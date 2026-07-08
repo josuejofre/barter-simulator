@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulador de Cashback Barter 2026 - Barter Hub</title>
+    <meta name="description" content="Simule taxas de barter, cashbacks e calcule a valorização das suas commodities (soja e algodão) com nossa estrutura comercial.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="app-layout">
+        
+        <!-- ==================== LEFT SIDEBAR MENU ==================== -->
+        <aside class="sidebar-menu">
+            <div class="sidebar-logo">
+                <!-- Generic Barter Hub upward trending chart line logo -->
+                <svg class="barter-logo" viewBox="0 0 130 40" width="105" height="30" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M5,25 L15,15 L22,18 L32,8 L38,12 L45,5" stroke="#38B000" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    <text x="52" y="26" font-family="'Outfit', sans-serif" font-weight="800" font-size="18" fill="#4b5563" letter-spacing="-0.5">Barter Hub</text>
+                </svg>
+            </div>
+            
+            <nav class="nav-links">
+                <!-- Generic Assistente link -->
+                <a class="nav-link" id="nav-link-assistente" onclick="alert('Assistente offline. Esta simulação é executada de forma local e segura.')">
+                    <div class="nav-link-main"><i class="fa-regular fa-comment-dots"></i> Assistente Virtual</div>
+                    <div class="nav-link-subtext">Tire suas dúvidas</div>
+                </a>
+                
+                <div class="sidebar-section-header">Contas</div>
+                
+                <a class="nav-link active" id="nav-link-simulador" onclick="showPage('simulador')">
+                    <div class="nav-link-main"><i class="fa-solid fa-circle-percent"></i> Simulador de taxas</div>
+                </a>
+
+                <!-- New Regras de negócio sidebar link -->
+                <a class="nav-link" id="nav-link-regras" onclick="showPage('regras')">
+                    <div class="nav-link-main"><i class="fa-solid fa-book-open"></i> Regras de negócio</div>
+                </a>
+                
+                <div class="nav-dropdown">
+                    <div class="nav-link dropdown-toggle">
+                        <div class="nav-link-main"><i class="fa-solid fa-file-invoice"></i> Simulações</div>
+                        <i class="fa-solid fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="#">Nova Simulação</a>
+                        <a href="#">Minhas Simulações</a>
+                    </div>
+                </div>
+                
+                <div class="nav-dropdown">
+                    <div class="nav-link dropdown-toggle">
+                        <div class="nav-link-main"><i class="fa-solid fa-database"></i> Cadastros</div>
+                        <i class="fa-solid fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="#">Limites de Crédito</a>
+                        <a href="#">Taxas de Juros</a>
+                        <a href="#">Preços de Commodities</a>
+                        <a href="#">Configurações Gerais</a>
+                    </div>
+                </div>
+                
+                <div class="nav-dropdown">
+                    <div class="nav-link dropdown-toggle">
+                        <div class="nav-link-main"><i class="fa-solid fa-chart-simple"></i> Relatórios</div>
+                        <i class="fa-solid fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="dropdown-content">
+                        <a href="#">Performance Comercial</a>
+                        <a href="#">Volume por Regional</a>
+                    </div>
+                </div>
+                
+                <a href="#" class="nav-link">
+                    <div class="nav-link-main"><i class="fa-solid fa-circle-question"></i> Ajuda & Suporte</div>
+                </a>
+            </nav>
+            
+            <!-- User Profile Avatar Card -->
+            <div class="sidebar-user">
+                <div class="user-avatar-initials">JS</div>
+                <div class="user-details">
+                    <div class="user-name">João Silva</div>
+                    <div class="user-email">produtor@barterhub.com</div>
+                </div>
+                <i class="fa-solid fa-right-from-bracket logout-icon" title="Sair"></i>
+            </div>
+        </aside>
+
+        <!-- ==================== MAIN VIEWPORT ==================== -->
+        <div class="main-viewport">
+            
+            <!-- Header Section -->
+            <header class="app-header">
+                <div class="header-container">
+                    <div class="logo-area">
+                        <!-- Generic Header Logo -->
+                        <svg class="barter-logo-header" viewBox="0 0 50 40" width="45" height="35" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M5,32 L15,20 L22,25 L35,10 L40,15 L45,5" stroke="#38B000" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <div class="brand-text">
+                            <span class="brand-name">Barter Hub</span>
+                            <span class="brand-divider">|</span>
+                            <h1 class="brand-title" id="main-title">Simulador de Cashback Barter 2026</h1>
+                        </div>
+                    </div>
+                    <div class="header-actions">
+                        <span class="live-status"><i class="fa-solid fa-circle-nodes pulse-icon"></i> Cotações Online</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Subtitle and Intro -->
+            <div class="intro-section container">
+                <p class="intro-text">Esta ferramenta auxilia na simulação de taxas, cotações e visualização dos benefícios financeiros da modalidade Barter com nossa plataforma integrada.</p>
+            </div>
+
+            <main class="main-content container">
+
+                <!-- ==================== PAGE 1: SIMULATOR ==================== -->
+                <div class="simulator-grid" id="page-simulador">
+                    
+                    <!-- Left Column: Operations Parameters Form -->
+                    <div class="form-card card animate-fade-in">
+                        <div class="card-header">
+                            <h2>Parâmetros da Operação</h2>
+                            <p>Preencha com o crédito demandado e os dados da sua safra.</p>
+                        </div>
+                        
+                        <form id="barter-form" onsubmit="event.preventDefault(); calculateSimulation();" class="simulator-form">
+                            <div class="input-group">
+                                <label for="sim-commodity">Commodity</label>
+                                <div class="select-wrapper">
+                                    <select id="sim-commodity" onchange="onCulturaChange(this.value)" required>
+                                        <option value="Soja">Soja (sacas - sc)</option>
+                                        <option value="Algodão">Algodão (libras - lp)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sim-regiao">Região / Praça (Impostos)</label>
+                                <div class="select-wrapper">
+                                    <select id="sim-regiao" onchange="calculateSimulation()" required>
+                                        <option value="Campo Novo do Parecis (MT)">Campo Novo do Parecis (MT) - Fethab</option>
+                                        <option value="Sorriso (MT)">Sorriso (MT) - Fethab</option>
+                                        <option value="Querência (MT)">Querência (MT) - Fethab</option>
+                                        <option value="Rio Verde (GO)">Rio Verde (GO) - Fundeagro</option>
+                                        <option value="Dourados (MS)">Dourados (MS) - Fundems</option>
+                                        <option value="Cascavel (PR)">Cascavel (PR) - Isento</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Currency Selector Group -->
+                            <div class="input-group">
+                                <label>Informações financeiras</label>
+                                <div class="currency-selector-group">
+                                    <button type="button" class="currency-btn active" id="btn-currency-brl" onclick="setCurrency('BRL')">Real (R$)</button>
+                                    <button type="button" class="currency-btn" id="btn-currency-usd" onclick="setCurrency('USD')">Dólar (USD)</button>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sim-credito" id="sim-credito-label">Valor da Operação (TP + Impostos)</label>
+                                <div class="input-wrapper">
+                                    <input type="text" id="sim-credito" value="R$ 1.000.000,00" required>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <div class="label-with-action">
+                                    <label for="sim-preco-bruto" id="sim-preco-bruto-label">Preço Commodity Bruto (FOB)</label>
+                                    <button type="button" class="btn-fetch-quote" onclick="fetchLiveQuotes()" title="Buscar preço do mercado em tempo real">
+                                        <i class="fa-solid fa-rotate"></i> Atualizar
+                                    </button>
+                                </div>
+                                <div class="input-wrapper">
+                                    <input type="number" id="sim-preco-bruto" value="103.00" min="0.01" step="any" oninput="calculateSimulation()" required>
+                                    <span class="input-suffix" id="sim-preco-bruto-suffix">R$/sc</span>
+                                </div>
+                                <small class="quote-timestamp" id="sim-quote-status">Cotação inicial padrão da tela</small>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sim-descontos">Aplicar Descontos Tributários Estaduais</label>
+                                <div class="toggle-switch">
+                                    <input type="checkbox" id="sim-descontos" checked onchange="calculateSimulation()">
+                                    <label for="sim-descontos" class="toggle-slider"></label>
+                                    <span class="toggle-label" id="sim-descontos-label">Ativo (Senar + Fethab)</span>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sim-prazo">Prazo (Dias)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="sim-prazo" value="216" min="1" oninput="calculateSimulation()" required>
+                                    <span class="input-suffix">dias</span>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sim-juros-anual">Taxa de Juros Anual (%)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="sim-juros-anual" value="14.40" min="0" step="any" oninput="calculateSimulation()" required>
+                                    <span class="input-suffix">% a.a.</span>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sim-campanha-val" id="sim-campanha-val-label">Valorização da Campanha (Cashback %)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="sim-campanha-val" value="4.50" min="0" step="any" oninput="calculateSimulation()" required>
+                                    <span class="input-suffix">%</span>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sim-dist-nutrade">Distância para nossa Base (KM)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="sim-dist-nutrade" value="50" min="0" oninput="calculateSimulation()" required>
+                                    <span class="input-suffix">KM</span>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sim-dist-concorr">Distância para Base Concorrente (KM)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="sim-dist-concorr" value="80" min="0" oninput="calculateSimulation()" required>
+                                    <span class="input-suffix">KM</span>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sim-frete-km" id="sim-frete-km-label">Custo do Frete por KM</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="sim-frete-km" value="10.30" min="0" step="any" oninput="calculateSimulation()" required>
+                                    <span class="input-suffix" id="sim-frete-km-suffix">R$/KM</span>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sim-cambio">Taxa Cambial Futura (BRL/USD)</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="sim-cambio" value="5.1500" min="0.01" step="any" oninput="calculateSimulation()" required>
+                                    <span class="input-suffix">R$/$</span>
+                                </div>
+                            </div>
+
+                            <button type="submit" class="btn-submit" id="btn-sim-calcular">
+                                <i class="fa-solid fa-calculator"></i> Simular Barter
+                            </button>
+                        </form>
+                        
+                        <div class="card-footer">
+                            <p>* Valores referenciais baseados nas condições de mercado atuais e regras da campanha 2026.</p>
+                        </div>
+                    </div>
+
+                    <!-- Right Column: Results & Interactive Charts -->
+                    <div class="results-container">
+                        
+                        <!-- Comparative Table Card -->
+                        <div class="results-card card animate-fade-in">
+                            <div class="card-header">
+                                <h2>Comparativo de Custos e Retornos da Operação (Foco em Crédito)</h2>
+                                <p>Simulação comparativa detalhada baseada nas regras de negócio da campanha 2026.</p>
+                            </div>
+                            
+                            <div class="table-responsive">
+                                <table class="comparison-table detailed-table" id="barter-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Variável da Operação</th>
+                                            <th class="col-nutrade" id="th-est-brand">Nossa Estrutura</th>
+                                            <th class="col-market">Outras Tradings</th>
+                                            <th>Vantagem (%)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr class="table-section-title">
+                                            <td colspan="4">1. ESTRUTURA FINANCEIRA E LOGÍSTICA</td>
+                                        </tr>
+                                        <tr>
+                                            <td id="td-lbl-fob">Valor do Crédito (FOB a Prazo)</td>
+                                            <td id="td-fob-nutrade" class="val-nutrade font-mono">R$ 1.000.000,00</td>
+                                            <td id="td-fob-market" class="font-mono">R$ 1.000.000,00</td>
+                                            <td id="td-fob-diff">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td id="td-lbl-bruto">Preço Commodity Bruto (FOB)</td>
+                                            <td id="td-bruto-nutrade" class="val-nutrade font-mono">R$ 103,00</td>
+                                            <td id="td-bruto-market" class="font-mono">R$ 101,97</td>
+                                            <td id="td-bruto-diff" class="text-green font-bold">+1,01%</td>
+                                        </tr>
+                                        <tr>
+                                            <td id="td-lbl-desc">(-) Descontos Tributários Estaduais</td>
+                                            <td id="td-desc-nutrade" class="val-nutrade font-mono text-danger">-R$ 3,30</td>
+                                            <td id="td-desc-market" class="font-mono text-danger">-R$ 3,30</td>
+                                            <td id="td-desc-diff">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td id="td-lbl-livre">Preço Commodity Livre (Porteira)</td>
+                                            <td id="td-livre-nutrade" class="val-nutrade font-mono">R$ 99,70</td>
+                                            <td id="td-livre-market" class="font-mono">R$ 98,68</td>
+                                            <td id="td-livre-diff" class="text-green font-bold">+1,04%</td>
+                                        </tr>
+                                        <tr class="highlight-row">
+                                            <td>Volume de Troca Físico Inicial</td>
+                                            <td id="td-vol-troca-nutrade" class="val-nutrade font-mono text-green">51.652,89 sc</td>
+                                            <td id="td-vol-troca-market" class="font-mono">52.190,98 sc</td>
+                                            <td id="td-vol-troca-diff" class="text-green font-bold">-1,03%</td>
+                                        </tr>
+                                        <tr>
+                                            <td id="td-lbl-vp">Preço Pedido TP (Valor Presente)</td>
+                                            <td id="td-vp-nutrade" class="val-nutrade font-mono">R$ 920.471,28</td>
+                                            <td id="td-vp-market" class="font-mono">R$ 920.471,28</td>
+                                            <td id="td-vp-diff">0,00%</td>
+                                        </tr>
+                                        <tr class="highlight-row">
+                                            <td id="td-lbl-custofin">Custo Financeiro da Operação</td>
+                                            <td id="td-custofin-nutrade" class="val-nutrade font-mono">R$ 79.528,72</td>
+                                            <td id="td-custofin-market" class="font-mono">R$ 79.528,72</td>
+                                            <td id="td-custofin-diff">0,00%</td>
+                                        </tr>
+                                        <tr>
+                                            <td id="td-lbl-frete">(-) Custo de Transporte (Frete)</td>
+                                            <td id="td-frete-nutrade" class="val-nutrade font-mono text-danger">-R$ 0,0100 / sc</td>
+                                            <td id="td-frete-market" class="font-mono text-danger">-R$ 0,0160 / sc</td>
+                                            <td id="td-frete-diff" class="text-green font-bold">-37,50%</td>
+                                        </tr>
+
+                                        <tr class="table-section-title">
+                                            <td colspan="4">2. COMPONENTES DE VALORIZAÇÃO COMERCIAL (CASHBACK & INCENTIVOS)</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Taxa de Valorização da Campanha (Cashback)</td>
+                                            <td id="td-valcamp-nutrade" class="val-nutrade">4,50%</td>
+                                            <td id="td-valcamp-market">3,00%</td>
+                                            <td id="td-valcamp-diff" class="text-green font-bold">+50,00%</td>
+                                        </tr>
+                                        <tr>
+                                            <td id="td-lbl-cashback-usd">Cash Back ($) da Campanha</td>
+                                            <td id="td-cashback-usd-nutrade" class="val-nutrade font-mono">R$ 45.000,00</td>
+                                            <td id="td-cashback-usd-market" class="font-mono">R$ 30.000,00</td>
+                                            <td id="td-cashback-usd-diff" class="text-green font-bold">+50,00%</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Incentivo Barter (%) atrelado ao Prazo</td>
+                                            <td id="td-incbarter-pct-nutrade" class="val-nutrade">3,60%</td>
+                                            <td id="td-incbarter-pct-market">3,60%</td>
+                                            <td id="td-incbarter-pct-diff">0,00%</td>
+                                        </tr>
+                                        <tr>
+                                            <td id="td-lbl-incbarter-usd">Incentivo Barter ($) ganho</td>
+                                            <td id="td-incbarter-usd-nutrade" class="val-nutrade font-mono">R$ 33.136,97</td>
+                                            <td id="td-incbarter-usd-market" class="font-mono">R$ 33.136,97</td>
+                                            <td id="td-incbarter-usd-diff">0,00%</td>
+                                        </tr>
+
+                                        <tr class="table-section-title">
+                                            <td colspan="4">3. RESULTADO FINAL CONSOLIDADO (PORTEIRA FECHADA COM RETORNOS)</td>
+                                        </tr>
+                                        <tr class="heavy-row">
+                                            <td id="td-lbl-totalret">Total de Retorno Recebido pelo Produtor ($)</td>
+                                            <td id="td-totalret-nutrade" class="val-nutrade font-mono text-green">R$ 78.136,97</td>
+                                            <td id="td-totalret-market" class="font-mono">R$ 63.136,97</td>
+                                            <td id="td-totalret-diff" class="text-green font-bold">+23,76%</td>
+                                        </tr>
+                                        <tr class="heavy-row text-gold gold-glow">
+                                            <td id="td-lbl-finalpreco">Preço Equivalente Final (Valorizado com Frete)</td>
+                                            <td id="td-finalpreco-nutrade" class="val-nutrade font-mono">R$ 107,4846 / sc</td>
+                                            <td id="td-finalpreco-market" class="font-mono">R$ 104,8901 / sc</td>
+                                            <td id="td-finalpreco-diff" class="text-green font-bold">+2,47%</td>
+                                        </tr>
+                                        <tr class="heavy-row text-green">
+                                            <td>Volume de Troca Equivalente Final</td>
+                                            <td id="td-finalvol-nutrade" class="val-nutrade font-mono">47.616,89 sc</td>
+                                            <td id="td-finalvol-market" class="font-mono">48.895,80 sc</td>
+                                            <td id="td-finalvol-diff" class="text-green font-bold">-2,62%</td>
+                                        </tr>
+                                        <tr class="heavy-row">
+                                            <td>Valorização Real obtida sobre Preço Livre</td>
+                                            <td id="td-valreal-nutrade" class="val-nutrade font-mono text-green">+7,80%</td>
+                                            <td id="td-valreal-market" class="font-mono">+6,29%</td>
+                                            <td id="td-valreal-diff" class="text-green font-bold">+24,00%</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- Highlight Benefit Cards -->
+                        <div class="benefit-cards-grid">
+                            <div class="benefit-card accent-green animate-scale-up">
+                                <div class="card-icon"><i class="fa-solid fa-piggy-bank"></i></div>
+                                <div class="card-info">
+                                    <h3>Incentivo Barter</h3>
+                                    <div class="benefit-value" id="card-incentivo">R$ 33.136,97</div>
+                                    <p class="benefit-sub" id="card-incentivo-sub">Proporcional ao Prazo da Operação</p>
+                                </div>
+                            </div>
+
+                            <div class="benefit-card accent-green animate-scale-up">
+                                <div class="card-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
+                                <div class="card-info">
+                                    <h3>Valorização da Campanha</h3>
+                                    <div class="benefit-value" id="card-valorizacao">R$ 45.000,00</div>
+                                    <p class="benefit-sub" id="card-valorizacao-sub">Retorno Cashback da safra 2026</p>
+                                </div>
+                            </div>
+
+                            <div class="benefit-card accent-solid animate-scale-up">
+                                <div class="card-icon"><i class="fa-solid fa-wheat-awn"></i></div>
+                                <div class="card-info">
+                                    <h3 class="text-white">Benefício Total da Estrutura</h3>
+                                    <div class="benefit-value text-white" id="card-total">1.278,91 sc</div>
+                                    <p class="benefit-sub text-light" id="card-total-sub">Sacas economizadas vs. mercado</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TradingView Chart Widget Card -->
+                        <div class="chart-card card animate-fade-in">
+                            <div class="card-header">
+                                <h2><i class="fa-solid fa-chart-line text-green"></i> Cotação do Mercado Futuro (CFD)</h2>
+                                <p id="chart-subtitle">Gráfico em tempo real de Chicago para Soja</p>
+                            </div>
+                            <div class="chart-container-wrapper">
+                                <div class="tradingview-widget-container" style="height:350px;width:100%">
+                                    <div id="tradingview_widget" style="height:350px;width:100%"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+
+                <!-- ==================== PAGE 2: BUSINESS RULES (GENERIC) ==================== -->
+                <div id="page-regras" style="display:none" class="animate-fade-in">
+                    <div class="card rules-card">
+                        <div class="card-header">
+                            <h2>Regras de Negócio - Simulador Barter 2026</h2>
+                            <p>Detalhamento conceitual e fórmulas matemáticas utilizadas na estruturação do Barter Hub.</p>
+                        </div>
+                        <div class="rules-content">
+                            
+                            <p>Este documento detalha as regras de negócio e fórmulas matemáticas utilizadas no <strong>Simulador de Cashback Barter 2026</strong>, baseando-se na planilha de estruturação financeira, adaptado para permitir a simulação em <strong>Dólar (USD)</strong> ou <strong>Real (BRL)</strong> e a dedução logística de frete.</p>
+                            <p>A ferramenta demonstra ao produtor rural o valor agregado da modalidade de Barter com a <strong>Nossa Estrutura</strong> em comparação com as práticas de mercado (<strong>Outras Tradings</strong>). O foco é evidenciar como o crédito contratado se reverte em economia física de grãos entregues.</p>
+
+                            <h3>1. Estrutura Geral dos Benefícios</h3>
+                            <p>O simulador unifica as vantagens estruturais divididas em quatro fatores de impacto financeiro:</p>
+                            <ul>
+                                <li><strong>Juros e Estruturação Financeira</strong>: Desconto da taxa de juros a prazo para obtenção do Preço Pedido TP (Valor Presente).</li>
+                                <li><strong>Descontos Tributários Regionais</strong>: Dedução de impostos estaduais incidentes sobre o barter de grãos (como Fethab/Senar em MT, Fundeagro em GO e Fundems em MS).</li>
+                                <li><strong>Cashback e Incentivo Barter</strong>: Retornos comerciais de campanha percentuais sobre o crédito contratado.</li>
+                                <li><strong>Logística (Custo de Transporte)</strong>: O frete da propriedade do produtor até a respectiva base logística de recebimento da trading.</li>
+                            </ul>
+
+                            <h3>2. Seleção de Moeda (Real R$ vs. Dólar USD)</h3>
+                            <p>O simulador permite definir a moeda padrão da operação. O sistema converte automaticamente as entradas usando a <strong>Taxa Cambial Futura (BRL/USD)</strong> configurada:</p>
+                            <ul>
+                                <li><strong>Ao selecionar Real (R$):</strong>
+                                    <ul>
+                                        <li>O crédito contratado é definido em BRL (ex: <code>R$ 1.000.000,00</code>).</li>
+                                        <li>O preço da commodity e o valor de frete por KM são digitados em BRL.</li>
+                                        <li>Para o cálculo matemático (que usa a base estruturada em USD da planilha), convertemos:<br>
+                                            <div class="equation">Credito_(USD) = Credito_(BRL) / Câmbio</div>
+                                            <div class="equation">Preço_Commodity_(USD) = Preço_Commodity_(BRL) / Câmbio</div>
+                                        </li>
+                                        <li>Após os cálculos, os resultados monetários da tabela de comparação e dos cartões de destaque são multiplicados pelo câmbio e exibidos em Real (R$).</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Ao selecionar Dólar (USD):</strong>
+                                    <ul>
+                                        <li>Todas as entradas e saídas permanecem em USD ($).</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <p><em>Nota: Os volumes físicos de commodities (sacas ou libras) não se alteram pela moeda selecionada, garantindo a integridade dos volumes da planilha.</em></p>
+
+                            <h3>3. Detalhamento das Regras de Impostos Regionais (Praças)</h3>
+                            <p>Para simular o desconto tributário, o sistema calcula a dedução com base na região/praça selecionada:</p>
+                            <ul>
+                                <li><strong>Campo Novo do Parecis (MT)</strong>:<br>
+                                    <div class="equation">Imposto = (Preço_Bruto * 0,2%) + 0,60 / saca</div>
+                                </li>
+                                <li><strong>Sorriso (MT)</strong>:<br>
+                                    <div class="equation">Imposto = (Preço_Bruto * 0,25%) + 0,65 / saca</div>
+                                </li>
+                                <li><strong>Querência (MT)</strong>:<br>
+                                    <div class="equation">Imposto = (Preço_Bruto * 0,22%) + 0,70 / saca</div>
+                                </li>
+                                <li><strong>Rio Verde (GO)</strong>:<br>
+                                    <div class="equation">Imposto = (Preço_Bruto * 0,15%) + 0,40 / saca</div>
+                                </li>
+                                <li><strong>Dourados (MS)</strong>:<br>
+                                    <div class="equation">Imposto = (Preço_Bruto * 0,10%) + 0,30 / saca</div>
+                                </li>
+                                <li><strong>Cascavel (PR)</strong>:<br>
+                                    <div class="equation">Imposto = 0.00 (Isento de taxas de Barter)</div>
+                                </li>
+                            </ul>
+
+                            <h3>4. Custo de Transporte (Frete)</h3>
+                            <p>O custo logístico de buscar a commodity na propriedade e entregar na base da nossa plataforma ou do concorrente é deduzido do preço final do produto (Porteira Aberta):</p>
+                            <ol>
+                                <li><strong>Custo de Frete Total:</strong><br>
+                                    <div class="equation">Custo_Frete_Total = Distância_Base_(KM) * Valor_KM</div>
+                                </li>
+                                <li><strong>Custo de Frete Unitário:</strong><br>
+                                    <div class="equation">Frete_Unitario = Custo_Frete_Total / Volume_Comercializado</div>
+                                </li>
+                            </ol>
+
+                            <h3>5. Fórmulas de Simulação por Crédito</h3>
+                            <p>Calcula a equivalência de troca física para amortizar um financiamento/crédito fixado a prazo (ex. <code>USD 1.000.000,00</code> ou <code>R$ 1.000.000,00</code>):</p>
+                            <ul>
+                                <li><strong>Preço Pedido TP (Valor Presente):</strong><br>
+                                    <div class="equation">Juros_Periodo = (Dias / 360) * Juros_Anual</div>
+                                    <div class="equation">Preço_TP = Credito / (1 + Juros_Periodo)</div>
+                                    <p><em>Exemplo para USD 1.000.000,00 e 216 dias:</em> 1.000.000 / (1 + 8,64%) = <strong>USD 920.471,28</strong></p>
+                                </li>
+                                <li><strong>Retorno Total do Produtor:</strong><br>
+                                    <p>Soma da valorização da campanha (4,5% sobre crédito) e do incentivo Barter (proporcional ao prazo sobre Preço TP).</p>
+                                    <div class="equation">Cashback = Credito * 4,5% = USD 45.000,00</div>
+                                    <div class="equation">Incentivo_Barter = Preço_TP * (Dias / 30 * 0,5%) = USD 33.136,97</div>
+                                    <div class="equation">Total_Retorno = Cashback + Incentivo_Barter = USD 78.136,97</div>
+                                </li>
+                                <li><strong>Preço Equivalente Final com Descontos e Frete:</strong><br>
+                                    <div class="equation">Preço_Livre = Preço_Bruto - Imposto_Região</div>
+                                    <div class="equation">Preço_Equiv_Final = Preço_Livre + Cashback_Unitario + Incentivo_Unitario - Frete_Unitario</div>
+                                    <p><em>Exemplo Campo Novo (MT) na Nossa Estrutura:</em> 19,36 + 0,8712 + 0,6415 - 0,0019 = <strong>USD 20,8708 / sc</strong></p>
+                                </li>
+                                <li><strong>Volume de Troca Equivalente Final:</strong><br>
+                                    <div class="equation">Volume_Troca_Final = Volume_Inicial - (Equivalência_Cashback + Equivalência_Incentivo)</div>
+                                    <p><em>Exemplo:</em> 51.652,89 - (2.324,38 + 1.711,62) = <strong>47.616,89 sacas</strong></p>
+                                    <p><em>Diferença para Outras Tradings (Volume Economizado):</em> <strong>1.278,91 sacas</strong>.</p>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+
+            <!-- Footer -->
+            <footer class="app-footer">
+                <div class="container footer-content">
+                    <p>&copy; 2026 Barter Hub. Todos os direitos reservados.</p>
+                    <p>Desenvolvido de forma local e segura como protótipo de validação de regras de negócio de Cashback Barter.</p>
+                </div>
+            </footer>
+            
+        </div>
+    </div>
+
+    <!-- TradingView Embed Code -->
+    <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
