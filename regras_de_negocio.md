@@ -1,0 +1,114 @@
+# Regras de Negócio - Simulador Barter 2026
+
+Este documento detalha as regras de negócio e fórmulas matemáticas utilizadas no **Simulador de Cashback Barter 2026**, baseando-se nas colunas A e B da planilha `Simulador_CashBack_Barter_2026.xlsx`, adaptadas para permitir a simulação em **Dólar (USD)** ou **Real (BRL)** e a dedução logística de frete.
+
+A ferramenta demonstra ao produtor rural o valor agregado da modalidade de Barter com a **Nossa Estrutura** em comparação com as práticas de mercado (**Outras Tradings**). O foco é evidenciar como o crédito contratado se reverte em economia física de grãos entregues.
+
+---
+
+## 1. Estrutura Geral dos Benefícios
+
+O simulador unifica as vantagens estruturais do Barter Hub divididas em quatro fatores de impacto financeiro:
+
+```mermaid
+graph TD
+    A[Preço Equivalente Final] --> B[1. Financiamento: Juros TP e Desconto à Vista]
+    A[Preço Equivalente Final] --> C[2. Tributação Regional: Descontos Estaduais]
+    A[Preço Equivalente Final] --> D[3. Campanhas: Cashback e Incentivo Barter]
+    A[Preço Equivalente Final] --> E[4. Logística: Custo de Frete até a Base]
+```
+
+1. **Juros e Estruturação Financeira**: Desconto da taxa de juros a prazo para obtenção do Preço Pedido TP (Valor Presente).
+2. **Descontos Tributários Regionais**: Dedução de impostos estaduais incidentes sobre o barter de grãos (como Fethab/Senar em MT, Fundeagro in GO e Fundems em MS).
+3. **Cashback e Incentivo Barter**: Retornos comerciais de campanha percentuais sobre o crédito contratado.
+4. **Logística (Custo de Transporte)**: O frete da propriedade do produtor até a respectiva base logística de recebimento da trading.
+
+---
+
+## 2. Seleção de Moeda (Real R$ vs. Dólar USD)
+
+O simulador permite definir a moeda padrão da operação. O sistema converte automaticamente as entradas usando a **Taxa Cambial Futura (BRL/USD)** configurada:
+
+* **Ao selecionar Real (R$):**
+  - O crédito contratado é definido em BRL (ex: `R$ 1.000.000,00`).
+  - O preço da commodity e o valor de frete por KM são digitados em BRL.
+  - Para o cálculo matemático (que usa a base estruturada em USD da planilha), convertemos:
+    $$Credito\_(USD) = \frac{Credito\_(BRL)}{C\hat{a}mbio}$$
+    $$Pre\c{c}o\_Commodity\_(USD) = \frac{Pre\c{c}o\_Commodity\_(BRL)}{C\hat{a}mbio}$$
+  - Após os cálculos, os resultados monetários da tabela de comparação e dos cartões de destaque são multiplicados pelo câmbio e exibidos em Real (R$).
+* **Ao selecionar Dólar (USD):**
+  - Todas as entradas e saídas permanecem em USD ($).
+
+*Nota: Os volumes físicos de commodities (sacas ou libras) não se alteram pela moeda selecionada, garantindo a integridade dos volumes da planilha.*
+
+---
+
+## 3. Detalhamento das Regras de Impostos Regionais (Praças)
+
+Para simular o desconto tributário, o sistema calcula a dedução com base na região/praça selecionada:
+
+* **Campo Novo do Parecis (MT)**:
+  $$Imposto = (Pre\c{c}o\_Bruto \times 0,2\%) + 0,60\ / saca$$
+* **Sorriso (MT)**:
+  $$Imposto = (Pre\c{c}o\_Bruto \times 0,25\%) + 0,65\ / saca$$
+* **Querência (MT)**:
+  $$Imposto = (Pre\c{c}o\_Bruto \times 0,22\%) + 0,70\ / saca$$
+* **Rio Verde (GO)**:
+  $$Imposto = (Pre\c{c}o\_Bruto \times 0,15\%) + 0,40\ / saca$$
+* **Dourados (MS)**:
+  $$Imposto = (Pre\c{c}o\_Bruto \times 0,10\%) + 0,30\ / saca$$
+* **Cascavel (PR)**:
+  $$Imposto = 0.00\ (Isento\ de\ taxas\ de\ Barter)$$
+
+---
+
+## 4. Custo de Transporte (Frete)
+
+O custo logístico de buscar a commodity na propriedade e entregar na nossa base ou na do concorrente é deduzido do preço final do produto (Porteira Aberta):
+
+1. **Custo de Frete Total:**
+   $$Custo\_Frete\_Total = Dist\hat{a}ncia\_Base\_(KM) \times Valor\_KM$$
+2. **Custo de Frete Unitário:**
+   $$Frete\_Unitario = \frac{Custo\_Frete\_Total}{Volume\_Comercializado}$$
+
+---
+
+## 5. Fórmulas de Simulação por Crédito
+
+Calcula a equivalência de troca física para amortizar um financiamento/crédito fixado a prazo (ex. **USD 1.000.000,00** ou **R$ 1.000.000,00**):
+
+1. **Preço Pedido TP (Valor Presente):**
+   $$Juros\_Periodo = \frac{Dias}{360} \times Juros\_Anual\_(14,40\%)$$
+   $$Pre\c{c}o\_TP = \frac{Credito}{1 + Juros\_Periodo}$$
+   *Exemplo para USD 1.000.000,00 e 216 dias:* $\frac{1.000.000}{1 + 8,64\%} = \mathbf{USD\ 920.471,28}$
+
+2. **Retorno Total do Produtor:**
+   Soma da valorização da campanha (4,5% sobre crédito) e do incentivo Barter (proporcional ao prazo sobre Preço TP).
+   $$Cashback = Credito \times 4,5\% = \mathbf{USD\ 45.000,00}$$
+   $$Incentivo\_Barter = Pre\c{c}o\_TP \times \left(\frac{Dias}{30} \times 0,5\%\right) = \mathbf{USD\ 33.136,97}$$
+   $$Total\_Retorno = 45.000 + 33.136,97 = \mathbf{USD\ 78.136,97}$$
+
+3. **Preço Equivalente Final com Descontos e Frete:**
+   $$Pre\c{c}o\_Livre = Pre\c{c}o\_Bruto - Imposto\_Regi\tilde{a}o$$
+   $$Pre\c{c}o\_Equiv\_Final = Pre\c{c}o\_Livre + Cashback\_Unitario + Incentivo\_Unitario - Frete\_Unitario$$
+   *Exemplo Campo Novo (MT) na nossa estrutura:*
+   $$19,36 + 0,8712 (cb) + 0,6415 (inc) - 0,0019 (frete) = \mathbf{USD\ 20,8708\ / sc}$$
+
+4. **Volume de Troca Equivalente Final:**
+   $$Volume\_Troca\_Final = Volume\_Inicial - (Equival\hat{e}ncia\_Cashback + Equival\hat{e}ncia\_Incentivo)$$
+   *Exemplo:* $51.652,89 - (2.324,38 + 1.711,62) = \mathbf{47.616,89\ sacas}$
+   *Diferença para Outras Tradings (Volume Economizado):* $\mathbf{1.278,91\ sacas}$.
+
+---
+
+## 6. Notas sobre Fontes de Dados e Integração em Produção (Pendências)
+
+Para a validação conceitual (protótipo), são utilizadas fontes públicas e simuladas. Para a versão final de produção integrada aos sistemas internos, as seguintes origens de dados devem ser configuradas:
+
+1. **Cotação de Commodities (Soja e Algodão) em Produção:**
+   - Deverá ser integrada a um feed profissional contratado, como a **CMA**, **Bloomberg**, **Reuters**, ou diretamente de fontes locais de liquidez como o **CEPEA/Esalq** e **Safras & Mercado**.
+   - *No Protótipo:* Buscamos o preço em tempo real de Chicago (CBOT:ZS=F para Soja e NYCE:CT=F para Algodão) via nosso servidor local de proxy no Yahoo Finance, com fallback estático para USD 20,00 e USD 0,85 respectivamente quando hospedado de forma estática (como no GitHub Pages).
+
+2. **Cotação do Dólar (Câmbio BRL/USD) em Produção:**
+   - Deverá integrar-se à API oficial do **Banco Central do Brasil (BACEN)** para obter a taxa **PTAX de fechamento/venda**, ou feeds de câmbio futuro da **B3** (contrato de dólar futuro) se a liquidação for a termo.
+   - *No Protótipo:* Buscamos a taxa em tempo real através da **AwesomeAPI** (economia.awesomeapi.com.br/last/USD-BRL) diretamente pelo navegador do usuário (com CORS liberado, sem necessidade de backend ou chaves expostas). O timestamp da última captura do dólar é atualizado dinamicamente logo abaixo do campo de câmbio. Se a API estiver inacessível, o sistema usa o valor de fallback cambial de R$ 5,1500.

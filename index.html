@@ -20,7 +20,6 @@
         <!-- ==================== LEFT SIDEBAR MENU ==================== -->
         <aside class="sidebar-menu">
             <div class="sidebar-logo">
-                <!-- Generic Barter Hub upward trending chart line logo -->
                 <svg class="barter-logo" viewBox="0 0 130 40" width="105" height="30" xmlns="http://www.w3.org/2000/svg">
                     <path d="M5,25 L15,15 L22,18 L32,8 L38,12 L45,5" stroke="#38B000" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                     <text x="52" y="26" font-family="'Outfit', sans-serif" font-weight="800" font-size="18" fill="#4b5563" letter-spacing="-0.5">Barter Hub</text>
@@ -28,7 +27,6 @@
             </div>
             
             <nav class="nav-links">
-                <!-- Generic Assistente link -->
                 <a class="nav-link" id="nav-link-assistente" onclick="alert('Assistente offline. Esta simulação é executada de forma local e segura.')">
                     <div class="nav-link-main"><i class="fa-regular fa-comment-dots"></i> Assistente Virtual</div>
                     <div class="nav-link-subtext">Tire suas dúvidas</div>
@@ -40,7 +38,6 @@
                     <div class="nav-link-main"><i class="fa-solid fa-circle-percent"></i> Simulador de taxas</div>
                 </a>
 
-                <!-- New Regras de negócio sidebar link -->
                 <a class="nav-link" id="nav-link-regras" onclick="showPage('regras')">
                     <div class="nav-link-main"><i class="fa-solid fa-book-open"></i> Regras de negócio</div>
                 </a>
@@ -103,7 +100,6 @@
             <header class="app-header">
                 <div class="header-container">
                     <div class="logo-area">
-                        <!-- Generic Header Logo -->
                         <svg class="barter-logo-header" viewBox="0 0 50 40" width="45" height="35" xmlns="http://www.w3.org/2000/svg">
                             <path d="M5,32 L15,20 L22,25 L35,10 L40,15 L45,5" stroke="#38B000" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
                         </svg>
@@ -129,7 +125,7 @@
                 <!-- ==================== PAGE 1: SIMULATOR ==================== -->
                 <div class="simulator-grid" id="page-simulador">
                     
-                    <!-- Left Column: Operations Parameters Form -->
+                    <!-- Left Column: Operations Parameters Form (Events removed to update only on button click) -->
                     <div class="form-card card animate-fade-in">
                         <div class="card-header">
                             <h2>Parâmetros da Operação</h2>
@@ -150,7 +146,7 @@
                             <div class="input-group">
                                 <label for="sim-regiao">Região / Praça (Impostos)</label>
                                 <div class="select-wrapper">
-                                    <select id="sim-regiao" onchange="calculateSimulation()" required>
+                                    <select id="sim-regiao" required>
                                         <option value="Campo Novo do Parecis (MT)">Campo Novo do Parecis (MT) - Fethab</option>
                                         <option value="Sorriso (MT)">Sorriso (MT) - Fethab</option>
                                         <option value="Querência (MT)">Querência (MT) - Fethab</option>
@@ -161,7 +157,7 @@
                                 </div>
                             </div>
 
-                            <!-- Currency Selector Group -->
+                            <!-- Currency Selector Group (Recalculates on click to swap units) -->
                             <div class="input-group">
                                 <label>Informações financeiras</label>
                                 <div class="currency-selector-group">
@@ -185,7 +181,7 @@
                                     </button>
                                 </div>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-preco-bruto" value="103.00" min="0.01" step="any" oninput="calculateSimulation()" required>
+                                    <input type="number" id="sim-preco-bruto" value="103.00" min="0.01" step="any" required>
                                     <span class="input-suffix" id="sim-preco-bruto-suffix">R$/sc</span>
                                 </div>
                                 <small class="quote-timestamp" id="sim-quote-status">Cotação inicial padrão da tela</small>
@@ -194,7 +190,7 @@
                             <div class="input-group">
                                 <label for="sim-descontos">Aplicar Descontos Tributários Estaduais</label>
                                 <div class="toggle-switch">
-                                    <input type="checkbox" id="sim-descontos" checked onchange="calculateSimulation()">
+                                    <input type="checkbox" id="sim-descontos" checked>
                                     <label for="sim-descontos" class="toggle-slider"></label>
                                     <span class="toggle-label" id="sim-descontos-label">Ativo (Senar + Fethab)</span>
                                 </div>
@@ -203,7 +199,7 @@
                             <div class="input-group">
                                 <label for="sim-prazo">Prazo (Dias)</label>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-prazo" value="216" min="1" oninput="calculateSimulation()" required>
+                                    <input type="number" id="sim-prazo" value="216" min="1" required>
                                     <span class="input-suffix">dias</span>
                                 </div>
                             </div>
@@ -211,7 +207,7 @@
                             <div class="input-group">
                                 <label for="sim-juros-anual">Taxa de Juros Anual (%)</label>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-juros-anual" value="14.40" min="0" step="any" oninput="calculateSimulation()" required>
+                                    <input type="number" id="sim-juros-anual" value="14.40" min="0" step="any" required>
                                     <span class="input-suffix">% a.a.</span>
                                 </div>
                             </div>
@@ -219,7 +215,7 @@
                             <div class="input-group">
                                 <label for="sim-campanha-val" id="sim-campanha-val-label">Valorização da Campanha (Cashback %)</label>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-campanha-val" value="4.50" min="0" step="any" oninput="calculateSimulation()" required>
+                                    <input type="number" id="sim-campanha-val" value="4.50" min="0" step="any" required>
                                     <span class="input-suffix">%</span>
                                 </div>
                             </div>
@@ -227,7 +223,7 @@
                             <div class="input-group">
                                 <label for="sim-dist-nutrade">Distância para nossa Base (KM)</label>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-dist-nutrade" value="50" min="0" oninput="calculateSimulation()" required>
+                                    <input type="number" id="sim-dist-nutrade" value="50" min="0" required>
                                     <span class="input-suffix">KM</span>
                                 </div>
                             </div>
@@ -235,7 +231,7 @@
                             <div class="input-group">
                                 <label for="sim-dist-concorr">Distância para Base Concorrente (KM)</label>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-dist-concorr" value="80" min="0" oninput="calculateSimulation()" required>
+                                    <input type="number" id="sim-dist-concorr" value="80" min="0" required>
                                     <span class="input-suffix">KM</span>
                                 </div>
                             </div>
@@ -243,7 +239,7 @@
                             <div class="input-group">
                                 <label for="sim-frete-km" id="sim-frete-km-label">Custo do Frete por KM</label>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-frete-km" value="10.30" min="0" step="any" oninput="calculateSimulation()" required>
+                                    <input type="number" id="sim-frete-km" value="10.30" min="0" step="any" required>
                                     <span class="input-suffix" id="sim-frete-km-suffix">R$/KM</span>
                                 </div>
                             </div>
@@ -251,11 +247,13 @@
                             <div class="input-group">
                                 <label for="sim-cambio">Taxa Cambial Futura (BRL/USD)</label>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-cambio" value="5.1500" min="0.01" step="any" oninput="calculateSimulation()" required>
+                                    <input type="number" id="sim-cambio" value="5.1500" min="0.01" step="any" required>
                                     <span class="input-suffix">R$/$</span>
                                 </div>
+                                <small class="quote-timestamp" id="sim-cambio-status">Câmbio padrão: R$ 5,1500</small>
                             </div>
 
+                            <!-- Button that actively triggers calculations -->
                             <button type="submit" class="btn-submit" id="btn-sim-calcular">
                                 <i class="fa-solid fa-calculator"></i> Simular Barter
                             </button>
@@ -349,7 +347,7 @@
                                             <td id="td-valcamp-diff" class="text-green font-bold">+50,00%</td>
                                         </tr>
                                         <tr>
-                                            <td id="td-lbl-cashback-usd">Cash Back ($) da Campanha</td>
+                                            <td id="td-lbl-cashback-usd">Cash Back (${selectedCurrency}) da Campanha</td>
                                             <td id="td-cashback-usd-nutrade" class="val-nutrade font-mono">R$ 45.000,00</td>
                                             <td id="td-cashback-usd-market" class="font-mono">R$ 30.000,00</td>
                                             <td id="td-cashback-usd-diff" class="text-green font-bold">+50,00%</td>
@@ -361,7 +359,7 @@
                                             <td id="td-incbarter-pct-diff">0,00%</td>
                                         </tr>
                                         <tr>
-                                            <td id="td-lbl-incbarter-usd">Incentivo Barter ($) ganho</td>
+                                            <td id="td-lbl-incbarter-usd">Incentivo Barter (${selectedCurrency}) ganho</td>
                                             <td id="td-incbarter-usd-nutrade" class="val-nutrade font-mono">R$ 33.136,97</td>
                                             <td id="td-incbarter-usd-market" class="font-mono">R$ 33.136,97</td>
                                             <td id="td-incbarter-usd-diff">0,00%</td>
@@ -371,13 +369,13 @@
                                             <td colspan="4">3. RESULTADO FINAL CONSOLIDADO (PORTEIRA FECHADA COM RETORNOS)</td>
                                         </tr>
                                         <tr class="heavy-row">
-                                            <td id="td-lbl-totalret">Total de Retorno Recebido pelo Produtor ($)</td>
+                                            <td id="td-lbl-totalret">Total de Retorno Recebido pelo Produtor (${selectedCurrency})</td>
                                             <td id="td-totalret-nutrade" class="val-nutrade font-mono text-green">R$ 78.136,97</td>
                                             <td id="td-totalret-market" class="font-mono">R$ 63.136,97</td>
                                             <td id="td-totalret-diff" class="text-green font-bold">+23,76%</td>
                                         </tr>
                                         <tr class="heavy-row text-gold gold-glow">
-                                            <td id="td-lbl-finalpreco">Preço Equivalente Final (Valorizado com Frete)</td>
+                                            <td id="td-lbl-finalpreco">Preço Equivalente Final (Valorizado com Frete) (${selectedCurrency}/${unitSymbol})</td>
                                             <td id="td-finalpreco-nutrade" class="val-nutrade font-mono">R$ 107,4846 / sc</td>
                                             <td id="td-finalpreco-market" class="font-mono">R$ 104,8901 / sc</td>
                                             <td id="td-finalpreco-diff" class="text-green font-bold">+2,47%</td>
@@ -445,7 +443,7 @@
                     </div>
                 </div>
 
-                <!-- ==================== PAGE 2: BUSINESS RULES (GENERIC) ==================== -->
+                <!-- ==================== PAGE 2: BUSINESS RULES (UPDATED WITH PRODUCTION NOTES) ==================== -->
                 <div id="page-regras" style="display:none" class="animate-fade-in">
                     <div class="card rules-card">
                         <div class="card-header">
@@ -456,6 +454,24 @@
                             
                             <p>Este documento detalha as regras de negócio e fórmulas matemáticas utilizadas no <strong>Simulador de Cashback Barter 2026</strong>, baseando-se na planilha de estruturação financeira, adaptado para permitir a simulação em <strong>Dólar (USD)</strong> ou <strong>Real (BRL)</strong> e a dedução logística de frete.</p>
                             <p>A ferramenta demonstra ao produtor rural o valor agregado da modalidade de Barter com a <strong>Nossa Estrutura</strong> em comparação com as práticas de mercado (<strong>Outras Tradings</strong>). O foco é evidenciar como o crédito contratado se reverte em economia física de grãos entregues.</p>
+
+                            <!-- NEW: NOTES ON PRODUCTION FEEDS AND CURRENT PROTOTYPE DATA SOURCES -->
+                            <h3>Notas sobre Fontes de Dados e Integração em Produção (Pendências)</h3>
+                            <p>Para a validação conceitual (protótipo), estamos utilizando fontes públicas e simuladas. Para a versão final de produção integrada aos sistemas internos, as seguintes origens de dados devem ser configuradas:</p>
+                            <ul>
+                                <li><strong>Cotação de Commodities (Soja e Algodão) em Produção:</strong>
+                                    <ul>
+                                        <li>Deverá ser integrada a um feed profissional contratado, como a <strong>CMA</strong>, <strong>Bloomberg</strong>, <strong>Reuters</strong>, ou diretamente de fontes locais de liquidez como o <strong>CEPEA/Esalq</strong> e <strong>Safras & Mercado</strong>.</li>
+                                        <li>*No Protótipo:* Buscamos o preço em tempo real de Chicago (CBOT:ZS=F para Soja e NYCE:CT=F para Algodão) via nosso servidor local de proxy no Yahoo Finance, com fallback estático para USD 20,00 e USD 0,85 respectivamente quando hospedado de forma estática (como no GitHub Pages).</li>
+                                    </ul>
+                                </li>
+                                <li><strong>Cotação do Dólar (Câmbio BRL/USD) em Produção:</strong>
+                                    <ul>
+                                        <li>Deverá integrar-se à API oficial do <strong>Banco Central do Brasil (BACEN)</strong> para obter a taxa <strong>PTAX de fechamento/venda</strong>, ou feeds de câmbio futuro da <strong>B3</strong> (contrato de dólar futuro) se a liquidação for a termo.</li>
+                                        <li>*No Protótipo:* Buscamos a taxa em tempo real através da <strong>AwesomeAPI</strong> (economia.awesomeapi.com.br/last/USD-BRL) diretamente pelo navegador do usuário (com CORS liberado, sem necessidade de backend ou chaves expostas). O timestamp da última captura do dólar é atualizado dinamicamente logo abaixo do campo de câmbio. Se a API estiver inacessível, o sistema usa o valor de fallback cambial de R$ 5,1500.</li>
+                                    </ul>
+                                </li>
+                            </ul>
 
                             <h3>1. Estrutura Geral dos Benefícios</h3>
                             <p>O simulador unifica as vantagens estruturais divididas em quatro fatores de impacto financeiro:</p>
@@ -512,7 +528,7 @@
                             </ul>
 
                             <h3>4. Custo de Transporte (Frete)</h3>
-                            <p>O custo logístico de buscar a commodity na propriedade e entregar na base da nossa plataforma ou do concorrente é deduzido do preço final do produto (Porteira Aberta):</p>
+                            <p>O custo logístico de buscar a commodity na propriedade e entregar na nossa base ou na do concorrente é deduzido do preço final do produto (Porteira Aberta):</p>
                             <ol>
                                 <li><strong>Custo de Frete Total:</strong><br>
                                     <div class="equation">Custo_Frete_Total = Distância_Base_(KM) * Valor_KM</div>

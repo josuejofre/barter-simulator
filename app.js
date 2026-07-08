@@ -1,4 +1,4 @@
-// app.js - Barter Fees Simulator Logic & Interactions (Generic Barter Hub version)
+// app.js - Barter Fees Simulator Logic & Interactions (Generic version with Button Activation and Live Currency Feed)
 
 // Global state
 let selectedCurrency = 'BRL'; // Default currency is Real (R$)
@@ -82,10 +82,9 @@ window.addEventListener('DOMContentLoaded', () => {
     setupMasks();
     initTradingViewWidget('Soja');
     fetchLiveQuotes();
-    calculateSimulation();
 });
 
-// Configure mask events
+// Configure mask events (Note: auto-calculation on input was removed to update only on button click)
 function setupMasks() {
     const creditInput = document.getElementById('sim-credito');
     if (creditInput) {
@@ -93,12 +92,10 @@ function setupMasks() {
             let digits = e.target.value.replace(/[^0-9]/g, '');
             if (digits === '') {
                 e.target.value = '';
-                calculateSimulation();
                 return;
             }
             let rawNum = parseFloat(digits) / 100;
             e.target.value = formatCurrencyValue(rawNum, selectedCurrency);
-            calculateSimulation();
         });
     }
 }
@@ -127,7 +124,7 @@ function showPage(pageId) {
     }
 }
 
-// Set Active Currency Toggle
+// Set Active Currency Toggle (recalculates immediately for ease of conversion viewing)
 function setCurrency(currency) {
     if (selectedCurrency === currency) return;
     
@@ -177,15 +174,40 @@ function setCurrency(currency) {
     priceInput.value = newPrice.toFixed(2);
     freteKmInput.value = newFrete.toFixed(2);
     
-    // Recalculate
+    // Recalculate immediately when converting currencies
     calculateSimulation();
 }
 
-// Fetch Quotes from backend server API (will fail gracefully on GitHub Pages static mode)
+// Fetch Quotes from APIs (Commodity via proxy, currency exchange rate directly from AwesomeAPI)
 async function fetchLiveQuotes() {
     const statusEl = document.getElementById('sim-quote-status');
+    const cambioEl = document.getElementById('sim-cambio');
+    const cambioStatusEl = document.getElementById('sim-cambio-status');
+    
     if (statusEl) statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Atualizando cotações...';
     
+    // 1. Fetch live currency exchange rate from public AwesomeAPI (CORS-friendly, client-side safe)
+    try {
+        const response = await fetch('https://economia.awesomeapi.com.br/last/USD-BRL');
+        const data = await response.json();
+        if (data && data.USDBRL) {
+            const usdBrlBid = parseFloat(data.USDBRL.bid);
+            if (cambioEl) {
+                cambioEl.value = usdBrlBid.toFixed(4);
+            }
+            const timeStr = new Date().toLocaleTimeString('pt-BR');
+            if (cambioStatusEl) {
+                cambioStatusEl.innerHTML = `<span class="text-green"><i class="fa-solid fa-circle-check"></i> Câmbio obtido: R$ ${formatNumber(usdBrlBid, 4)} às ${timeStr} (AwesomeAPI)</span>`;
+            }
+        }
+    } catch (e) {
+        console.error("Failed to fetch exchange rate:", e);
+        if (cambioStatusEl) {
+            cambioStatusEl.innerHTML = `<span class="text-secondary"><i class="fa-solid fa-triangle-exclamation"></i> Usando câmbio padrão (R$ 5,1500)</span>`;
+        }
+    }
+    
+    // 2. Fetch commodity prices via local proxy (fails gracefully on GitHub Pages static mode)
     try {
         const response = await fetch('/api/quotes');
         const data = await response.json();
@@ -208,9 +230,6 @@ async function fetchLiveQuotes() {
             
             const timeStr = new Date().toLocaleTimeString('pt-BR');
             if (statusEl) statusEl.innerHTML = `<span class="text-green"><i class="fa-solid fa-circle-check"></i> Cotações reais obtidas às ${timeStr} (Yahoo Finance)</span>`;
-            
-            // Re-run simulation
-            calculateSimulation();
         } else {
             throw new Error(data.error || 'Erro desconhecido');
         }
@@ -218,6 +237,9 @@ async function fetchLiveQuotes() {
         console.error("Failed to fetch live quotes:", e);
         if (statusEl) statusEl.innerHTML = `<span class="text-secondary"><i class="fa-solid fa-triangle-exclamation"></i> Usando valores de referência padrão para simulação offline</span>`;
     }
+    
+    // Perform initial calculation on load
+    calculateSimulation();
 }
 
 // When commodity changes in unified mode
@@ -251,7 +273,7 @@ function onCulturaChange(value) {
     // Update TradingView widget symbol
     initTradingViewWidget(value);
     
-    // Recalculate
+    // Recalculate commodity price and reset values
     calculateSimulation();
 }
 
@@ -362,7 +384,6 @@ function calculateSimulation() {
     const commLivreUSDMarket = commBrutoUSDMarket - taxDeductionUSDMarket;
     
     // Volume de Troca Físico Inicial = Credit Limit (USD) / Livre Price (USD)
-    // Grãos volumes do not depend on selected display currency
     const volTrocaProposta = commLivreUSDProposta > 0 ? (credLimitUSD / commLivreUSDProposta) : 0;
     const volTrocaMarket = commLivreUSDMarket > 0 ? (credLimitUSD / commLivreUSDMarket) : 0;
     
@@ -515,8 +536,6 @@ function calculateSimulation() {
 
 // Initialize and redraw TradingView chart widget (CFDs for free widgets)
 function initTradingViewWidget(commodity) {
-    // Soybeans CFD: OANDA:SOYBNUSD
-    // Cotton CFD: PEPPERSTONE:COTTON
     const symbol = commodity === 'Soja' ? 'OANDA:SOYBNUSD' : 'PEPPERSTONE:COTTON';
     const containerId = 'tradingview_widget';
     
