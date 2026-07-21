@@ -1410,7 +1410,7 @@ function downloadSimulationPDF(dataInput = null) {
     printWindow.document.write(`
         <html>
         <head>
-            <title>Relatório de Simulação - Syde Barter</title>
+            <title>Relatório de Simulação - Barter Hub</title>
             <style>
                 body { font-family: 'Inter', sans-serif; color: #111827; padding: 40px; line-height: 1.5; background-color: #ffffff; }
                 .header { border-bottom: 2px solid #088395; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
@@ -1439,7 +1439,7 @@ function downloadSimulationPDF(dataInput = null) {
         <body>
             <button class="btn-print" onclick="window.print()">Imprimir / Salvar PDF</button>
             <div class="header">
-                <div class="logo">syde</div>
+                <div class="logo">barter hub</div>
                 <div class="title">Relatório de Simulação Barter</div>
             </div>
             
