@@ -20,74 +20,56 @@
         <!-- ==================== LEFT SIDEBAR MENU ==================== -->
         <aside class="sidebar-menu">
             <div class="sidebar-logo">
-                <svg class="barter-logo" viewBox="0 0 130 40" width="105" height="30" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M5,25 L15,15 L22,18 L32,8 L38,12 L45,5" stroke="#38B000" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                    <text x="52" y="26" font-family="'Outfit', sans-serif" font-weight="800" font-size="18" fill="#4b5563" letter-spacing="-0.5">Barter Hub</text>
-                </svg>
+                <span class="syde-logo-text">barter hub</span>
             </div>
             
             <nav class="nav-links">
-                <a class="nav-link" id="nav-link-assistente" onclick="alert('Assistente offline. Esta simulação é executada de forma local e segura.')">
-                    <div class="nav-link-main"><i class="fa-regular fa-comment-dots"></i> Assistente Virtual</div>
-                    <div class="nav-link-subtext">Tire suas dúvidas</div>
+                <div class="sidebar-section-header">Assistente IA</div>
+                <a class="nav-link active" id="nav-link-assistente" onclick="showPage('assistente')">
+                    <div class="nav-link-main"><i class="fa-regular fa-comment-dots"></i> Assistente virtual</div>
                 </a>
                 
                 <div class="sidebar-section-header">Contas</div>
+                <a class="nav-link" id="nav-link-contas-list" onclick="alert('Funcionalidade simulada do painel administrativo')">
+                    <div class="nav-link-main"><i class="fa-regular fa-user"></i> Contas</div>
+                </a>
+                <a class="nav-link" id="nav-link-admins" onclick="alert('Funcionalidade simulada do painel administrativo')">
+                    <div class="nav-link-main"><i class="fa-solid fa-users-gear"></i> Administradores</div>
+                </a>
+                <a class="nav-link" id="nav-link-permissoes" onclick="alert('Funcionalidade simulada do painel administrativo')">
+                    <div class="nav-link-main"><i class="fa-solid fa-shield-halved"></i> Grupo de permissões</div>
+                </a>
+                <a class="nav-link" id="nav-link-logs" onclick="alert('Funcionalidade simulada do painel administrativo')">
+                    <div class="nav-link-main"><i class="fa-solid fa-list-check"></i> Logs das contas</div>
+                </a>
                 
-                <a class="nav-link active" id="nav-link-simulador" onclick="showPage('simulador')">
+                <div class="sidebar-section-header">Crédito</div>
+                <a class="nav-link" id="nav-link-simulador" onclick="showPage('simulador')">
                     <div class="nav-link-main"><i class="fa-solid fa-circle-percent"></i> Simulador de taxas</div>
                 </a>
-
                 <a class="nav-link" id="nav-link-regras" onclick="showPage('regras')">
                     <div class="nav-link-main"><i class="fa-solid fa-book-open"></i> Regras de negócio</div>
                 </a>
-                
-                <div class="nav-dropdown">
-                    <div class="nav-link dropdown-toggle">
-                        <div class="nav-link-main"><i class="fa-solid fa-file-invoice"></i> Simulações</div>
-                        <i class="fa-solid fa-chevron-down arrow"></i>
-                    </div>
-                    <div class="dropdown-content">
-                        <a href="#">Nova Simulação</a>
-                        <a href="#">Minhas Simulações</a>
-                    </div>
-                </div>
-                
-                <div class="nav-dropdown">
-                    <div class="nav-link dropdown-toggle">
-                        <div class="nav-link-main"><i class="fa-solid fa-database"></i> Cadastros</div>
-                        <i class="fa-solid fa-chevron-down arrow"></i>
-                    </div>
-                    <div class="dropdown-content">
-                        <a href="#">Limites de Crédito</a>
-                        <a href="#">Taxas de Juros</a>
-                        <a href="#">Preços de Commodities</a>
-                        <a href="#">Configurações Gerais</a>
-                    </div>
-                </div>
-                
-                <div class="nav-dropdown">
-                    <div class="nav-link dropdown-toggle">
-                        <div class="nav-link-main"><i class="fa-solid fa-chart-simple"></i> Relatórios</div>
-                        <i class="fa-solid fa-chevron-down arrow"></i>
-                    </div>
-                    <div class="dropdown-content">
-                        <a href="#">Performance Comercial</a>
-                        <a href="#">Volume por Regional</a>
-                    </div>
-                </div>
-                
-                <a href="#" class="nav-link">
-                    <div class="nav-link-main"><i class="fa-solid fa-circle-question"></i> Ajuda & Suporte</div>
+                <a class="nav-link" id="nav-link-solicitacoes" onclick="alert('Redirecionando para o fluxo de crédito corporativo')">
+                    <div class="nav-link-main"><i class="fa-solid fa-file-invoice-dollar"></i> Solicitações de crédito</div>
+                </a>
+                <a class="nav-link" id="nav-link-parceiros" onclick="alert('Redirecionando para o fluxo de crédito corporativo')">
+                    <div class="nav-link-main"><i class="fa-solid fa-handshake"></i> Parceiros de crédito</div>
+                </a>
+                <a class="nav-link" id="nav-link-fidc" onclick="alert('Redirecionando para o fluxo de crédito corporativo')">
+                    <div class="nav-link-main"><i class="fa-solid fa-building-columns"></i> Operação FIDC</div>
+                </a>
+                <a class="nav-link" id="nav-link-debitos" onclick="alert('Redirecionando para o fluxo de crédito corporativo')">
+                    <div class="nav-link-main"><i class="fa-solid fa-receipt"></i> Listagem de débitos</div>
                 </a>
             </nav>
             
             <!-- User Profile Avatar Card -->
             <div class="sidebar-user">
-                <div class="user-avatar-initials">JS</div>
+                <div class="user-avatar-initials">U</div>
                 <div class="user-details">
-                    <div class="user-name">João Silva</div>
-                    <div class="user-email">produtor@barterhub.com</div>
+                    <div class="user-name">Usuário</div>
+                    <div class="user-email">usuario@barterhub.com.br</div>
                 </div>
                 <i class="fa-solid fa-right-from-bracket logout-icon" title="Sair"></i>
             </div>
@@ -100,17 +82,16 @@
             <header class="app-header">
                 <div class="header-container">
                     <div class="logo-area">
-                        <svg class="barter-logo-header" viewBox="0 0 50 40" width="45" height="35" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M5,32 L15,20 L22,25 L35,10 L40,15 L45,5" stroke="#38B000" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                        </svg>
-                        <div class="brand-text">
-                            <span class="brand-name">Barter Hub</span>
-                            <span class="brand-divider">|</span>
-                            <h1 class="brand-title" id="main-title">Simulador de Cashback Barter 2026</h1>
-                        </div>
+                        <span class="brand-name">barter hub</span>
+                        <span class="brand-divider">|</span>
+                        <h1 class="brand-title" id="main-title">Simulador de Cashback Barter 2026</h1>
                     </div>
                     <div class="header-actions">
                         <span class="live-status"><i class="fa-solid fa-circle-nodes pulse-icon"></i> Cotações Online</span>
+                        <div class="header-user-info">
+                            <div class="header-avatar-circle">U</div>
+                            <span class="header-username">Usuário</span>
+                        </div>
                     </div>
                 </div>
             </header>
@@ -122,8 +103,77 @@
 
             <main class="main-content container">
 
+                <!-- ==================== PAGE 0: ASSISTENTE VIRTUAL ==================== -->
+                <div class="chat-grid" id="page-assistente" class="animate-fade-in">
+                    <!-- Left: Histórico -->
+                    <div class="chat-sidebar">
+                        <div class="chat-sidebar-header">
+                            <h3>HISTÓRICO</h3>
+                            <button type="button" class="btn-new-chat" onclick="startNewChat()" title="Nova simulação no chat">
+                                <i class="fa-solid fa-plus"></i>
+                            </button>
+                        </div>
+                        <div class="chat-history-list" id="chat-history-list">
+                            <!-- Dynamic history items will go here -->
+                            <div class="chat-history-item active" id="hist-item-default" onclick="loadChatHistory(0)">
+                                <i class="fa-regular fa-comment"></i>
+                                <div class="history-details">
+                                    <span class="history-title">Nova Simulação IA</span>
+                                    <span class="history-time">agora</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Right: Chat Window -->
+                    <div class="chat-window">
+                        <div class="chat-window-header">
+                            <div class="chat-header-left">
+                                <div class="chat-robot-avatar">
+                                    <i class="fa-solid fa-robot"></i>
+                                </div>
+                                <div class="chat-header-title">
+                                    <h3>Assistente IA</h3>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-window-body" id="chat-window-body">
+                            <div class="chat-messages-container" id="chat-messages">
+                                <!-- Welcome screen centered -->
+                                <div class="chat-welcome-box" id="chat-welcome-box">
+                                    <div class="welcome-robot-icon">
+                                        <i class="fa-solid fa-robot text-teal"></i>
+                                    </div>
+                                    <h2>Olá! Sou seu assistente de IA.</h2>
+                                    <p>Posso ajudar você a consultar informações sobre solicitações de crédito, contas, usuários e muito mais. Escolha uma sugestão abaixo ou digite sua pergunta.</p>
+                                    
+                                    <div class="suggestion-chips-grid">
+                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Quantas solicitações de crédito existem?')">Quantas solicitações de crédito existem?</button>
+                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Listar propostas de crédito pendentes')">Listar propostas de crédito pendentes</button>
+                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Buscar conta por CPF')">Buscar conta por CPF</button>
+                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Listar usuários ativos')">Listar usuários ativos</button>
+                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Buscar conta por nome')">Buscar conta por nome</button>
+                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Listar operadores de uma conta')">Listar operadores de uma conta</button>
+                                        <button type="button" class="chip-btn highlight-chip" onclick="startBarterSimulationFlow()">Quero simular uma oferta de barter</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="chat-window-footer">
+                            <div class="chat-input-wrapper">
+                                <input type="text" id="chat-input-field" placeholder="Digite sua mensagem..." onkeydown="if(event.key === 'Enter') handleSendButton()">
+                                <button type="button" class="chat-send-btn" id="chat-send-btn" onclick="handleSendButton()">
+                                    <i class="fa-solid fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- ==================== PAGE 1: SIMULATOR ==================== -->
-                <div class="simulator-grid" id="page-simulador">
+                <div class="simulator-grid" id="page-simulador" style="display:none">
                     
                     <!-- Left Column: Operations Parameters Form (Events removed to update only on button click) -->
                     <div class="form-card card animate-fade-in">
@@ -221,26 +271,34 @@
                             </div>
 
                             <div class="input-group">
-                                <label for="sim-dist-nutrade">Distância para nossa Base (KM)</label>
+                                <label for="sim-dist-chao">Distância Estrada de Chão (KM)</label>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-dist-nutrade" value="50" min="0" required>
+                                    <input type="number" id="sim-dist-chao" value="15" min="0" required>
                                     <span class="input-suffix">KM</span>
                                 </div>
                             </div>
 
                             <div class="input-group">
-                                <label for="sim-dist-concorr">Distância para Base Concorrente (KM)</label>
+                                <label for="sim-dist-asfalto">Distância Estrada de Asfalto (KM)</label>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-dist-concorr" value="80" min="0" required>
+                                    <input type="number" id="sim-dist-asfalto" value="35" min="0" required>
                                     <span class="input-suffix">KM</span>
                                 </div>
                             </div>
 
                             <div class="input-group">
-                                <label for="sim-frete-km" id="sim-frete-km-label">Custo do Frete por KM</label>
+                                <label for="sim-frete-chao" id="sim-frete-chao-label">Custo Frete KM Estrada de Chão</label>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-frete-km" value="10.30" min="0" step="any" required>
-                                    <span class="input-suffix" id="sim-frete-km-suffix">R$/KM</span>
+                                    <input type="number" id="sim-frete-chao" value="15.00" min="0" step="any" required>
+                                    <span class="input-suffix" id="sim-frete-chao-suffix">R$/KM</span>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sim-frete-asfalto" id="sim-frete-asfalto-label">Custo Frete KM Asfalto</label>
+                                <div class="input-wrapper">
+                                    <input type="number" id="sim-frete-asfalto" value="8.00" min="0" step="any" required>
+                                    <span class="input-suffix" id="sim-frete-asfalto-suffix">R$/KM</span>
                                 </div>
                             </div>
 
@@ -254,9 +312,14 @@
                             </div>
 
                             <!-- Button that actively triggers calculations -->
-                            <button type="submit" class="btn-submit" id="btn-sim-calcular">
-                                <i class="fa-solid fa-calculator"></i> Simular Barter
-                            </button>
+                            <div class="form-actions" style="display: flex; gap: 10px; margin-top: 5px;">
+                                <button type="submit" class="btn-submit" id="btn-sim-calcular" style="flex: 1; margin-top: 0;">
+                                    <i class="fa-solid fa-calculator"></i> Simular Barter
+                                </button>
+                                <button type="button" class="btn-submit btn-pdf" id="btn-sim-pdf" onclick="downloadSimulationPDF()" style="flex: 1; margin-top: 0; background-color: #6b7280; background-image: none; box-shadow: 0 4px 12px rgba(107, 114, 128, 0.2);">
+                                    <i class="fa-solid fa-file-pdf"></i> Exportar PDF
+                                </button>
+                            </div>
                         </form>
                         
                         <div class="card-footer">
@@ -394,6 +457,10 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                            </div>
+                            <div class="card-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-top: 1px solid var(--border-color); background-color: var(--bg-hover);">
+                                <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">* Valores baseados nas taxas atuais de mercado.</p>
+                                <p id="sim-disclaimer" style="font-size: 11px; color: var(--text-secondary); font-weight: 600; margin: 0; font-style: italic;">Aguardando simulação...</p>
                             </div>
                         </div>
 
