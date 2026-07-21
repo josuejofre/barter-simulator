@@ -84,6 +84,7 @@ window.addEventListener('DOMContentLoaded', () => {
     fetchLiveQuotes();
     showPage('assistente'); // Active by default matching the screenshot
     startNewChat(); // Initialize default chat welcome state
+    updateCampaignSelectOptions(); // Populate campaigns select in simulator form
 });
 
 // Configure mask events
@@ -107,20 +108,24 @@ function showPage(pageId) {
     const assistPage = document.getElementById('page-assistente');
     const simPage = document.getElementById('page-simulador');
     const rulesPage = document.getElementById('page-regras');
+    const campaignsPage = document.getElementById('page-campanhas');
     
     const assistLink = document.getElementById('nav-link-assistente');
     const simLink = document.getElementById('nav-link-simulador');
     const rulesLink = document.getElementById('nav-link-regras');
+    const campaignsLink = document.getElementById('nav-link-campanhas');
     
     // Hide all pages
     if (assistPage) assistPage.style.display = 'none';
     if (simPage) simPage.style.display = 'none';
     if (rulesPage) rulesPage.style.display = 'none';
+    if (campaignsPage) campaignsPage.style.display = 'none';
     
     // Remove active class from links
     if (assistLink) assistLink.classList.remove('active');
     if (simLink) simLink.classList.remove('active');
     if (rulesLink) rulesLink.classList.remove('active');
+    if (campaignsLink) campaignsLink.classList.remove('active');
     
     if (pageId === 'assistente') {
         if (assistPage) assistPage.style.display = 'grid';
@@ -135,6 +140,10 @@ function showPage(pageId) {
     } else if (pageId === 'regras') {
         if (rulesPage) rulesPage.style.display = 'block';
         if (rulesLink) rulesLink.classList.add('active');
+    } else if (pageId === 'campanhas') {
+        if (campaignsPage) campaignsPage.style.display = 'block';
+        if (campaignsLink) campaignsLink.classList.add('active');
+        renderCampaignsTable();
     }
 }
 
@@ -613,13 +622,36 @@ function calculateSimulation() {
     }
     
     // Modalidades Tab calculations and DOM updates
-    const jurosAnualFidc = Math.max(0, jurosAnual - 4.0);
-    const jurosAnualFiso = Math.max(0, jurosAnual - 3.0);
+    const campSelect = document.getElementById('sim-campanha-select');
+    const campId = campSelect ? campSelect.value : 'custom';
+    
+    let jurosAnualFidc, jurosAnualFiso, jurosAnualPrazo;
+    
+    if (campId !== 'custom') {
+        const camp = campaigns.find(c => c.id == campId);
+        if (camp) {
+            const fidcTax = camp.taxas.find(t => t.produtoFinanceiro === 'FIDC');
+            const fisoTax = camp.taxas.find(t => t.produtoFinanceiro === 'FISO');
+            const prazoTax = camp.taxas.find(t => t.produtoFinanceiro === 'Prazo');
+            
+            jurosAnualFidc = fidcTax ? (fidcTax.jurosMensais * 12) : Math.max(0, jurosAnual - 4.0);
+            jurosAnualFiso = fisoTax ? (fisoTax.jurosMensais * 12) : Math.max(0, jurosAnual - 3.0);
+            jurosAnualPrazo = prazoTax ? (prazoTax.jurosMensais * 12) : jurosAnual;
+        } else {
+            jurosAnualFidc = Math.max(0, jurosAnual - 4.0);
+            jurosAnualFiso = Math.max(0, jurosAnual - 3.0);
+            jurosAnualPrazo = jurosAnual;
+        }
+    } else {
+        jurosAnualFidc = Math.max(0, jurosAnual - 4.0);
+        jurosAnualFiso = Math.max(0, jurosAnual - 3.0);
+        jurosAnualPrazo = jurosAnual;
+    }
     
     const jurosPeriodoBarter = (prazo / 360) * (jurosAnual / 100);
     const jurosPeriodoFidc = (prazo / 360) * (jurosAnualFidc / 100);
     const jurosPeriodoFiso = (prazo / 360) * (jurosAnualFiso / 100);
-    const jurosPeriodoPrazo = (prazo / 360) * (jurosAnual / 100);
+    const jurosPeriodoPrazo = (prazo / 360) * (jurosAnualPrazo / 100);
     
     const custoFidc = creditRaw * jurosPeriodoFidc;
     const custoFiso = creditRaw * jurosPeriodoFiso;
@@ -638,9 +670,9 @@ function calculateSimulation() {
     const modJurosPrazo = document.getElementById('mod-juros-prazo');
     
     if (modJurosBarter) modJurosBarter.textContent = `${jurosAnual.toFixed(2)}% a.a. (c/ Retorno)`;
-    if (modJurosFidc) modJurosFidc.textContent = `${jurosAnualFidc.toFixed(2)}% a.a. (-4% inc.)`;
-    if (modJurosFiso) modJurosFiso.textContent = `${jurosAnualFiso.toFixed(2)}% a.a. (-3% inc.)`;
-    if (modJurosPrazo) modJurosPrazo.textContent = `${jurosAnual.toFixed(2)}% a.a. (tabela)`;
+    if (modJurosFidc) modJurosFidc.textContent = `${jurosAnualFidc.toFixed(2)}% a.a. ${campId !== 'custom' ? '(FIDC)' : '(-4% inc.)'}`;
+    if (modJurosFiso) modJurosFiso.textContent = `${jurosAnualFiso.toFixed(2)}% a.a. ${campId !== 'custom' ? '(FISO)' : '(-3% inc.)'}`;
+    if (modJurosPrazo) modJurosPrazo.textContent = `${jurosAnualPrazo.toFixed(2)}% a.a. ${campId !== 'custom' ? '(Prazo)' : '(tabela)'}`;
     
     const modCustoBarter = document.getElementById('mod-custo-barter');
     const modCustoFidc = document.getElementById('mod-custo-fidc');
@@ -1734,4 +1766,422 @@ function downloadSimulationPDFFromIndex(index) {
     
     downloadSimulationPDF(formattedInputs);
 }
+
+// ==================== CAMPAIGN MANAGER MODULE ====================
+
+// Default Campaigns Array populated to match the provided screens
+let campaigns = [
+    {
+        id: 1,
+        nome: "Verão",
+        titulo: "Verão",
+        status: "Ativa",
+        desembolso: "2026-10-05",
+        vencimento: "2026-12-01",
+        visivelRTV: true,
+        taxas: [
+            {
+                produtoFinanceiro: "Barter",
+                produtoAgricola: "Soja",
+                moeda: "BRL",
+                jurosMensais: 1.20, // 14.4% a.a.
+                tipoJuros: "Simples",
+                contagemDias: "Dias úteis",
+                incentivo: 4.50,
+                desconto: 0.00,
+                inicio: "2026-07-21",
+                fim: "2026-12-01"
+            },
+            {
+                produtoFinanceiro: "FIDC",
+                produtoAgricola: "Soja",
+                moeda: "BRL",
+                jurosMensais: 0.87, // 10.4% a.a.
+                tipoJuros: "Simples",
+                contagemDias: "Dias úteis",
+                incentivo: 0.00,
+                desconto: 4.00,
+                inicio: "2026-07-21",
+                fim: "2026-12-01"
+            },
+            {
+                produtoFinanceiro: "FISO",
+                produtoAgricola: "Soja",
+                moeda: "BRL",
+                jurosMensais: 0.95, // 11.4% a.a.
+                tipoJuros: "Simples",
+                contagemDias: "Dias úteis",
+                incentivo: 0.00,
+                desconto: 3.00,
+                inicio: "2026-07-21",
+                fim: "2026-12-01"
+            },
+            {
+                produtoFinanceiro: "Prazo",
+                produtoAgricola: "Soja",
+                moeda: "BRL",
+                jurosMensais: 1.20, // 14.4% a.a.
+                tipoJuros: "Simples",
+                contagemDias: "Dias úteis",
+                incentivo: 0.00,
+                desconto: 0.00,
+                inicio: "2026-07-21",
+                fim: "2026-12-01"
+            }
+        ]
+    },
+    { id: 2, nome: "Campanha Teste", titulo: "Campanha Teste", status: "Ativa", desembolso: "2026-08-01", vencimento: "2026-08-02", visivelRTV: false, taxas: [] },
+    { id: 3, nome: "Campanha Fertilizante", titulo: "Campanha Fertilizante", status: "Ativa", desembolso: "2026-11-11", vencimento: "2026-11-11", visivelRTV: true, taxas: [] },
+    { id: 4, nome: "Atualizando excluindo taxas", titulo: "Teste Taxas 2", status: "Ativa", desembolso: "", vencimento: "", visivelRTV: true, taxas: [] },
+    { id: 5, nome: "Safra Inverno", titulo: "Safra Inverno", status: "Ativa", desembolso: "2025-12-01", vencimento: "2026-09-01", visivelRTV: true, taxas: [] },
+    { id: 6, nome: "campanha teste", titulo: "campanha teste", status: "Ativa", desembolso: "2026-08-19", vencimento: "2026-12-20", visivelRTV: false, taxas: [] },
+    { id: 7, nome: "Nova campanha [3]", titulo: "Nova campanha [3]", status: "Ativa", desembolso: "2026-07-01", vencimento: "2028-05-30", visivelRTV: true, taxas: [] },
+    { id: 8, nome: "Nova campanha [2]", titulo: "Nova campanha [2]", status: "Ativa", desembolso: "2026-07-30", vencimento: "2026-07-31", visivelRTV: true, taxas: [] },
+    { id: 9, nome: "teste", titulo: "teste", status: "Ativa", desembolso: "2026-10-05", vencimento: "2027-05-05", visivelRTV: true, taxas: [] },
+    { id: 10, nome: "Fessa teste 002", titulo: "Vascampanha 001", status: "Ativa", desembolso: "2026-12-26", vencimento: "2027-10-10", visivelRTV: true, taxas: [] },
+    { id: 11, nome: "Fessa Test 003", titulo: "VasCampanha", status: "Ativa", desembolso: "2026-06-28", vencimento: "2027-05-20", visivelRTV: true, taxas: [] }
+];
+
+let tempTaxes = [];
+let editingTaxIndex = null;
+
+// Toggle advanced filters dropdown
+function toggleAdvancedFilters() {
+    const filtersDiv = document.getElementById('advanced-filters');
+    const chevron = document.getElementById('filters-chevron');
+    if (filtersDiv) {
+        if (filtersDiv.style.display === 'none') {
+            filtersDiv.style.display = 'grid';
+            if (chevron) chevron.className = 'fa-solid fa-chevron-up';
+        } else {
+            filtersDiv.style.display = 'none';
+            if (chevron) chevron.className = 'fa-solid fa-chevron-down';
+        }
+    }
+}
+
+// Search filter in campaigns table
+function filterCampaignsTable(query) {
+    const term = query.toLowerCase();
+    const rows = document.querySelectorAll('#campaigns-table-body tr');
+    rows.forEach(row => {
+        const nameText = row.cells[0]?.textContent.toLowerCase() || '';
+        const titleText = row.cells[1]?.textContent.toLowerCase() || '';
+        if (nameText.includes(term) || titleText.includes(term)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+// Status filter in campaigns table
+function filterCampaignsByStatus(status) {
+    const rows = document.querySelectorAll('#campaigns-table-body tr');
+    rows.forEach(row => {
+        const statusText = row.cells[2]?.textContent.trim() || '';
+        if (status === '' || statusText === status) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+// Switches campaigns view from list to create form
+function showCreateCampaignForm() {
+    document.getElementById('campanhas-list-view').style.display = 'none';
+    document.getElementById('campanhas-create-view').style.display = 'block';
+    
+    // Clear form inputs
+    document.getElementById('create-campaign-form').reset();
+    tempTaxes = [];
+    renderTempTaxesTable();
+}
+
+// Cancels campaign creation and returns to list view
+function cancelCreateCampaign() {
+    document.getElementById('campanhas-create-view').style.display = 'none';
+    document.getElementById('campanhas-list-view').style.display = 'block';
+}
+
+// Opens the Tax addition modal overlay
+function openTaxModal(index = null) {
+    const modal = document.getElementById('tax-modal');
+    const form = document.getElementById('tax-modal-form');
+    if (modal) {
+        modal.style.display = 'flex';
+    }
+    
+    if (form) form.reset();
+    
+    // Set default start date to today in calendar (2026-07-21)
+    document.getElementById('tax-modal-inicio').value = "2026-07-21";
+    
+    if (index !== null) {
+        editingTaxIndex = index;
+        const tax = tempTaxes[index];
+        document.getElementById('tax-modal-financeiro').value = tax.produtoFinanceiro;
+        document.getElementById('tax-modal-agricola').value = tax.produtoAgricola;
+        document.getElementById('tax-modal-juros').value = tax.jurosMensais.toFixed(2);
+        document.getElementById('tax-modal-tipojuros').value = tax.tipoJuros;
+        document.getElementById('tax-modal-contagem').value = tax.contagemDias;
+        document.getElementById('tax-modal-moeda').value = tax.moeda;
+        document.getElementById('tax-modal-incentivo').value = tax.incentivo ? tax.incentivo.toFixed(2) : '';
+        document.getElementById('tax-modal-desconto').value = tax.desconto ? tax.desconto.toFixed(2) : '';
+        document.getElementById('tax-modal-inicio').value = tax.inicio;
+        document.getElementById('tax-modal-fim').value = tax.fim;
+        document.getElementById('tax-modal-desembolso').value = tax.desembolso || '';
+        document.getElementById('tax-modal-vencimento').value = tax.vencimento || '';
+    } else {
+        editingTaxIndex = null;
+    }
+}
+
+// Closes the Tax modal
+function closeTaxModal() {
+    const modal = document.getElementById('tax-modal');
+    if (modal) modal.style.display = 'none';
+}
+
+// Helper to parse percent or currency text box fields to clean floats
+function parsePercentInput(val) {
+    let clean = val.replace(/[^0-9.,]/g, '').replace(',', '.');
+    return parseFloat(clean) || 0;
+}
+
+// Save tax inside modal
+function handleSaveTax(e) {
+    e.preventDefault();
+    
+    const produtoFinanceiro = document.getElementById('tax-modal-financeiro').value;
+    const produtoAgricola = document.getElementById('tax-modal-agricola').value || 'Soja';
+    const jurosMensais = parsePercentInput(document.getElementById('tax-modal-juros').value);
+    const tipoJuros = document.getElementById('tax-modal-tipojuros').value;
+    const contagemDias = document.getElementById('tax-modal-contagem').value;
+    const moeda = document.getElementById('tax-modal-moeda').value;
+    const incentivo = parsePercentInput(document.getElementById('tax-modal-incentivo').value);
+    const desconto = parsePercentInput(document.getElementById('tax-modal-desconto').value);
+    const inicio = document.getElementById('tax-modal-inicio').value;
+    const fim = document.getElementById('tax-modal-fim').value;
+    const desembolso = document.getElementById('tax-modal-desembolso').value;
+    const vencimento = document.getElementById('tax-modal-vencimento').value;
+    
+    const taxObj = {
+        produtoFinanceiro, produtoAgricola, jurosMensais, tipoJuros, contagemDias,
+        moeda, incentivo, desconto, inicio, fim, desembolso, vencimento
+    };
+    
+    if (editingTaxIndex !== null) {
+        tempTaxes[editingTaxIndex] = taxObj;
+    } else {
+        tempTaxes.push(taxObj);
+    }
+    
+    closeTaxModal();
+    renderTempTaxesTable();
+}
+
+// Draw the temporary taxes list inside the creation form
+function renderTempTaxesTable() {
+    const tbody = document.getElementById('camp-taxas-table-body');
+    if (!tbody) return;
+    
+    if (tempTaxes.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="9" style="text-align: center; color: var(--text-secondary); padding: 20px;">Sem resultados</td>
+            </tr>
+        `;
+        return;
+    }
+    
+    tbody.innerHTML = '';
+    tempTaxes.forEach((tax, index) => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="font-bold">${tax.produtoFinanceiro}</td>
+            <td>${tax.produtoAgricola}</td>
+            <td>${tax.moeda}</td>
+            <td>${tax.contagemDias}</td>
+            <td>${tax.tipoJuros}</td>
+            <td class="font-mono">${tax.jurosMensais.toFixed(2)}%</td>
+            <td class="font-mono">${tax.incentivo ? tax.incentivo.toFixed(2) + '%' : '-'}</td>
+            <td class="font-mono">${tax.desconto ? tax.desconto.toFixed(2) + '%' : '-'}</td>
+            <td style="text-align: center;">
+                <div style="display: flex; gap: 8px; justify-content: center;">
+                    <button type="button" class="btn-new-chat" onclick="openTaxModal(${index})" title="Editar taxa" style="background-color: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); padding: 5px 8px;">
+                        <i class="fa-regular fa-edit"></i>
+                    </button>
+                    <button type="button" class="btn-new-chat" onclick="deleteTempTax(${index})" title="Excluir taxa" style="background-color: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 5px 8px;">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function deleteTempTax(index) {
+    tempTaxes.splice(index, 1);
+    renderTempTaxesTable();
+}
+
+// Saves the entire Campaign object into the global array and returns to main list
+function handleSaveCampaign(e) {
+    e.preventDefault();
+    
+    const nome = document.getElementById('camp-nome').value;
+    const titulo = document.getElementById('camp-titulo').value;
+    const status = document.getElementById('camp-status').value;
+    const desembolso = document.getElementById('camp-desembolso').value;
+    const vencimento = document.getElementById('camp-vencimento').value;
+    const visivelRTV = document.getElementById('camp-rtv').checked;
+    
+    const nextId = campaigns.length > 0 ? (Math.max(...campaigns.map(c => c.id)) + 1) : 1;
+    
+    const newCamp = {
+        id: nextId, nome, titulo, status, desembolso, vencimento, visivelRTV,
+        taxas: [...tempTaxes]
+    };
+    
+    campaigns.unshift(newCamp); // Insert at beginning of list to see immediately
+    
+    cancelCreateCampaign();
+    renderCampaignsTable();
+    updateCampaignSelectOptions();
+}
+
+// Formats dates from YYYY-MM-DD to DD/MM/YYYY
+function formatDateBR(dateStr) {
+    if (!dateStr) return '-';
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+    return `${parts[2]}/${parts[1]}/${parts[0]}`;
+}
+
+// Redraws the main Campaigns list table
+function renderCampaignsTable() {
+    const tbody = document.getElementById('campaigns-table-body');
+    if (!tbody) return;
+    
+    tbody.innerHTML = '';
+    campaigns.forEach(camp => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td class="font-bold">${camp.nome}</td>
+            <td>${camp.titulo}</td>
+            <td>
+                <span class="${camp.status === 'Ativa' ? 'status-badge-active' : 'status-badge-inactive'}">
+                    ${camp.status}
+                </span>
+            </td>
+            <td class="font-mono">${formatDateBR(camp.desembolso)}</td>
+            <td class="font-mono">${formatDateBR(camp.vencimento)}</td>
+            <td style="text-align: center;">
+                <div style="display: flex; gap: 8px; justify-content: center;">
+                    <button type="button" class="btn-new-chat" title="Ver taxas vinculadas" onclick="alert('Campanha contém ${camp.taxas.length} taxa(s).')" style="background-color: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); padding: 5px 8px;">
+                        <i class="fa-regular fa-eye"></i>
+                    </button>
+                    <button type="button" class="btn-new-chat" title="Excluir campanha" onclick="deleteCampaign(${camp.id})" style="background-color: #fee2e2; color: #dc2626; border: 1px solid #fca5a5; padding: 5px 8px;">
+                        <i class="fa-regular fa-trash-can"></i>
+                    </button>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// Deletes a campaign from list
+function deleteCampaign(id) {
+    if (confirm("Tem certeza que deseja excluir esta campanha?")) {
+        campaigns = campaigns.filter(c => c.id !== id);
+        renderCampaignsTable();
+        updateCampaignSelectOptions();
+    }
+}
+
+// Updates selector dropdown inside classic simulator page
+function updateCampaignSelectOptions() {
+    const select = document.getElementById('sim-campanha-select');
+    if (!select) return;
+    
+    // Save current selection value
+    const curVal = select.value;
+    
+    // Re-fill with options
+    select.innerHTML = '<option value="custom">Campanha Customizada (Manual)</option>';
+    
+    campaigns.forEach(camp => {
+        if (camp.status === 'Ativa') {
+            const opt = document.createElement('option');
+            opt.value = camp.id;
+            opt.textContent = `${camp.nome} (${formatDateBR(camp.desembolso)} - ${formatDateBR(camp.vencimento)})`;
+            select.appendChild(opt);
+        }
+    });
+    
+    // Re-apply value if exists
+    select.value = curVal;
+}
+
+// Refactored onCampanhaSelectChange to handle autofilling of parameters
+function onCampanhaSelectChange(val) {
+    const commoditySelect = document.getElementById('sim-commodity');
+    const jurosInput = document.getElementById('sim-juros-anual');
+    const campanhaValInput = document.getElementById('sim-campanha-val');
+    const prazoInput = document.getElementById('sim-prazo');
+    
+    if (val === 'custom') {
+        // Unlock inputs
+        if (commoditySelect) commoditySelect.disabled = false;
+        if (jurosInput) jurosInput.disabled = false;
+        if (campanhaValInput) campanhaValInput.disabled = false;
+        return;
+    }
+    
+    const camp = campaigns.find(c => c.id == val);
+    if (!camp) return;
+    
+    // Find Barter tax parameters
+    const barterTax = camp.taxas.find(t => t.produtoFinanceiro === 'Barter');
+    
+    if (barterTax) {
+        if (commoditySelect) {
+            commoditySelect.value = barterTax.produtoAgricola;
+            commoditySelect.disabled = true;
+            onCulturaChange(barterTax.produtoAgricola);
+        }
+        if (jurosInput) {
+            // Annual interest rate = monthly rate * 12
+            jurosInput.value = (barterTax.jurosMensais * 12).toFixed(2);
+            jurosInput.disabled = true;
+        }
+        if (campanhaValInput) {
+            campanhaValInput.value = barterTax.incentivo.toFixed(2);
+            campanhaValInput.disabled = true;
+        }
+    } else {
+        // No barter tax found, unlock
+        if (commoditySelect) commoditySelect.disabled = false;
+        if (jurosInput) jurosInput.disabled = false;
+        if (campanhaValInput) campanhaValInput.disabled = false;
+    }
+    
+    // Calculate term in days if dates are present
+    if (camp.desembolso && camp.vencimento && prazoInput) {
+        const desembolsoDate = new Date(camp.desembolso);
+        const vencimentoDate = new Date(camp.vencimento);
+        if (!isNaN(desembolsoDate) && !isNaN(vencimentoDate)) {
+            const diffTime = vencimentoDate - desembolsoDate;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (diffDays > 0) {
+                prazoInput.value = diffDays;
+            }
+        }
+    }
+}
+
 
