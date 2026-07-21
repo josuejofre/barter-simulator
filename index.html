@@ -149,13 +149,10 @@
                                     <p>Posso ajudar você a consultar informações sobre solicitações de crédito, contas, usuários e muito mais. Escolha uma sugestão abaixo ou digite sua pergunta.</p>
                                     
                                     <div class="suggestion-chips-grid">
-                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Quantas solicitações de crédito existem?')">Quantas solicitações de crédito existem?</button>
-                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Listar propostas de crédito pendentes')">Listar propostas de crédito pendentes</button>
-                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Buscar conta por CPF')">Buscar conta por CPF</button>
-                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Listar usuários ativos')">Listar usuários ativos</button>
-                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Buscar conta por nome')">Buscar conta por nome</button>
-                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Listar operadores de uma conta')">Listar operadores de uma conta</button>
                                         <button type="button" class="chip-btn highlight-chip" onclick="startBarterSimulationFlow()">Quero simular uma oferta de barter</button>
+                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Comparar Barter com FIDC e FISO')">Comparar modalidades de crédito</button>
+                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Quais são as garantias do FIDC e FISO?')">Garantias exigidas</button>
+                                        <button type="button" class="chip-btn" onclick="handleSuggestion('Quais os critérios de elegibilidade?')">Critérios de elegibilidade</button>
                                     </div>
                                 </div>
                             </div>
@@ -330,8 +327,18 @@
                     <!-- Right Column: Results & Interactive Charts -->
                     <div class="results-container">
                         
+                        <!-- Tabs for switching comparison views -->
+                        <div class="tabs-container">
+                            <button type="button" class="tab-btn active" id="tab-btn-barter" onclick="switchResultsTab('barter')">
+                                <i class="fa-solid fa-wheat-awn"></i> Barter vs Mercado
+                            </button>
+                            <button type="button" class="tab-btn" id="tab-btn-modalidades" onclick="switchResultsTab('modalidades')">
+                                <i class="fa-solid fa-scale-balanced"></i> Outras Modalidades
+                            </button>
+                        </div>
+
                         <!-- Comparative Table Card -->
-                        <div class="results-card card animate-fade-in">
+                        <div class="results-card card animate-fade-in" id="tab-content-barter">
                             <div class="card-header">
                                 <h2>Comparativo de Custos e Retornos da Operação (Foco em Crédito)</h2>
                                 <p>Simulação comparativa detalhada baseada nas regras de negócio da campanha 2026.</p>
@@ -461,6 +468,75 @@
                             <div class="card-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-top: 1px solid var(--border-color); background-color: var(--bg-hover);">
                                 <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">* Valores baseados nas taxas atuais de mercado.</p>
                                 <p id="sim-disclaimer" style="font-size: 11px; color: var(--text-secondary); font-weight: 600; margin: 0; font-style: italic;">Aguardando simulação...</p>
+                            </div>
+                        </div>
+
+                        <!-- Modalidades Comparative Card (Modalidades Tab) -->
+                        <div class="results-card card animate-fade-in" id="tab-content-modalidades" style="display: none;">
+                            <div class="card-header">
+                                <h2>Comparativo de Modalidades de Crédito</h2>
+                                <p>Compare os custos financeiros, garantias atreladas e regras de elegibilidade entre as modalidades.</p>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="comparison-table detailed-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Variável da Operação</th>
+                                            <th class="col-nutrade">Barter (Físico)</th>
+                                            <th>FIDC (Syde)</th>
+                                            <th>FISO (Bancário)</th>
+                                            <th>Prazo (On-Balance)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td class="font-bold">Taxa Juros Anual Efetiva</td>
+                                            <td id="mod-juros-barter" class="text-green font-bold">14,40%</td>
+                                            <td id="mod-juros-fidc">10,40% (-4% inc.)</td>
+                                            <td id="mod-juros-fiso">11,40% (-3% inc.)</td>
+                                            <td id="mod-juros-prazo">14,40% (tabela)</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold">Custo Financeiro Líquido</td>
+                                            <td id="mod-custo-barter" class="text-green font-bold font-mono">R$ 6.480,00</td>
+                                            <td id="mod-custo-fidc" class="font-mono">R$ 74.880,00</td>
+                                            <td id="mod-custo-fiso" class="font-mono">R$ 82.080,00</td>
+                                            <td id="mod-custo-prazo" class="font-mono">R$ 103.680,00</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold">Incentivo / Retorno Comercial</td>
+                                            <td id="mod-inc-barter" class="text-green font-bold">8,10%</td>
+                                            <td>Taxa Reduzida (-4,0% a.a.)</td>
+                                            <td>Taxa Reduzida (-3,0% a.a.)</td>
+                                            <td>Sem incentivo</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold">Garantias Exigidas</td>
+                                            <td>CPR Física e Seguro Agrícola</td>
+                                            <td>CPR Financeira, Nota Promissória (NP) e cessão de recebíveis</td>
+                                            <td>Penhor Agrícola, CPR Financeira e Seguro de Crédito</td>
+                                            <td>Nota Promissória (NP) e FSCM</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="font-bold">Critérios de Elegibilidade</td>
+                                            <td class="text-green font-bold">Livre (focado no grão)</td>
+                                            <td>Relacionamento &ge; 2 anos, exclui riscos altos (HR/VHR)</td>
+                                            <td>Restrições para relacionamento &lt; 2 anos (exceto FLEX/Santander)</td>
+                                            <td>Análise padrão no SAP FSCM</td>
+                                        </tr>
+                                        <tr class="heavy-row">
+                                            <td class="font-bold">Fluxo de Pagamento</td>
+                                            <td>Entrega física de grãos (sacas/libras)</td>
+                                            <td>Antecipação de recebíveis e liquidação financeira</td>
+                                            <td>Liquidação financeira via banco parceiro (Flex/Nice)</td>
+                                            <td>Pagamento financeiro direto (boleto/on-balance)</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="card-footer" style="display: flex; flex-direction: column; gap: 8px; padding: 12px 20px; border-top: 1px solid var(--border-color); background-color: var(--bg-hover);">
+                                <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.5;"><strong>Nota de Garantias:</strong> A CPR Física no Barter vincula a produção diretamente. O FIDC utiliza CPR-F/NP com assinatura digital integrada para aceleração do desembolso. O FISO exige garantias mais robustas dos bancos parceiros (ex: penhor + 30% de retenção de AR para o Santander).</p>
+                                <p id="mod-disclaimer" style="font-size: 11px; color: var(--text-secondary); font-weight: 600; margin: 0; font-style: italic;">Simulação não realizada ainda</p>
                             </div>
                         </div>
 

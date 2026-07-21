@@ -611,6 +611,77 @@ function calculateSimulation() {
     if (disclaimerEl) {
         disclaimerEl.textContent = `Simulação gerada em ${dateStr} às ${timeStr}`;
     }
+    
+    // Modalidades Tab calculations and DOM updates
+    const jurosAnualFidc = Math.max(0, jurosAnual - 4.0);
+    const jurosAnualFiso = Math.max(0, jurosAnual - 3.0);
+    
+    const jurosPeriodoBarter = (prazo / 360) * (jurosAnual / 100);
+    const jurosPeriodoFidc = (prazo / 360) * (jurosAnualFidc / 100);
+    const jurosPeriodoFiso = (prazo / 360) * (jurosAnualFiso / 100);
+    const jurosPeriodoPrazo = (prazo / 360) * (jurosAnual / 100);
+    
+    const custoFidc = creditRaw * jurosPeriodoFidc;
+    const custoFiso = creditRaw * jurosPeriodoFiso;
+    const custoPrazo = creditRaw * jurosPeriodoPrazo;
+    
+    // Barter net financial cost = Gross interest cost - Total returns + Freight cost
+    const custoBrutoBarter = creditRaw * jurosPeriodoBarter;
+    const totalRetornosBarter = res.totalRetornoUSDProposta * factor;
+    const freteTotalBarter = res.freteTotalUSDProposta * factor;
+    const netCustoBarter = custoBrutoBarter - totalRetornosBarter + freteTotalBarter;
+    
+    // Update DOM fields for other modalities comparison
+    const modJurosBarter = document.getElementById('mod-juros-barter');
+    const modJurosFidc = document.getElementById('mod-juros-fidc');
+    const modJurosFiso = document.getElementById('mod-juros-fiso');
+    const modJurosPrazo = document.getElementById('mod-juros-prazo');
+    
+    if (modJurosBarter) modJurosBarter.textContent = `${jurosAnual.toFixed(2)}% a.a. (c/ Retorno)`;
+    if (modJurosFidc) modJurosFidc.textContent = `${jurosAnualFidc.toFixed(2)}% a.a. (-4% inc.)`;
+    if (modJurosFiso) modJurosFiso.textContent = `${jurosAnualFiso.toFixed(2)}% a.a. (-3% inc.)`;
+    if (modJurosPrazo) modJurosPrazo.textContent = `${jurosAnual.toFixed(2)}% a.a. (tabela)`;
+    
+    const modCustoBarter = document.getElementById('mod-custo-barter');
+    const modCustoFidc = document.getElementById('mod-custo-fidc');
+    const modCustoFiso = document.getElementById('mod-custo-fiso');
+    const modCustoPrazo = document.getElementById('mod-custo-prazo');
+    
+    if (modCustoBarter) modCustoBarter.textContent = formatSelectedCurrency(netCustoBarter);
+    if (modCustoFidc) modCustoFidc.textContent = formatSelectedCurrency(custoFidc);
+    if (modCustoFiso) modCustoFiso.textContent = formatSelectedCurrency(custoFiso);
+    if (modCustoPrazo) modCustoPrazo.textContent = formatSelectedCurrency(custoPrazo);
+    
+    const modIncBarter = document.getElementById('mod-inc-barter');
+    if (modIncBarter) {
+        const totalIncPct = valPctProposta + (res.incentivoBarterPct * 100);
+        modIncBarter.textContent = `+${totalIncPct.toFixed(2)}% (Cashback + Inc.)`;
+    }
+    
+    const modDisclaimer = document.getElementById('mod-disclaimer');
+    if (modDisclaimer) {
+        modDisclaimer.textContent = `Simulação gerada em ${dateStr} às ${timeStr}`;
+    }
+}
+
+// Tab switcher for comparison dashboard
+function switchResultsTab(tabName) {
+    const btnBarter = document.getElementById('tab-btn-barter');
+    const btnModalidades = document.getElementById('tab-btn-modalidades');
+    const contentBarter = document.getElementById('tab-content-barter');
+    const contentModalidades = document.getElementById('tab-content-modalidades');
+    
+    if (tabName === 'barter') {
+        if (btnBarter) btnBarter.classList.add('active');
+        if (btnModalidades) btnModalidades.classList.remove('active');
+        if (contentBarter) contentBarter.style.display = 'block';
+        if (contentModalidades) contentModalidades.style.display = 'none';
+    } else {
+        if (btnModalidades) btnModalidades.classList.add('active');
+        if (btnBarter) btnBarter.classList.remove('active');
+        if (contentBarter) contentBarter.style.display = 'none';
+        if (contentModalidades) contentModalidades.style.display = 'block';
+    }
 }
 
 // ==================== ASSISTENTE VIRTUAL (CHAT BOT) LOGIC ====================
@@ -786,13 +857,10 @@ function startNewChat() {
                 <p>Posso ajudar você a consultar informações sobre solicitações de crédito, contas, usuários e muito mais. Escolha uma sugestão abaixo ou digite sua pergunta.</p>
                 
                 <div class="suggestion-chips-grid">
-                    <button type="button" class="chip-btn" onclick="handleSuggestion('Quantas solicitações de crédito existem?')">Quantas solicitações de crédito existem?</button>
-                    <button type="button" class="chip-btn" onclick="handleSuggestion('Listar propostas de crédito pendentes')">Listar propostas de crédito pendentes</button>
-                    <button type="button" class="chip-btn" onclick="handleSuggestion('Buscar conta por CPF')">Buscar conta por CPF</button>
-                    <button type="button" class="chip-btn" onclick="handleSuggestion('Listar usuários ativos')">Listar usuários ativos</button>
-                    <button type="button" class="chip-btn" onclick="handleSuggestion('Buscar conta por nome')">Buscar conta por nome</button>
-                    <button type="button" class="chip-btn" onclick="handleSuggestion('Listar operadores de uma conta')">Listar operadores de uma conta</button>
                     <button type="button" class="chip-btn highlight-chip" onclick="startBarterSimulationFlow()">Quero simular uma oferta de barter</button>
+                    <button type="button" class="chip-btn" onclick="handleSuggestion('Comparar Barter com FIDC e FISO')">Comparar modalidades de crédito</button>
+                    <button type="button" class="chip-btn" onclick="handleSuggestion('Quais são as garantias do FIDC e FISO?')">Garantias exigidas</button>
+                    <button type="button" class="chip-btn" onclick="handleSuggestion('Quais os critérios de elegibilidade?')">Critérios de elegibilidade</button>
                 </div>
             </div>
         `;
@@ -834,7 +902,38 @@ function handleSuggestion(text) {
     setTimeout(() => {
         const query = text.toLowerCase();
         
-        if (query.includes('simular') || query.includes('barter') || query.includes('crédito')) {
+        if (query.includes('modalidade') || query.includes('comparar') || query.includes('comparativo') || query.includes('fidc') || query.includes('fiso') || query.includes('prazo')) {
+            addMessageToChat(
+                "### Comparativo de Modalidades de Crédito\n\n" +
+                "1. **Barter (Físico)**:\n" +
+                "   - **Descrição:** Amortização via entrega de grãos. Risco cambial travado fisicamente.\n" +
+                "   - **Garantias:** CPR Física (Cédula de Produto Rural) e Seguro Agrícola.\n" +
+                "   - **Incentivos:** Cashback comercial de 4,5% + Incentivo de 0,5% a cada 30 dias.\n\n" +
+                "2. **FIDC (Syde)**:\n" +
+                "   - **Descrição:** Antecipação de recebíveis via fundo. Foco em agilidade.\n" +
+                "   - **Garantias:** CPR Financeira (CPR-F), Nota Promissória (NP) e cessão de recebíveis.\n" +
+                "   - **Incentivos:** Maior desconto comercial de juros (redução de até **-4,0% a.a.** na taxa).\n" +
+                "   - **Elegibilidade:** Exige relacionamento &ge; 2 anos e exclui clientes classificados como High Risk (HR/VHR).\n\n" +
+                "3. **FISO (Bancos)**:\n" +
+                "   - **Descrição:** Financiamento via parceiros bancários (Santander/Flex, Itaú/Nice) com incentivos de fabricante.\n" +
+                "   - **Garantias:** Penhor Agrícola, CPR Financeira e Seguro de Crédito. Pode haver colateral de retenção de AR (ex: 30% no Santander).\n" +
+                "   - **Incentivos:** Redução intermediária de juros (redução de até **-3,0% a.a.** na taxa).\n" +
+                "   - **Elegibilidade:** Restrito para clientes com menos de 2 anos (exceto Santander/Flex).\n\n" +
+                "4. **Prazo (Convencional)**:\n" +
+                "   - **Descrição:** Crédito direto no balanço da Syngenta (On-Balance) sob preço de tabela a prazo.\n" +
+                "   - **Garantias:** Nota Promissória (NP) e análise padrão de limite FSCM.",
+                "bot"
+            );
+        } else if (query.includes('garantia') || query.includes('garantias') || query.includes('elegibilidade')) {
+            addMessageToChat(
+                "### Garantias e Critérios das Modalidades:\n\n" +
+                "- **Barter:** A principal garantia é a **CPR Física** vinculada diretamente à produção do grão. Elegibilidade livre focada na capacidade de produção.\n" +
+                "- **FIDC (Syde):** Formalizado via **CPR-F** ou **NP** com assinatura digital integrada. Elegível para relacionamento &ge; 2 anos e rating de risco aceitável (exclui HR/VHR).\n" +
+                "- **FISO:** Exige garantias bancárias tradicionais como **Penhor Agrícola** e **Seguro de Crédito**, além de potencial retenção colateral de recebíveis (ex: 30% no Santander). Restrito para novos clientes sem relacionamento prévio (exceto FLEX).\n" +
+                "- **Prazo (Convencional):** Garantido por **Nota Promissória (NP)** e sujeito à análise rígida de limites de crédito (SAP FSCM).",
+                "bot"
+            );
+        } else if (query.includes('simular') || query.includes('barter') || query.includes('crédito')) {
             startBarterSimulationFlow();
         } else if (query.includes('cotação do dólar') || query.includes('câmbio')) {
             const cambioVal = parseFloat(document.getElementById('sim-cambio').value) || 5.15;
@@ -1405,6 +1504,24 @@ function downloadSimulationPDF(dataInput = null) {
     const dateStr = now.toLocaleDateString('pt-BR');
     const timeStr = now.toLocaleTimeString('pt-BR');
     
+    // Modalidades Calculations for PDF
+    const jurosAnualFidc = Math.max(0, d.jurosAnual - 4.0);
+    const jurosAnualFiso = Math.max(0, d.jurosAnual - 3.0);
+    
+    const jurosPeriodoBarter = (d.prazo / 360) * (d.jurosAnual / 100);
+    const jurosPeriodoFidc = (d.prazo / 360) * (jurosAnualFidc / 100);
+    const jurosPeriodoFiso = (d.prazo / 360) * (jurosAnualFiso / 100);
+    const jurosPeriodoPrazo = (d.prazo / 360) * (d.jurosAnual / 100);
+    
+    const custoFidc = d.credit * jurosPeriodoFidc;
+    const custoFiso = d.credit * jurosPeriodoFiso;
+    const custoPrazo = d.credit * jurosPeriodoPrazo;
+    
+    const custoBrutoBarter = d.credit * jurosPeriodoBarter;
+    const totalRetornosBarter = res.totalRetornoUSDProposta * factor;
+    const freteTotalBarter = res.freteTotalUSDProposta * factor;
+    const netCustoBarter = custoBrutoBarter - totalRetornosBarter + freteTotalBarter;
+    
     // Create print template in a new window
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
@@ -1456,7 +1573,7 @@ function downloadSimulationPDF(dataInput = null) {
                 <div class="meta-item"><span class="meta-label">Impostos Estaduais:</span><span class="meta-val">${d.descontoAtivo ? 'Ativo' : 'Inativo'}</span></div>
             </div>
             
-            <div class="section-title">Comparação de Resultados</div>
+            <div class="section-title">Comparação de Resultados (Barter)</div>
             <table>
                 <thead>
                     <tr>
@@ -1520,6 +1637,63 @@ function downloadSimulationPDF(dataInput = null) {
                         <td colspan="3" class="text-green" style="text-align: center; font-size: 16px; padding: 16px;">
                             Economia de <strong>${formatNumber(res.volFinalMarket - res.volFinalProposta)} ${res.unitSymbol}</strong> em relação ao mercado!
                         </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="section-title" style="page-break-before: always;">Comparação Geral de Modalidades de Crédito</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variável / Regra</th>
+                        <th>Barter (Físico)</th>
+                        <th>FIDC (Syde)</th>
+                        <th>FISO (Bancário)</th>
+                        <th>Prazo (On-Balance)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Taxa Juros Anual Efetiva</strong></td>
+                        <td class="text-green">${d.jurosAnual.toFixed(2)}% a.a.</td>
+                        <td>${jurosAnualFidc.toFixed(2)}% a.a. (-4% inc.)</td>
+                        <td>${jurosAnualFiso.toFixed(2)}% a.a. (-3% inc.)</td>
+                        <td>${d.jurosAnual.toFixed(2)}% a.a. (tabela)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Custo Financeiro Líquido</strong></td>
+                        <td class="text-green font-bold">${formatVal(netCustoBarter)}</td>
+                        <td>${formatVal(custoFidc)}</td>
+                        <td>${formatVal(custoFiso)}</td>
+                        <td>${formatVal(custoPrazo)}</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Incentivo Comercial</strong></td>
+                        <td class="text-green">+${(d.valPctProposta + res.incentivoBarterPct * 100).toFixed(2)}% (Cashback+Inc.)</td>
+                        <td>Taxa Reduzida (-4,0% a.a.)</td>
+                        <td>Taxa Reduzida (-3,0% a.a.)</td>
+                        <td>Sem incentivo</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Garantias Atreladas</strong></td>
+                        <td>CPR Física e Seguro Agrícola</td>
+                        <td>CPR Financeira, NP e cessão de recebíveis</td>
+                        <td>Penhor Agrícola, CPR Financeira e Seguro Crédito</td>
+                        <td>Nota Promissória (NP) e FSCM</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Critérios de Elegibilidade</strong></td>
+                        <td class="text-green">Livre (grão colhido)</td>
+                        <td>Relacionamento &ge; 2 anos, sem riscos altos (HR/VHR)</td>
+                        <td>Restrições para &lt; 2 anos (exceto FLEX)</td>
+                        <td>Limite padrão SAP FSCM</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Fluxo de Liquidação</strong></td>
+                        <td>Físico (sacas entregues)</td>
+                        <td>Financeiro (recebíveis)</td>
+                        <td>Financeiro (bancos parceiros)</td>
+                        <td>Financeiro direto (boleto)</td>
                     </tr>
                 </tbody>
             </table>
