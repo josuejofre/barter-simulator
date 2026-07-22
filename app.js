@@ -609,7 +609,8 @@ function calculateSimulation() {
     document.getElementById('card-incentivo').textContent = formatSelectedCurrency(res.incentivoBarterUsd * factor);
     document.getElementById('card-valorizacao').textContent = formatSelectedCurrency(res.cashbackUsdProposta * factor);
     const economiaSacas = res.volFinalMarket - res.volFinalProposta;
-    document.getElementById('card-total').textContent = `${formatNumber(economiaSacas)} ${unitSymbol}`;
+    const valorEconomia = economiaSacas * commBrutoRaw;
+    document.getElementById('card-total').textContent = `${formatNumber(economiaSacas)} ${unitSymbol} (${formatSelectedCurrency(valorEconomia)})`;
     document.getElementById('card-total-sub').textContent = `${isSoy ? 'Sacas' : 'Libras'} economizadas vs. mercado`;
     
     // Update disclaimer timestamp
@@ -683,6 +684,21 @@ function calculateSimulation() {
     if (modCustoFidc) modCustoFidc.textContent = formatSelectedCurrency(custoFidc);
     if (modCustoFiso) modCustoFiso.textContent = formatSelectedCurrency(custoFiso);
     if (modCustoPrazo) modCustoPrazo.textContent = formatSelectedCurrency(custoPrazo);
+
+    const totalBarter = (res.volFinalProposta * commBrutoRaw) + freteTotalBarter;
+    const totalFidc = creditRaw + custoFidc;
+    const totalFiso = creditRaw + custoFiso;
+    const totalPrazo = creditRaw + custoPrazo;
+
+    const modTotalBarter = document.getElementById('mod-total-barter');
+    const modTotalFidc = document.getElementById('mod-total-fidc');
+    const modTotalFiso = document.getElementById('mod-total-fiso');
+    const modTotalPrazo = document.getElementById('mod-total-prazo');
+
+    if (modTotalBarter) modTotalBarter.textContent = formatSelectedCurrency(totalBarter);
+    if (modTotalFidc) modTotalFidc.textContent = formatSelectedCurrency(totalFidc);
+    if (modTotalFiso) modTotalFiso.textContent = formatSelectedCurrency(totalFiso);
+    if (modTotalPrazo) modTotalPrazo.textContent = formatSelectedCurrency(totalPrazo);
     
     const modIncBarter = document.getElementById('mod-inc-barter');
     if (modIncBarter) {
@@ -1554,6 +1570,11 @@ function downloadSimulationPDF(dataInput = null) {
     const freteTotalBarter = res.freteTotalUSDProposta * factor;
     const netCustoBarter = custoBrutoBarter - totalRetornosBarter + freteTotalBarter;
     
+    const totalBarter = (res.volFinalProposta * d.precoCommodity) + freteTotalBarter;
+    const totalFidc = d.credit + custoFidc;
+    const totalFiso = d.credit + custoFiso;
+    const totalPrazo = d.credit + custoPrazo;
+    
     // Create print template in a new window
     const printWindow = window.open('', '_blank');
     printWindow.document.write(`
@@ -1667,7 +1688,7 @@ function downloadSimulationPDF(dataInput = null) {
                     <tr class="highlight">
                         <td>Economia de Commodity Obtida</td>
                         <td colspan="3" class="text-green" style="text-align: center; font-size: 16px; padding: 16px;">
-                            Economia de <strong>${formatNumber(res.volFinalMarket - res.volFinalProposta)} ${res.unitSymbol}</strong> em relação ao mercado!
+                            Economia de <strong>${formatNumber(res.volFinalMarket - res.volFinalProposta)} ${res.unitSymbol} (${formatVal((res.volFinalMarket - res.volFinalProposta) * d.precoCommodity)})</strong> em relação ao mercado!
                         </td>
                     </tr>
                 </tbody>
@@ -1698,6 +1719,13 @@ function downloadSimulationPDF(dataInput = null) {
                         <td>${formatVal(custoFidc)}</td>
                         <td>${formatVal(custoFiso)}</td>
                         <td>${formatVal(custoPrazo)}</td>
+                    </tr>
+                    <tr class="highlight">
+                        <td><strong>Valor Total a Pagar (Equivalente)</strong></td>
+                        <td class="text-green font-bold">${formatVal(totalBarter)}</td>
+                        <td>${formatVal(totalFidc)}</td>
+                        <td>${formatVal(totalFiso)}</td>
+                        <td>${formatVal(totalPrazo)}</td>
                     </tr>
                     <tr>
                         <td><strong>Incentivo Comercial</strong></td>

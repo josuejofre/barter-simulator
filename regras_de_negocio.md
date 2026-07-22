@@ -99,16 +99,49 @@ Calcula a equivalência de troca física para amortizar um financiamento/crédit
    *Exemplo:* $51.652,89 - (2.324,38 + 1.711,62) = \mathbf{47.616,89\ sacas}$
    *Diferença para Outras Tradings (Volume Economizado):* $\mathbf{1.278,91\ sacas}$.
 
+5. **Benefício Financeiro Total da Estrutura (Barter Hub):**
+   Representa a economia em volume físico convertida em moeda (BRL/USD) com base no preço bruto de spot da commodity:
+   $$Beneficio\_Financeiro = Volume\_Economizado \times Pre\c{c}o\_Bruto$$
+   *Exemplo:* $1.278,91\ sacas \times USD\ 20,00 = \mathbf{USD\ 25.578,20}$
+
 ---
 
-## 6. Notas sobre Fontes de Dados e Integração em Produção (Pendências)
+## 6. Comparativo de Outras Modalidades de Crédito
+
+Para permitir a comparação direta do Barter com FIDC (Syde), FISO (Bancos) e Prazo (On-Balance), aplicamos as seguintes taxas de juros e despesas sobre o limite de crédito contratado:
+
+1. **Taxa de Juros Anual:**
+   - **Barter:** Taxa de tabela da campanha (ex: $14,40\%$ a.a.).
+   - **FIDC (Syde):** Desconto de $-4,0\%$ a.a. sobre a taxa base da campanha (ex: $10,40\%$ a.a.).
+   - **FISO:** Desconto de $-3,0\%$ a.a. sobre a taxa base da campanha (ex: $11,40\%$ a.a.).
+   - **Prazo:** Taxa cheia de tabela (ex: $14,40\%$ a.a.).
+
+2. **Juros do Período:**
+   $$Juros\_Periodo\_Modalidade = \frac{Dias}{360} \times Taxa\_Juros\_Efetiva$$
+
+3. **Custo Financeiro Líquido:**
+   - **FIDC / FISO / Prazo:** Representa os encargos financeiros de juros proporcionais ao prazo:
+     $$Custo\_Financeiro = Credito \times Juros\_Periodo\_Modalidade$$
+   - **Barter (Físico):** Custo de juros bruto compensado pelo retorno comercial (cashback + incentivo de prazo) e acrescido do frete logístico:
+     $$Custo\_Net\_Barter = (Credito \times Juros\_Periodo\_Barter) - Total\_Retorno + Frete\_Total$$
+
+4. **Valor Total a Pagar (Principal + Encargos):**
+   - **FIDC / FISO / Prazo (Modalidades Financeiras):** Pagamento estritamente financeiro (sem frete de transporte ou commodity envolvida):
+     $$Total\_a\_Pagar = Credito + Custo\_Financeiro$$
+   - **Barter (Físico):** O produtor realiza a entrega física do grão mais o pagamento de frete. O valor monetário equivalente entregue é:
+     $$Total\_a\_Pagar\_Barter = (Volume\_Troca\_Final \times Pre\c{c}o\_Bruto) + Custo\_Frete\_Total$$
+     *Nota: Não existe custo de transporte para as outras modalidades financeiras, apenas para o Barter, onde há a entrega física da commodity.*
+
+---
+
+## 7. Notas sobre Fontes de Dados e Integração em Produção (Pendências)
 
 Para a validação conceitual (protótipo), são utilizadas fontes públicas e simuladas. Para a versão final de produção integrada aos sistemas internos, as seguintes origens de dados devem ser configuradas:
 
 1. **Cotação de Commodities (Soja e Algodão) em Produção:**
-   - Deverá ser integrada a um feed profissional contratado, como a **CMA**, **Bloomberg**, **Reuters**, ou diretamente de fontes locais de liquidez como o **CEPEA/Esalq** e **Safras & Mercado**.
+   - Deverá ser integrada a um feed profissional contratado, como a **CMA**, **Bloomberg**, **Reuters**, ou diretamente de fontes locais de liquidez como o **CEPEA/Esalq e Safras & Mercado**.
    - *No Protótipo:* Buscamos o preço em tempo real de Chicago (CBOT:ZS=F para Soja e NYCE:CT=F para Algodão) via nosso servidor local de proxy no Yahoo Finance, com fallback estático para USD 20,00 e USD 0,85 respectivamente quando hospedado de forma estática (como no GitHub Pages).
 
 2. **Cotação do Dólar (Câmbio BRL/USD) em Produção:**
    - Deverá integrar-se à API oficial do **Banco Central do Brasil (BACEN)** para obter a taxa **PTAX de fechamento/venda**, ou feeds de câmbio futuro da **B3** (contrato de dólar futuro) se a liquidação for a termo.
-   - *No Protótipo:* Buscamos a taxa em tempo real através da **AwesomeAPI** (economia.awesomeapi.com.br/last/USD-BRL) diretamente pelo navegador do usuário (com CORS liberado, sem necessidade de backend ou chaves expostas). O timestamp da última captura do dólar é atualizado dinamicamente logo abaixo do campo de câmbio. Se a API estiver inacessível, o sistema usa o valor de fallback cambial de R$ 5,1500.
+   - *No Protótipo:* Buscamos a taxa em tempo real através da AwesomeAPI (economia.awesomeapi.com.br/last/USD-BRL) diretamente pelo navegador do usuário (com CORS liberado, sem necessidade de backend ou chaves expostas). O timestamp da última captura do dólar é atualizado dinamicamente logo abaixo do campo de câmbio. Se a API estiver inacessível, o sistema usa o valor de fallback cambial de R$ 5,1500.
