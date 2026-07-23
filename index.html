@@ -50,6 +50,9 @@
                 <a class="nav-link" id="nav-link-campanhas" onclick="showPage('campanhas')">
                     <div class="nav-link-main"><i class="fa-solid fa-calendar-days"></i> Campanhas</div>
                 </a>
+                <a class="nav-link" id="nav-link-pracas" onclick="showPage('pracas')">
+                    <div class="nav-link-main"><i class="fa-solid fa-map-location-dot"></i> Cadastro de Praças (WSys)</div>
+                </a>
                 <a class="nav-link" id="nav-link-regras" onclick="showPage('regras')">
                     <div class="nav-link-main"><i class="fa-solid fa-book-open"></i> Regras de negócio</div>
                 </a>
@@ -180,11 +183,9 @@
                         <div class="card-header">
                             <h2>Parâmetros da Operação</h2>
                             <p>Preencha com o crédito demandado e os dados da sua safra.</p>
-                        </div>
-                        
-                        <form id="barter-form" onsubmit="event.preventDefault(); calculateSimulation();" class="simulator-form">
+                        </div>                        <form id="barter-form" onsubmit="event.preventDefault(); calculateSimulation();" class="simulator-form">
                             <div class="input-group">
-                                <label for="sim-campanha-select">Campanha de Referência (Taxas)</label>
+                                <label for="sim-campanha-select">Campanha de Referência <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Seleção manual de opções mockadas ou adicionadas em Ajustar Taxas.<br><strong>Versão Final:</strong> Integração com base de campanhas de Barter registradas no SAP/Salesforce.</span></span></label>
                                 <div class="select-wrapper">
                                     <select id="sim-campanha-select" onchange="onCampanhaSelectChange(this.value)" required>
                                         <option value="custom">Campanha Customizada (Manual)</option>
@@ -194,7 +195,7 @@
                             </div>
 
                             <div class="input-group">
-                                <label for="sim-commodity">Commodity</label>
+                                <label for="sim-commodity">Commodity <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Seleção manual (Soja em sc ou Algodão em lp).<br><strong>Versão Final:</strong> Cadastro de produtos e commodities de originação da Syngenta/Nutrade.</span></span></label>
                                 <div class="select-wrapper">
                                     <select id="sim-commodity" onchange="onCulturaChange(this.value)" required>
                                         <option value="Soja">Soja (sacas - sc)</option>
@@ -204,22 +205,29 @@
                             </div>
 
                             <div class="input-group">
-                                <label for="sim-regiao">Região / Praça (Impostos)</label>
+                                <label for="sim-estado">Estado <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Seleção do Estado correspondente.<br><strong>Versão Final:</strong> Preenchido de forma automática com base no domicílio fiscal (CNPJ) do cliente integrado no SAP MDM.</span></span></label>
                                 <div class="select-wrapper">
-                                    <select id="sim-regiao" required>
-                                        <option value="Campo Novo do Parecis (MT)">Campo Novo do Parecis (MT) - Fethab</option>
-                                        <option value="Sorriso (MT)">Sorriso (MT) - Fethab</option>
-                                        <option value="Querência (MT)">Querência (MT) - Fethab</option>
-                                        <option value="Rio Verde (GO)">Rio Verde (GO) - Fundeagro</option>
-                                        <option value="Dourados (MS)">Dourados (MS) - Fundems</option>
-                                        <option value="Cascavel (PR)">Cascavel (PR) - Isento</option>
+                                    <select id="sim-estado" onchange="onEstadoChange(this.value)" required>
+                                        <option value="MT">Mato Grosso (MT)</option>
+                                        <option value="GO">Goiás (GO)</option>
+                                        <option value="MS">Mato Grosso do Sul (MS)</option>
+                                        <option value="PR">Paraná (PR)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sim-regiao">Praça (Dados do WSys) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Filtro local de praças (carregando dados de localStorage).<br><strong>Versão Final:</strong> Chamada de API direta ao sistema corporativo de logística e originação (WSys).<br><strong>Fórmula:</strong> Retorna as tarifas logísticas e impostos vigentes do município.</span></span></label>
+                                <div class="select-wrapper">
+                                    <select id="sim-regiao" onchange="onPracaChange(this.value)" required>
+                                        <!-- Dynamic options loaded based on Estado selection -->
                                     </select>
                                 </div>
                             </div>
 
                             <!-- Currency Selector Group (Recalculates on click to swap units) -->
                             <div class="input-group">
-                                <label>Informações financeiras</label>
+                                <label>Moeda da Operação <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Escolha entre Real (R$) e Dólar ($).<br><strong>Versão Final:</strong> Puxado das regras da linha de faturamento e financiamento do pedido de venda (SAP/Salesforce).</span></span></label>
                                 <div class="currency-selector-group">
                                     <button type="button" class="currency-btn active" id="btn-currency-brl" onclick="setCurrency('BRL')">Real (R$)</button>
                                     <button type="button" class="currency-btn" id="btn-currency-usd" onclick="setCurrency('USD')">Dólar (USD)</button>
@@ -227,28 +235,14 @@
                             </div>
 
                             <div class="input-group">
-                                <label for="sim-credito" id="sim-credito-label">Valor da Operação (TP + Impostos)</label>
+                                <label for="sim-credito" id="sim-credito-label">Valor da Operação (TP + Impostos) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Valor digitado pelo usuário.<br><strong>Versão Final:</strong> Valor bruto do pedido de faturamento de insumos associado (Salesforce/SAP FSCM).</span></span></label>
                                 <div class="input-wrapper">
                                     <input type="text" id="sim-credito" value="R$ 1.000.000,00" required>
                                 </div>
                             </div>
 
                             <div class="input-group">
-                                <div class="label-with-action">
-                                    <label for="sim-preco-bruto" id="sim-preco-bruto-label">Preço Commodity Bruto (FOB)</label>
-                                    <button type="button" class="btn-fetch-quote" onclick="fetchLiveQuotes()" title="Buscar preço do mercado em tempo real">
-                                        <i class="fa-solid fa-rotate"></i> Atualizar
-                                    </button>
-                                </div>
-                                <div class="input-wrapper">
-                                    <input type="number" id="sim-preco-bruto" value="103.00" min="0.01" step="any" required>
-                                    <span class="input-suffix" id="sim-preco-bruto-suffix">R$/sc</span>
-                                </div>
-                                <small class="quote-timestamp" id="sim-quote-status">Cotação inicial padrão da tela</small>
-                            </div>
-
-                            <div class="input-group">
-                                <label for="sim-descontos">Aplicar Descontos Tributários Estaduais</label>
+                                <label for="sim-descontos">Deduções Fiscais de Barter <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Botão liga/desliga para fins comparativos.<br><strong>Versão Final:</strong> Determinação fiscal automatizada (SAP Tax Engine) segundo o enquadramento fiscal e tributação estadual do produtor.</span></span></label>
                                 <div class="toggle-switch">
                                     <input type="checkbox" id="sim-descontos" checked>
                                     <label for="sim-descontos" class="toggle-slider"></label>
@@ -257,31 +251,7 @@
                             </div>
 
                             <div class="input-group">
-                                <label for="sim-prazo">Prazo (Dias)</label>
-                                <div class="input-wrapper">
-                                    <input type="number" id="sim-prazo" value="216" min="1" required>
-                                    <span class="input-suffix">dias</span>
-                                </div>
-                            </div>
-
-                            <div class="input-group">
-                                <label for="sim-juros-anual">Taxa de Juros Anual (%)</label>
-                                <div class="input-wrapper">
-                                    <input type="number" id="sim-juros-anual" value="14.40" min="0" step="any" required>
-                                    <span class="input-suffix">% a.a.</span>
-                                </div>
-                            </div>
-
-                            <div class="input-group">
-                                <label for="sim-campanha-val" id="sim-campanha-val-label">Valorização da Campanha (Cashback %)</label>
-                                <div class="input-wrapper">
-                                    <input type="number" id="sim-campanha-val" value="4.50" min="0" step="any" required>
-                                    <span class="input-suffix">%</span>
-                                </div>
-                            </div>
-
-                            <div class="input-group">
-                                <label for="sim-dist-chao">Distância Estrada de Chão (KM)</label>
+                                <label for="sim-dist-chao">Distância Estrada de Chão (KM) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Carrega do WSys (editável).<br><strong>Versão Final:</strong> Calculado via roteirizador do frete com a geolocalização da fazenda cadastrada.<br><strong>Fórmula:</strong> Distância Chão * Custo KM Terra do WSys.</span></span></label>
                                 <div class="input-wrapper">
                                     <input type="number" id="sim-dist-chao" value="15" min="0" required>
                                     <span class="input-suffix">KM</span>
@@ -289,213 +259,239 @@
                             </div>
 
                             <div class="input-group">
-                                <label for="sim-dist-asfalto">Distância Estrada de Asfalto (KM)</label>
+                                <label for="sim-dist-asfalto">Distância Estrada de Asfalto (KM) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Carrega do WSys (editável).<br><strong>Versão Final:</strong> Calculado via roteirizador do frete com a geolocalização da fazenda cadastrada.<br><strong>Fórmula:</strong> Distância Asfalto * Custo KM Asfalto do WSys.</span></span></label>
                                 <div class="input-wrapper">
                                     <input type="number" id="sim-dist-asfalto" value="35" min="0" required>
                                     <span class="input-suffix">KM</span>
                                 </div>
                             </div>
 
-                            <div class="input-group">
-                                <label for="sim-frete-chao" id="sim-frete-chao-label">Custo Frete KM Estrada de Chão</label>
-                                <div class="input-wrapper">
-                                    <input type="number" id="sim-frete-chao" value="15.00" min="0" step="any" required>
-                                    <span class="input-suffix" id="sim-frete-chao-suffix">R$/KM</span>
-                                </div>
-                            </div>
-
-                            <div class="input-group">
-                                <label for="sim-frete-asfalto" id="sim-frete-asfalto-label">Custo Frete KM Asfalto</label>
-                                <div class="input-wrapper">
-                                    <input type="number" id="sim-frete-asfalto" value="8.00" min="0" step="any" required>
-                                    <span class="input-suffix" id="sim-frete-asfalto-suffix">R$/KM</span>
-                                </div>
-                            </div>
-
-                            <div class="input-group">
-                                <label for="sim-cambio">Taxa Cambial Futura (BRL/USD)</label>
-                                <div class="input-wrapper">
-                                    <input type="number" id="sim-cambio" value="5.1500" min="0.01" step="any" required>
-                                    <span class="input-suffix">R$/$</span>
-                                </div>
-                                <small class="quote-timestamp" id="sim-cambio-status">Câmbio padrão: R$ 5,1500</small>
+                            <!-- Ocultos: Campos automáticos vindos da campanha e WSys -->
+                            <div style="display: none;">
+                                <input type="number" id="sim-preco-bruto" value="103.00">
+                                <input type="number" id="sim-prazo" value="216">
+                                <input type="number" id="sim-juros-anual" value="14.40">
+                                <input type="number" id="sim-campanha-val" value="4.50">
+                                <input type="number" id="sim-frete-chao" value="15.00">
+                                <input type="number" id="sim-frete-asfalto" value="8.00">
+                                <input type="number" id="sim-cambio" value="5.1500">
                             </div>
 
                             <!-- Button that actively triggers calculations -->
-                            <div class="form-actions" style="display: flex; gap: 10px; margin-top: 5px;">
-                                <button type="submit" class="btn-submit" id="btn-sim-calcular" style="flex: 1; margin-top: 0;">
-                                    <i class="fa-solid fa-calculator"></i> Simular Barter
+                            <div class="form-actions" style="display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap;">
+                                <button type="submit" class="btn-submit" id="btn-sim-calcular" style="flex: 1 1 100%; margin-top: 0; min-height: 44px;">
+                                    <i class="fa-solid fa-calculator"></i> Simular
                                 </button>
-                                <button type="button" class="btn-submit btn-pdf" id="btn-sim-pdf" onclick="downloadSimulationPDF()" style="flex: 1; margin-top: 0; background-color: #6b7280; background-image: none; box-shadow: 0 4px 12px rgba(107, 114, 128, 0.2);">
-                                    <i class="fa-solid fa-file-pdf"></i> Exportar PDF
+                                <button type="button" class="btn-submit btn-pdf" id="btn-sim-pdf" onclick="downloadSimulationPDF()" style="flex: 1; margin-top: 0; background-color: #4b5563; background-image: none; box-shadow: 0 4px 12px rgba(75, 85, 99, 0.2); min-height: 42px;">
+                                    <i class="fa-solid fa-file-pdf"></i> PDF
+                                </button>
+                                <button type="button" class="btn-submit btn-share" id="btn-sim-share" onclick="openSharePopup()" style="flex: 1; margin-top: 0; min-height: 42px;">
+                                    <i class="fa-solid fa-share-nodes"></i> Compartilhar
                                 </button>
                             </div>
                         </form>
                         
                         <div class="card-footer">
                             <p>* Valores referenciais baseados nas condições de mercado atuais e regras da campanha 2026.</p>
+                            <p style="margin-top: 6px; color: var(--text-secondary); font-size: 11px; font-weight: 500; line-height: 1.3;">
+                                <i class="fa-solid fa-circle-exclamation" style="color: var(--primary-medium); margin-right: 4px;"></i>
+                                Se não encontrar a sua praça neste simulador, favor entrar em contato com o time de FISO para análise especial.
+                            </p>
                         </div>
                     </div>
 
                     <!-- Right Column: Results & Interactive Charts -->
                     <div class="results-container">
                         
-                        <!-- Tabs for switching comparison views -->
-                        <div class="tabs-container">
-                            <button type="button" class="tab-btn active" id="tab-btn-barter" onclick="switchResultsTab('barter')">
-                                <i class="fa-solid fa-wheat-awn"></i> Barter vs Mercado
-                            </button>
-                            <button type="button" class="tab-btn" id="tab-btn-modalidades" onclick="switchResultsTab('modalidades')">
-                                <i class="fa-solid fa-scale-balanced"></i> Outras Modalidades
-                            </button>
+                        <!-- Resumo da Operação matching screenshot -->
+                        <div class="card results-card animate-fade-in" style="background-color: var(--primary-deep); color: white; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(5, 59, 67, 0.15); overflow: visible;">
+                            <div class="card-header" style="border-bottom: 1px solid rgba(255,255,255,0.12); padding: 16px 20px;">
+                                <h2 style="color: white; font-family: var(--font-heading); font-size: 18px; margin: 0; display: flex; align-items: center; justify-content: space-between;">
+                                    Resumo da operação
+                                    <span class="tooltip-container"><i class="fa-regular fa-circle-question" style="color: #fff; font-size: 14px;"></i><span class="tooltip-text tooltip-white" style="box-shadow: 0 8px 24px rgba(0,0,0,0.15);"><strong>Simulador:</strong> Consolidação de juros, prazos e economia com base na opção selecionada.<br><strong>Versão Final:</strong> Espelho e resumo executivo da CPR/proposta de faturamento do cliente.</span></span>
+                                </h2>
+                            </div>
+                            <div style="padding: 16px 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center;">
+                                <div style="border-right: 1px solid rgba(255,255,255,0.12);">
+                                    <span style="font-size: 10.5px; text-transform: uppercase; color: #22d3ee; font-weight: 700; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">Valor</span>
+                                    <strong id="summary-value" style="font-size: 18px; font-family: var(--font-heading); color: #ffffff;">R$ 1.000.000,00</strong>
+                                </div>
+                                <div style="border-right: 1px solid rgba(255,255,255,0.12);">
+                                    <span style="font-size: 10.5px; text-transform: uppercase; color: #22d3ee; font-weight: 700; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">Data da Simulação</span>
+                                    <strong id="summary-date" style="font-size: 18px; font-family: var(--font-heading); color: #ffffff;">-</strong>
+                                </div>
+                                <div>
+                                    <span style="font-size: 10.5px; text-transform: uppercase; color: #22d3ee; font-weight: 700; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">Validade da Simulação</span>
+                                    <strong id="summary-validity" style="font-size: 18px; font-family: var(--font-heading); color: #ffffff;">-</strong>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Comparative Table Card -->
-                        <div class="results-card card animate-fade-in" id="tab-content-barter">
-                            <div class="card-header">
-                                <h2>Comparativo de Custos e Retornos da Operação (Foco em Crédito)</h2>
-                                <p>Simulação comparativa detalhada baseada nas regras de negócio da campanha 2026.</p>
+                        <!-- Reference Parameters Display Card -->
+                        <div class="reference-parameters-card animate-fade-in" id="ref-parameters-card">
+                            <h3><i class="fa-solid fa-circle-info"></i> Dados de Referência (Campanha & WSys)</h3>
+                            <div class="reference-parameters-grid">
+                                <div class="reference-parameter-item" style="display: none;">
+                                    <span class="reference-parameter-label">Preço do Grão <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Preço bruto FOB obtido via API / Wsys.</span></span></span>
+                                    <span class="reference-parameter-value" id="ref-preco">-</span>
+                                </div>
+                                <div class="reference-parameter-item" style="display: none;">
+                                    <span class="reference-parameter-label">Taxa Cambial <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Dólar futuro / spot atual obtido via AwesomeAPI.</span></span></span>
+                                    <span class="reference-parameter-value" id="ref-cambio">-</span>
+                                </div>
+                                <div class="reference-parameter-item">
+                                    <span class="reference-parameter-label">Taxa Juros (a.a.) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Taxa de juros anualizada cadastrada para o Barter nesta campanha.</span></span></span>
+                                    <span class="reference-parameter-value" id="ref-juros">-</span>
+                                </div>
+                                <div class="reference-parameter-item">
+                                    <span class="reference-parameter-label">Prazo Calculado <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Prazo calculado (Data de carência a Vencimento da campanha).</span></span></span>
+                                    <span class="reference-parameter-value" id="ref-prazo">-</span>
+                                </div>
+                                <div class="reference-parameter-item">
+                                    <span class="reference-parameter-label">Valoriz. Nutrade <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Retorno de valorização comercial (Cashback) da Nutrade.</span></span></span>
+                                    <span class="reference-parameter-value" id="ref-val-nutrade">-</span>
+                                </div>
+                                <div class="reference-parameter-item">
+                                    <span class="reference-parameter-label">Valoriz. Outras <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Dedução de valorização das tradings concorrentes.</span></span></span>
+                                    <span class="reference-parameter-value" id="ref-val-outras">-</span>
+                                </div>
+                                <div class="reference-parameter-item" style="display: none;">
+                                    <span class="reference-parameter-label">Frete Chão (WSys) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Custo por KM de terra recuperado do WSys para a praça.</span></span></span>
+                                    <span class="reference-parameter-value" id="ref-frete-chao">-</span>
+                                </div>
+                                <div class="reference-parameter-item" style="display: none;">
+                                    <span class="reference-parameter-label">Frete Asfalto (WSys) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Custo por KM de asfalto recuperado do WSys para a praça.</span></span></span>
+                                    <span class="reference-parameter-value" id="ref-frete-asfalto">-</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modality Cards List (Sorted from best to worst) -->
+                        <div class="card results-card animate-fade-in" style="padding: 20px; margin-bottom: 20px;">
+                            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
+                                <h2 style="font-family: var(--font-heading); color: var(--primary-deep); font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                                    Modalidades de Crédito (Ordenado por Benefício)
+                                    <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Apresentado da mais vantajosa (melhor benefício) para a menos vantajosa. Clique para ver o detalhamento completo dos custos.</span></span>
+                                </h2>
+                                <p style="color: var(--text-secondary); font-size: 12.5px; margin: 4px 0 0 0;">Selecione qualquer modalidade para carregar seu detalhamento completo abaixo.</p>
+                            </div>
+                            <div class="modality-cards-grid" id="modality-cards-list">
+                                <!-- Cards rendered dynamically by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Detailed Breakdown comparative table -->
+                        <div class="card results-card animate-fade-in" id="detailed-breakdown-card" style="display: none; margin-bottom: 20px;">
+                            <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color);">
+                                <div>
+                                    <h2 id="detailed-breakdown-title" style="font-family: var(--font-heading); color: var(--primary-deep); font-size: 16px; margin: 0;">Detalhamento da Modalidade</h2>
+                                    <p style="color: var(--text-secondary); font-size: 12px; margin: 2px 0 0 0;">Veja os cálculos detalhados da simulação da modalidade selecionada.</p>
+                                </div>
+                                <button type="button" class="btn-submit" onclick="hideDetailedBreakdown()" style="width: auto; margin-top: 0; padding: 6px 12px; background-color: var(--border-hover); background-image: none; color: var(--text-primary); font-size: 12px; font-weight: 600; box-shadow: none;">
+                                    <i class="fa-solid fa-angle-up"></i> Recolher
+                                </button>
                             </div>
                             
-                            <div class="table-responsive">
+                            <!-- Detailed table for Barter -->
+                            <div class="table-responsive" id="detailed-table-barter" style="display: none; padding: 15px;">
                                 <table class="comparison-table detailed-table" id="barter-table">
                                     <thead>
                                         <tr>
                                             <th>Variável da Operação</th>
-                                            <th class="col-nutrade" id="th-est-brand">Nossa Estrutura</th>
+                                            <th class="col-nutrade" id="th-est-brand">Nossa Estrutura (Nutrade)</th>
                                             <th class="col-market">Outras Tradings</th>
-                                            <th>Vantagem (%)</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr class="table-section-title">
-                                            <td colspan="4">1. ESTRUTURA FINANCEIRA E LOGÍSTICA</td>
+                                        <tr class="table-sec                                        <tr>
+                                            <td id="td-lbl-fob">Valor do Crédito (FOB a Prazo) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Resgatado do input Valor da Operação.<br><strong>Versão Final:</strong> Valor do faturamento do pedido de insumos integrado via Salesforce/SAP.<br><strong>Fórmula:</strong> Valor do Crédito.</span></span></td>
+                                            <td id="td-fob-nutrade" class="val-nutrade font-mono">-</td>
+                                            <td id="td-fob-market" class="font-mono">-</td>
                                         </tr>
-                                        <tr>
-                                            <td id="td-lbl-fob">Valor do Crédito (FOB a Prazo)</td>
-                                            <td id="td-fob-nutrade" class="val-nutrade font-mono">R$ 1.000.000,00</td>
-                                            <td id="td-fob-market" class="font-mono">R$ 1.000.000,00</td>
-                                            <td id="td-fob-diff">-</td>
-                                        </tr>
-                                        <tr>
+                                        <tr style="display: none;">
                                             <td id="td-lbl-bruto">Preço Commodity Bruto (FOB)</td>
-                                            <td id="td-bruto-nutrade" class="val-nutrade font-mono">R$ 103,00</td>
-                                            <td id="td-bruto-market" class="font-mono">R$ 101,97</td>
-                                            <td id="td-bruto-diff" class="text-green font-bold">+1,01%</td>
+                                            <td id="td-bruto-nutrade" class="val-nutrade font-mono">-</td>
+                                            <td id="td-bruto-market" class="font-mono">-</td>
                                         </tr>
                                         <tr>
-                                            <td id="td-lbl-desc">(-) Descontos Tributários Estaduais</td>
-                                            <td id="td-desc-nutrade" class="val-nutrade font-mono text-danger">-R$ 3,30</td>
-                                            <td id="td-desc-market" class="font-mono text-danger">-R$ 3,30</td>
-                                            <td id="td-desc-diff">-</td>
+                                            <td id="td-lbl-desc-estadual">(-) Descontos Tributários Estaduais <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Parcela fixa de imposto cadastrada na Praça logístia local (WSys).<br><strong>Versão Final:</strong> Puxado do motor fiscal (SAP Tax Engine) conforme enquadramento fiscal do produtor.<br><strong>Fórmula:</strong> Desconto Fixo = Volume Físico Inicial * Alíquota por Saca da Praça (ex: Fethab/Fundems).</span></span></td>
+                                            <td id="td-desc-nutrade-estadual" class="val-nutrade font-mono text-danger">-</td>
+                                            <td id="td-desc-market-estadual" class="font-mono text-danger">-</td>
                                         </tr>
                                         <tr>
-                                            <td id="td-lbl-livre">Preço Commodity Livre (Porteira)</td>
-                                            <td id="td-livre-nutrade" class="val-nutrade font-mono">R$ 99,70</td>
-                                            <td id="td-livre-market" class="font-mono">R$ 98,68</td>
-                                            <td id="td-livre-diff" class="text-green font-bold">+1,04%</td>
+                                            <td id="td-lbl-desc-demais">(-) Demais Descontos (SENAR / Funrural) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Alíquota percentual cadastrada na Praça logístia local (WSys).<br><strong>Versão Final:</strong> Motor fiscal de impostos federais retidos na fonte (SENAR/Funrural) no SAP.<br><strong>Fórmula:</strong> Desconto SENAR/Funrural = Preço Commodity Bruto * Alíquota Percentual da Praça.</span></span></td>
+                                            <td id="td-desc-nutrade-demais" class="val-nutrade font-mono text-danger">-</td>
+                                            <td id="td-desc-market-demais" class="font-mono text-danger">-</td>
+                                        </tr>
+                                        <tr>
+                                            <td id="td-lbl-livre">Preço Commodity Livre (Porteira) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Subtração dos descontos fiscais sobre o Preço Bruto.<br><strong>Versão Final:</strong> Calculado pelo Motor de Netback da mesa de originação (Nutrade).<br><strong>Fórmula:</strong> Preço Bruto FOB - Descontos Estaduais - Demais Descontos.</span></span></td>
+                                            <td id="td-livre-nutrade" class="val-nutrade font-mono">-</td>
+                                            <td id="td-livre-market" class="font-mono">-</td>
                                         </tr>
                                         <tr class="highlight-row">
-                                            <td>Volume de Troca Físico Inicial</td>
-                                            <td id="td-vol-troca-nutrade" class="val-nutrade font-mono text-green">51.652,89 sc</td>
-                                            <td id="td-vol-troca-market" class="font-mono">52.190,98 sc</td>
-                                            <td id="td-vol-troca-diff" class="text-green font-bold">-1,03%</td>
+                                            <td>Volume de Troca Físico Inicial (Inteiro) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Razão entre Crédito e Preço Livre, arredondada para cima.<br><strong>Versão Final:</strong> CPR Física gerada e registrada no cartório de títulos (SAP FSCM).<br><strong>Fórmula:</strong> Volume Inicial = Teto(Valor do Crédito / Preço Commodity Livre).</span></span></td>
+                                            <td id="td-vol-troca-nutrade" class="val-nutrade font-mono text-green">-</td>
+                                            <td id="td-vol-troca-market" class="font-mono">-</td>
                                         </tr>
-                                        <tr>
-                                            <td id="td-lbl-vp">Preço Pedido TP (Valor Presente)</td>
-                                            <td id="td-vp-nutrade" class="val-nutrade font-mono">R$ 920.471,28</td>
-                                            <td id="td-vp-market" class="font-mono">R$ 920.471,28</td>
-                                            <td id="td-vp-diff">0,00%</td>
-                                        </tr>
-                                        <tr class="highlight-row">
-                                            <td id="td-lbl-custofin">Custo Financeiro da Operação</td>
-                                            <td id="td-custofin-nutrade" class="val-nutrade font-mono">R$ 79.528,72</td>
-                                            <td id="td-custofin-market" class="font-mono">R$ 79.528,72</td>
-                                            <td id="td-custofin-diff">0,00%</td>
-                                        </tr>
-                                        <tr>
-                                            <td id="td-lbl-frete">(-) Custo de Transporte (Frete)</td>
-                                            <td id="td-frete-nutrade" class="val-nutrade font-mono text-danger">-R$ 0,0100 / sc</td>
-                                            <td id="td-frete-market" class="font-mono text-danger">-R$ 0,0160 / sc</td>
-                                            <td id="td-frete-diff" class="text-green font-bold">-37,50%</td>
-                                        </tr>
-
+ 
                                         <tr class="table-section-title">
-                                            <td colspan="4">2. COMPONENTES DE VALORIZAÇÃO COMERCIAL (CASHBACK & INCENTIVOS)</td>
+                                            <td colspan="3">2. COMPONENTES DE VALORIZAÇÃO COMERCIAL (CASHBACK & INCENTIVOS)</td>
                                         </tr>
                                         <tr>
-                                            <td>Taxa de Valorização da Campanha (Cashback)</td>
-                                            <td id="td-valcamp-nutrade" class="val-nutrade">4,50%</td>
-                                            <td id="td-valcamp-market">3,00%</td>
-                                            <td id="td-valcamp-diff" class="text-green font-bold">+50,00%</td>
+                                            <td>Taxa de Valorização da Campanha (Cashback) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Taxa associada à campanha selecionada (Nutrade vs Outras).<br><strong>Versão Final:</strong> Campanha comercial aprovada pela originação cadastrada no Salesforce/SAP.</span></span></td>
+                                            <td id="td-valcamp-nutrade" class="val-nutrade">-</td>
+                                            <td id="td-valcamp-market">-</td>
                                         </tr>
                                         <tr>
-                                            <td id="td-lbl-cashback-usd">Cash Back (${selectedCurrency}) da Campanha</td>
-                                            <td id="td-cashback-usd-nutrade" class="val-nutrade font-mono">R$ 45.000,00</td>
-                                            <td id="td-cashback-usd-market" class="font-mono">R$ 30.000,00</td>
-                                            <td id="td-cashback-usd-diff" class="text-green font-bold">+50,00%</td>
+                                            <td id="td-lbl-cashback-usd">Cash Back da Campanha <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Multiplicação do crédito pela taxa de cashback.<br><strong>Versão Final:</strong> Abatimento comercial bonificado no pedido de insumos (SAP).<br><strong>Fórmula:</strong> Valor do Crédito * Taxa de Valorização da Campanha.</span></span></td>
+                                            <td id="td-cashback-usd-nutrade" class="val-nutrade font-mono">-</td>
+                                            <td id="td-cashback-usd-market" class="font-mono">-</td>
                                         </tr>
                                         <tr>
-                                            <td>Incentivo Barter (%) atrelado ao Prazo</td>
-                                            <td id="td-incbarter-pct-nutrade" class="val-nutrade">3,60%</td>
-                                            <td id="td-incbarter-pct-market">3,60%</td>
-                                            <td id="td-incbarter-pct-diff">0,00%</td>
+                                            <td>Incentivo Barter (%) atrelado ao Prazo <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Juros regressivos da campanha calculados conforme o prazo.<br><strong>Versão Final:</strong> Política de desconto financeiro por faturamento físico parametrizada no SAP.<br><strong>Fórmula:</strong> Retornado da tabela de juros comerciais associada à campanha.</span></span></td>
+                                            <td id="td-incbarter-pct-nutrade" class="val-nutrade">-</td>
+                                            <td id="td-incbarter-pct-market">-</td>
                                         </tr>
                                         <tr>
-                                            <td id="td-lbl-incbarter-usd">Incentivo Barter (${selectedCurrency}) ganho</td>
-                                            <td id="td-incbarter-usd-nutrade" class="val-nutrade font-mono">R$ 33.136,97</td>
-                                            <td id="td-incbarter-usd-market" class="font-mono">R$ 33.136,97</td>
-                                            <td id="td-incbarter-usd-diff">0,00%</td>
+                                            <td id="td-lbl-incbarter-usd">Incentivo Barter ganho <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Multiplicação do crédito pela taxa de juros regressivos.<br><strong>Versão Final:</strong> Abatimento de juros lançado no faturamento de barter (SAP).<br><strong>Fórmula:</strong> Valor do Crédito * Incentivo Barter (%).</span></span></td>
+                                            <td id="td-incbarter-usd-nutrade" class="val-nutrade font-mono">-</td>
+                                            <td id="td-incbarter-usd-market" class="font-mono">-</td>
                                         </tr>
-
+ 
                                         <tr class="table-section-title">
-                                            <td colspan="4">3. RESULTADO FINAL CONSOLIDADO (PORTEIRA FECHADA COM RETORNOS)</td>
+                                            <td colspan="3">3. RESULTADO FINAL CONSOLIDADO (PORTEIRA FECHADA COM RETORNOS)</td>
                                         </tr>
                                         <tr class="heavy-row">
-                                            <td id="td-lbl-totalret">Total de Retorno Recebido pelo Produtor (${selectedCurrency})</td>
-                                            <td id="td-totalret-nutrade" class="val-nutrade font-mono text-green">R$ 78.136,97</td>
-                                            <td id="td-totalret-market" class="font-mono">R$ 63.136,97</td>
-                                            <td id="td-totalret-diff" class="text-green font-bold">+23,76%</td>
+                                            <td id="td-lbl-totalret">Total de Retorno Recebido pelo Produtor <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Somatório de cashback e juros regressivos concedidos.<br><strong>Versão Final:</strong> Desconto de originação consolidado na proposta comercial do Salesforce.<br><strong>Fórmula:</strong> Cash Back da Campanha + Incentivo Barter ganho.</span></span></td>
+                                            <td id="td-totalret-nutrade" class="val-nutrade font-mono text-green">-</td>
+                                            <td id="td-totalret-market" class="font-mono">-</td>
                                         </tr>
                                         <tr class="heavy-row text-gold gold-glow">
-                                            <td id="td-lbl-finalpreco">Preço Equivalente Final (Valorizado com Frete) (${selectedCurrency}/${unitSymbol})</td>
-                                            <td id="td-finalpreco-nutrade" class="val-nutrade font-mono">R$ 107,4846 / sc</td>
-                                            <td id="td-finalpreco-market" class="font-mono">R$ 104,8901 / sc</td>
-                                            <td id="td-finalpreco-diff" class="text-green font-bold">+2,47%</td>
+                                            <td id="td-lbl-finalpreco">Preço Equivalente Final (Valorizado com Frete) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Preço livre acrescido dos benefícios comerciais convertidos por unidade.<br><strong>Versão Final:</strong> Indicador de preço neto real para faturamento logístico corporativo.<br><strong>Fórmula:</strong> Preço Commodity Livre + (Total Retorno / Volume Inicial).</span></span></td>
+                                            <td id="td-finalpreco-nutrade" class="val-nutrade font-mono">-</td>
+                                            <td id="td-finalpreco-market" class="font-mono">-</td>
                                         </tr>
                                         <tr class="heavy-row text-green">
-                                            <td>Volume de Troca Equivalente Final</td>
-                                            <td id="td-finalvol-nutrade" class="val-nutrade font-mono">47.616,89 sc</td>
-                                            <td id="td-finalvol-market" class="font-mono">48.895,80 sc</td>
-                                            <td id="td-finalvol-diff" class="text-green font-bold">-2,62%</td>
+                                            <td>Volume de Troca Equivalente Final <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Volume físico inicial menos o volume deduzido pelos retornos comerciais.<br><strong>Versão Final:</strong> CPR Física consolidada final com o volume líquido final faturado (SAP FSCM).<br><strong>Fórmula:</strong> Volume Inicial - (Total Retorno / Preço Equivalente Final).</span></span></td>
+                                            <td id="td-finalvol-nutrade" class="val-nutrade font-mono">-</td>
+                                            <td id="td-finalvol-market" class="font-mono">-</td>
                                         </tr>
                                         <tr class="heavy-row">
-                                            <td>Valorização Real obtida sobre Preço Livre</td>
-                                            <td id="td-valreal-nutrade" class="val-nutrade font-mono text-green">+7,80%</td>
-                                            <td id="td-valreal-market" class="font-mono">+6,29%</td>
-                                            <td id="td-valreal-diff" class="text-green font-bold">+24,00%</td>
+                                            <td>Valorização Real obtida sobre Preço Livre <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Percentual de ganho efetivo sobre o Preço Livre (Porteira).<br><strong>Versão Final:</strong> Indicador comercial interno de margem do produtor no Salesforce.<br><strong>Fórmula:</strong> (Preço Equivalente Final / Preço Commodity Livre) - 1.</span></span></td>
+                                            <td id="td-valreal-nutrade" class="val-nutrade font-mono text-green">-</td>
+                                            <td id="td-valreal-market" class="font-mono">-</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="card-footer" style="display: flex; justify-content: space-between; align-items: center; padding: 12px 20px; border-top: 1px solid var(--border-color); background-color: var(--bg-hover);">
-                                <p style="font-size: 11px; color: var(--text-secondary); margin: 0;">* Valores baseados nas taxas atuais de mercado.</p>
-                                <p id="sim-disclaimer" style="font-size: 11px; color: var(--text-secondary); font-weight: 600; margin: 0; font-style: italic;">Aguardando simulação...</p>
-                            </div>
-                        </div>
-
-                        <!-- Modalidades Comparative Card (Modalidades Tab) -->
-                        <div class="results-card card animate-fade-in" id="tab-content-modalidades" style="display: none;">
-                            <div class="card-header">
-                                <h2>Comparativo de Modalidades de Crédito</h2>
-                                <p>Compare os custos financeiros, garantias atreladas e regras de elegibilidade entre as modalidades.</p>
-                            </div>
-                            <div class="table-responsive">
+                            
+                            <!-- Detailed table for Financial Modalities -->
+                            <div class="table-responsive" id="detailed-table-financial" style="display: none; padding: 15px;">
                                 <table class="comparison-table detailed-table">
                                     <thead>
                                         <tr>
                                             <th>Variável da Operação</th>
-                                            <th class="col-nutrade">Barter (Físico)</th>
+                                            <th>Barter (Nutrade)</th>
                                             <th>FIDC (Syde)</th>
                                             <th>FISO (Bancário)</th>
                                             <th>Prazo (On-Balance)</th>
@@ -503,90 +499,60 @@
                                     </thead>
                                     <tbody>
                                         <tr>
-                                            <td class="font-bold">Taxa Juros Anual Efetiva</td>
-                                            <td id="mod-juros-barter" class="text-green font-bold">14,40%</td>
-                                            <td id="mod-juros-fidc">10,40% (-4% inc.)</td>
-                                            <td id="mod-juros-fiso">11,40% (-3% inc.)</td>
-                                            <td id="mod-juros-prazo">14,40% (tabela)</td>
+                                            <td class="font-bold">Taxa Juros Anual Efetiva <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Taxa de juros anual configurada para a campanha (com reduções promocionais para FIDC e FISO).<br><strong>Versão Final:</strong> Taxa contratual parametrizada no SAP e negociada com as instituições financeiras.</span></span></td>
+                                            <td id="mod-juros-barter" class="text-green font-bold">-</td>
+                                            <td id="mod-juros-fidc">-</td>
+                                            <td id="mod-juros-fiso">-</td>
+                                            <td id="mod-juros-prazo">-</td>
                                         </tr>
                                         <tr>
-                                            <td class="font-bold">Custo Financeiro Líquido</td>
-                                            <td id="mod-custo-barter" class="text-green font-bold font-mono">R$ 6.480,00</td>
-                                            <td id="mod-custo-fidc" class="font-mono">R$ 74.880,00</td>
-                                            <td id="mod-custo-fiso" class="font-mono">R$ 82.080,00</td>
-                                            <td id="mod-custo-prazo" class="font-mono">R$ 103.680,00</td>
+                                            <td class="font-bold">Custo Financeiro Líquido <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Custo líquido de captação de juros, ponderado pelo prazo e deduzido dos retornos de originação (para Barter).<br><strong>Versão Final:</strong> Lançamento de despesas financeiras integradas no módulo SAP FI-CO.<br><strong>Fórmula:</strong> Crédito * (Prazo/360) * Juros Anual. Para Barter: Custo de Juros - Retorno Total + Frete.</span></span></td>
+                                            <td id="mod-custo-barter" class="text-green font-bold font-mono">-</td>
+                                            <td id="mod-custo-fidc" class="font-mono">-</td>
+                                            <td id="mod-custo-fiso" class="font-mono">-</td>
+                                            <td id="mod-custo-prazo" class="font-mono">-</td>
                                         </tr>
                                         <tr class="heavy-row" style="background-color: var(--bg-hover);">
-                                            <td class="font-bold">Valor Total a Pagar (Equivalente)</td>
-                                            <td id="mod-total-barter" class="text-green font-bold font-mono">R$ 0,00</td>
-                                            <td id="mod-total-fidc" class="font-mono">R$ 0,00</td>
-                                            <td id="mod-total-fiso" class="font-mono">R$ 0,00</td>
-                                            <td id="mod-total-prazo" class="font-mono">R$ 0,00</td>
+                                            <td class="font-bold">Valor Total a Pagar (Equivalente) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Soma do crédito e custo financeiro líquido da modalidade correspondente.<br><strong>Versão Final:</strong> Valor total de liquidação e encerramento de contrato integrado no SAP FSCM.<br><strong>Fórmula:</strong> Valor do Crédito + Custo Financeiro Líquido.</span></span></td>
+                                            <td id="mod-total-barter" class="text-green font-bold font-mono">-</td>
+                                            <td id="mod-total-fidc" class="font-mono">-</td>
+                                            <td id="mod-total-fiso" class="font-mono">-</td>
+                                            <td id="mod-total-prazo" class="font-mono">-</td>
                                         </tr>
                                         <tr>
-                                            <td class="font-bold">Incentivo / Retorno Comercial</td>
-                                            <td id="mod-inc-barter" class="text-green font-bold">8,10%</td>
-                                            <td>Taxa Reduzida (-4,0% a.a.)</td>
-                                            <td>Taxa Reduzida (-3,0% a.a.)</td>
+                                            <td class="font-bold">Incentivo / Retorno Comercial <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Detalhe da redução promocional de taxa de captação (-4% para FIDC, -3% para FISO) ou bonificação/cashback de originação (Barter).<br><strong>Versão Final:</strong> Parâmetros comerciais integrados de desconto financeiro da campanha comercial.</span></span></td>
+                                            <td id="mod-inc-barter" class="text-green font-bold">-</td>
+                                            <td>Taxa Reduzida (-4.0% a.a.)</td>
+                                            <td>Taxa Reduzida (-3.0% a.a.)</td>
                                             <td>Sem incentivo</td>
                                         </tr>
                                         <tr>
-                                            <td class="font-bold">Garantias Exigidas</td>
+                                            <td class="font-bold">Garantias Exigidas <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Texto fixo descritivo das garantias exigidas.<br><strong>Versão Final:</strong> Estrutura de colaterais e garantias exigidas pela mesa de crédito integradas no fluxo do dossiê digital de crédito (Salesforce).</span></span></td>
                                             <td>CPR Física e Seguro Agrícola</td>
-                                            <td>CPR Financeira, Nota Promissória (NP) e cessão de recebíveis</td>
-                                            <td>Penhor Agrícola, CPR Financeira e Seguro de Crédito</td>
+                                            <td>CPR Financeira, NP e recebíveis</td>
+                                            <td>Penhor, CPR-F e Seguro de Crédito</td>
                                             <td>Nota Promissória (NP) e FSCM</td>
                                         </tr>
                                         <tr>
-                                            <td class="font-bold">Critérios de Elegibilidade</td>
+                                            <td class="font-bold">Critérios de Elegibilidade <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Texto descritivo das condições de aceitação.<br><strong>Versão Final:</strong> Políticas automatizadas de score de crédito e compliance integradas na esteira de concessão de limite.</span></span></td>
                                             <td class="text-green font-bold">Livre (focado no grão)</td>
-                                            <td>Relacionamento &ge; 2 anos, exclui riscos altos (HR/VHR)</td>
-                                            <td>Restrições para relacionamento &lt; 2 anos (exceto FLEX/Santander)</td>
-                                            <td>Análise padrão no SAP FSCM</td>
+                                            <td>Relacionamento &ge; 2 anos, exclui HR/VHR</td>
+                                            <td>Restrições para relacionamento &lt; 2 anos (exceto FLEX)</td>
+                                            <td>SAP FSCM padrão</td>
                                         </tr>
                                         <tr class="heavy-row">
-                                            <td class="font-bold">Fluxo de Pagamento</td>
+                                            <td class="font-bold">Fluxo de Pagamento <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Tipo de entrega física ou financeira da modalidade.<br><strong>Versão Final:</strong> Parametrização do fluxo de liquidação contratual no SAP FSCM (físico ou financeiro).</span></span></td>
                                             <td>Entrega física de grãos (sacas/libras)</td>
                                             <td>Antecipação de recebíveis e liquidação financeira</td>
-                                            <td>Liquidação financeira via banco parceiro (Flex/Nice)</td>
+                                            <td>Liquidação financeira via banco parceiro</td>
                                             <td>Pagamento financeiro direto (boleto/on-balance)</td>
                                         </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="card-footer" style="display: flex; flex-direction: column; gap: 8px; padding: 12px 20px; border-top: 1px solid var(--border-color); background-color: var(--bg-hover);">
-                                <p style="font-size: 11px; color: var(--text-secondary); margin: 0; line-height: 1.5;"><strong>Nota de Garantias:</strong> A CPR Física no Barter vincula a produção diretamente. O FIDC utiliza CPR-F/NP com assinatura digital integrada para aceleração do desembolso. O FISO exige garantias mais robustas dos bancos parceiros (ex: penhor + 30% de retenção de AR para o Santander).</p>
-                                <p id="mod-disclaimer" style="font-size: 11px; color: var(--text-secondary); font-weight: 600; margin: 0; font-style: italic;">Simulação não realizada ainda</p>
-                            </div>
-                        </div>
-
-                        <!-- Highlight Benefit Cards -->
-                        <div class="benefit-cards-grid">
-                            <div class="benefit-card accent-green animate-scale-up">
-                                <div class="card-icon"><i class="fa-solid fa-piggy-bank"></i></div>
-                                <div class="card-info">
-                                    <h3>Incentivo Barter</h3>
-                                    <div class="benefit-value" id="card-incentivo">R$ 33.136,97</div>
-                                    <p class="benefit-sub" id="card-incentivo-sub">Proporcional ao Prazo da Operação</p>
-                                </div>
-                            </div>
-
-                            <div class="benefit-card accent-green animate-scale-up">
-                                <div class="card-icon"><i class="fa-solid fa-hand-holding-dollar"></i></div>
-                                <div class="card-info">
-                                    <h3>Valorização da Campanha</h3>
-                                    <div class="benefit-value" id="card-valorizacao">R$ 45.000,00</div>
-                                    <p class="benefit-sub" id="card-valorizacao-sub">Retorno Cashback da safra 2026</p>
-                                </div>
-                            </div>
-
-                            <div class="benefit-card accent-solid animate-scale-up">
-                                <div class="card-icon"><i class="fa-solid fa-wheat-awn"></i></div>
-                                <div class="card-info">
-                                    <h3 class="text-white">Benefício Total da Estrutura</h3>
-                                    <div class="benefit-value text-white" id="card-total">1.278,91 sc</div>
-                                    <p class="benefit-sub text-light" id="card-total-sub">Sacas economizadas vs. mercado</p>
-                                </div>
+                            
+                            <div class="card-footer" style="padding: 10px 20px; border-top: 1px solid var(--border-color); background-color: var(--bg-hover);">
+                                <p style="font-size: 11px; color: var(--text-secondary); margin: 0;" id="detailed-table-disclaimer">* Valores de simulação gerados dinamicamente.</p>
                             </div>
                         </div>
 
@@ -600,6 +566,14 @@
                                 <div class="tradingview-widget-container" style="height:350px;width:100%">
                                     <div id="tradingview_widget" style="height:350px;width:100%"></div>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Disclaimer Banner -->
+                        <div class="disclaimer-banner animate-fade-in">
+                            <i class="fa-solid fa-circle-exclamation"></i>
+                            <div>
+                                Se não encontrar a sua praça neste simulador, favor entrar em contato com o time de FISO para análise especial.
                             </div>
                         </div>
                         
@@ -877,6 +851,104 @@
 
                 </div>
 
+                <!-- ==================== PAGE 4: CADASTRO DE PRAÇAS (WSYS) ==================== -->
+                <div id="page-pracas" style="display:none" class="animate-fade-in">
+                    
+                    <!-- View A: Praças List View -->
+                    <div id="pracas-list-view" class="card">
+                        <div class="card-header" style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 15px;">
+                            <div>
+                                <h2>Cadastro de Praças (WSys) <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Esta tela simula o cadastro de praças e custos logísticos do sistema WSys, conforme solicitado para demonstração.</span></span></h2>
+                                <p>Gerencie as praças integradas ao sistema WSys e configure seus custos de frete e regras tributárias.</p>
+                            </div>
+                            <button type="button" class="btn-submit" onclick="showCreatePracaForm()" style="width: auto; margin-top: 0; padding: 10px 20px;">
+                                <i class="fa-solid fa-plus"></i> Cadastrar Praça
+                            </button>
+                        </div>
+                        
+                        <div class="table-responsive" style="margin-top: 20px;">
+                            <table class="comparison-table detailed-table" id="pracas-table">
+                                <thead>
+                                    <tr>
+                                        <th>Estado</th>
+                                        <th>Nome da Praça</th>
+                                        <th>Custo Frete Chão (R$/KM)</th>
+                                        <th>Custo Frete Asfalto (R$/KM)</th>
+                                        <th>Alíquota de Imposto (%)</th>
+                                        <th>Taxa de Imposto Fixa (por un)</th>
+                                        <th style="text-align: center; width: 120px;">Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pracas-table-body">
+                                    <!-- Dynamic rows loaded from JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- View B: Praça Create/Edit View -->
+                    <div id="pracas-create-view" class="card" style="display: none;">
+                        <div class="card-header">
+                            <h2 id="praca-form-title">Cadastrar nova praça no WSys</h2>
+                            <p>Preencha os campos abaixo para salvar a praça no sistema.</p>
+                        </div>
+                        
+                        <form id="create-praca-form" onsubmit="handleSavePraca(event)" style="padding-top: 15px;">
+                            <input type="hidden" id="praca-edit-index">
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                                <div class="input-group">
+                                    <label for="praca-estado">Estado*</label>
+                                    <div class="select-wrapper">
+                                        <select id="praca-estado" required>
+                                            <option value="MT">Mato Grosso (MT)</option>
+                                            <option value="GO">Goiás (GO)</option>
+                                            <option value="MS">Mato Grosso do Sul (MS)</option>
+                                            <option value="PR">Paraná (PR)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label for="praca-nome">Nome da Praça*</label>
+                                    <input type="text" id="praca-nome" placeholder="Ex: Sorriso" required>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                                <div class="input-group">
+                                    <label for="praca-frete-chao">Custo Frete Chão (por KM)*</label>
+                                    <input type="number" id="praca-frete-chao" min="0" step="any" value="15.00" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="praca-frete-asfalto">Custo Frete Asfalto (por KM)*</label>
+                                    <input type="number" id="praca-frete-asfalto" min="0" step="any" value="8.00" required>
+                                </div>
+                            </div>
+                            
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                                <div class="input-group">
+                                    <label for="praca-tax-pct">Dedução Regional Alíquota (%)*</label>
+                                    <input type="number" id="praca-tax-pct" min="0" step="any" value="0.25" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="praca-tax-fixo">Dedução Regional Fixa (por saca/libra)*</label>
+                                    <input type="number" id="praca-tax-fixo" min="0" step="any" value="0.60" required>
+                                </div>
+                            </div>
+                            
+                            <div style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border-color); padding-top: 15px; margin-top: 15px;">
+                                <button type="button" class="btn-submit" onclick="cancelCreatePraca()" style="width: auto; margin-top: 0; padding: 10px 20px; background-color: #6b7280; background-image: none; box-shadow: none;">
+                                    Cancelar
+                                </button>
+                                <button type="submit" class="btn-submit" style="width: auto; margin-top: 0; padding: 10px 25px;">
+                                    Salvar Praça
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                </div>
+
             </main>
 
             <!-- Footer -->
@@ -953,12 +1025,12 @@
                         </div>
                     </div>
                     <div class="input-group">
-                        <label for="tax-modal-incentivo">Incentivo</label>
-                        <input type="text" id="tax-modal-incentivo" placeholder="% 0,00">
+                        <label for="tax-modal-incentivo">Valorização Nutrade (%)*</label>
+                        <input type="text" id="tax-modal-incentivo" placeholder="% 4,50" required>
                     </div>
                     <div class="input-group">
-                        <label for="tax-modal-desconto">Desconto</label>
-                        <input type="text" id="tax-modal-desconto" placeholder="% 0,00">
+                        <label for="tax-modal-desconto">Valorização Outras Trades (%)*</label>
+                        <input type="text" id="tax-modal-desconto" placeholder="% 3,00" required>
                     </div>
                 </div>
 
@@ -995,6 +1067,27 @@
                     </button>
                 </div>
             </form>
+        </div>
+    </div>
+
+    <!-- ==================== SHARE POPUP MODAL ==================== -->
+    <div id="share-modal" class="share-popup-overlay" onclick="closeSharePopup()">
+        <div class="share-popup card" onclick="event.stopPropagation()">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">
+                <h3 style="margin: 0; font-family: var(--font-heading); color: var(--text-primary); font-size: 16px;">Compartilhar Simulação</h3>
+                <span style="font-size: 20px; cursor: pointer; color: var(--text-secondary);" onclick="closeSharePopup()">&times;</span>
+            </div>
+            <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 15px;">Escolha como você deseja compartilhar a simulação:</p>
+            <div class="share-options-grid">
+                <button type="button" class="share-btn share-btn-wa" onclick="shareToWhatsApp()">
+                    <i class="fa-brands fa-whatsapp"></i>
+                    <span>WhatsApp</span>
+                </button>
+                <button type="button" class="share-btn share-btn-native" onclick="shareNative()">
+                    <i class="fa-solid fa-share-nodes"></i>
+                    <span>Opções do Sistema</span>
+                </button>
+            </div>
         </div>
     </div>
 
