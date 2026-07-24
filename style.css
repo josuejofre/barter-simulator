@@ -1728,7 +1728,7 @@ select {
 
 .tooltip-container .tooltip-text {
     visibility: hidden;
-    width: 260px;
+    width: 280px;
     background-color: var(--primary-deep);
     color: #ffffff;
     text-align: left;
@@ -1738,7 +1738,7 @@ select {
     z-index: 1050;
     bottom: 130%;
     left: 50%;
-    margin-left: -130px;
+    margin-left: -140px;
     opacity: 0;
     transition: opacity 0.2s, transform 0.2s;
     transform: translateY(8px);
@@ -1747,7 +1747,10 @@ select {
     line-height: 1.4;
     font-weight: 400;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
-    pointer-events: none;
+    pointer-events: auto;
+    user-select: text;
+    -webkit-user-select: text;
+    cursor: text;
     white-space: normal;
 }
 
@@ -1762,7 +1765,9 @@ select {
     border-color: var(--primary-deep) transparent transparent transparent;
 }
 
-.tooltip-container:hover .tooltip-text {
+.tooltip-container:hover .tooltip-text,
+.tooltip-container:focus-within .tooltip-text,
+.tooltip-container.active-tooltip .tooltip-text {
     visibility: visible;
     opacity: 1;
     transform: translateY(0);

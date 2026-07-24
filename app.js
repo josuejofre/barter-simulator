@@ -20,6 +20,38 @@ let wsysPlazas = [
 
 let activeCampanhaValorizacaoOutras = 3.00;
 
+// Lista de Feriados Nacionais (baseada na aba Feriados da planilha Simulador_outras_Modalidades.xlsx)
+const FERIADOS_NACIONAIS = [
+    "2025-01-01", "2025-03-03", "2025-03-04", "2025-04-18", "2025-04-21", "2025-05-01", "2025-06-19", "2025-09-07", "2025-10-12", "2025-11-02", "2025-11-15", "2025-12-25",
+    "2026-01-01", "2026-02-16", "2026-02-17", "2026-04-03", "2026-04-21", "2026-05-01", "2026-06-04", "2026-09-07", "2026-10-12", "2026-11-02", "2026-11-15", "2026-12-25",
+    "2027-01-01", "2027-02-08", "2027-02-09", "2027-03-26", "2027-04-21", "2027-05-01", "2027-05-27", "2027-09-07", "2027-10-12", "2027-11-02", "2027-11-15", "2027-12-25"
+];
+
+// Cálculo de Dias Úteis (equivalente ao NETWORKDAYS(inicio, fim, feriados) - 1 da planilha Excel)
+function calculateBusinessDays(startDate, endDate) {
+    if (!startDate || !endDate) return 0;
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    if (isNaN(start.getTime()) || isNaN(end.getTime()) || start > end) return 0;
+    
+    let count = 0;
+    let cur = new Date(start.getTime());
+    while (cur <= end) {
+        const dayOfWeek = cur.getDay(); // 0 = Domingo, 6 = Sábado
+        const yyyy = cur.getFullYear();
+        const mm = String(cur.getMonth() + 1).padStart(2, '0');
+        const dd = String(cur.getDate()).padStart(2, '0');
+        const dateStr = `${yyyy}-${mm}-${dd}`;
+        
+        if (dayOfWeek !== 0 && dayOfWeek !== 6 && !FERIADOS_NACIONAIS.includes(dateStr)) {
+            count++;
+        }
+        cur.setDate(cur.getDate() + 1);
+    }
+    return Math.max(0, count - 1);
+}
+
+
 // Formatting helpers
 const formatUSD = (val) => {
     return new Intl.NumberFormat('en-US', {
@@ -99,6 +131,7 @@ window.addEventListener('DOMContentLoaded', () => {
     initWsysPlazas(); // Initialize WSys database
     initEstadoSelect(); // Initialize Estado and Praça selects
     updateCampaignSelectOptions(); // Populate campaigns select in simulator form
+    initTooltipsStore(); // Initialize tooltips database
 });
 
 // Configure mask events
@@ -124,12 +157,14 @@ function showPage(pageId) {
     const rulesPage = document.getElementById('page-regras');
     const campaignsPage = document.getElementById('page-campanhas');
     const pracasPage = document.getElementById('page-pracas');
+    const tooltipsPage = document.getElementById('page-tooltips');
     
     const assistLink = document.getElementById('nav-link-assistente');
     const simLink = document.getElementById('nav-link-simulador');
     const rulesLink = document.getElementById('nav-link-regras');
     const campaignsLink = document.getElementById('nav-link-campanhas');
     const pracasLink = document.getElementById('nav-link-pracas');
+    const tooltipsLink = document.getElementById('nav-link-tooltips');
     
     // Hide all pages
     if (assistPage) assistPage.style.display = 'none';
@@ -137,6 +172,7 @@ function showPage(pageId) {
     if (rulesPage) rulesPage.style.display = 'none';
     if (campaignsPage) campaignsPage.style.display = 'none';
     if (pracasPage) pracasPage.style.display = 'none';
+    if (tooltipsPage) tooltipsPage.style.display = 'none';
     
     // Remove active class from links
     if (assistLink) assistLink.classList.remove('active');
@@ -144,6 +180,7 @@ function showPage(pageId) {
     if (rulesLink) rulesLink.classList.remove('active');
     if (campaignsLink) campaignsLink.classList.remove('active');
     if (pracasLink) pracasLink.classList.remove('active');
+    if (tooltipsLink) tooltipsLink.classList.remove('active');
     
     if (pageId === 'assistente') {
         if (assistPage) assistPage.style.display = 'grid';
@@ -166,6 +203,10 @@ function showPage(pageId) {
         if (pracasPage) pracasPage.style.display = 'block';
         if (pracasLink) pracasLink.classList.add('active');
         renderPracasTable();
+    } else if (pageId === 'tooltips') {
+        if (tooltipsPage) tooltipsPage.style.display = 'block';
+        if (tooltipsLink) tooltipsLink.classList.add('active');
+        renderTooltipsTable();
     }
 }
 
@@ -589,56 +630,92 @@ function calculateSimulation() {
     document.getElementById('ref-frete-chao').textContent = `R$ ${freteChaoRaw.toFixed(2)}/KM`;
     document.getElementById('ref-frete-asfalto').textContent = `R$ ${freteAsfaltoRaw.toFixed(2)}/KM`;
 
-    // 3. Modalidades Tab calculations and structures
+    // 3. Modalidades Tab calculations and structures (incorporating Simulador_outras_Modalidades.xlsx formulas)
     const campSelect = document.getElementById('sim-campanha-select');
     const campId = campSelect ? campSelect.value : 'custom';
     
-    let jurosAnualFidc, jurosAnualFiso, jurosAnualPrazo;
-    
-    if (campId !== 'custom') {
-        const camp = campaigns.find(c => c.id == campId);
-        if (camp) {
-            const fidcTax = camp.taxas.find(t => t.produtoFinanceiro === 'FIDC');
-            const fisoTax = camp.taxas.find(t => t.produtoFinanceiro === 'FISO');
-            const prazoTax = camp.taxas.find(t => t.produtoFinanceiro === 'Prazo');
-            
-            jurosAnualFidc = fidcTax ? (fidcTax.jurosMensais * 12) : Math.max(0, jurosAnual - 4.0);
-            jurosAnualFiso = fisoTax ? (fisoTax.jurosMensais * 12) : Math.max(0, jurosAnual - 3.0);
-            jurosAnualPrazo = prazoTax ? (prazoTax.jurosMensais * 12) : jurosAnual;
-        } else {
-            jurosAnualFidc = Math.max(0, jurosAnual - 4.0);
-            jurosAnualFiso = Math.max(0, jurosAnual - 3.0);
-            jurosAnualPrazo = jurosAnual;
+    let campObj = (campId !== 'custom') ? campaigns.find(c => c.id == campId) : null;
+
+    // Helper to calculate a financial product using Simulador_outras_Modalidades.xlsx formulas
+    function computeFinancialProduct(productKey, defaultRateAM, defaultDiscountVPAN, defaultIncentive, defaultTipoJuros, defaultContagemDias) {
+        let tax = null;
+        if (campObj && campObj.taxas) {
+            tax = campObj.taxas.find(t => {
+                const name = (t.produtoFinanceiro || '').toLowerCase();
+                const key = productKey.toLowerCase();
+                return name.includes(key) || (key === 'syde' && name.includes('fidc')) || (key === 'fiso' && name.includes('fiso')) || (key === 'syngenta' && name.includes('prazo'));
+            });
         }
-    } else {
-        jurosAnualFidc = Math.max(0, jurosAnual - 4.0);
-        jurosAnualFiso = Math.max(0, jurosAnual - 3.0);
-        jurosAnualPrazo = jurosAnual;
+
+        const taxaMensal = tax ? tax.jurosMensais : defaultRateAM;
+        const descontoVPAN = tax ? (tax.desconto || 0) : defaultDiscountVPAN;
+        const incentivo = tax ? (tax.incentivo || 0) : defaultIncentive;
+        const tipoJuros = tax ? tax.tipoJuros : defaultTipoJuros;
+        const contagemDias = tax ? tax.contagemDias : defaultContagemDias;
+
+        const nMesesCorridos = prazo / 30.0;
+        let nMesesCalculo;
+
+        if (contagemDias === 'Uteis' || contagemDias === 'Dias úteis') {
+            let diasUteis = 0;
+            if (campObj && campObj.desembolso && campObj.vencimento) {
+                diasUteis = calculateBusinessDays(campObj.desembolso, campObj.vencimento);
+            } else {
+                diasUteis = Math.round((prazo / 30.0) * 22);
+            }
+            nMesesCalculo = diasUteis / 22.0;
+        } else {
+            nMesesCalculo = nMesesCorridos;
+        }
+
+        const vfIntermed = creditRaw * (1.0 - (descontoVPAN / 100.0));
+        let vfComJuros;
+        if (tipoJuros === 'Composto') {
+            vfComJuros = vfIntermed * Math.pow(1.0 + (taxaMensal / 100.0), nMesesCalculo);
+        } else {
+            vfComJuros = vfIntermed * (1.0 + (taxaMensal / 100.0) * nMesesCalculo);
+        }
+
+        const valorTotal = vfComJuros * (1.0 - (incentivo / 100.0));
+        const custoTotal = valorTotal - creditRaw;
+        const custoTotalPct = (valorTotal / creditRaw - 1.0) * 100.0;
+        const custoAmPct = (nMesesCorridos > 0) ? (custoTotalPct / nMesesCorridos) : 0;
+
+        return {
+            taxaMensal,
+            descontoVPAN,
+            incentivo,
+            tipoJuros,
+            contagemDias,
+            valorTotal,
+            custoTotal,
+            custoTotalPct,
+            custoAmPct,
+            jurosAnual: taxaMensal * 12
+        };
     }
-    
+
+    // 1. Syde (FIDC) - Formula: VPAN (4%), Composto, Dias Úteis (/22)
+    const calcSyde = computeFinancialProduct('Syde', 1.85, 4.0, 0.0, 'Composto', 'Dias úteis');
+
+    // 2. Fiso (Bancário) - Formula: Simples, Dias Corridos (/30), Incentivo (3%)
+    const calcFiso = computeFinancialProduct('Fiso', 1.85, 0.0, 3.0, 'Simples', 'Dias corridos');
+
+    // 3. Syngenta (Prazo / On-Balance) - Formula: Simples, Dias Corridos (/30)
+    const calcSyngenta = computeFinancialProduct('Syngenta', 1.85, 0.0, 0.0, 'Simples', 'Dias corridos');
+
+    // 4. Barter Nutrade & Barter Outras Tradings
     const jurosPeriodoBarter = (prazo / 360) * (jurosAnual / 100);
-    const jurosPeriodoFidc = (prazo / 360) * (jurosAnualFidc / 100);
-    const jurosPeriodoFiso = (prazo / 360) * (jurosAnualFiso / 100);
-    const jurosPeriodoPrazo = (prazo / 360) * (jurosAnualPrazo / 100);
-    
-    const custoFidc = creditRaw * jurosPeriodoFidc;
-    const custoFiso = creditRaw * jurosPeriodoFiso;
-    const custoPrazo = creditRaw * jurosPeriodoPrazo;
-    
     const custoBrutoBarter = creditRaw * jurosPeriodoBarter;
     const totalRetornosBarter = res.totalRetornoUSDProposta * factor;
     const freteTotalBarter = res.freteTotalUSDProposta * factor;
     const netCustoBarter = custoBrutoBarter - totalRetornosBarter + freteTotalBarter;
-    
     const netCustoMarket = (creditRaw * jurosPeriodoBarter) - (res.totalRetornoUSDMarket * factor) + (res.freteTotalUSDMarket * factor);
-    
+
     const totalBarter = (res.volFinalProposta * commBrutoRaw) + freteTotalBarter;
     const totalMarket = (res.volFinalMarket * (res.commBrutoUSDMarket * factor)) + (res.freteTotalUSDMarket * factor);
-    const totalFidc = creditRaw + custoFidc;
-    const totalFiso = creditRaw + custoFiso;
-    const totalPrazo = creditRaw + custoPrazo;
 
-    // Define the modalities list to sort
+    // List all 5 modalities to show and sort
     const modalities = [
         {
             id: 'barter_nutrade',
@@ -656,7 +733,7 @@ function calculateSimulation() {
         },
         {
             id: 'barter_market',
-            name: 'Barter (Outras Trades)',
+            name: 'Barter (Outras Tradings)',
             type: 'barter',
             jurosAnual: jurosAnual,
             jurosPeriodo: jurosPeriodoBarter,
@@ -670,45 +747,45 @@ function calculateSimulation() {
         },
         {
             id: 'fidc',
-            name: 'FIDC (Syde)',
+            name: 'Syde (FIDC)',
             type: 'financial',
-            jurosAnual: jurosAnualFidc,
-            jurosPeriodo: jurosPeriodoFidc,
-            jurosMensal: jurosAnualFidc / 12,
-            incentivo: 'Taxa reduzida (-4.0% a.a.)',
+            jurosAnual: calcSyde.jurosAnual,
+            jurosPeriodo: calcSyde.custoTotalPct / 100,
+            jurosMensal: calcSyde.taxaMensal,
+            incentivo: calcSyde.descontoVPAN > 0 ? `Desc. VPAN (-${calcSyde.descontoVPAN.toFixed(1)}%) | ${calcSyde.tipoJuros}` : 'Taxa reduzida',
             desconto: 'Não aplicado',
-            custoTotal: custoFidc,
-            custoTotalPct: jurosPeriodoFidc * 100,
-            custoAmPct: jurosAnualFidc / 12,
-            valorTotal: totalFidc
+            custoTotal: calcSyde.custoTotal,
+            custoTotalPct: calcSyde.custoTotalPct,
+            custoAmPct: calcSyde.custoAmPct,
+            valorTotal: calcSyde.valorTotal
         },
         {
             id: 'fiso',
-            name: 'FISO (Bancário)',
+            name: 'Fiso (Bancário)',
             type: 'financial',
-            jurosAnual: jurosAnualFiso,
-            jurosPeriodo: jurosPeriodoFiso,
-            jurosMensal: jurosAnualFiso / 12,
-            incentivo: 'Taxa reduzida (-3.0% a.a.)',
+            jurosAnual: calcFiso.jurosAnual,
+            jurosPeriodo: calcFiso.custoTotalPct / 100,
+            jurosMensal: calcFiso.taxaMensal,
+            incentivo: calcFiso.incentivo > 0 ? `Incentivo (-${calcFiso.incentivo.toFixed(1)}%) | ${calcFiso.tipoJuros}` : 'Taxa reduzida',
             desconto: 'Não aplicado',
-            custoTotal: custoFiso,
-            custoTotalPct: jurosPeriodoFiso * 100,
-            custoAmPct: jurosAnualFiso / 12,
-            valorTotal: totalFiso
+            custoTotal: calcFiso.custoTotal,
+            custoTotalPct: calcFiso.custoTotalPct,
+            custoAmPct: calcFiso.custoAmPct,
+            valorTotal: calcFiso.valorTotal
         },
         {
             id: 'prazo',
-            name: 'Prazo (On-Balance)',
+            name: 'Syngenta (Prazo)',
             type: 'financial',
-            jurosAnual: jurosAnualPrazo,
-            jurosPeriodo: jurosPeriodoPrazo,
-            jurosMensal: jurosAnualPrazo / 12,
+            jurosAnual: calcSyngenta.jurosAnual,
+            jurosPeriodo: calcSyngenta.custoTotalPct / 100,
+            jurosMensal: calcSyngenta.taxaMensal,
             incentivo: 'Sem incentivos',
             desconto: 'Não aplicado',
-            custoTotal: custoPrazo,
-            custoTotalPct: jurosPeriodoPrazo * 100,
-            custoAmPct: jurosAnualPrazo / 12,
-            valorTotal: totalPrazo
+            custoTotal: calcSyngenta.custoTotal,
+            custoTotalPct: calcSyngenta.custoTotalPct,
+            custoAmPct: calcSyngenta.custoAmPct,
+            valorTotal: calcSyngenta.valorTotal
         }
     ];
 
@@ -1996,23 +2073,35 @@ let campaigns = [
         visivelRTV: true,
         taxas: [
             {
-                produtoFinanceiro: "Barter",
+                produtoFinanceiro: "Barter Nutrade",
                 produtoAgricola: "Soja",
                 moeda: "BRL",
                 jurosMensais: 1.20, // 14.4% a.a.
                 tipoJuros: "Simples",
-                contagemDias: "Dias úteis",
+                contagemDias: "Dias corridos",
                 incentivo: 4.50,
-                desconto: 3.00,
+                desconto: 0.00,
                 inicio: "2026-07-21",
                 fim: "2026-12-01"
             },
             {
-                produtoFinanceiro: "FIDC",
+                produtoFinanceiro: "Barter Outras Tradings",
                 produtoAgricola: "Soja",
                 moeda: "BRL",
-                jurosMensais: 0.87, // 10.4% a.a.
+                jurosMensais: 1.20, // 14.4% a.a.
                 tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 3.00,
+                desconto: 0.00,
+                inicio: "2026-07-21",
+                fim: "2026-12-01"
+            },
+            {
+                produtoFinanceiro: "Syde",
+                produtoAgricola: "Soja",
+                moeda: "BRL",
+                jurosMensais: 1.85,
+                tipoJuros: "Composto",
                 contagemDias: "Dias úteis",
                 incentivo: 0.00,
                 desconto: 4.00,
@@ -2020,24 +2109,24 @@ let campaigns = [
                 fim: "2026-12-01"
             },
             {
-                produtoFinanceiro: "FISO",
+                produtoFinanceiro: "Fiso",
                 produtoAgricola: "Soja",
                 moeda: "BRL",
-                jurosMensais: 0.95, // 11.4% a.a.
+                jurosMensais: 1.85,
                 tipoJuros: "Simples",
-                contagemDias: "Dias úteis",
-                incentivo: 0.00,
-                desconto: 3.00,
+                contagemDias: "Dias corridos",
+                incentivo: 1.00,
+                desconto: 0.00,
                 inicio: "2026-07-21",
                 fim: "2026-12-01"
             },
             {
-                produtoFinanceiro: "Prazo",
+                produtoFinanceiro: "Syngenta",
                 produtoAgricola: "Soja",
                 moeda: "BRL",
-                jurosMensais: 1.20, // 14.4% a.a.
+                jurosMensais: 1.85,
                 tipoJuros: "Simples",
-                contagemDias: "Dias úteis",
+                contagemDias: "Dias corridos",
                 incentivo: 0.00,
                 desconto: 0.00,
                 inicio: "2026-07-21",
@@ -2360,14 +2449,19 @@ function onCampanhaSelectChange(val) {
     const camp = campaigns.find(c => c.id == val);
     if (!camp) return;
     
-    // Find Barter tax parameters
-    const barterTax = camp.taxas.find(t => t.produtoFinanceiro === 'Barter');
+    // Find Barter tax parameters (Nutrade or generic Barter)
+    const barterTax = camp.taxas.find(t => t.produtoFinanceiro === 'Barter Nutrade' || t.produtoFinanceiro === 'Barter');
+    const barterMarketTax = camp.taxas.find(t => t.produtoFinanceiro === 'Barter Outras Tradings');
+
+    if (barterMarketTax && barterMarketTax.incentivo !== undefined) {
+        activeCampanhaValorizacaoOutras = barterMarketTax.incentivo;
+    }
     
     if (barterTax) {
         if (commoditySelect) {
-            commoditySelect.value = barterTax.produtoAgricola;
+            commoditySelect.value = barterTax.produtoAgricola || 'Soja';
             commoditySelect.disabled = true;
-            onCulturaChange(barterTax.produtoAgricola);
+            onCulturaChange(barterTax.produtoAgricola || 'Soja');
         }
         if (jurosInput) {
             // Annual interest rate = monthly rate * 12
@@ -2627,6 +2721,398 @@ function shareNative() {
             alert("Não foi possível acessar a área de transferência.");
         });
     }
+}
+
+// ==================== TOOLTIPS MANAGER MODULE ====================
+
+const defaultTooltips = [
+    {
+        id: "sim-campanha-select",
+        label: "Campanha de Referência",
+        location: "Formulário de Operação",
+        text: "<strong>Simulador:</strong> Seleção manual de opções mockadas ou adicionadas em Ajustar Taxas.<br><strong>Versão Final:</strong> Integração com base de campanhas de Barter registradas no SAP/Salesforce."
+    },
+    {
+        id: "sim-commodity",
+        label: "Commodity",
+        location: "Formulário de Operação",
+        text: "<strong>Simulador:</strong> Seleção manual (Soja em sc ou Algodão em lp).<br><strong>Versão Final:</strong> Cadastro de produtos e commodities de originação da Syngenta/Nutrade."
+    },
+    {
+        id: "sim-estado",
+        label: "Estado",
+        location: "Formulário de Operação",
+        text: "<strong>Simulador:</strong> Seleção do Estado correspondente.<br><strong>Versão Final:</strong> Preenchido de forma automática com base no domicílio fiscal (CNPJ) do cliente integrado no SAP MDM."
+    },
+    {
+        id: "sim-regiao",
+        label: "Praça (Dados do WSys)",
+        location: "Formulário de Operação",
+        text: "<strong>Simulador:</strong> Filtro local de praças (carregando dados de localStorage).<br><strong>Versão Final:</strong> Chamada de API direta ao sistema corporativo de logística e originação (WSys).<br><strong>Fórmula:</strong> Retorna as tarifas logísticas e impostos vigentes do município."
+    },
+    {
+        id: "currency-group",
+        label: "Moeda da Operação",
+        location: "Formulário de Operação",
+        text: "<strong>Simulador:</strong> Escolha entre Real (R$) e Dólar ($).<br><strong>Versão Final:</strong> Puxado das regras da linha de faturamento e financiamento do pedido de venda (SAP/Salesforce)."
+    },
+    {
+        id: "sim-credito",
+        label: "Valor da Operação",
+        location: "Formulário de Operação",
+        text: "<strong>Simulador:</strong> Valor digitado pelo usuário.<br><strong>Versão Final:</strong> Valor bruto do pedido de faturamento de insumos associado (Salesforce/SAP FSCM)."
+    },
+    {
+        id: "sim-descontos",
+        label: "Deduções Fiscais de Barter",
+        location: "Formulário de Operação",
+        text: "<strong>Simulador:</strong> Botão liga/desliga para fins comparativos.<br><strong>Versão Final:</strong> Determinação fiscal automatizada (SAP Tax Engine) segundo o enquadramento fiscal e tributação estadual do produtor."
+    },
+    {
+        id: "sim-dist-chao",
+        label: "Distância Estrada de Chão (KM)",
+        location: "Formulário de Operação",
+        text: "<strong>Simulador:</strong> Carrega do WSys (editável).<br><strong>Versão Final:</strong> Calculado via roteirizador do frete com a geolocalização da fazenda cadastrada.<br><strong>Fórmula:</strong> Distância Chão * Custo KM Terra do WSys."
+    },
+    {
+        id: "sim-dist-asfalto",
+        label: "Distância Estrada de Asfalto (KM)",
+        location: "Formulário de Operação",
+        text: "<strong>Simulador:</strong> Carrega do WSys (editável).<br><strong>Versão Final:</strong> Calculado via roteirizador do frete com a geolocalização da fazenda cadastrada.<br><strong>Fórmula:</strong> Distância Asfalto * Custo KM Asfalto do WSys."
+    },
+    {
+        id: "summary-card",
+        label: "Resumo da Operação",
+        location: "Cartão Resumo",
+        text: "<strong>Simulador:</strong> Consolidação de juros, prazos e economia com base na opção selecionada.<br><strong>Versão Final:</strong> Espelho e resumo executivo da CPR/proposta de faturamento do cliente."
+    },
+    {
+        id: "ref-preco",
+        label: "Preço do Grão",
+        location: "Dados de Referência",
+        text: "Preço bruto FOB obtido via API / WSys."
+    },
+    {
+        id: "ref-cambio",
+        label: "Taxa Cambial",
+        location: "Dados de Referência",
+        text: "Dólar futuro / spot atual obtido via AwesomeAPI."
+    },
+    {
+        id: "ref-juros",
+        label: "Taxa Juros (a.a.)",
+        location: "Dados de Referência",
+        text: "Taxa de juros anualizada cadastrada para o Barter nesta campanha."
+    },
+    {
+        id: "ref-prazo",
+        label: "Prazo Calculado",
+        location: "Dados de Referência",
+        text: "Prazo calculated (Data de carência a Vencimento da campanha)."
+    },
+    {
+        id: "ref-val-nutrade",
+        label: "Valoriz. Nutrade",
+        location: "Dados de Referência",
+        text: "Retorno de valorização comercial (Cashback) da Nutrade."
+    },
+    {
+        id: "ref-val-outras",
+        label: "Valoriz. Outras",
+        location: "Dados de Referência",
+        text: "Dedução de valorização das tradings concorrentes."
+    },
+    {
+        id: "ref-frete-chao",
+        label: "Frete Chão (WSys)",
+        location: "Dados de Referência",
+        text: "Custo por KM de terra recuperado do WSys para a praça."
+    },
+    {
+        id: "ref-frete-asfalto",
+        label: "Frete Asfalto (WSys)",
+        location: "Dados de Referência",
+        text: "Custo por KM de asfalto recuperado do WSys para a praça."
+    },
+    {
+        id: "modality-cards-list",
+        label: "Modalidades de Crédito (Lista)",
+        location: "Cards de Modalidades",
+        text: "Apresentado da mais vantajosa (melhor benefício) para a menos vantajosa. Clique para ver o detalhamento completo dos custos."
+    },
+    {
+        id: "tbl-barter-fob",
+        label: "Valor do Crédito (FOB a Prazo)",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Resgatado do input Valor da Operação.<br><strong>Versão Final:</strong> Valor do faturamento do pedido de insumos integrado via Salesforce/SAP.<br><strong>Fórmula:</strong> Valor do Crédito."
+    },
+    {
+        id: "tbl-barter-desc-estadual",
+        label: "(-) Descontos Tributários Estaduais",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Parcela fixa de imposto cadastrada na Praça logística local (WSys).<br><strong>Versão Final:</strong> Puxado do motor fiscal (SAP Tax Engine) conforme enquadramento fiscal do produtor.<br><strong>Fórmula:</strong> Desconto Fixo = Volume Físico Inicial * Alíquota por Saca da Praça (ex: Fethab/Fundems)."
+    },
+    {
+        id: "tbl-barter-desc-demais",
+        label: "(-) Demais Descontos (SENAR / Funrural)",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Alíquota percentual cadastrada na Praça logística local (WSys).<br><strong>Versão Final:</strong> Motor fiscal de impostos federais retidos na fonte (SENAR/Funrural) no SAP.<br><strong>Fórmula:</strong> Desconto SENAR/Funrural = Preço Commodity Bruto * Alíquota Percentual da Praça."
+    },
+    {
+        id: "tbl-barter-livre",
+        label: "Preço Commodity Livre (Porteira)",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Subtração dos descontos fiscais sobre o Preço Bruto.<br><strong>Versão Final:</strong> Calculado pelo Motor de Netback da mesa de originação (Nutrade).<br><strong>Fórmula:</strong> Preço Bruto FOB - Descontos Estaduais - Demais Descontos."
+    },
+    {
+        id: "tbl-barter-vol-troca",
+        label: "Volume de Troca Físico Inicial",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Razão entre Crédito e Preço Livre, arredondada para cima.<br><strong>Versão Final:</strong> CPR Física gerada e registrada no cartório de títulos (SAP FSCM).<br><strong>Fórmula:</strong> Volume Inicial = Teto(Valor do Crédito / Preço Commodity Livre)."
+    },
+    {
+        id: "tbl-barter-valcamp",
+        label: "Taxa de Valorização (Cashback)",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Taxa associada à campanha selecionada (Nutrade vs Outras).<br><strong>Versão Final:</strong> Campanha comercial aprovada pela originação cadastrada no Salesforce/SAP."
+    },
+    {
+        id: "tbl-barter-cashback-usd",
+        label: "Cash Back da Campanha",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Multiplicação do crédito pela taxa de cashback.<br><strong>Versão Final:</strong> Abatimento comercial bonificado no pedido de insumos (SAP).<br><strong>Fórmula:</strong> Valor do Crédito * Taxa de Valorização da Campanha."
+    },
+    {
+        id: "tbl-barter-incbarter-pct",
+        label: "Incentivo Barter (%)",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Juros regressivos da campanha calculados conforme o prazo.<br><strong>Versão Final:</strong> Política de desconto financeiro por faturamento físico parametrizada no SAP.<br><strong>Fórmula:</strong> Retornado da tabela de juros comerciais associada à campanha."
+    },
+    {
+        id: "tbl-barter-incbarter-usd",
+        label: "Incentivo Barter ganho",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Multiplicação do crédito pela taxa de juros regressivos.<br><strong>Versão Final:</strong> Abatimento de juros lançado no faturamento de barter (SAP).<br><strong>Fórmula:</strong> Valor do Crédito * Incentivo Barter (%)."
+    },
+    {
+        id: "tbl-barter-totalret",
+        label: "Total de Retorno Recebido pelo Produtor",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Somatório de cashback e juros regressivos concedidos.<br><strong>Versão Final:</strong> Desconto de originação consolidado na proposta comercial do Salesforce.<br><strong>Fórmula:</strong> Cash Back da Campanha + Incentivo Barter ganho."
+    },
+    {
+        id: "tbl-barter-finalpreco",
+        label: "Preço Equivalente Final",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Preço livre acrescido dos benefícios comerciais convertidos por unidade.<br><strong>Versão Final:</strong> Indicador de preço neto real para faturamento logístico corporativo.<br><strong>Fórmula:</strong> Preço Commodity Livre + (Total Retorno / Volume Inicial)."
+    },
+    {
+        id: "tbl-barter-finalvol",
+        label: "Volume de Troca Equivalente Final",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Volume físico inicial menos o volume deduzido pelos retornos comerciais.<br><strong>Versão Final:</strong> CPR Física consolidada final com o volume líquido final faturado (SAP FSCM).<br><strong>Fórmula:</strong> Volume Inicial - (Total Retorno / Preço Equivalente Final)."
+    },
+    {
+        id: "tbl-barter-valreal",
+        label: "Valorização Real sobre Preço Livre",
+        location: "Tabela Detalhada Barter",
+        text: "<strong>Simulador:</strong> Percentual de ganho efetivo sobre o Preço Livre (Porteira).<br><strong>Versão Final:</strong> Indicador comercial interno de margem do produtor no Salesforce.<br><strong>Fórmula:</strong> (Preço Equivalente Final / Preço Commodity Livre) - 1."
+    },
+    {
+        id: "tbl-fin-juros",
+        label: "Taxa Juros Anual Efetiva",
+        location: "Tabela Modalidades Financeiras",
+        text: "<strong>Simulador:</strong> Taxa de juros anual configurada para a campanha (com reduções promocionais para FIDC e FISO).<br><strong>Versão Final:</strong> Taxa contratual parametrizada no SAP e negociada com as instituições financeiras."
+    },
+    {
+        id: "tbl-fin-custo",
+        label: "Custo Financeiro Líquido",
+        location: "Tabela Modalidades Financeiras",
+        text: "<strong>Simulador:</strong> Custo líquido de captação de juros, ponderado pelo prazo e deduzido dos retornos de originação (para Barter).<br><strong>Versão Final:</strong> Lançamento de despesas financeiras integradas no módulo SAP FI-CO.<br><strong>Fórmula:</strong> Crédito * (Prazo/360) * Juros Anual. Para Barter: Custo de Juros - Retorno Total + Frete."
+    },
+    {
+        id: "tbl-fin-total",
+        label: "Valor Total a Pagar (Equivalente)",
+        location: "Tabela Modalidades Financeiras",
+        text: "<strong>Simulador:</strong> Soma do crédito e custo financeiro líquido da modalidade correspondente.<br><strong>Versão Final:</strong> Valor total de liquidação e encerramento de contrato integrado no SAP FSCM.<br><strong>Fórmula:</strong> Valor do Crédito + Custo Financeiro Líquido."
+    },
+    {
+        id: "tbl-fin-inc",
+        label: "Incentivo / Retorno Comercial",
+        location: "Tabela Modalidades Financeiras",
+        text: "<strong>Simulador:</strong> Detalhe da redução promocional de taxa de captação (-4% para FIDC, -3% para FISO) ou bonificação/cashback de originação (Barter).<br><strong>Versão Final:</strong> Parâmetros comerciais integrados de desconto financeiro da campanha comercial."
+    },
+    {
+        id: "tbl-fin-garantias",
+        label: "Garantias Exigidas",
+        location: "Tabela Modalidades Financeiras",
+        text: "<strong>Simulador:</strong> Texto fixo descritivo das garantias exigidas.<br><strong>Versão Final:</strong> Estrutura de colaterais e garantias exigidas pela mesa de crédito integradas no fluxo do dossiê digital de crédito (Salesforce)."
+    },
+    {
+        id: "tbl-fin-elegibilidade",
+        label: "Critérios de Elegibilidade",
+        location: "Tabela Modalidades Financeiras",
+        text: "<strong>Simulador:</strong> Texto descritivo das condições de aceitação.<br><strong>Versão Final:</strong> Políticas automatizadas de score de crédito e compliance integradas na esteira de concessão de limite."
+    },
+    {
+        id: "tbl-fin-fluxo",
+        label: "Fluxo de Pagamento",
+        location: "Tabela Modalidades Financeiras",
+        text: "<strong>Simulador:</strong> Tipo de entrega física ou financeira da modalidade.<br><strong>Versão Final:</strong> Parametrização do fluxo de liquidação contratual no SAP FSCM (físico ou financeiro)."
+    },
+    {
+        id: "pracas-wsys",
+        label: "Cadastro de Praças (WSys)",
+        location: "Tela WSys",
+        text: "Esta tela simula o cadastro de praças e custos logísticos do sistema WSys, conforme solicitado para demonstração."
+    }
+];
+
+let currentTooltips = [];
+
+function initTooltipsStore() {
+    const saved = localStorage.getItem('barter_tooltips_store');
+    if (saved) {
+        try {
+            currentTooltips = JSON.parse(saved);
+        } catch (e) {
+            currentTooltips = JSON.parse(JSON.stringify(defaultTooltips));
+        }
+    } else {
+        currentTooltips = JSON.parse(JSON.stringify(defaultTooltips));
+    }
+    applyTooltipsToDOM();
+}
+
+function applyTooltipsToDOM() {
+    currentTooltips.forEach(item => {
+        const elements = document.querySelectorAll(`[data-tooltip-id="${item.id}"] .tooltip-text`);
+        elements.forEach(el => {
+            el.innerHTML = item.text;
+        });
+    });
+}
+
+function renderTooltipsTable() {
+    const tbody = document.getElementById('tooltips-table-body');
+    if (!tbody) return;
+
+    tbody.innerHTML = '';
+    currentTooltips.forEach((item) => {
+        const tr = document.createElement('tr');
+        tr.id = `tooltip-row-${item.id}`;
+        tr.innerHTML = `
+            <td>
+                <strong>${item.label}</strong>
+                <span style="display: block; font-size: 11px; color: var(--text-secondary); margin-top: 2px;">
+                    <i class="fa-solid fa-location-dot" style="margin-right: 3px;"></i> ${item.location}
+                </span>
+                <code style="font-size: 10px; color: var(--primary-medium); background: rgba(8, 131, 149, 0.08); padding: 1px 4px; border-radius: 4px;">id: ${item.id}</code>
+            </td>
+            <td>
+                <textarea id="textarea-tooltip-${item.id}" rows="3" style="width: 100%; border: 1px solid var(--border-color); border-radius: 6px; padding: 8px; font-family: var(--font-body); font-size: 12.5px; line-height: 1.4; color: var(--text-primary); background-color: var(--bg-card); resize: vertical;" onchange="updateTooltipText('${item.id}', this.value)">${item.text}</textarea>
+            </td>
+            <td style="text-align: center; vertical-align: middle;">
+                <div style="display: flex; flex-direction: column; gap: 6px; align-items: center;">
+                    <button type="button" class="btn-submit" onclick="copyTooltipText('${item.id}')" title="Copiar texto do tooltip em 1 clique" style="width: 100%; padding: 6px 10px; font-size: 11px; margin-top: 0; background-color: var(--primary-medium); background-image: none; color: white;">
+                        <i class="fa-solid fa-copy"></i> Copiar
+                    </button>
+                    <button type="button" class="btn-submit" onclick="saveTooltipTextFromRow('${item.id}')" title="Salvar alteração" style="width: 100%; padding: 6px 10px; font-size: 11px; margin-top: 0; background-color: var(--bg-hover); color: var(--text-primary); border: 1px solid var(--border-color); box-shadow: none;">
+                        <i class="fa-solid fa-check"></i> Salvar
+                    </button>
+                </div>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+function updateTooltipText(id, newText) {
+    const item = currentTooltips.find(t => t.id === id);
+    if (item) {
+        item.text = newText;
+        localStorage.setItem('barter_tooltips_store', JSON.stringify(currentTooltips));
+        applyTooltipsToDOM();
+    }
+}
+
+function saveTooltipTextFromRow(id) {
+    const textarea = document.getElementById(`textarea-tooltip-${id}`);
+    if (textarea) {
+        updateTooltipText(id, textarea.value);
+        alert(`Texto do tooltip "${id}" salvo com sucesso!`);
+    }
+}
+
+function copyTooltipText(id) {
+    const item = currentTooltips.find(t => t.id === id);
+    if (!item) return;
+
+    // Clean html tags for clean copy text
+    const tempEl = document.createElement('div');
+    tempEl.innerHTML = item.text.replace(/<br\s*\/?>/gi, '\n');
+    const plainText = tempEl.innerText || tempEl.textContent;
+
+    navigator.clipboard.writeText(plainText).then(() => {
+        alert(`Texto de "${item.label}" copiado para a área de transferência!`);
+    }).catch(() => {
+        alert("Não foi possível copiar automaticamente.");
+    });
+}
+
+function resetTooltipsToDefault() {
+    if (confirm("Deseja restaurar todos os textos de ajuda para a versão padrão?")) {
+        currentTooltips = JSON.parse(JSON.stringify(defaultTooltips));
+        localStorage.setItem('barter_tooltips_store', JSON.stringify(currentTooltips));
+        applyTooltipsToDOM();
+        renderTooltipsTable();
+        alert("Textos de ajuda restaurados para o padrão original!");
+    }
+}
+
+function filterTooltipsTable(query) {
+    const term = (query || '').toLowerCase().trim();
+    const rows = document.querySelectorAll('#tooltips-table-body tr');
+    rows.forEach(row => {
+        const textContent = row.textContent.toLowerCase();
+        const textareaVal = (row.querySelector('textarea')?.value || '').toLowerCase();
+        if (textContent.includes(term) || textareaVal.includes(term)) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function exportTooltipsJSON() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(currentTooltips, null, 2));
+    const dlAnchorElem = document.createElement('a');
+    dlAnchorElem.setAttribute("href", dataStr);
+    dlAnchorElem.setAttribute("download", "tooltips_backup.json");
+    document.body.appendChild(dlAnchorElem);
+    dlAnchorElem.click();
+    dlAnchorElem.remove();
+}
+
+function downloadTooltipsMD() {
+    let mdContent = `# Dicionário de Textos de Ajuda (Tooltips) - Simulador Barter Hub 2026\n\n`;
+    mdContent += `Este arquivo lista todos os textos explicativos associados aos ícones de interrogação (\`?\`) presentes no **Simulador de Cashback Barter 2026**.\n\n---\n\n`;
+    mdContent += `| ID | Campo / Rótulo | Localização | Texto de Ajuda (Tooltip) |\n`;
+    mdContent += `|---|---|---|---|\n`;
+
+    currentTooltips.forEach(t => {
+        const cleanText = t.text.replace(/\n/g, ' ');
+        mdContent += `| \`${t.id}\` | **${t.label}** | ${t.location} | ${cleanText} |\n`;
+    });
+
+    const blob = new Blob([mdContent], { type: 'text/markdown;charset=utf-8;' });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", "tooltips.md");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 
