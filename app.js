@@ -354,9 +354,12 @@ function onCulturaChange(value) {
     const unitSymbol = isSoy ? 'sc' : 'lp';
     
     // Update labels and suffixes
-    document.getElementById('sim-preco-bruto-label').textContent = `Preço Commodity Bruto (FOB) (${currencySign}/${unitSymbol})`;
-    document.getElementById('sim-preco-bruto-suffix').textContent = `${currencySign}/${unitSymbol}`;
-    document.getElementById('sim-descontos-label').textContent = isSoy ? 'Ativo (Senar + Fethab)' : 'Ativo (Senar + Fial)';
+    const labelEl = document.getElementById('sim-preco-bruto-label');
+    if (labelEl) labelEl.textContent = `Preço Commodity Bruto (FOB) (${currencySign}/${unitSymbol})`;
+    const suffixEl = document.getElementById('sim-preco-bruto-suffix');
+    if (suffixEl) suffixEl.textContent = `${currencySign}/${unitSymbol}`;
+    const descLabelEl = document.getElementById('sim-descontos-label');
+    if (descLabelEl) descLabelEl.textContent = isSoy ? 'Ativo (Senar + Fethab)' : 'Ativo (Senar + Fial)';
     
     const cambio = parseFloat(document.getElementById('sim-cambio').value) || 1.0;
     const basePriceUSD = isSoy ? currentQuotes.soybeans : currentQuotes.cotton;
@@ -761,14 +764,18 @@ function calculateSimulation() {
 
     // 4. Barter Nutrade & Barter Outras Tradings (only when canBarter)
     const jurosPeriodoBarter = (prazo / 360) * (jurosAnual / 100);
-    const custoBrutoBarter = creditRaw * jurosPeriodoBarter;
-    const totalRetornosBarter = res ? (res.totalRetornoUSDProposta * factor) : 0;
     const freteTotalBarter = res ? (res.freteTotalUSDProposta * factor) : 0;
-    const netCustoBarter = custoBrutoBarter - totalRetornosBarter + freteTotalBarter;
-    const netCustoMarket = res ? ((creditRaw * jurosPeriodoBarter) - (res.totalRetornoUSDMarket * factor) + (res.freteTotalUSDMarket * factor)) : 0;
+    const freteTotalMarket = res ? (res.freteTotalUSDMarket * factor) : 0;
 
     const totalBarter = res ? ((res.volFinalProposta * commBrutoRaw) + freteTotalBarter) : 0;
-    const totalMarket = res ? ((res.volFinalMarket * (res.commBrutoUSDMarket * factor)) + (res.freteTotalUSDMarket * factor)) : 0;
+    const totalMarket = res ? ((res.volFinalMarket * (res.commBrutoUSDMarket * factor)) + freteTotalMarket) : 0;
+
+    const custoTotalBarter = totalBarter - creditRaw;
+    const custoTotalMarket = totalMarket - creditRaw;
+    const custoTotalPctBarter = (custoTotalBarter / creditRaw) * 100.0;
+    const custoTotalPctMarket = (custoTotalMarket / creditRaw) * 100.0;
+    const custoAmPctBarter = (nMesesCorridos > 0) ? (custoTotalPctBarter / nMesesCorridos) : 0;
+    const custoAmPctMarket = (nMesesCorridos > 0) ? (custoTotalPctMarket / nMesesCorridos) : 0;
 
     let diasUteisSyde = 0;
     if (campObj && campObj.desembolso && campObj.vencimento) {
@@ -812,9 +819,13 @@ function calculateSimulation() {
             cashbackExplicacao: `Cashback de campanha comercial Nutrade de +${valPctProposta.toFixed(2)}% aplicado sobre o valor bruto da operação.`,
             garantia: 'CPR Física e Seguro Agrícola',
             garantiaExplicacao: 'Garantia vinculada à CPR Física da produção e seguro agrícola com a Nutrade.',
-            custoTotal: netCustoBarter,
-            custoTotalPct: (netCustoBarter / creditRaw) * 100,
-            custoAmPct: ((netCustoBarter / creditRaw) * 100) / nMesesCorridos,
+            volInicial: res ? res.volTrocaProposta : 0,
+            volFinal: res ? res.volFinalProposta : 0,
+            volEconomia: res ? (res.volTrocaProposta - res.volFinalProposta) : 0,
+            unitAbbr: res ? res.unitSymbol : 'sc',
+            custoTotal: custoTotalBarter,
+            custoTotalPct: custoTotalPctBarter,
+            custoAmPct: custoAmPctBarter,
             valorTotal: totalBarter
         },
         {
@@ -835,9 +846,13 @@ function calculateSimulation() {
             cashbackExplicacao: `Valorização comercial padrão oferecida pelas tradings concorrentes de mercado (+${activeCampanhaValorizacaoOutras.toFixed(2)}%).`,
             garantia: 'CPR Física e Seguro Agrícola',
             garantiaExplicacao: 'Garantia padrão de mercado vinculada à CPR Física e seguro.',
-            custoTotal: netCustoMarket,
-            custoTotalPct: (netCustoMarket / creditRaw) * 100,
-            custoAmPct: ((netCustoMarket / creditRaw) * 100) / nMesesCorridos,
+            volInicial: res ? res.volTrocaMarket : 0,
+            volFinal: res ? res.volFinalMarket : 0,
+            volEconomia: res ? (res.volTrocaMarket - res.volFinalMarket) : 0,
+            unitAbbr: res ? res.unitSymbol : 'sc',
+            custoTotal: custoTotalMarket,
+            custoTotalPct: custoTotalPctMarket,
+            custoAmPct: custoAmPctMarket,
             valorTotal: totalMarket
         },
         {
@@ -1007,6 +1022,26 @@ function calculateSimulation() {
                             </span>
                             <strong class="modality-bullet-val ${m.cashbackDisplay.includes('+') ? 'text-teal' : ''}">${m.cashbackDisplay}</strong>
                         </li>
+                        ${m.type === 'barter' ? `<li class="modality-bullet-item">
+                            <span class="modality-bullet-label">
+                                Volume Final Equivalente
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text">Volume de troca físico final líquido de grãos a ser entregue na liquidação da safra.</span>
+                                </span>
+                            </span>
+                            <strong class="modality-bullet-val text-teal">${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>
+                        </li>
+                        <li class="modality-bullet-item">
+                            <span class="modality-bullet-label">
+                                Economia em Grãos
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text">Quantidade total de sacas/libras economizadas graças aos benefícios de Cashback e Incentivo de prazo.</span>
+                                </span>
+                            </span>
+                            <strong class="modality-bullet-val text-teal">+${formatNumber(m.volEconomia, 0)} ${m.unitAbbr} economizados</strong>
+                        </li>` : ''}
                         <li class="modality-bullet-item modality-guarantee-item">
                             <span class="modality-bullet-label">
                                 Garantias Exigidas
@@ -1026,7 +1061,13 @@ function calculateSimulation() {
                                 <span class="tooltip-text"><strong>Fórmula:</strong> ${m.type === 'barter' ? '(Volume Final × Preço Grão FOB) + Frete Total' : 'Crédito × (1 - Desc. VPAN) × (1 + Taxa × Meses) × (1 - Incentivo)'}. Total de ${formatSelectedCurrency(m.valorTotal)}</span>
                             </span>
                         </div>
-                        <span class="modality-card-total-value">${formatSelectedCurrency(m.valorTotal)}</span>
+                        <span class="modality-card-total-value">
+                            ${formatSelectedCurrency(m.valorTotal)}
+                            ${m.type === 'barter' ? `<span style="display: flex; align-items: center; justify-content: flex-end; gap: 5px; font-size: 12.5px; font-weight: 600; color: var(--primary-medium); margin-top: 4px; letter-spacing: -0.2px;">
+                                <i class="fa-solid fa-wheat-awn" style="font-size: 11px;"></i>
+                                ${formatNumber(m.volFinal, 0)} ${m.unitAbbr} (${formatNumber(m.volEconomia, 0)} ${m.unitAbbr} de economia)
+                            </span>` : ''}
+                        </span>
                     </div>
                 </div>
                 <div class="modality-card-footer">
