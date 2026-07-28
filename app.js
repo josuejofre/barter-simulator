@@ -919,7 +919,7 @@ function calculateSimulation() {
                             </span>
                             <strong class="modality-bullet-val">${m.prazoDisplay}</strong>
                         </li>
-                        <li class="modality-bullet-item">
+                        ${m.type !== 'barter' ? `<li class="modality-bullet-item">
                             <span class="modality-bullet-label">
                                 Desconto VPAN
                                 <span class="tooltip-container">
@@ -928,7 +928,7 @@ function calculateSimulation() {
                                 </span>
                             </span>
                             <strong class="modality-bullet-val ${m.vpanDisplay.includes('-') ? 'text-teal' : ''}">${m.vpanDisplay}</strong>
-                        </li>
+                        </li>` : ''}
                         <li class="modality-bullet-item">
                             <span class="modality-bullet-label">
                                 ${m.incentivoLabel}
