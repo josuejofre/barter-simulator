@@ -186,7 +186,7 @@
                         <div class="card-header">
                             <h2>Parâmetros da Operação</h2>
                             <p>Preencha com o crédito demandado e os dados da sua safra.</p>
-                        </div>                        <form id="barter-form" onsubmit="event.preventDefault(); calculateSimulation();" class="simulator-form">
+                        </div>                        <form id="barter-form" onsubmit="handleFormSimulate(event)" class="simulator-form">
                             <div class="input-group">
                                 <label for="sim-campanha-select">Campanha de Referência <span class="tooltip-container" data-tooltip-id="sim-campanha-select"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Seleção manual de opções mockadas ou adicionadas em Ajustar Taxas.<br><strong>Versão Final:</strong> Integração com base de campanhas de Barter registradas no SAP/Salesforce.</span></span></label>
                                 <div class="select-wrapper">
@@ -283,7 +283,7 @@
 
                             <!-- Button that actively triggers calculations -->
                             <div class="form-actions" style="display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap;">
-                                <button type="submit" class="btn-submit" id="btn-sim-calcular" style="flex: 1 1 100%; margin-top: 0; min-height: 44px;">
+                                <button type="submit" class="btn-submit" id="btn-sim-calcular" onclick="handleFormSimulate(event)" style="flex: 1 1 100%; margin-top: 0; min-height: 44px;">
                                     <i class="fa-solid fa-calculator"></i> Simular
                                 </button>
                                 <button type="button" class="btn-submit btn-pdf" id="btn-sim-pdf" onclick="downloadSimulationPDF()" style="flex: 1; margin-top: 0; background-color: #4b5563; background-image: none; box-shadow: 0 4px 12px rgba(75, 85, 99, 0.2); min-height: 42px;">
@@ -307,53 +307,70 @@
                     <!-- Right Column: Results & Interactive Charts -->
                     <div class="results-container">
                         
-                        <!-- Resumo da Operação matching screenshot -->
-                        <div class="card results-card animate-fade-in" style="background-color: var(--primary-deep); color: white; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(5, 59, 67, 0.15); overflow: visible;">
-                            <div class="card-header" style="border-bottom: 1px solid rgba(255,255,255,0.12); padding: 16px 20px;">
-                                <h2 style="color: white; font-family: var(--font-heading); font-size: 18px; margin: 0; display: flex; align-items: center; justify-content: space-between;">
-                                    Resumo da operação
-                                    <span class="tooltip-container" data-tooltip-id="summary-card"><i class="fa-regular fa-circle-question" style="color: #fff; font-size: 14px;"></i><span class="tooltip-text tooltip-white" style="box-shadow: 0 8px 24px rgba(0,0,0,0.15);"><strong>Simulador:</strong> Consolidação de juros, prazos e economia com base na opção selecionada.<br><strong>Versão Final:</strong> Espelho e resumo executivo da CPR/proposta de faturamento do cliente.</span></span>
-                                </h2>
+                        <!-- Initial Placeholder card shown BEFORE simulation -->
+                        <div id="sim-placeholder-card" class="card animate-fade-in" style="padding: 48px 24px; text-align: center; background-color: var(--bg-card); border: 2px dashed var(--border-color); border-radius: 12px; margin-bottom: 20px;">
+                            <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(8, 131, 149, 0.1); color: var(--primary-medium); display: flex; align-items: center; justify-content: center; font-size: 28px; margin: 0 auto 18px auto;">
+                                <i class="fa-solid fa-calculator"></i>
                             </div>
-                            <div style="padding: 16px 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center;">
-                                <div style="border-right: 1px solid rgba(255,255,255,0.12);">
-                                    <span style="font-size: 10.5px; text-transform: uppercase; color: #22d3ee; font-weight: 700; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">Valor</span>
-                                    <strong id="summary-value" style="font-size: 18px; font-family: var(--font-heading); color: #ffffff;">R$ 1.000.000,00</strong>
-                                </div>
-                                <div style="border-right: 1px solid rgba(255,255,255,0.12);">
-                                    <span style="font-size: 10.5px; text-transform: uppercase; color: #22d3ee; font-weight: 700; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">Data da Simulação</span>
-                                    <strong id="summary-date" style="font-size: 18px; font-family: var(--font-heading); color: #ffffff;">-</strong>
-                                </div>
-                                <div>
-                                    <span style="font-size: 10.5px; text-transform: uppercase; color: #22d3ee; font-weight: 700; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">Validade da Simulação</span>
-                                    <strong id="summary-validity" style="font-size: 18px; font-family: var(--font-heading); color: #ffffff;">-</strong>
-                                </div>
-                            </div>
+                            <h3 style="font-family: var(--font-heading); color: var(--primary-deep); font-size: 18px; margin: 0 0 8px 0;">Aguardando Simulação</h3>
+                            <p style="font-size: 13.5px; color: var(--text-secondary); max-width: 400px; margin: 0 auto 16px auto; line-height: 1.5;">
+                                Preencha os parâmetros da operação no formulário ao lado e clique em <strong>Simular</strong> para visualizar o resumo da operação e comparar as modalidades de crédito.
+                            </p>
+                            <span style="font-size: 11.5px; color: var(--primary-medium); background: rgba(8, 131, 149, 0.08); padding: 6px 12px; border-radius: 20px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px;">
+                                <i class="fa-solid fa-lightbulb"></i> Selecione uma Commodity (opcional) para incluir ofertas Barter
+                            </span>
                         </div>
 
-                        <!-- Modality Cards List (Sorted from best to worst) -->
-                        <div class="card results-card animate-fade-in" style="padding: 20px; margin-bottom: 20px; overflow: visible;">
-                            <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
-                                <h2 style="font-family: var(--font-heading); color: var(--primary-deep); font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px;">
-                                    Modalidades de Crédito (Ordenado por Benefício)
-                                    <span class="tooltip-container" data-tooltip-id="modality-cards-list"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Apresentado da opção com melhor benefício para a menos vantajosa. Passe o mouse nos ícones de interrogação (?) em cada linha do card para ver o detalhamento da fórmula.</span></span>
-                                </h2>
-                                <p style="color: var(--text-secondary); font-size: 12.5px; margin: 4px 0 0 0;">Confira os indicadores, garantias exigidas e descontos VPAN em cada card. Passe o mouse no interrogação (?) para ver as fórmulas.</p>
+                        <!-- Results Wrapper (Hidden initially until user clicks Simular) -->
+                        <div id="sim-results-wrapper" style="display: none;">
+                            <!-- Resumo da Operação matching screenshot -->
+                            <div class="card results-card animate-fade-in" style="background-color: var(--primary-deep); color: white; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(5, 59, 67, 0.15); overflow: visible;">
+                                <div class="card-header" style="border-bottom: 1px solid rgba(255,255,255,0.12); padding: 16px 20px;">
+                                    <h2 style="color: white; font-family: var(--font-heading); font-size: 18px; margin: 0; display: flex; align-items: center; justify-content: space-between;">
+                                        Resumo da operação
+                                        <span class="tooltip-container" data-tooltip-id="summary-card"><i class="fa-regular fa-circle-question" style="color: #fff; font-size: 14px;"></i><span class="tooltip-text tooltip-white" style="box-shadow: 0 8px 24px rgba(0,0,0,0.15);"><strong>Simulador:</strong> Consolidação de juros, prazos e economia com base na opção selecionada.<br><strong>Versão Final:</strong> Espelho e resumo executivo da CPR/proposta de faturamento do cliente.</span></span>
+                                    </h2>
+                                </div>
+                                <div style="padding: 16px 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center;">
+                                    <div style="border-right: 1px solid rgba(255,255,255,0.12);">
+                                        <span style="font-size: 10.5px; text-transform: uppercase; color: #22d3ee; font-weight: 700; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">Valor</span>
+                                        <strong id="summary-value" style="font-size: 18px; font-family: var(--font-heading); color: #ffffff;">R$ 1.000.000,00</strong>
+                                    </div>
+                                    <div style="border-right: 1px solid rgba(255,255,255,0.12);">
+                                        <span style="font-size: 10.5px; text-transform: uppercase; color: #22d3ee; font-weight: 700; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">Data da Simulação</span>
+                                        <strong id="summary-date" style="font-size: 18px; font-family: var(--font-heading); color: #ffffff;">-</strong>
+                                    </div>
+                                    <div>
+                                        <span style="font-size: 10.5px; text-transform: uppercase; color: #22d3ee; font-weight: 700; display: block; margin-bottom: 4px; letter-spacing: 0.5px;">Validade da Simulação</span>
+                                        <strong id="summary-validity" style="font-size: 18px; font-family: var(--font-heading); color: #ffffff;">-</strong>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="modality-cards-grid" id="modality-cards-list">
-                                <!-- Cards rendered dynamically by JS -->
-                            </div>
-                        </div>
 
-                        <!-- TradingView Chart Widget Card -->
-                        <div class="chart-card card animate-fade-in" id="chart-card-cfd" style="display:none;">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-chart-line text-green"></i> Cotação do Mercado Futuro (CFD)</h2>
-                                <p id="chart-subtitle">Gráfico em tempo real de Chicago para Soja</p>
+                            <!-- Modality Cards List (Sorted from best to worst) -->
+                            <div class="card results-card animate-fade-in" style="padding: 20px; margin-bottom: 20px; overflow: visible;">
+                                <div style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
+                                    <h2 style="font-family: var(--font-heading); color: var(--primary-deep); font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                                        Modalidades de Crédito (Ordenado por Benefício)
+                                        <span class="tooltip-container" data-tooltip-id="modality-cards-list"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Apresentado da opção com melhor benefício para a menos vantajosa. Passe o mouse nos ícones de interrogação (?) em cada linha do card para ver o detalhamento da fórmula.</span></span>
+                                    </h2>
+                                    <p style="color: var(--text-secondary); font-size: 12.5px; margin: 4px 0 0 0;">Confira os indicadores, garantias exigidas e descontos VPAN em cada card. Passe o mouse no interrogação (?) para ver as fórmulas.</p>
+                                </div>
+                                <div class="modality-cards-grid" id="modality-cards-list">
+                                    <!-- Cards rendered dynamically by JS -->
+                                </div>
                             </div>
-                            <div class="chart-container-wrapper">
-                                <div class="tradingview-widget-container" style="height:350px;width:100%">
-                                    <div id="tradingview_widget" style="height:350px;width:100%"></div>
+
+                            <!-- TradingView Chart Widget Card -->
+                            <div class="chart-card card animate-fade-in" id="chart-card-cfd" style="display:none;">
+                                <div class="card-header">
+                                    <h2><i class="fa-solid fa-chart-line text-green"></i> Cotação do Mercado Futuro (CFD)</h2>
+                                    <p id="chart-subtitle">Gráfico em tempo real de Chicago para Soja</p>
+                                </div>
+                                <div class="chart-container-wrapper">
+                                    <div class="tradingview-widget-container" style="height:350px;width:100%">
+                                        <div id="tradingview_widget" style="height:350px;width:100%"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>

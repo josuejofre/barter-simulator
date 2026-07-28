@@ -3,6 +3,7 @@
 // Global state
 let selectedCurrency = 'BRL'; // Default currency is Real (R$)
 let tvWidget = null;
+let hasSimulated = false; // Tracks if user clicked "Simular" button
 let currentQuotes = {
     soybeans: 20.00, // USD per saca (default starting price from sheet)
     cotton: 0.85     // USD per lb (default starting price from sheet)
@@ -585,7 +586,30 @@ function runSimulationMath(inputs) {
 let selectedModalityId = null;
 let lastSimulationResult = null; // store to redraw when selected modality changes
 
+function handleFormSimulate(e) {
+    if (e) e.preventDefault();
+    hasSimulated = true;
+    calculateSimulation();
+    
+    const resultsWrapper = document.getElementById('sim-results-wrapper');
+    if (resultsWrapper && window.innerWidth < 1024) {
+        resultsWrapper.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+
 function calculateSimulation() {
+    const placeholder = document.getElementById('sim-placeholder-card');
+    const resultsWrapper = document.getElementById('sim-results-wrapper');
+
+    if (!hasSimulated) {
+        if (placeholder) placeholder.style.display = 'block';
+        if (resultsWrapper) resultsWrapper.style.display = 'none';
+        return;
+    }
+
+    if (placeholder) placeholder.style.display = 'none';
+    if (resultsWrapper) resultsWrapper.style.display = 'block';
+
     const commoditySelect = document.getElementById('sim-commodity');
     if (!commoditySelect) return;
     const commodity = commoditySelect.value; // may be empty string
@@ -2083,6 +2107,7 @@ function openSimulationInForm(index) {
     if (asfaltoSuffixEl) asfaltoSuffixEl.textContent = d.currency === 'BRL' ? 'R$/KM' : 'USD/KM';
     
     showPage('simulador');
+    hasSimulated = true;
     calculateSimulation();
 }
 
@@ -2120,6 +2145,9 @@ function initTradingViewWidget(commodity) {
 
 // Generate PDF by screenshotting result cards + disclaimer + CFD chart using html2canvas
 function downloadSimulationPDF(dataInput = null) {
+    if (!hasSimulated && !dataInput) {
+        handleFormSimulate();
+    }
     // Load html2canvas if not already available
     function ensureHtml2Canvas(cb) {
         if (window.html2canvas) { cb(); return; }
@@ -2814,6 +2842,9 @@ function deletePraca(index) {
 
 // ==================== SHARE POPUP ACTIONS ====================
 function openSharePopup() {
+    if (!hasSimulated) {
+        handleFormSimulate();
+    }
     shareNative();
 }
 
