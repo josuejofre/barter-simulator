@@ -586,8 +586,11 @@ function runSimulationMath(inputs) {
 let selectedModalityId = null;
 let lastSimulationResult = null; // store to redraw when selected modality changes
 
+window.hasSimulated = false;
+
 function handleFormSimulate(e) {
     if (e) e.preventDefault();
+    window.hasSimulated = true;
     hasSimulated = true;
     calculateSimulation();
     
@@ -596,12 +599,13 @@ function handleFormSimulate(e) {
         resultsWrapper.scrollIntoView({ behavior: 'smooth' });
     }
 }
+window.handleFormSimulate = handleFormSimulate;
 
 function calculateSimulation() {
     const placeholder = document.getElementById('sim-placeholder-card');
     const resultsWrapper = document.getElementById('sim-results-wrapper');
 
-    if (!hasSimulated) {
+    if (!window.hasSimulated && !hasSimulated) {
         if (placeholder) placeholder.style.display = 'block';
         if (resultsWrapper) resultsWrapper.style.display = 'none';
         return;

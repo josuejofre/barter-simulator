@@ -186,11 +186,11 @@
                         <div class="card-header">
                             <h2>Parâmetros da Operação</h2>
                             <p>Preencha com o crédito demandado e os dados da sua safra.</p>
-                        </div>                        <form id="barter-form" onsubmit="handleFormSimulate(event)" class="simulator-form">
+                        </div>                        <form id="barter-form" novalidate onsubmit="event.preventDefault(); window.handleFormSimulate(event);" class="simulator-form">
                             <div class="input-group">
                                 <label for="sim-campanha-select">Campanha de Referência <span class="tooltip-container" data-tooltip-id="sim-campanha-select"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Seleção manual de opções mockadas ou adicionadas em Ajustar Taxas.<br><strong>Versão Final:</strong> Integração com base de campanhas de Barter registradas no SAP/Salesforce.</span></span></label>
                                 <div class="select-wrapper">
-                                    <select id="sim-campanha-select" onchange="onCampanhaSelectChange(this.value)" required>
+                                    <select id="sim-campanha-select" onchange="onCampanhaSelectChange(this.value)">
                                         <option value="custom">Campanha Customizada (Manual)</option>
                                         <!-- Dynamic options will be loaded here -->
                                     </select>
@@ -241,7 +241,7 @@
                             <div class="input-group">
                                 <label for="sim-credito" id="sim-credito-label">Valor da Operação (TP + Impostos) <span class="tooltip-container" data-tooltip-id="sim-credito"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Valor digitado pelo usuário.<br><strong>Versão Final:</strong> Valor bruto do pedido de faturamento de insumos associado (Salesforce/SAP FSCM).</span></span></label>
                                 <div class="input-wrapper">
-                                    <input type="text" id="sim-credito" value="R$ 1.000.000,00" required>
+                                    <input type="text" id="sim-credito" value="R$ 1.000.000,00">
                                 </div>
                             </div>
 
@@ -283,7 +283,7 @@
 
                             <!-- Button that actively triggers calculations -->
                             <div class="form-actions" style="display: flex; gap: 8px; margin-top: 15px; flex-wrap: wrap;">
-                                <button type="submit" class="btn-submit" id="btn-sim-calcular" onclick="handleFormSimulate(event)" style="flex: 1 1 100%; margin-top: 0; min-height: 44px;">
+                                <button type="button" class="btn-submit" id="btn-sim-calcular" onclick="window.handleFormSimulate(event)" style="flex: 1 1 100%; margin-top: 0; min-height: 44px;">
                                     <i class="fa-solid fa-calculator"></i> Simular
                                 </button>
                                 <button type="button" class="btn-submit btn-pdf" id="btn-sim-pdf" onclick="downloadSimulationPDF()" style="flex: 1; margin-top: 0; background-color: #4b5563; background-image: none; box-shadow: 0 4px 12px rgba(75, 85, 99, 0.2); min-height: 42px;">
