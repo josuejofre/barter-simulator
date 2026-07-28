@@ -1720,6 +1720,7 @@ select {
     margin-left: 6px;
     color: var(--primary-medium);
     vertical-align: middle;
+    z-index: 10;
 }
 
 .tooltip-container i {
@@ -1735,7 +1736,7 @@ select {
     border-radius: 8px;
     padding: 10px 14px;
     position: absolute;
-    z-index: 1050;
+    z-index: 99999 !important;
     bottom: 130%;
     left: 50%;
     margin-left: -140px;
@@ -1746,7 +1747,7 @@ select {
     font-size: 12px;
     line-height: 1.4;
     font-weight: 400;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
     pointer-events: auto;
     user-select: text;
     -webkit-user-select: text;
@@ -1763,6 +1764,12 @@ select {
     border-width: 5px;
     border-style: solid;
     border-color: var(--primary-deep) transparent transparent transparent;
+}
+
+.tooltip-container:hover,
+.tooltip-container:focus-within,
+.tooltip-container.active-tooltip {
+    z-index: 99999 !important;
 }
 
 .tooltip-container:hover .tooltip-text,
@@ -1838,7 +1845,7 @@ select {
 
 .modality-cards-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(235px, 1fr));
     gap: 16px;
     margin-top: 15px;
 }
@@ -1847,19 +1854,23 @@ select {
     background-color: var(--bg-card);
     border: 1.5px solid var(--border-color);
     border-radius: 12px;
-    overflow: hidden;
+    overflow: visible !important;
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.015);
+    z-index: 1;
 }
 
-.modality-card:hover {
+.modality-card:hover,
+.modality-card:focus-within,
+.modality-card:has(.tooltip-container:hover) {
     transform: translateY(-4px);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
     border-color: var(--primary-medium);
+    z-index: 9999 !important;
 }
 
 .modality-card.best-option {
@@ -1879,6 +1890,7 @@ select {
     padding: 2.5px 7px;
     border-radius: 12px;
     letter-spacing: 0.5px;
+    z-index: 2;
 }
 
 .modality-card.selected {
@@ -1892,6 +1904,8 @@ select {
     padding: 16px;
     border-bottom: 1px solid var(--border-color);
     background-color: var(--bg-card);
+    border-radius: 12px 12px 0 0;
+    position: relative;
 }
 
 .modality-card-title {
@@ -1913,6 +1927,8 @@ select {
     display: flex;
     flex-direction: column;
     gap: 8px;
+    position: relative;
+    overflow: visible !important;
 }
 
 .modality-bullet-list {
@@ -1921,7 +1937,7 @@ select {
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    gap: 8px;
 }
 
 .modality-bullet-item {
@@ -1929,6 +1945,38 @@ select {
     color: var(--text-secondary);
     display: flex;
     justify-content: space-between;
+    align-items: center;
+    position: relative;
+}
+
+.modality-bullet-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--text-secondary);
+}
+
+.modality-bullet-val {
+    color: var(--text-primary);
+}
+
+.modality-guarantee-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+    background: rgba(8, 131, 149, 0.04);
+    border: 1px dashed rgba(8, 131, 149, 0.25);
+    padding: 8px 10px;
+    border-radius: 8px;
+    margin-top: 4px;
+}
+
+.modality-guarantee-text {
+    color: var(--primary-deep);
+    font-size: 11.5px;
+    font-weight: 600;
+    line-height: 1.35;
+    word-break: break-word;
 }
 
 .modality-card-total-box {
@@ -1938,6 +1986,13 @@ select {
     display: flex;
     flex-direction: column;
     gap: 2px;
+    position: relative;
+}
+
+.modality-card-total-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .modality-card-total-label {
@@ -1948,15 +2003,18 @@ select {
 }
 
 .modality-card-total-value {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
-    color: var(--text-primary);
+    color: var(--primary-deep);
 }
 
 .modality-card-footer {
     display: flex;
     flex-direction: column;
     margin-top: auto;
+    border-radius: 0 0 10px 10px;
+    position: relative;
+    overflow: visible !important;
 }
 
 .modality-cost-row {
@@ -1966,6 +2024,7 @@ select {
     align-items: center;
     font-size: 12.5px;
     font-weight: 600;
+    position: relative;
 }
 
 .modality-cost-total {
@@ -1977,6 +2036,12 @@ select {
 .modality-cost-operation {
     background-color: var(--primary-medium);
     color: #ffffff;
+    border-radius: 0 0 10px 10px;
+}
+
+.modality-cost-operation .tooltip-container,
+.modality-cost-operation .tooltip-container i {
+    color: #ffffff !important;
 }
 
 /* Disclaimer Banner */

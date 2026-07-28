@@ -106,31 +106,37 @@ Calcula a equivalência de troca física para amortizar um financiamento/crédit
 
 ---
 
-## 6. Comparativo de Outras Modalidades de Crédito
+## 6. Comparativo das 5 Modalidades de Crédito e Desconto VPAN
 
-Para permitir a comparação direta do Barter com FIDC (Syde), FISO (Bancos) e Prazo (On-Balance), aplicamos as seguintes taxas de juros e despesas sobre o limite de crédito contratado:
+O simulador apresenta o comparativo ordenado por melhor benefício entre 5 modalidades de crédito: **Barter (Nutrade)**, **Barter (Outras Tradings)**, **FISO**, **Syngenta** e **Syde**.
 
-1. **Taxa de Juros Anual:**
-   - **Barter:** Taxa de tabela da campanha (ex: $14,40\%$ a.a.).
-   - **FIDC (Syde):** Desconto de $-4,0\%$ a.a. sobre a taxa base da campanha (ex: $10,40\%$ a.a.).
-   - **FISO:** Desconto de $-3,0\%$ a.a. sobre a taxa base da campanha (ex: $11,40\%$ a.a.).
-   - **Prazo:** Taxa cheia de tabela (ex: $14,40\%$ a.a.).
+### Conceito de Desconto VPAN (Desconto à Vista)
+* **O que é o Desconto VPAN?** VPAN é a sigla para **Valor Presente À Vista** (Desconto à vista). Representa a dedução percentual concedida para liquidação antecipada/à vista sobre o valor bruto contratado da operação:
+  $$Valor\_Intermediario = Credito \times (1 - VPAN\%)$$
+  $$Total\_a\_Pagar\_Financeiro = Valor\_Intermediario \times (1 + Taxa\_Mensal \times MesesCalculo) \times (1 - Incentivo\%)$$
+* Na modalidade **Syde**, o simulador contabiliza o desconto VPAN à vista (ex: $4,0\%$ à vista), reduzindo o saldo base devedor antes da incidência dos juros.
 
-2. **Juros do Período:**
-   $$Juros\_Periodo\_Modalidade = \frac{Dias}{360} \times Taxa\_Juros\_Efetiva$$
+### Detalhamento das Modalidades e Garantias Exigidas
 
-3. **Custo Financeiro Líquido:**
-   - **FIDC / FISO / Prazo:** Representa os encargos financeiros de juros proporcionais ao prazo:
-     $$Custo\_Financeiro = Credito \times Juros\_Periodo\_Modalidade$$
-   - **Barter (Físico):** Custo de juros bruto compensado pelo retorno comercial (cashback + incentivo de prazo) e acrescido do frete logístico:
-     $$Custo\_Net\_Barter = (Credito \times Juros\_Periodo\_Barter) - Total\_Retorno + Frete\_Total$$
+1. **Barter (Nutrade):**
+   - **Garantias Exigidas:** CPR Física e Seguro Agrícola.
+   - **Incentivos:** Cashback de campanha ($4,5\%$) + Incentivo Barter regressivo de prazo.
 
-4. **Valor Total a Pagar (Principal + Encargos):**
-   - **FIDC / FISO / Prazo (Modalidades Financeiras):** Pagamento estritamente financeiro (sem frete de transporte ou commodity envolvida):
-     $$Total\_a\_Pagar = Credito + Custo\_Financeiro$$
-   - **Barter (Físico):** O produtor realiza a entrega física do grão mais o pagamento de frete. O valor monetário equivalente entregue é:
-     $$Total\_a\_Pagar\_Barter = (Volume\_Troca\_Final \times Pre\c{c}o\_Bruto) + Custo\_Frete\_Total$$
-     *Nota: Não existe custo de transporte para as outras modalidades financeiras, apenas para o Barter, onde há a entrega física da commodity.*
+2. **Barter (Outras Tradings):**
+   - **Garantias Exigidas:** CPR Física e Seguro Agrícola.
+   - **Incentivos:** Valorização comercial padrão de mercado concorrente.
+
+3. **FISO:**
+   - **Garantias Exigidas:** Não há garantia. É uma venda a prazo cedida a um parceiro.
+   - **Incentivos:** Venda a prazo dentro de uma campanha comercial com rebate/incentivo comercial (-3,0%).
+
+4. **Syngenta:**
+   - **Garantias Exigidas:** Garantia alinhada diretamente com o time de crédito.
+   - **Incentivos:** Faturamento direto no balanço Syngenta (On-Balance) sob preço de tabela.
+
+5. **Syde:**
+   - **Garantias Exigidas:** Nota promissória ou CPR financeira sem penhor.
+   - **Incentivos:** Desconto VPAN à vista de $-4,0\%$ com juros compostos calculados por dias úteis.
 
 ---
 

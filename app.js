@@ -620,15 +620,15 @@ function calculateSimulation() {
     document.getElementById('summary-date').textContent = today.toLocaleDateString('pt-BR');
     document.getElementById('summary-validity').textContent = validityDate.toLocaleDateString('pt-BR');
 
-    // 2. Update Reference Parameters Card
-    document.getElementById('ref-preco').textContent = formatSelectedCurrency(commBrutoRaw);
-    document.getElementById('ref-cambio').textContent = formatUSD(cambio);
-    document.getElementById('ref-juros').textContent = `${jurosAnual.toFixed(2)}% a.a.`;
-    document.getElementById('ref-prazo').textContent = `${prazo} dias`;
-    document.getElementById('ref-val-nutrade').textContent = `${valPctProposta.toFixed(2)}%`;
-    document.getElementById('ref-val-outras').textContent = `${activeCampanhaValorizacaoOutras.toFixed(2)}%`;
-    document.getElementById('ref-frete-chao').textContent = `R$ ${freteChaoRaw.toFixed(2)}/KM`;
-    document.getElementById('ref-frete-asfalto').textContent = `R$ ${freteAsfaltoRaw.toFixed(2)}/KM`;
+    // 2. Update Summary metrics (safely handling missing ref card)
+    if (document.getElementById('ref-preco')) document.getElementById('ref-preco').textContent = formatSelectedCurrency(commBrutoRaw);
+    if (document.getElementById('ref-cambio')) document.getElementById('ref-cambio').textContent = formatUSD(cambio);
+    if (document.getElementById('ref-juros')) document.getElementById('ref-juros').textContent = `${jurosAnual.toFixed(2)}% a.a.`;
+    if (document.getElementById('ref-prazo')) document.getElementById('ref-prazo').textContent = `${prazo} dias`;
+    if (document.getElementById('ref-val-nutrade')) document.getElementById('ref-val-nutrade').textContent = `${valPctProposta.toFixed(2)}%`;
+    if (document.getElementById('ref-val-outras')) document.getElementById('ref-val-outras').textContent = `${activeCampanhaValorizacaoOutras.toFixed(2)}%`;
+    if (document.getElementById('ref-frete-chao')) document.getElementById('ref-frete-chao').textContent = `R$ ${freteChaoRaw.toFixed(2)}/KM`;
+    if (document.getElementById('ref-frete-asfalto')) document.getElementById('ref-frete-asfalto').textContent = `R$ ${freteAsfaltoRaw.toFixed(2)}/KM`;
 
     // 3. Modalidades Tab calculations and structures (incorporating Simulador_outras_Modalidades.xlsx formulas)
     const campSelect = document.getElementById('sim-campanha-select');
@@ -715,7 +715,29 @@ function calculateSimulation() {
     const totalBarter = (res.volFinalProposta * commBrutoRaw) + freteTotalBarter;
     const totalMarket = (res.volFinalMarket * (res.commBrutoUSDMarket * factor)) + (res.freteTotalUSDMarket * factor);
 
-    // List all 5 modalities to show and sort
+    let diasUteisSyde = 0;
+    if (campObj && campObj.desembolso && campObj.vencimento) {
+        diasUteisSyde = calculateBusinessDays(campObj.desembolso, campObj.vencimento);
+    } else {
+        diasUteisSyde = Math.round((prazo / 30.0) * 22);
+    }
+    const nMesesCorridos = prazo / 30.0;
+    const nMesesStr = nMesesCorridos.toFixed(1).replace('.', ',');
+
+    // Date formatting helper for campaign dates
+    function formatDateBR(dateStr) {
+        if (!dateStr) return null;
+        const parts = dateStr.split('-');
+        if (parts.length === 3) {
+            return `${parts[2]}/${parts[1]}/${parts[0]}`;
+        }
+        return dateStr;
+    }
+
+    let carenciaStr = campObj && campObj.desembolso ? formatDateBR(campObj.desembolso) : '31/12/2026';
+    let vencimentoStr = campObj && campObj.vencimento ? formatDateBR(campObj.vencimento) : '01/01/2027';
+
+    // List all 5 modalities to show and sort (Barter Nutrade, Barter Outras Tradings, FISO, Syngenta, Syde)
     const modalities = [
         {
             id: 'barter_nutrade',
@@ -724,11 +746,20 @@ function calculateSimulation() {
             jurosAnual: jurosAnual,
             jurosPeriodo: jurosPeriodoBarter,
             jurosMensal: jurosAnual / 12,
-            incentivo: `Valoriz. (+${valPctProposta.toFixed(2)}%) + Incentivo Barter (+${(res.incentivoBarterPct * 100).toFixed(2)}%)`,
-            desconto: 'Fethab/Fundeagro e frete deduzidos',
+            prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
+            prazoExplicacao: `Prazo calculado de ${prazo} dias decorrido entre o desembolso e o vencimento da safra 2026.`,
+            vpanDisplay: '0,00%',
+            vpanExplicacao: 'Desconto à vista (VPAN) não é aplicável na modalidade Barter, pois o benefício comercial ocorre via Cashback de campanha e Incentivo de prazo.',
+            incentivoLabel: 'Incentivo Barter',
+            incentivoDisplay: `+${(res.incentivoBarterPct * 100).toFixed(2)}%`,
+            incentivoExplicacao: `Incentivo de prazo de +${(res.incentivoBarterPct * 100).toFixed(2)}% calculated sobre o Preço TP (Valor Presente) com base na carência.`,
+            cashbackDisplay: `+${valPctProposta.toFixed(2)}%`,
+            cashbackExplicacao: `Cashback de campanha comercial Nutrade de +${valPctProposta.toFixed(2)}% aplicado sobre o valor bruto da operação.`,
+            garantia: 'CPR Física e Seguro Agrícola',
+            garantiaExplicacao: 'Garantia vinculada à CPR Física da produção e seguro agrícola com a Nutrade.',
             custoTotal: netCustoBarter,
             custoTotalPct: (netCustoBarter / creditRaw) * 100,
-            custoAmPct: ((netCustoBarter / creditRaw) * 100) / (prazo / 30),
+            custoAmPct: ((netCustoBarter / creditRaw) * 100) / nMesesCorridos,
             valorTotal: totalBarter
         },
         {
@@ -738,64 +769,100 @@ function calculateSimulation() {
             jurosAnual: jurosAnual,
             jurosPeriodo: jurosPeriodoBarter,
             jurosMensal: jurosAnual / 12,
-            incentivo: `Valoriz. (+${activeCampanhaValorizacaoOutras.toFixed(2)}%) + Incentivo Barter (+${(res.incentivoBarterPct * 100).toFixed(2)}%)`,
-            desconto: 'Descontos regionais de mercado',
+            prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
+            prazoExplicacao: `Prazo calculado de ${prazo} dias corridos praticado pelas tradings de mercado.`,
+            vpanDisplay: '0,00%',
+            vpanExplicacao: 'Desconto à vista (VPAN) não aplicável nesta modalidade de entrega física.',
+            incentivoLabel: 'Incentivo Barter',
+            incentivoDisplay: '0,00%',
+            incentivoExplicacao: 'Sem incentivo de prazo adicional oferecido pelas tradings concorrentes.',
+            cashbackDisplay: `+${activeCampanhaValorizacaoOutras.toFixed(2)}%`,
+            cashbackExplicacao: `Valorização comercial padrão oferecida pelas tradings concorrentes de mercado (+${activeCampanhaValorizacaoOutras.toFixed(2)}%).`,
+            garantia: 'CPR Física e Seguro Agrícola',
+            garantiaExplicacao: 'Garantia padrão de mercado vinculada à CPR Física e seguro.',
             custoTotal: netCustoMarket,
             custoTotalPct: (netCustoMarket / creditRaw) * 100,
-            custoAmPct: ((netCustoMarket / creditRaw) * 100) / (prazo / 30),
+            custoAmPct: ((netCustoMarket / creditRaw) * 100) / nMesesCorridos,
             valorTotal: totalMarket
         },
         {
-            id: 'fidc',
-            name: 'Syde (FIDC)',
-            type: 'financial',
-            jurosAnual: calcSyde.jurosAnual,
-            jurosPeriodo: calcSyde.custoTotalPct / 100,
-            jurosMensal: calcSyde.taxaMensal,
-            incentivo: calcSyde.descontoVPAN > 0 ? `Desc. VPAN (-${calcSyde.descontoVPAN.toFixed(1)}%) | ${calcSyde.tipoJuros}` : 'Taxa reduzida',
-            desconto: 'Não aplicado',
-            custoTotal: calcSyde.custoTotal,
-            custoTotalPct: calcSyde.custoTotalPct,
-            custoAmPct: calcSyde.custoAmPct,
-            valorTotal: calcSyde.valorTotal
-        },
-        {
             id: 'fiso',
-            name: 'Fiso (Bancário)',
+            name: 'FISO',
             type: 'financial',
             jurosAnual: calcFiso.jurosAnual,
             jurosPeriodo: calcFiso.custoTotalPct / 100,
             jurosMensal: calcFiso.taxaMensal,
-            incentivo: calcFiso.incentivo > 0 ? `Incentivo (-${calcFiso.incentivo.toFixed(1)}%) | ${calcFiso.tipoJuros}` : 'Taxa reduzida',
-            desconto: 'Não aplicado',
+            prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
+            prazoExplicacao: `Prazo financeiro calculado de ${prazo} dias corridos (base /30).`,
+            vpanDisplay: '0,00%',
+            vpanExplicacao: 'A modalidade FISO não concede desconto à vista VPAN.',
+            incentivoLabel: 'Incentivo',
+            incentivoDisplay: calcFiso.incentivo > 0 ? `-${calcFiso.incentivo.toFixed(2)}%` : '0,00%',
+            incentivoExplicacao: calcFiso.incentivo > 0 ? `Rebate de incentivo comercial de campanha de -${calcFiso.incentivo.toFixed(2)}% aplicado à taxa/operação FISO.` : 'Sem rebate de incentivo aplicável.',
+            cashbackDisplay: '0,00%',
+            cashbackExplicacao: 'Sem programa de cashback em grãos.',
+            garantia: 'Sem garantia (venda a prazo cedida a um parceiro)',
+            garantiaExplicacao: 'FISO não possui garantia patrimonial exigida. É uma cessão de crédito em que a venda a prazo é cedida a um parceiro.',
             custoTotal: calcFiso.custoTotal,
             custoTotalPct: calcFiso.custoTotalPct,
             custoAmPct: calcFiso.custoAmPct,
             valorTotal: calcFiso.valorTotal
         },
         {
-            id: 'prazo',
-            name: 'Syngenta (Prazo)',
+            id: 'syngenta',
+            name: 'Syngenta',
             type: 'financial',
             jurosAnual: calcSyngenta.jurosAnual,
             jurosPeriodo: calcSyngenta.custoTotalPct / 100,
             jurosMensal: calcSyngenta.taxaMensal,
-            incentivo: 'Sem incentivos',
-            desconto: 'Não aplicado',
+            prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
+            prazoExplicacao: `Prazo financeiro calculado de ${prazo} dias corridos (On-Balance).`,
+            vpanDisplay: '0,00%',
+            vpanExplicacao: 'Faturamento a prazo direto On-Balance Syngenta sem concessão de desconto à vista (VPAN).',
+            incentivoLabel: 'Incentivo',
+            incentivoDisplay: '0,00%',
+            incentivoExplicacao: 'Sem incentivo de campanha aplicável.',
+            cashbackDisplay: '0,00%',
+            cashbackExplicacao: 'Sem programa de cashback em grãos.',
+            garantia: 'Garantia alinhada diretamente com o time de crédito',
+            garantiaExplicacao: 'Estrutura de garantias alinhada diretamente com a mesa de crédito corporativa Syngenta.',
             custoTotal: calcSyngenta.custoTotal,
             custoTotalPct: calcSyngenta.custoTotalPct,
             custoAmPct: calcSyngenta.custoAmPct,
             valorTotal: calcSyngenta.valorTotal
+        },
+        {
+            id: 'syde',
+            name: 'Syde',
+            type: 'financial',
+            jurosAnual: calcSyde.jurosAnual,
+            jurosPeriodo: calcSyde.custoTotalPct / 100,
+            jurosMensal: calcSyde.taxaMensal,
+            prazoDisplay: `${prazo} dias (${diasUteisSyde} úteis)`,
+            prazoExplicacao: `Prazo financeiro de ${prazo} dias corridos, correspondendo a ${diasUteisSyde} dias úteis no cálculo de juros FIDC.`,
+            vpanDisplay: calcSyde.descontoVPAN > 0 ? `-${calcSyde.descontoVPAN.toFixed(2)}% à vista` : '0,00%',
+            vpanExplicacao: calcSyde.descontoVPAN > 0 ? `Desconto VPAN (Valor Presente À Vista) de -${calcSyde.descontoVPAN.toFixed(2)}% aplicado à vista sobre o valor base da operação antes dos juros.` : 'Sem desconto VPAN à vista.',
+            incentivoLabel: 'Incentivo',
+            incentivoDisplay: '0,00%',
+            incentivoExplicacao: 'Sem incentivo adicional aplicável.',
+            cashbackDisplay: '0,00%',
+            cashbackExplicacao: 'Sem programa de cashback em grãos.',
+            garantia: 'Nota promissória ou CPR financeira sem penhor',
+            garantiaExplicacao: 'Formalizado via Nota Promissória (NP) ou CPR Financeira (CPR-F) sem exigência de penhor agrícola.',
+            custoTotal: calcSyde.custoTotal,
+            custoTotalPct: calcSyde.custoTotalPct,
+            custoAmPct: calcSyde.custoAmPct,
+            valorTotal: calcSyde.valorTotal
         }
     ];
 
-    // Sort modalities from best to worst (lowest total payment or lowest cost percentage)
+    // Sort modalities from best to worst (lowest total payment)
     modalities.sort((a, b) => a.custoTotal - b.custoTotal);
 
     // Save modalities list globally
     window.modalitiesData = modalities;
 
-    // Render sorted modality cards
+    // Render sorted modality cards with question marks (?) and tooltips in every line
     const cardsContainer = document.getElementById('modality-cards-list');
     if (cardsContainer) {
         cardsContainer.innerHTML = '';
@@ -808,57 +875,183 @@ function calculateSimulation() {
 
             const card = document.createElement('div');
             card.className = `modality-card ${isBest ? 'best-option' : ''} ${isSelected ? 'selected' : ''}`;
-            card.onclick = () => selectModality(m.id);
+            card.onclick = (e) => {
+                if (e.target.closest('.tooltip-container')) return;
+                selectModality(m.id);
+            };
+
             card.innerHTML = `
                 <div class="modality-card-header">
-                    <div class="modality-card-title">${m.name}</div>
-                    <div class="modality-card-dates">${m.id.startsWith('barter') ? 'Safra 2026' : 'Período Comercial'}</div>
+                    <div class="modality-card-title-row">
+                        <span class="modality-card-title">${m.name}</span>
+                    </div>
+                    <div class="modality-card-dates">Data de carência <strong>${carenciaStr}</strong> &nbsp;|&nbsp; Vencimento <strong>${vencimentoStr}</strong></div>
                 </div>
                 <div class="modality-card-body">
                     <ul class="modality-bullet-list">
                         <li class="modality-bullet-item">
-                            <span>Taxa Juros Anual</span>
-                            <strong>${m.jurosAnual.toFixed(2)}% a.a.</strong>
+                            <span class="modality-bullet-label">
+                                Taxa Juros Anual
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text"><strong>Fórmula:</strong> Taxa de juros anualizada contratual da modalidade (${m.jurosAnual.toFixed(2)}% a.a.).</span>
+                                </span>
+                            </span>
+                            <strong class="modality-bullet-val">${m.jurosAnual.toFixed(2)}% a.a.</strong>
                         </li>
                         <li class="modality-bullet-item">
-                            <span>Taxa Juros Efetiva a.m.</span>
-                            <strong>${m.jurosMensal.toFixed(2)}% a.m.</strong>
+                            <span class="modality-bullet-label">
+                                Taxa Efetiva a.m.
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text"><strong>Fórmula:</strong> Taxa de juros efetiva mensal da operação (${m.jurosMensal.toFixed(2)}% a.m.).</span>
+                                </span>
+                            </span>
+                            <strong class="modality-bullet-val">${m.jurosMensal.toFixed(2)}% a.m.</strong>
                         </li>
                         <li class="modality-bullet-item">
-                            <span>Incentivo / Retorno</span>
-                            <strong style="color: var(--primary-deep); font-size: 11px; text-align: right;">${m.id.startsWith('barter') ? 'Sim (Cashback)' : 'Taxa Reduzida'}</strong>
+                            <span class="modality-bullet-label">
+                                Prazo Calculado
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text"><strong>Prazo Calculado:</strong> ${m.prazoExplicacao}</span>
+                                </span>
+                            </span>
+                            <strong class="modality-bullet-val">${m.prazoDisplay}</strong>
+                        </li>
+                        <li class="modality-bullet-item">
+                            <span class="modality-bullet-label">
+                                Desconto VPAN
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text"><strong>Desconto VPAN:</strong> ${m.vpanExplicacao}</span>
+                                </span>
+                            </span>
+                            <strong class="modality-bullet-val ${m.vpanDisplay.includes('-') ? 'text-teal' : ''}">${m.vpanDisplay}</strong>
+                        </li>
+                        <li class="modality-bullet-item">
+                            <span class="modality-bullet-label">
+                                ${m.incentivoLabel}
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text"><strong>${m.incentivoLabel}:</strong> ${m.incentivoExplicacao}</span>
+                                </span>
+                            </span>
+                            <strong class="modality-bullet-val ${m.incentivoDisplay.includes('+') || m.incentivoDisplay.includes('-') ? 'text-teal' : ''}">${m.incentivoDisplay}</strong>
+                        </li>
+                        <li class="modality-bullet-item">
+                            <span class="modality-bullet-label">
+                                Cashback
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text"><strong>Cashback:</strong> ${m.cashbackExplicacao}</span>
+                                </span>
+                            </span>
+                            <strong class="modality-bullet-val ${m.cashbackDisplay.includes('+') ? 'text-teal' : ''}">${m.cashbackDisplay}</strong>
+                        </li>
+                        <li class="modality-bullet-item modality-guarantee-item">
+                            <span class="modality-bullet-label">
+                                Garantias Exigidas
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text"><strong>Garantias Exigidas:</strong> ${m.garantiaExplicacao}</span>
+                                </span>
+                            </span>
+                            <strong class="modality-guarantee-text">${m.garantia}</strong>
                         </li>
                     </ul>
                     <div class="modality-card-total-box">
-                        <span class="modality-card-total-label">Valor Total Equivalente</span>
+                        <div class="modality-card-total-header">
+                            <span class="modality-card-total-label">Valor Total Equivalente</span>
+                            <span class="tooltip-container">
+                                <i class="fa-regular fa-circle-question"></i>
+                                <span class="tooltip-text"><strong>Fórmula:</strong> ${m.type === 'barter' ? '(Volume Final × Preço Grão FOB) + Frete Total' : 'Crédito × (1 - Desc. VPAN) × (1 + Taxa × Meses) × (1 - Incentivo)'}. Total de ${formatSelectedCurrency(m.valorTotal)}</span>
+                            </span>
+                        </div>
                         <span class="modality-card-total-value">${formatSelectedCurrency(m.valorTotal)}</span>
                     </div>
                 </div>
                 <div class="modality-card-footer">
                     <div class="modality-cost-row modality-cost-total">
-                        <span>Custo Real Total</span>
+                        <span>
+                            Custo Real Total
+                            <span class="tooltip-container">
+                                <i class="fa-regular fa-circle-question"></i>
+                                <span class="tooltip-text">
+                                    <strong>Fórmula do Custo Real Total:</strong><br>
+                                    • Valor Total: ${formatSelectedCurrency(m.valorTotal)}<br>
+                                    • Valor da Operação: ${formatSelectedCurrency(creditRaw)}<br>
+                                    • Custo Acumulado: ((${formatSelectedCurrency(m.valorTotal)} / ${formatSelectedCurrency(creditRaw)}) - 1) × 100 = <strong>${m.custoTotalPct.toFixed(2)}%</strong>
+                                </span>
+                            </span>
+                        </span>
                         <span>${m.custoTotalPct.toFixed(2)}%</span>
                     </div>
                     <div class="modality-cost-row modality-cost-operation">
-                        <span>Custo Real Operação</span>
+                        <span>
+                            Custo Real Operação
+                            <span class="tooltip-container" style="color: #ffffff;">
+                                <i class="fa-regular fa-circle-question" style="color: #ffffff;"></i>
+                                <span class="tooltip-text">
+                                    <strong>Fórmula do Custo Real da Operação:</strong><br>
+                                    • Custo Real Total (%): <strong>${m.custoTotalPct.toFixed(2)}%</strong><br>
+                                    • Prazo em Meses: ${prazo} dias / 30 = <strong>${nMesesCorridos.toFixed(2)} meses</strong><br>
+                                    • Taxa Efetiva da Operação: ${m.custoTotalPct.toFixed(2)}% / ${nMesesCorridos.toFixed(2)} = <strong>${m.custoAmPct.toFixed(3)}% a.m.</strong><br><br>
+                                    <em>Mede a taxa mensal efetiva ponderada real da operação.</em>
+                                </span>
+                            </span>
+                        </span>
                         <span>${m.custoAmPct.toFixed(3)}% a.m.</span>
                     </div>
                 </div>
             `;
             cardsContainer.appendChild(card);
         });
-    }
 
-    // Load detailed breakdown if selected
-    if (selectedModalityId) {
-        showDetailedBreakdown(selectedModalityId);
+        // Elevate the hovered card so its tooltips always appear on top of neighbors
+        bindCardTooltipElevation(cardsContainer);
     }
+}
+
+// Attach mouseover elevation logic to the cards grid after each render
+function bindCardTooltipElevation(grid) {
+    if (!grid) return;
+    // Clone and replace to remove previous listeners
+    const fresh = grid.cloneNode(true);
+    fresh.id = grid.id; // Preserve the id (e.g. modality-cards-list)
+    grid.parentNode.replaceChild(fresh, grid);
+
+    fresh.addEventListener('mouseover', function(e) {
+        const tooltipIcon = e.target.closest('.tooltip-container');
+        if (!tooltipIcon) return;
+        const card = tooltipIcon.closest('.modality-card');
+        if (!card) return;
+        fresh.querySelectorAll('.modality-card').forEach(c => { c.style.zIndex = '1'; });
+        card.style.zIndex = '9999';
+    });
+    fresh.addEventListener('mouseleave', function() {
+        fresh.querySelectorAll('.modality-card').forEach(c => { c.style.zIndex = '1'; });
+    });
+
+    // Re-attach click delegation since cloneNode stripped inline onclick
+    fresh.addEventListener('click', function(e) {
+        if (e.target.closest('.tooltip-container')) return;
+        const card = e.target.closest('.modality-card');
+        if (!card || !window.modalitiesData) return;
+        const allCards = fresh.querySelectorAll('.modality-card');
+        const idxArr = Array.from(allCards);
+        const idx = idxArr.indexOf(card);
+        if (idx >= 0 && window.modalitiesData[idx]) {
+            selectModality(window.modalitiesData[idx].id);
+        }
+    });
 }
 
 function selectModality(modId) {
     selectedModalityId = modId;
     calculateSimulation(); // Re-trigger to redraw selected state
 }
+
 
 function hideDetailedBreakdown() {
     document.getElementById('detailed-breakdown-card').style.display = 'none';
@@ -1177,9 +1370,9 @@ function startNewChat() {
                 
                 <div class="suggestion-chips-grid">
                     <button type="button" class="chip-btn highlight-chip" onclick="startBarterSimulationFlow()">Quero simular uma oferta de barter</button>
-                    <button type="button" class="chip-btn" onclick="handleSuggestion('Comparar Barter com FIDC e FISO')">Comparar modalidades de crédito</button>
-                    <button type="button" class="chip-btn" onclick="handleSuggestion('Quais são as garantias do FIDC e FISO?')">Garantias exigidas</button>
-                    <button type="button" class="chip-btn" onclick="handleSuggestion('Quais os critérios de elegibilidade?')">Critérios de elegibilidade</button>
+                    <button type="button" class="chip-btn" onclick="handleSuggestion('Comparar modalidades de crédito')">Comparar modalidades de crédito</button>
+                    <button type="button" class="chip-btn" onclick="handleSuggestion('Quais são as garantias exigidas?')">Garantias exigidas</button>
+                    <button type="button" class="chip-btn" onclick="handleSuggestion('O que é desconto VPAN?')">O que é desconto VPAN?</button>
                 </div>
             </div>
         `;
@@ -1221,35 +1414,42 @@ function handleSuggestion(text) {
     setTimeout(() => {
         const query = text.toLowerCase();
         
-        if (query.includes('modalidade') || query.includes('comparar') || query.includes('comparativo') || query.includes('fidc') || query.includes('fiso') || query.includes('prazo')) {
+        if (query.includes('vpan') || query.includes('desconto à vista') || query.includes('à vista')) {
             addMessageToChat(
-                "### Comparativo de Modalidades de Crédito\n\n" +
-                "1. **Barter (Físico)**:\n" +
-                "   - **Descrição:** Amortização via entrega de grãos. Risco cambial travado fisicamente.\n" +
-                "   - **Garantias:** CPR Física (Cédula de Produto Rural) e Seguro Agrícola.\n" +
-                "   - **Incentivos:** Cashback comercial de 4,5% + Incentivo de 0,5% a cada 30 dias.\n\n" +
-                "2. **FIDC (Syde)**:\n" +
-                "   - **Descrição:** Antecipação de recebíveis via fundo. Foco em agilidade.\n" +
-                "   - **Garantias:** CPR Financeira (CPR-F), Nota Promissória (NP) e cessão de recebíveis.\n" +
-                "   - **Incentivos:** Maior desconto comercial de juros (redução de até **-4,0% a.a.** na taxa).\n" +
-                "   - **Elegibilidade:** Exige relacionamento &ge; 2 anos e exclui clientes classificados como High Risk (HR/VHR).\n\n" +
-                "3. **FISO (Bancos)**:\n" +
-                "   - **Descrição:** Financiamento via parceiros bancários (Santander/Flex, Itaú/Nice) com incentivos de fabricante.\n" +
-                "   - **Garantias:** Penhor Agrícola, CPR Financeira e Seguro de Crédito. Pode haver colateral de retenção de AR (ex: 30% no Santander).\n" +
-                "   - **Incentivos:** Redução intermediária de juros (redução de até **-3,0% a.a.** na taxa).\n" +
-                "   - **Elegibilidade:** Restrito para clientes com menos de 2 anos (exceto Santander/Flex).\n\n" +
-                "4. **Prazo (Convencional)**:\n" +
-                "   - **Descrição:** Crédito direto no balanço da Syngenta (On-Balance) sob preço de tabela a prazo.\n" +
-                "   - **Garantias:** Nota Promissória (NP) e análise padrão de limite FSCM.",
+                "### O que é o Desconto VPAN?\n\n" +
+                "**VPAN** significa **Valor Presente À Vista** e representa o **desconto à vista** concedido na operação.\n\n" +
+                "- No nosso simulador, o Desconto VPAN reduz o valor principal da operação antes da aplicação dos juros do período.\n" +
+                "- Por exemplo, na modalidade **Syde**, é concedido um desconto VPAN à vista de **4,0%**, proporcionando maior economia ao produtor.",
                 "bot"
             );
-        } else if (query.includes('garantia') || query.includes('garantias') || query.includes('elegibilidade')) {
+        } else if (query.includes('modalidade') || query.includes('comparar') || query.includes('comparativo') || query.includes('syde') || query.includes('fiso') || query.includes('syngenta') || query.includes('nutrade')) {
             addMessageToChat(
-                "### Garantias e Critérios das Modalidades:\n\n" +
-                "- **Barter:** A principal garantia é a **CPR Física** vinculada diretamente à produção do grão. Elegibilidade livre focada na capacidade de produção.\n" +
-                "- **FIDC (Syde):** Formalizado via **CPR-F** ou **NP** com assinatura digital integrada. Elegível para relacionamento &ge; 2 anos e rating de risco aceitável (exclui HR/VHR).\n" +
-                "- **FISO:** Exige garantias bancárias tradicionais como **Penhor Agrícola** e **Seguro de Crédito**, além de potencial retenção colateral de recebíveis (ex: 30% no Santander). Restrito para novos clientes sem relacionamento prévio (exceto FLEX).\n" +
-                "- **Prazo (Convencional):** Garantido por **Nota Promissória (NP)** e sujeito à análise rígida de limites de crédito (SAP FSCM).",
+                "### Comparativo das 5 Modalidades de Crédito\n\n" +
+                "1. **Barter (Nutrade)**:\n" +
+                "   - **Garantia:** CPR Física e Seguro Agrícola.\n" +
+                "   - **Benefício:** Cashback de campanha + Incentivo Barter regressivo de prazo.\n\n" +
+                "2. **Barter (Outras Tradings)**:\n" +
+                "   - **Garantia:** CPR Física e Seguro Agrícola.\n" +
+                "   - **Benefício:** Valorização comercial padrão praticada no mercado concorrente.\n\n" +
+                "3. **FISO**:\n" +
+                "   - **Garantia:** Não há garantia (venda a prazo cedida a um parceiro).\n" +
+                "   - **Benefício:** Venda a prazo dentro de uma campanha com rebate/incentivo comercial.\n\n" +
+                "4. **Syngenta**:\n" +
+                "   - **Garantia:** Garantia alinhada diretamente com o time de crédito.\n" +
+                "   - **Benefício:** Financiamento direto em balanço Syngenta (On-Balance).\n\n" +
+                "5. **Syde**:\n" +
+                "   - **Garantia:** Nota promissória ou CPR financeira sem penhor.\n" +
+                "   - **Benefício:** Desconto VPAN (desconto à vista de 4,0%) com alta agilidade.",
+                "bot"
+            );
+        } else if (query.includes('garantia') || query.includes('garantias')) {
+            addMessageToChat(
+                "### Garantias Exigidas por Modalidade:\n\n" +
+                "- **Barter (Nutrade)**: CPR Física e Seguro Agrícola.\n" +
+                "- **Barter (Outras Tradings)**: CPR Física e Seguro Agrícola.\n" +
+                "- **FISO**: Não há garantia (venda a prazo cedida a um parceiro).\n" +
+                "- **Syngenta**: Garantia alinhada diretamente com o time de crédito.\n" +
+                "- **Syde**: Nota promissória ou CPR financeira sem penhor.",
                 "bot"
             );
         } else if (query.includes('simular') || query.includes('barter') || query.includes('crédito')) {
@@ -1963,60 +2163,52 @@ function downloadSimulationPDF(dataInput = null) {
                     <tr>
                         <th>Variável / Regra</th>
                         <th>Barter (Nutrade)</th>
-                        <th>FIDC (Syde)</th>
-                        <th>FISO (Bancário)</th>
-                        <th>Prazo (On-Balance)</th>
+                        <th>Barter (Outras Tradings)</th>
+                        <th>FISO</th>
+                        <th>Syngenta</th>
+                        <th>Syde</th>
                     </tr>
                 </thead>
                 <tbody>
                     <tr>
                         <td><strong>Taxa Juros Anual Efetiva</strong></td>
                         <td class="text-green">${d.jurosAnual.toFixed(2)}% a.a.</td>
-                        <td>${jurosAnualFidc.toFixed(2)}% a.a. (-4% inc.)</td>
-                        <td>${jurosAnualFiso.toFixed(2)}% a.a. (-3% inc.)</td>
-                        <td>${d.jurosAnual.toFixed(2)}% a.a. (tabela)</td>
+                        <td>${d.jurosAnual.toFixed(2)}% a.a.</td>
+                        <td>${jurosAnualFiso.toFixed(2)}% a.a.</td>
+                        <td>${d.jurosAnual.toFixed(2)}% a.a.</td>
+                        <td>${jurosAnualFidc.toFixed(2)}% a.a.</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Desconto VPAN / Incentivo</strong></td>
+                        <td class="text-green">+${(d.valPctProposta + res.incentivoBarterPct * 100).toFixed(2)}% (Cashback + Inc.)</td>
+                        <td>+${activeCampanhaValorizacaoOutras.toFixed(2)}% (Valoriz.)</td>
+                        <td>Incentivo (-3.0%)</td>
+                        <td>Sem desc. VPAN</td>
+                        <td>Desc. VPAN (-4.0% à vista)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Garantias Exigidas</strong></td>
+                        <td>CPR Física e Seguro Agrícola</td>
+                        <td>CPR Física e Seguro Agrícola</td>
+                        <td>Sem garantia (venda a prazo cedida a um parceiro)</td>
+                        <td>Garantia alinhada diretamente com o time de crédito</td>
+                        <td>Nota promissória ou CPR financeira sem penhor</td>
                     </tr>
                     <tr>
                         <td><strong>Custo Financeiro Líquido</strong></td>
                         <td class="text-green font-bold">${formatVal(netCustoBarter)}</td>
-                        <td>${formatVal(custoFidc)}</td>
+                        <td>${formatVal((d.credit * jurosPeriodoBarter) - (res.totalRetornoUSDMarket * factor) + (res.freteTotalUSDMarket * factor))}</td>
                         <td>${formatVal(custoFiso)}</td>
                         <td>${formatVal(custoPrazo)}</td>
+                        <td>${formatVal(custoFidc)}</td>
                     </tr>
                     <tr class="highlight">
                         <td><strong>Valor Total a Pagar (Equivalente)</strong></td>
                         <td class="text-green font-bold">${formatVal(totalBarter)}</td>
-                        <td>${formatVal(totalFidc)}</td>
+                        <td>${formatVal((res.volFinalMarket * (res.commBrutoUSDMarket * factor)) + (res.freteTotalUSDMarket * factor))}</td>
                         <td>${formatVal(totalFiso)}</td>
                         <td>${formatVal(totalPrazo)}</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Incentivo Comercial</strong></td>
-                        <td class="text-green">+${(d.valPctProposta + res.incentivoBarterPct * 100).toFixed(2)}% (Cashback+Inc.)</td>
-                        <td>Taxa Reduzida (-4.0% a.a.)</td>
-                        <td>Taxa Reduzida (-3.0% a.a.)</td>
-                        <td>Sem incentivo</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Garantias Atreladas</strong></td>
-                        <td>CPR Física e Seguro Agrícola</td>
-                        <td>CPR Financeira, NP e recebíveis</td>
-                        <td>Penhor, CPR-F e Seguro de Crédito</td>
-                        <td>Nota Promissória (NP) e FSCM</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Critérios de Elegibilidade</strong></td>
-                        <td class="text-green">Livre (grão colhido)</td>
-                        <td>Relacionamento &ge; 2 anos, sem riscos altos (HR/VHR)</td>
-                        <td>Restrições para &lt; 2 anos (exceto FLEX)</td>
-                        <td>Limite padrão SAP FSCM</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Fluxo de Liquidação</strong></td>
-                        <td>Físico (sacas entregues)</td>
-                        <td>Financeiro (recebíveis)</td>
-                        <td>Financeiro (bancos parceiros)</td>
-                        <td>Financeiro direto (boleto)</td>
+                        <td>${formatVal(totalFidc)}</td>
                     </tr>
                 </tbody>
             </table>
@@ -2657,19 +2849,20 @@ function deletePraca(index) {
 
 // ==================== SHARE POPUP ACTIONS ====================
 function openSharePopup() {
-    document.getElementById('share-modal').style.display = 'flex';
+    shareNative();
 }
 
 function closeSharePopup() {
-    document.getElementById('share-modal').style.display = 'none';
+    const modal = document.getElementById('share-modal');
+    if (modal) modal.style.display = 'none';
 }
 
 function buildShareMessageText() {
-    const credInput = document.getElementById('sim-credito').value;
-    const estado = document.getElementById('sim-estado').value;
-    const praca = document.getElementById('sim-regiao').value;
+    const credInput = document.getElementById('sim-credito') ? document.getElementById('sim-credito').value : '';
+    const estado = document.getElementById('sim-estado') ? document.getElementById('sim-estado').value : '';
+    const praca = document.getElementById('sim-regiao') ? document.getElementById('sim-regiao').value : '';
     const campSelect = document.getElementById('sim-campanha-select');
-    const campNome = campSelect.options[campSelect.selectedIndex].text;
+    const campNome = campSelect && campSelect.options[campSelect.selectedIndex] ? campSelect.options[campSelect.selectedIndex].text : '';
     
     let text = `*Simulação de Barter Hub 2026*\n\n`;
     text += `• *Campanha:* ${campNome}\n`;
@@ -2679,12 +2872,12 @@ function buildShareMessageText() {
     // Add best modality
     const cardEl = document.querySelector('.modality-card');
     if (cardEl) {
-        const title = cardEl.querySelector('.modality-title').textContent;
-        const total = cardEl.querySelector('.modality-total-value').textContent;
-        const cost = cardEl.querySelector('.modality-cost-percentage').textContent;
-        text += `*Melhor Opção:* ${title}\n`;
-        text += `• Valor Total Amortizado: ${total}\n`;
-        text += `• Custo Real da Operação: ${cost}\n\n`;
+        const titleEl = cardEl.querySelector('.modality-card-title');
+        const totalEl = cardEl.querySelector('.modality-card-total-value');
+        if (titleEl && totalEl) {
+            text += `*Melhor Opção:* ${titleEl.textContent}\n`;
+            text += `• Valor Total Equivalente: ${totalEl.textContent}\n\n`;
+        }
     }
     
     text += `_Gerado automaticamente pelo Barter Hub Simulator._`;
@@ -2698,27 +2891,31 @@ function shareToWhatsApp() {
 }
 
 function shareNative() {
-    const credInput = document.getElementById('sim-credito').value;
-    const praca = document.getElementById('sim-regiao').value;
+    const credInput = document.getElementById('sim-credito') ? document.getElementById('sim-credito').value : '';
+    const praca = document.getElementById('sim-regiao') ? document.getElementById('sim-regiao').value : '';
+    const rawText = decodeURIComponent(buildShareMessageText().replace(/\+/g, ' '));
     
     if (navigator.share) {
         navigator.share({
-            title: 'Simulação Barter Hub',
-            text: `Simulação de Barter Hub de ${credInput} para a praça ${praca}`,
+            title: 'Simulação Barter Hub 2026',
+            text: rawText,
             url: window.location.href
         })
         .then(() => closeSharePopup())
-        .catch((err) => console.log('Erro ao compartilhar:', err));
+        .catch((err) => {
+            if (err.name !== 'AbortError') {
+                console.log('Erro ao compartilhar via sistema:', err);
+            }
+        });
     } else {
         // Fallback: Copy to clipboard
-        const rawText = decodeURIComponent(buildShareMessageText().replace(/\+/g, ' '));
         navigator.clipboard.writeText(rawText)
         .then(() => {
-            alert("Resumo copiado para a área de transferência!");
+            alert("Resumo da simulação copiado para a área de transferência!");
             closeSharePopup();
         })
         .catch(() => {
-            alert("Não foi possível acessar a área de transferência.");
+            alert("Não foi possível acessar a área de transferência para compartilhamento.");
         });
     }
 }
@@ -2919,46 +3116,46 @@ const defaultTooltips = [
         text: "<strong>Simulador:</strong> Percentual de ganho efetivo sobre o Preço Livre (Porteira).<br><strong>Versão Final:</strong> Indicador comercial interno de margem do produtor no Salesforce.<br><strong>Fórmula:</strong> (Preço Equivalente Final / Preço Commodity Livre) - 1."
     },
     {
-        id: "tbl-fin-juros",
-        label: "Taxa Juros Anual Efetiva",
-        location: "Tabela Modalidades Financeiras",
-        text: "<strong>Simulador:</strong> Taxa de juros anual configurada para a campanha (com reduções promocionais para FIDC e FISO).<br><strong>Versão Final:</strong> Taxa contratual parametrizada no SAP e negociada com as instituições financeiras."
+        id: "mod-card-juros-anual",
+        label: "Taxa Juros Anual",
+        location: "Card de Modalidades",
+        text: "<strong>Fórmula:</strong> Taxa de juros anualizada contratual da modalidade."
     },
     {
-        id: "tbl-fin-custo",
-        label: "Custo Financeiro Líquido",
-        location: "Tabela Modalidades Financeiras",
-        text: "<strong>Simulador:</strong> Custo líquido de captação de juros, ponderado pelo prazo e deduzido dos retornos de originação (para Barter).<br><strong>Versão Final:</strong> Lançamento de despesas financeiras integradas no módulo SAP FI-CO.<br><strong>Fórmula:</strong> Crédito * (Prazo/360) * Juros Anual. Para Barter: Custo de Juros - Retorno Total + Frete."
+        id: "mod-card-juros-am",
+        label: "Taxa Efetiva a.m.",
+        location: "Card de Modalidades",
+        text: "<strong>Fórmula:</strong> Taxa de juros efetiva mensal da operação em % a.m."
     },
     {
-        id: "tbl-fin-total",
-        label: "Valor Total a Pagar (Equivalente)",
-        location: "Tabela Modalidades Financeiras",
-        text: "<strong>Simulador:</strong> Soma do crédito e custo financeiro líquido da modalidade correspondente.<br><strong>Versão Final:</strong> Valor total de liquidação e encerramento de contrato integrado no SAP FSCM.<br><strong>Fórmula:</strong> Valor do Crédito + Custo Financeiro Líquido."
+        id: "mod-card-vpan-inc",
+        label: "Desconto VPAN / Incentivo",
+        location: "Card de Modalidades",
+        text: "<strong>Fórmula & Conceito VPAN:</strong> O Desconto VPAN é o desconto à vista (Valor Presente À Vista) concedido na liquidação, reduzindo o valor principal da operação antes dos juros."
     },
     {
-        id: "tbl-fin-inc",
-        label: "Incentivo / Retorno Comercial",
-        location: "Tabela Modalidades Financeiras",
-        text: "<strong>Simulador:</strong> Detalhe da redução promocional de taxa de captação (-4% para FIDC, -3% para FISO) ou bonificação/cashback de originação (Barter).<br><strong>Versão Final:</strong> Parâmetros comerciais integrados de desconto financeiro da campanha comercial."
-    },
-    {
-        id: "tbl-fin-garantias",
+        id: "mod-card-garantias",
         label: "Garantias Exigidas",
-        location: "Tabela Modalidades Financeiras",
-        text: "<strong>Simulador:</strong> Texto fixo descritivo das garantias exigidas.<br><strong>Versão Final:</strong> Estrutura de colaterais e garantias exigidas pela mesa de crédito integradas no fluxo do dossiê digital de crédito (Salesforce)."
+        location: "Card de Modalidades",
+        text: "<strong>Garantias Exigidas:</strong> Estrutura de colaterais e garantias exigidas pela mesa de crédito para formalização do contrato."
     },
     {
-        id: "tbl-fin-elegibilidade",
-        label: "Critérios de Elegibilidade",
-        location: "Tabela Modalidades Financeiras",
-        text: "<strong>Simulador:</strong> Texto descritivo das condições de aceitação.<br><strong>Versão Final:</strong> Políticas automatizadas de score de crédito e compliance integradas na esteira de concessão de limite."
+        id: "mod-card-valor-total",
+        label: "Valor Total Equivalente",
+        location: "Card de Modalidades",
+        text: "<strong>Fórmula:</strong> Para modalidades financeiras: <code>Crédito * (1 - Desc. VPAN) * (1 + Taxa * Meses) * (1 - Incentivo)</code>. Para Barter: <code>(Volume Final * Preço Grão FOB) + Frete</code>."
     },
     {
-        id: "tbl-fin-fluxo",
-        label: "Fluxo de Pagamento",
-        location: "Tabela Modalidades Financeiras",
-        text: "<strong>Simulador:</strong> Tipo de entrega física ou financeira da modalidade.<br><strong>Versão Final:</strong> Parametrização do fluxo de liquidação contratual no SAP FSCM (físico ou financeiro)."
+        id: "mod-card-custo-total",
+        label: "Custo Real Total (%)",
+        location: "Card de Modalidades",
+        text: "<strong>Fórmula:</strong> <code>((Valor Total Equivalente / Valor da Operação) - 1) * 100</code>."
+    },
+    {
+        id: "mod-card-custo-op",
+        label: "Custo Real Operação (a.m.)",
+        location: "Card de Modalidades",
+        text: "<strong>Fórmula:</strong> <code>Custo Real Total (%) / (Prazo / 30)</code>. Mede a taxa efetiva mensal ponderada da operação."
     },
     {
         id: "pracas-wsys",
@@ -3114,5 +3311,49 @@ function downloadTooltipsMD() {
     link.click();
     document.body.removeChild(link);
 }
+
+// ==================== TOOLTIP Z-INDEX ELEVATION ====================
+// Garante que o card cujo tooltip está ativo sempre fique acima dos vizinhos
+(function setupCardTooltipElevation() {
+    function elevate() {
+        // Listen on the cards grid container using event delegation
+        const grid = document.getElementById('modality-cards-list');
+        if (!grid) return;
+
+        grid.addEventListener('mouseover', function(e) {
+            const tooltipIcon = e.target.closest('.tooltip-container');
+            if (!tooltipIcon) return;
+
+            const card = tooltipIcon.closest('.modality-card');
+            if (!card) return;
+
+            // Elevate the card
+            document.querySelectorAll('#modality-cards-list .modality-card').forEach(c => {
+                c.style.zIndex = '1';
+            });
+            card.style.zIndex = '9999';
+        });
+
+        grid.addEventListener('mouseleave', function() {
+            document.querySelectorAll('#modality-cards-list .modality-card').forEach(c => {
+                c.style.zIndex = '1';
+            });
+        });
+    }
+
+    // Run after DOM is ready and also after cards are re-rendered
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', elevate);
+    } else {
+        elevate();
+    }
+
+    // Also re-bind after any calculateSimulation() re-renders the grid
+    const _origCalc = typeof calculateSimulation === 'function' ? calculateSimulation : null;
+    if (_origCalc) {
+        window._cardTooltipElevationReady = true;
+    }
+})();
+
 
 

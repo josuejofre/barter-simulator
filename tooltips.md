@@ -20,20 +20,12 @@ Este arquivo lista todos os textos explicativos associados aos ícones de interr
 
 ---
 
-## 2. Resumo da Operação e Cartão de Referência
+## 2. Resumo da Operação
 
 | ID | Campo / Rótulo | Texto de Ajuda (Tooltip) |
 |---|---|---|
 | `summary-card` | **Resumo da Operação** | **Simulador:** Consolidação de juros, prazos e economia com base na opção selecionada.<br>**Versão Final:** Espelho e resumo executivo da CPR/proposta de faturamento do cliente. |
-| `ref-preco` | **Preço do Grão** | Preço bruto FOB obtido via API / WSys. |
-| `ref-cambio` | **Taxa Cambial** | Dólar futuro / spot atual obtido via AwesomeAPI. |
-| `ref-juros` | **Taxa Juros (a.a.)** | Taxa de juros anualizada cadastrada para o Barter nesta campanha. |
-| `ref-prazo` | **Prazo Calculado** | Prazo calculado (Data de carência a Vencimento da campanha). |
-| `ref-val-nutrade` | **Valoriz. Nutrade** | Retorno de valorização comercial (Cashback) da Nutrade. |
-| `ref-val-outras` | **Valoriz. Outras** | Dedução de valorização das tradings concorrentes. |
-| `ref-frete-chao` | **Frete Chão (WSys)** | Custo por KM de terra recuperado do WSys para a praça. |
-| `ref-frete-asfalto` | **Frete Asfalto (WSys)** | Custo por KM de asfalto recuperado do WSys para a praça. |
-| `modality-cards-list` | **Modalidades Ordenadas** | Apresentado da mais vantajosa (melhor benefício) para a menos vantajosa. Clique para ver o detalhamento completo dos custos. |
+| `modality-cards-list` | **Modalidades Ordenadas** | Apresentado da mais vantajosa (melhor benefício) para a menos vantajosa. Passe o mouse nos ícones de interrogação (?) em cada linha para ver as fórmulas detalhadas. |
 
 ---
 
@@ -57,15 +49,19 @@ Este arquivo lista todos os textos explicativos associados aos ícones de interr
 
 ---
 
-## 4. Detalhamento da Tabela de Modalidades Financeiras
+## 4. Detalhamento das Linhas dos Cards de Modalidades Priorizadas
 
-| ID | Campo / Rótulo | Texto de Ajuda (Tooltip) |
+| ID | Campo / Rótulo | Texto de Ajuda (Tooltip com Fórmula) |
 |---|---|---|
-| `tbl-fin-juros` | **Taxa Juros Anual Efetiva** | **Simulador:** Taxa de juros anual configurada para a campanha (com reduções promocionais para FIDC e FISO).<br>**Versão Final:** Taxa contratual parametrizada no SAP e negociada com as instituições financeiras. |
-| `tbl-fin-custo` | **Custo Financeiro Líquido** | **Simulador:** Custo líquido de captação de juros, ponderado pelo prazo e deduzido dos retornos de originação (para Barter).<br>**Versão Final:** Lançamento de despesas financeiras integradas no módulo SAP FI-CO.<br>**Fórmula:** Crédito * (Prazo/360) * Juros Anual. Para Barter: Custo de Juros - Retorno Total + Frete. |
-| `tbl-fin-total` | **Valor Total a Pagar** | **Simulador:** Soma do crédito e custo financeiro líquido da modalidade correspondente.<br>**Versão Final:** Valor total de liquidação e encerramento de contrato integrado no SAP FSCM.<br>**Fórmula:** Valor do Crédito + Custo Financeiro Líquido. |
-| `tbl-fin-inc` | **Incentivo / Retorno Comercial** | **Simulador:** Detalhe da redução promocional de taxa de captação (-4% para FIDC, -3% para FISO) ou bonificação/cashback de originação (Barter).<br>**Versão Final:** Parâmetros comerciais integrados de desconto financeiro da campanha comercial. |
-| `tbl-fin-garantias` | **Garantias Exigidas** | **Simulador:** Texto fixo descritivo das garantias exigidas.<br>**Versão Final:** Estrutura de colaterais e garantias exigidas pela mesa de crédito integradas no fluxo do dossiê digital de crédito (Salesforce). |
-| `tbl-fin-elegibilidade` | **Critérios de Elegibilidade** | **Simulador:** Texto descritivo das condições de aceitação.<br>**Versão Final:** Políticas automatizadas de score de crédito e compliance integradas na esteira de concessão de limite. |
-| `tbl-fin-fluxo` | **Fluxo de Pagamento** | **Simulador:** Tipo de entrega física ou financeira da modalidade.<br>**Versão Final:** Parametrização do fluxo de liquidação contratual no SAP FSCM (físico ou financeiro). |
-| `pracas-wsys` | **Cadastro de Praças (WSys)** | Esta tela simula o cadastro de praças e custos logísticos do sistema WSys, conforme solicitado para demonstração. |
+| `mod-card-juros-anual` | **Taxa Juros Anual** | **Fórmula:** Taxa de juros anualizada contratual da modalidade em % a.a. |
+| `mod-card-juros-efetiva` | **Taxa Efetiva a.m.** | **Fórmula:** Taxa de juros efetiva mensal da operação em % a.m. |
+| `mod-card-prazo` | **Prazo Calculado** | Período em dias corridos (ou úteis para FIDC) decorrido entre o desembolso e o vencimento da operação. |
+| `mod-card-vpan` | **Desconto VPAN** | **Fórmula & Conceito VPAN:** Desconto à vista (Valor Presente À Vista) concedido na liquidação, reduzindo o valor base da operação antes dos juros. |
+| `mod-card-incentivo` | **Incentivo Barter** | **Fórmula:** Rebate ou incentivo comercial de prazo calculado proporcionalmente ao período da campanha. |
+| `mod-card-cashback` | **Cashback** | **Fórmula:** Cashback de valorização comercial de campanha aplicado sobre o valor bruto da operação. |
+| `mod-card-garantias` | **Garantias Exigidas** | Estrutura de colaterais e garantias exigidas pela mesa de crédito para a modalidade correspondente. |
+| `mod-card-valor-total` | **Valor Total Equivalente** | **Fórmula:** Para modalidades financeiras: `Crédito * (1 - Desc. VPAN) * (1 + Taxa * Meses) * (1 - Incentivo)`. Para Barter: `(Volume Final * Preço Grão FOB) + Frete`. |
+| `mod-card-custo-total` | **Custo Real Total (%)** | **Fórmula:** `((Valor Total Equivalente / Valor da Operação) - 1) * 100`. |
+| `mod-card-custo-op` | **Custo Real Operação (a.m.)** | **Fórmula Detalhada:** `Custo Real Total (%) / (Prazo em dias / 30)`. Mede a taxa mensal efetiva ponderada real da operação. |
+| `pracas-wsys` | **Cadastro de Praças (WSys)** | Esta tela simula o cadastro de praças e custos logísticos do sistema WSys. |
+
