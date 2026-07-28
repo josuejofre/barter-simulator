@@ -763,6 +763,9 @@ function calculateSimulation() {
     const calcSyngenta = computeFinancialProduct('Syngenta', 1.85, 0.0, 0.0, 'Simples', 'Dias corridos');
 
     // 4. Barter Nutrade & Barter Outras Tradings (only when canBarter)
+    const nMesesCorridos = prazo / 30.0;
+    const nMesesStr = nMesesCorridos.toFixed(1).replace('.', ',');
+
     const jurosPeriodoBarter = (prazo / 360) * (jurosAnual / 100);
     const freteTotalBarter = res ? (res.freteTotalUSDProposta * factor) : 0;
     const freteTotalMarket = res ? (res.freteTotalUSDMarket * factor) : 0;
@@ -783,8 +786,6 @@ function calculateSimulation() {
     } else {
         diasUteisSyde = Math.round((prazo / 30.0) * 22);
     }
-    const nMesesCorridos = prazo / 30.0;
-    const nMesesStr = nMesesCorridos.toFixed(1).replace('.', ',');
 
     // Date formatting helper for campaign dates
     function formatDateBR(dateStr) {
