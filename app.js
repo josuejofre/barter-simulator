@@ -336,6 +336,18 @@ async function fetchLiveQuotes() {
 
 // When commodity changes in unified mode
 function onCulturaChange(value) {
+    // Toggle chart card visibility based on commodity selection
+    const chartCard = document.getElementById('chart-card-cfd');
+    if (chartCard) {
+        chartCard.style.display = value ? 'block' : 'none';
+    }
+
+    if (!value) {
+        // No commodity selected — clear barter-specific labels and recalculate
+        calculateSimulation();
+        return;
+    }
+
     const isSoy = value === 'Soja';
     const currencySign = selectedCurrency === 'BRL' ? 'R$' : 'USD';
     const unitSymbol = isSoy ? 'sc' : 'lp';
@@ -576,28 +588,43 @@ let lastSimulationResult = null; // store to redraw when selected modality chang
 function calculateSimulation() {
     const commoditySelect = document.getElementById('sim-commodity');
     if (!commoditySelect) return;
-    const commodity = commoditySelect.value;
-    const regiao = document.getElementById('sim-regiao').value;
+    const commodity = commoditySelect.value; // may be empty string
+
+    const regiaoEl = document.getElementById('sim-regiao');
+    const regiao = regiaoEl ? regiaoEl.value : '';
+
     const creditRaw = getRawCurrencyValue(document.getElementById('sim-credito').value);
     const commBrutoRaw = parseFloat(document.getElementById('sim-preco-bruto').value) || 0;
     const descontoAtivo = document.getElementById('sim-descontos').checked;
     const prazo = parseFloat(document.getElementById('sim-prazo').value) || 0;
     const jurosAnual = parseFloat(document.getElementById('sim-juros-anual').value) || 0;
     const valPctProposta = parseFloat(document.getElementById('sim-campanha-val').value) || 0;
-    
-    const distChao = parseFloat(document.getElementById('sim-dist-chao').value) || 0;
-    const distAsfalto = parseFloat(document.getElementById('sim-dist-asfalto').value) || 0;
+
+    // Distances: treat empty as "not provided"
+    const distChaoRaw = document.getElementById('sim-dist-chao').value;
+    const distAsfaltoRaw = document.getElementById('sim-dist-asfalto').value;
+    const distChao = distChaoRaw !== '' ? parseFloat(distChaoRaw) : NaN;
+    const distAsfalto = distAsfaltoRaw !== '' ? parseFloat(distAsfaltoRaw) : NaN;
+
     const freteChaoRaw = parseFloat(document.getElementById('sim-frete-chao').value) || 0;
     const freteAsfaltoRaw = parseFloat(document.getElementById('sim-frete-asfalto').value) || 0;
     const cambio = parseFloat(document.getElementById('sim-cambio').value) || 1.0;
-    
-    // Call standalone math calculator
-    const res = runSimulationMath({
+
+    // Determine if Barter can be calculated
+    const canBarter = !!(commodity && regiao && !isNaN(distChao) && !isNaN(distAsfalto));
+
+    // Store canBarter for PDF
+    window.lastCanBarter = canBarter;
+    window.lastSimCommodity = commodity;
+
+    // Call standalone math calculator (only fully runs barter when canBarter)
+    const res = canBarter ? runSimulationMath({
         commodity, regiao, creditRaw, commBrutoRaw, descontoAtivo,
-        prazo, jurosAnual, valPctProposta, distChao, distAsfalto,
+        prazo, jurosAnual, valPctProposta,
+        distChao, distAsfalto,
         freteChaoRaw, freteAsfaltoRaw, cambio, currency: selectedCurrency,
         valPctOutras: activeCampanhaValorizacaoOutras
-    });
+    }) : null;
 
     lastSimulationResult = res;
 
@@ -704,16 +731,16 @@ function calculateSimulation() {
     // 3. Syngenta (Prazo / On-Balance) - Formula: Simples, Dias Corridos (/30)
     const calcSyngenta = computeFinancialProduct('Syngenta', 1.85, 0.0, 0.0, 'Simples', 'Dias corridos');
 
-    // 4. Barter Nutrade & Barter Outras Tradings
+    // 4. Barter Nutrade & Barter Outras Tradings (only when canBarter)
     const jurosPeriodoBarter = (prazo / 360) * (jurosAnual / 100);
     const custoBrutoBarter = creditRaw * jurosPeriodoBarter;
-    const totalRetornosBarter = res.totalRetornoUSDProposta * factor;
-    const freteTotalBarter = res.freteTotalUSDProposta * factor;
+    const totalRetornosBarter = res ? (res.totalRetornoUSDProposta * factor) : 0;
+    const freteTotalBarter = res ? (res.freteTotalUSDProposta * factor) : 0;
     const netCustoBarter = custoBrutoBarter - totalRetornosBarter + freteTotalBarter;
-    const netCustoMarket = (creditRaw * jurosPeriodoBarter) - (res.totalRetornoUSDMarket * factor) + (res.freteTotalUSDMarket * factor);
+    const netCustoMarket = res ? ((creditRaw * jurosPeriodoBarter) - (res.totalRetornoUSDMarket * factor) + (res.freteTotalUSDMarket * factor)) : 0;
 
-    const totalBarter = (res.volFinalProposta * commBrutoRaw) + freteTotalBarter;
-    const totalMarket = (res.volFinalMarket * (res.commBrutoUSDMarket * factor)) + (res.freteTotalUSDMarket * factor);
+    const totalBarter = res ? ((res.volFinalProposta * commBrutoRaw) + freteTotalBarter) : 0;
+    const totalMarket = res ? ((res.volFinalMarket * (res.commBrutoUSDMarket * factor)) + (res.freteTotalUSDMarket * factor)) : 0;
 
     let diasUteisSyde = 0;
     if (campObj && campObj.desembolso && campObj.vencimento) {
@@ -751,8 +778,8 @@ function calculateSimulation() {
             vpanDisplay: '0,00%',
             vpanExplicacao: 'Desconto à vista (VPAN) não é aplicável na modalidade Barter, pois o benefício comercial ocorre via Cashback de campanha e Incentivo de prazo.',
             incentivoLabel: 'Incentivo Barter',
-            incentivoDisplay: `+${(res.incentivoBarterPct * 100).toFixed(2)}%`,
-            incentivoExplicacao: `Incentivo de prazo de +${(res.incentivoBarterPct * 100).toFixed(2)}% calculated sobre o Preço TP (Valor Presente) com base na carência.`,
+            incentivoDisplay: res ? `+${(res.incentivoBarterPct * 100).toFixed(2)}%` : '0,00%',
+            incentivoExplicacao: res ? `Incentivo de prazo de +${(res.incentivoBarterPct * 100).toFixed(2)}% calculado sobre o Preço TP (Valor Presente) com base na carência.` : 'Sem incentivo.',
             cashbackDisplay: `+${valPctProposta.toFixed(2)}%`,
             cashbackExplicacao: `Cashback de campanha comercial Nutrade de +${valPctProposta.toFixed(2)}% aplicado sobre o valor bruto da operação.`,
             garantia: 'CPR Física e Seguro Agrícola',
@@ -856,17 +883,20 @@ function calculateSimulation() {
         }
     ];
 
+    // Filter out Barter modalities if inputs for Barter calculation are incomplete
+    const availableModalities = canBarter ? modalities : modalities.filter(m => m.type !== 'barter');
+
     // Sort modalities from best to worst (lowest total payment)
-    modalities.sort((a, b) => a.custoTotal - b.custoTotal);
+    availableModalities.sort((a, b) => a.custoTotal - b.custoTotal);
 
     // Save modalities list globally
-    window.modalitiesData = modalities;
+    window.modalitiesData = availableModalities;
 
     // Render sorted modality cards with question marks (?) and tooltips in every line
     const cardsContainer = document.getElementById('modality-cards-list');
     if (cardsContainer) {
         cardsContainer.innerHTML = '';
-        modalities.forEach((m, idx) => {
+        availableModalities.forEach((m, idx) => {
             const isBest = idx === 0;
             const isSelected = selectedModalityId === m.id || (selectedModalityId === null && isBest);
             if (selectedModalityId === null && isBest) {
@@ -2088,285 +2118,102 @@ function initTradingViewWidget(commodity) {
     }
 }
 
-// Generate print-ready simulation PDF in a new window
+// Generate PDF by screenshotting result cards + disclaimer + CFD chart using html2canvas
 function downloadSimulationPDF(dataInput = null) {
-    let d;
-    if (dataInput) {
-        d = dataInput;
-    } else {
-        const commodity = document.getElementById('sim-commodity').value;
-        const regiao = document.getElementById('sim-regiao').value;
-        const creditRaw = getRawCurrencyValue(document.getElementById('sim-credito').value);
-        const commBrutoRaw = parseFloat(document.getElementById('sim-preco-bruto').value) || 0;
-        const descontoAtivo = document.getElementById('sim-descontos').checked;
-        const prazo = parseFloat(document.getElementById('sim-prazo').value) || 0;
-        const jurosAnual = parseFloat(document.getElementById('sim-juros-anual').value) || 0;
-        const valPctProposta = parseFloat(document.getElementById('sim-campanha-val').value) || 0;
-        
-        const distChao = parseFloat(document.getElementById('sim-dist-chao').value) || 0;
-        const distAsfalto = parseFloat(document.getElementById('sim-dist-asfalto').value) || 0;
-        const freteChaoRaw = parseFloat(document.getElementById('sim-frete-chao').value) || 0;
-        const freteAsfaltoRaw = parseFloat(document.getElementById('sim-frete-asfalto').value) || 0;
-        const cambio = parseFloat(document.getElementById('sim-cambio').value) || 1.0;
-        
-        d = {
-            commodity, region: regiao, credit: creditRaw, precoCommodity: commBrutoRaw,
-            descontoAtivo, prazo, jurosAnual, valPctProposta, distChao, distAsfalto,
-            freteChao: freteChaoRaw, freteAsfalto: freteAsfaltoRaw, cambio, currency: selectedCurrency
-        };
+    // Load html2canvas if not already available
+    function ensureHtml2Canvas(cb) {
+        if (window.html2canvas) { cb(); return; }
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js';
+        s.onload = cb;
+        document.head.appendChild(s);
     }
-    
-    const res = runSimulationMath({
-        commodity: d.commodity,
-        regiao: d.region,
-        creditRaw: d.credit,
-        commBrutoRaw: d.precoCommodity,
-        descontoAtivo: d.descontoAtivo,
-        prazo: d.prazo,
-        jurosAnual: d.jurosAnual,
-        valPctProposta: d.valPctProposta !== undefined ? d.valPctProposta : 4.50,
-        distChao: d.distChao !== undefined ? d.distChao : 15,
-        distAsfalto: d.distAsfalto !== undefined ? d.distAsfalto : 35,
-        freteChaoRaw: d.freteChao !== undefined ? d.freteChao : 15.00,
-        freteAsfaltoRaw: d.freteAsfalto !== undefined ? d.freteAsfalto : 8.00,
-        cambio: d.cambio,
-        currency: d.currency
-    });
-    
-    const factor = d.currency === 'BRL' ? d.cambio : 1.0;
-    const formatVal = (val) => d.currency === 'BRL' ? formatBRL(val) : formatUSD(val);
-    const formatValExtended = (val) => d.currency === 'BRL' ? formatBRLExtended(val) : formatUSDExtended(val);
-    
-    const now = new Date();
-    const dateStr = now.toLocaleDateString('pt-BR');
-    const timeStr = now.toLocaleTimeString('pt-BR');
-    
-    // Modalidades Calculations for PDF
-    const jurosAnualFidc = Math.max(0, d.jurosAnual - 4.0);
-    const jurosAnualFiso = Math.max(0, d.jurosAnual - 3.0);
-    
-    const jurosPeriodoBarter = (d.prazo / 360) * (d.jurosAnual / 100);
-    const jurosPeriodoFidc = (d.prazo / 360) * (jurosAnualFidc / 100);
-    const jurosPeriodoFiso = (d.prazo / 360) * (jurosAnualFiso / 100);
-    const jurosPeriodoPrazo = (d.prazo / 360) * (d.jurosAnual / 100);
-    
-    const custoFidc = d.credit * jurosPeriodoFidc;
-    const custoFiso = d.credit * jurosPeriodoFiso;
-    const custoPrazo = d.credit * jurosPeriodoPrazo;
-    
-    const custoBrutoBarter = d.credit * jurosPeriodoBarter;
-    const totalRetornosBarter = res.totalRetornoUSDProposta * factor;
-    const freteTotalBarter = res.freteTotalUSDProposta * factor;
-    const netCustoBarter = custoBrutoBarter - totalRetornosBarter + freteTotalBarter;
-    
-    const totalBarter = (res.volFinalProposta * d.precoCommodity) + freteTotalBarter;
-    const totalFidc = d.credit + custoFidc;
-    const totalFiso = d.credit + custoFiso;
-    const totalPrazo = d.credit + custoPrazo;
-    
-    // Create print template in a new window
-    const printWindow = window.open('', '_blank');
-    printWindow.document.write(`
-        <html>
-        <head>
-            <title>Relatório de Simulação - Barter Hub</title>
-            <style>
-                body { font-family: 'Inter', sans-serif; color: #111827; padding: 40px; line-height: 1.5; background-color: #ffffff; }
-                .header { border-bottom: 2px solid #088395; padding-bottom: 20px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: center; }
-                .logo { font-size: 28px; font-weight: 800; color: #088395; letter-spacing: -1.5px; }
-                .title { font-size: 20px; font-weight: 700; color: #374151; }
-                .metadata { margin-bottom: 30px; background-color: #f9fafb; padding: 20px; border-radius: 8px; border: 1px solid #e5e7eb; display: grid; grid-template-columns: 1fr 1fr; gap: 15px; font-size: 14px; }
-                .meta-item { display: flex; justify-content: space-between; padding-bottom: 8px; border-bottom: 1px dashed #e5e7eb; }
-                .meta-label { font-weight: 600; color: #4b5563; }
-                .meta-val { color: #111827; }
-                .section-title { font-size: 16px; font-weight: 700; color: #088395; margin-top: 30px; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 14px; }
-                th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid #e5e7eb; }
-                th { background-color: #f3f4f6; font-weight: 700; color: #374151; }
-                tr.highlight { background-color: #e2f2f5; font-weight: 600; }
-                tr.heavy { font-weight: 700; border-top: 2px solid #088395; }
-                .text-green { color: #0d9488; }
-                .text-danger { color: #dc2626; }
-                .disclaimer { font-size: 12px; color: #6b7280; text-align: center; margin-top: 50px; border-top: 1px solid #e5e7eb; padding-top: 15px; }
-                @media print {
-                    body { padding: 0; }
-                    .btn-print { display: none; }
-                }
-                .btn-print { background-color: #088395; color: white; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; float: right; margin-bottom: 20px; }
-            </style>
-        </head>
-        <body>
-            <button class="btn-print" onclick="window.print()">Imprimir / Salvar PDF</button>
-            <div class="header">
-                <div class="logo">barter hub</div>
-                <div class="title">Relatório de Simulação Barter</div>
-            </div>
-            
-            <div class="metadata">
-                <div class="meta-item"><span class="meta-label">Commodity:</span><span class="meta-val">${d.commodity}</span></div>
-                <div class="meta-item"><span class="meta-label">Região / Praça:</span><span class="meta-val">${d.region}</span></div>
-                <div class="meta-item"><span class="meta-label">Valor do Crédito:</span><span class="meta-val">${formatVal(d.credit)}</span></div>
-                <div class="meta-item"><span class="meta-label">Prazo da Operação:</span><span class="meta-val">${d.prazo} dias</span></div>
-                <div class="meta-item"><span class="meta-label">Taxa de Juros:</span><span class="meta-val">${d.jurosAnual.toFixed(2)}% a.a.</span></div>
-                <div class="meta-item"><span class="meta-label">Impostos Estaduais:</span><span class="meta-val">${d.descontoAtivo ? 'Ativo' : 'Inativo'}</span></div>
-            </div>
-            
-            <div class="section-title">Comparação de Resultados (Barter)</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Variável da Operação</th>
-                        <th>Nossa Estrutura (Nutrade)</th>
-                        <th>Outras Tradings</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>(-) Descontos Tributários Estaduais</td>
-                        <td class="text-danger">- ${formatVal(res.fixedTaxUSDProposta * factor)}</td>
-                        <td class="text-danger">- ${formatVal(res.fixedTaxUSDMarket * factor)}</td>
-                    </tr>
-                    <tr>
-                        <td>(-) Demais Descontos (SENAR / Funrural)</td>
-                        <td class="text-danger">- ${formatVal(res.pctTaxUSDProposta * factor)}</td>
-                        <td class="text-danger">- ${formatVal(res.pctTaxUSDMarket * factor)}</td>
-                    </tr>
-                    <tr>
-                        <td>Preço Commodity Livre (Porteira)</td>
-                        <td>${formatVal(res.commLivreUSDProposta * factor)}</td>
-                        <td>${formatVal(res.commLivreUSDMarket * factor)}</td>
-                    </tr>
-                    <tr>
-                        <td>Volume de Troca Físico Inicial (Inteiro)</td>
-                        <td>${formatNumber(res.volTrocaProposta)} ${res.unitSymbol}</td>
-                        <td>${formatNumber(res.volTrocaMarket)} ${res.unitSymbol}</td>
-                    </tr>
-                    <tr>
-                        <td>Cash Back da Campanha</td>
-                        <td>${formatVal(res.cashbackUsdProposta * factor)} (${d.valPctProposta.toFixed(2)}%)</td>
-                        <td>${formatVal(res.cashbackUsdMarket * factor)} (${res.valPctMarket.toFixed(2)}%)</td>
-                    </tr>
-                    <tr>
-                        <td>Incentivo Barter ganho</td>
-                        <td>${formatVal(res.incentivoBarterUsd * factor)}</td>
-                        <td>${formatVal(res.incentivoBarterUsd * factor)}</td>
-                    </tr>
-                    <tr class="highlight">
-                        <td>Total de Retorno Recebido</td>
-                        <td class="text-green">${formatVal(res.totalRetornoUSDProposta * factor)}</td>
-                        <td>${formatVal(res.totalRetornoUSDMarket * factor)}</td>
-                    </tr>
-                    <tr class="heavy">
-                        <td>Preço Equivalente Final</td>
-                        <td>${formatValExtended(res.precoFinalUSDProposta * factor)} / ${res.unitSymbol}</td>
-                        <td>${formatValExtended(res.precoFinalUSDMarket * factor)} / ${res.unitSymbol}</td>
-                    </tr>
-                    <tr class="heavy highlight">
-                        <td>Volume de Troca Equivalente Final</td>
-                        <td>${formatNumber(res.volFinalProposta)} ${res.unitSymbol}</td>
-                        <td>${formatNumber(res.volFinalMarket)} ${res.unitSymbol}</td>
-                    </tr>
-                    <tr class="highlight">
-                        <td>Economia de Commodity Obtida</td>
-                        <td colspan="2" class="text-green" style="text-align: center; font-size: 16px; padding: 16px;">
-                            Economia de <strong>${formatNumber(res.volFinalMarket - res.volFinalProposta)} ${res.unitSymbol} (${formatVal((res.volFinalMarket - res.volFinalProposta) * d.precoCommodity)})</strong> em relação ao mercado!
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
 
-            <div class="section-title" style="page-break-before: always;">Comparação Geral de Modalidades de Crédito</div>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Variável / Regra</th>
-                        <th>Barter (Nutrade)</th>
-                        <th>Barter (Outras Tradings)</th>
-                        <th>FISO</th>
-                        <th>Syngenta</th>
-                        <th>Syde</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><strong>Taxa Juros Anual Efetiva</strong></td>
-                        <td class="text-green">${d.jurosAnual.toFixed(2)}% a.a.</td>
-                        <td>${d.jurosAnual.toFixed(2)}% a.a.</td>
-                        <td>${jurosAnualFiso.toFixed(2)}% a.a.</td>
-                        <td>${d.jurosAnual.toFixed(2)}% a.a.</td>
-                        <td>${jurosAnualFidc.toFixed(2)}% a.a.</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Desconto VPAN / Incentivo</strong></td>
-                        <td class="text-green">+${(d.valPctProposta + res.incentivoBarterPct * 100).toFixed(2)}% (Cashback + Inc.)</td>
-                        <td>+${activeCampanhaValorizacaoOutras.toFixed(2)}% (Valoriz.)</td>
-                        <td>Incentivo (-3.0%)</td>
-                        <td>Sem desc. VPAN</td>
-                        <td>Desc. VPAN (-4.0% à vista)</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Garantias Exigidas</strong></td>
-                        <td>CPR Física e Seguro Agrícola</td>
-                        <td>CPR Física e Seguro Agrícola</td>
-                        <td>Sem garantia (venda a prazo cedida a um parceiro)</td>
-                        <td>Garantia alinhada diretamente com o time de crédito</td>
-                        <td>Nota promissória ou CPR financeira sem penhor</td>
-                    </tr>
-                    <tr>
-                        <td><strong>Custo Financeiro Líquido</strong></td>
-                        <td class="text-green font-bold">${formatVal(netCustoBarter)}</td>
-                        <td>${formatVal((d.credit * jurosPeriodoBarter) - (res.totalRetornoUSDMarket * factor) + (res.freteTotalUSDMarket * factor))}</td>
-                        <td>${formatVal(custoFiso)}</td>
-                        <td>${formatVal(custoPrazo)}</td>
-                        <td>${formatVal(custoFidc)}</td>
-                    </tr>
-                    <tr class="highlight">
-                        <td><strong>Valor Total a Pagar (Equivalente)</strong></td>
-                        <td class="text-green font-bold">${formatVal(totalBarter)}</td>
-                        <td>${formatVal((res.volFinalMarket * (res.commBrutoUSDMarket * factor)) + (res.freteTotalUSDMarket * factor))}</td>
-                        <td>${formatVal(totalFiso)}</td>
-                        <td>${formatVal(totalPrazo)}</td>
-                        <td>${formatVal(totalFidc)}</td>
-                    </tr>
-                </tbody>
-            </table>
-            
-            <div class="disclaimer">
-                Se não encontrar a sua praça neste simulador, favor entrar em contato com o time de FISO para análise especial.<br>
-                Relatório de simulação comercial emitido para simples referência e comparação.<br>
-                Simulação realizada em <strong>${dateStr}</strong> às <strong>${timeStr}</strong>.
-            </div>
-        </body>
-        </html>
-    `);
-    printWindow.document.close();
+    ensureHtml2Canvas(() => {
+        const canBarter = window.lastCanBarter !== false; // default true for legacy calls
+        const hasCommodity = !!(window.lastSimCommodity || (dataInput && dataInput.commodity));
+
+        // Elements to capture
+        const cardsContainer = document.getElementById('modality-cards-list');
+        const disclaimerEl = document.querySelector('.simulation-disclaimer, .disclaimer-section, [class*="disclaimer"]');
+        const chartCard = document.getElementById('chart-card-cfd');
+
+        // Build a wrapper div containing the elements to capture
+        const wrapper = document.createElement('div');
+        wrapper.style.cssText = 'position:fixed;top:0;left:0;width:900px;background:#ffffff;padding:24px;box-sizing:border-box;font-family:Inter,sans-serif;z-index:-9999;opacity:0;pointer-events:none;';
+
+        // Header
+        const header = document.createElement('div');
+        header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #0d9488;padding-bottom:16px;margin-bottom:24px;';
+        header.innerHTML = `
+            <div style="font-size:26px;font-weight:800;color:#0d9488;letter-spacing:-1.5px;">barter hub</div>
+            <div style="font-size:15px;font-weight:600;color:#374151;">Simulação de Crédito — ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}</div>
+        `;
+        wrapper.appendChild(header);
+
+        // Modality cards clone
+        if (cardsContainer) {
+            const cardsClone = cardsContainer.cloneNode(true);
+            cardsClone.style.cssText = 'display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;';
+            // Strip interactive elements
+            cardsClone.querySelectorAll('button, .tooltip-container').forEach(el => el.style.display = 'none');
+            wrapper.appendChild(cardsClone);
+        }
+
+        // Disclaimer
+        const disclaimerDiv = document.createElement('div');
+        disclaimerDiv.style.cssText = 'font-size:11px;color:#6b7280;text-align:center;border-top:1px solid #e5e7eb;padding-top:12px;margin-bottom:20px;font-style:italic;line-height:1.6;';
+        disclaimerDiv.innerHTML = `
+            Necessário consulta prévia de limite disponível com o time de crédito.<br>
+            Simulação meramente informativa, sem efeito contratual. Valores sujeitos a validação final. Baseado em taxa incluída em 27/07/2026.
+        `;
+        wrapper.appendChild(disclaimerDiv);
+
+        // CFD Chart (only if commodity selected and chart visible)
+        if (hasCommodity && chartCard && chartCard.style.display !== 'none') {
+            const chartClone = chartCard.cloneNode(true);
+            chartClone.style.cssText = 'margin-top:16px;border:1px solid #e5e7eb;border-radius:8px;padding:12px;';
+            wrapper.appendChild(chartClone);
+        }
+
+        document.body.appendChild(wrapper);
+
+        // Small delay to allow rendering
+        setTimeout(() => {
+            html2canvas(wrapper, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff' }).then(canvas => {
+                document.body.removeChild(wrapper);
+
+                // Convert to image and open print window
+                const imgData = canvas.toDataURL('image/png');
+                const printWindow = window.open('', '_blank');
+                printWindow.document.write(`
+                    <html><head><title>Simulação Barter Hub</title>
+                    <style>
+                        body { margin: 0; background: #fff; display: flex; flex-direction: column; align-items: center; padding: 20px; font-family: Inter, sans-serif; }
+                        img { max-width: 100%; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+                        .btn-print { display: block; margin: 16px auto; padding: 10px 24px; background:#0d9488; color:#fff; border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:14px; }
+                        @media print { .btn-print { display: none; } body { padding: 0; } }
+                    </style></head>
+                    <body>
+                        <button class="btn-print" onclick="window.print()">Imprimir / Salvar PDF</button>
+                        <img src="${imgData}" alt="Simulação Barter Hub" />
+                    </body></html>
+                `);
+                printWindow.document.close();
+            }).catch(err => {
+                console.error('html2canvas error:', err);
+                alert('Não foi possível gerar a imagem. Tente novamente.');
+            });
+        }, 200);
+    });
 }
 
 function downloadSimulationPDFFromIndex(index) {
     const session = chatHistorySessions[index];
     if (!session) return;
-    
-    const d = session.fullInputs;
-    
-    // Ensure default values are populated in the parameters object
-    const formattedInputs = {
-        commodity: d.commodity,
-        region: d.region,
-        credit: d.credit,
-        precoCommodity: d.precoCommodity,
-        descontoAtivo: true,
-        prazo: d.prazo,
-        jurosAnual: d.jurosAnual,
-        valPctProposta: 4.50, // default propuesta campaign rate
-        distChao: d.distChao !== undefined ? d.distChao : 15,
-        distAsfalto: d.distAsfalto !== undefined ? d.distAsfalto : 35,
-        freteChao: d.freteChao !== undefined ? d.freteChao : 15.00,
-        freteAsfalto: d.freteAsfalto !== undefined ? d.freteAsfalto : 8.00,
-        cambio: d.cambio || 5.15,
-        currency: d.currency || 'BRL'
-    };
-    
-    downloadSimulationPDF(formattedInputs);
+    window.lastCanBarter = !!(session.inputs && session.inputs.commodity && session.inputs.region);
+    window.lastSimCommodity = session.inputs ? session.inputs.commodity : '';
+    downloadSimulationPDF(session.fullInputs);
 }
 
 // ==================== CAMPAIGN MANAGER MODULE ====================

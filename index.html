@@ -198,19 +198,20 @@
                             </div>
 
                             <div class="input-group">
-                                <label for="sim-commodity">Commodity <span class="tooltip-container" data-tooltip-id="sim-commodity"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Seleção manual (Soja em sc ou Algodão em lp).<br><strong>Versão Final:</strong> Cadastro de produtos e commodities de originação da Syngenta/Nutrade.</span></span></label>
+                                <label for="sim-commodity">Commodity <span class="tooltip-container" data-tooltip-id="sim-commodity"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Seleção manual (Soja em sc ou Algodão em lp).<br><strong>Opcional:</strong> Se não selecionado, as modalidades Barter não serão calculadas.</span></span> <span style="font-size:11px;color:var(--text-secondary);font-weight:400;">(opcional)</span></label>
                                 <div class="select-wrapper">
-                                    <select id="sim-commodity" onchange="onCulturaChange(this.value)" required>
+                                    <select id="sim-commodity" onchange="onCulturaChange(this.value)">
+                                        <option value="">— Sem commodity (sem Barter) —</option>
                                         <option value="Soja">Soja (sacas - sc)</option>
                                         <option value="Algodão">Algodão (libras - lp)</option>
                                     </select>
                                 </div>
                             </div>
 
-                            <div class="input-group">
-                                <label for="sim-estado">Estado <span class="tooltip-container" data-tooltip-id="sim-estado"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Seleção do Estado correspondente.<br><strong>Versão Final:</strong> Preenchido de forma automática com base no domicílio fiscal (CNPJ) do cliente integrado no SAP MDM.</span></span></label>
+                            <div class="input-group" id="group-sim-estado">
+                                <label for="sim-estado">Estado <span class="tooltip-container" data-tooltip-id="sim-estado"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Seleção do Estado correspondente.<br><strong>Versão Final:</strong> Preenchido de forma automática com base no domicílio fiscal (CNPJ) do cliente integrado no SAP MDM.</span></span> <span style="font-size:11px;color:var(--text-secondary);font-weight:400;">(opcional)</span></label>
                                 <div class="select-wrapper">
-                                    <select id="sim-estado" onchange="onEstadoChange(this.value)" required>
+                                    <select id="sim-estado" onchange="onEstadoChange(this.value)">
                                         <option value="MT">Mato Grosso (MT)</option>
                                         <option value="GO">Goiás (GO)</option>
                                         <option value="MS">Mato Grosso do Sul (MS)</option>
@@ -219,10 +220,10 @@
                                 </div>
                             </div>
 
-                            <div class="input-group">
-                                <label for="sim-regiao">Praça (Dados do WSys) <span class="tooltip-container" data-tooltip-id="sim-regiao"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Filtro local de praças (carregando dados de localStorage).<br><strong>Versão Final:</strong> Chamada de API direta ao sistema corporativo de logística e originação (WSys).<br><strong>Fórmula:</strong> Retorna as tarifas logísticas e impostos vigentes do município.</span></span></label>
+                            <div class="input-group" id="group-sim-regiao">
+                                <label for="sim-regiao">Praça (Dados do WSys) <span class="tooltip-container" data-tooltip-id="sim-regiao"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Filtro local de praças (carregando dados de localStorage).<br><strong>Versão Final:</strong> Chamada de API direta ao sistema corporativo de logística e originação (WSys).<br><strong>Fórmula:</strong> Retorna as tarifas logísticas e impostos vigentes do município.</span></span> <span style="font-size:11px;color:var(--text-secondary);font-weight:400;">(opcional)</span></label>
                                 <div class="select-wrapper">
-                                    <select id="sim-regiao" onchange="onPracaChange(this.value)" required>
+                                    <select id="sim-regiao" onchange="onPracaChange(this.value)">
                                         <!-- Dynamic options loaded based on Estado selection -->
                                     </select>
                                 </div>
@@ -253,18 +254,18 @@
                                 </div>
                             </div>
 
-                            <div class="input-group">
-                                <label for="sim-dist-chao">Distância Estrada de Chão (KM) <span class="tooltip-container" data-tooltip-id="sim-dist-chao"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Carrega do WSys (editável).<br><strong>Versão Final:</strong> Calculado via roteirizador do frete com a geolocalização da fazenda cadastrada.<br><strong>Fórmula:</strong> Distância Chão * Custo KM Terra do WSys.</span></span></label>
+                            <div class="input-group" id="group-sim-dist-chao">
+                                <label for="sim-dist-chao">Distância Estrada de Chão (KM) <span class="tooltip-container" data-tooltip-id="sim-dist-chao"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Carrega do WSys (editável).<br><strong>Versão Final:</strong> Calculado via roteirizador do frete com a geolocalização da fazenda cadastrada.<br><strong>Fórmula:</strong> Distância Chão * Custo KM Terra do WSys.</span></span> <span style="font-size:11px;color:var(--text-secondary);font-weight:400;">(opcional)</span></label>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-dist-chao" value="15" min="0" required>
+                                    <input type="number" id="sim-dist-chao" value="" min="0" placeholder="Ex: 15">
                                     <span class="input-suffix">KM</span>
                                 </div>
                             </div>
 
-                            <div class="input-group">
-                                <label for="sim-dist-asfalto">Distância Estrada de Asfalto (KM) <span class="tooltip-container" data-tooltip-id="sim-dist-asfalto"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Carrega do WSys (editável).<br><strong>Versão Final:</strong> Calculado via roteirizador do frete com a geolocalização da fazenda cadastrada.<br><strong>Fórmula:</strong> Distância Asfalto * Custo KM Asfalto do WSys.</span></span></label>
+                            <div class="input-group" id="group-sim-dist-asfalto">
+                                <label for="sim-dist-asfalto">Distância Estrada de Asfalto (KM) <span class="tooltip-container" data-tooltip-id="sim-dist-asfalto"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text"><strong>Simulador:</strong> Carrega do WSys (editável).<br><strong>Versão Final:</strong> Calculado via roteirizador do frete com a geolocalização da fazenda cadastrada.<br><strong>Fórmula:</strong> Distância Asfalto * Custo KM Asfalto do WSys.</span></span> <span style="font-size:11px;color:var(--text-secondary);font-weight:400;">(opcional)</span></label>
                                 <div class="input-wrapper">
-                                    <input type="number" id="sim-dist-asfalto" value="35" min="0" required>
+                                    <input type="number" id="sim-dist-asfalto" value="" min="0" placeholder="Ex: 35">
                                     <span class="input-suffix">KM</span>
                                 </div>
                             </div>
@@ -345,7 +346,7 @@
                         </div>
 
                         <!-- TradingView Chart Widget Card -->
-                        <div class="chart-card card animate-fade-in">
+                        <div class="chart-card card animate-fade-in" id="chart-card-cfd" style="display:none;">
                             <div class="card-header">
                                 <h2><i class="fa-solid fa-chart-line text-green"></i> Cotação do Mercado Futuro (CFD)</h2>
                                 <p id="chart-subtitle">Gráfico em tempo real de Chicago para Soja</p>
