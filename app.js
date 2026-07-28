@@ -1200,18 +1200,9 @@ function switchResultsTab(tabName) {
 
 // Global chat state
 let chatState = {
-    step: null, // null, waiting_currency, waiting_commodity, waiting_region, waiting_credit, waiting_confirmation, waiting_custom_prazo, waiting_custom_juros
-    data: {
-        currency: 'BRL',
-        commodity: 'Soja',
-        region: 'Sorriso (MT)',
-        credit: 1000000,
-        prazo: 216,
-        jurosAnual: 14.40,
-        precoCommodity: 103.00,
-        cashback: 4.50,
-        freteKm: 10.30
-    }
+    // Steps: null | waiting_campanha | waiting_credito | waiting_commodity | waiting_regiao | waiting_distancias | waiting_dist_asfalto | waiting_confirmacao | waiting_custom_prazo | waiting_custom_juros
+    step: null,
+    data: {}
 };
 
 let chatHistorySessions = []; // Stores completed simulation data objects
@@ -1366,11 +1357,11 @@ function startNewChat() {
                     <i class="fa-solid fa-robot text-teal"></i>
                 </div>
                 <h2>Olá! Sou seu assistente de IA.</h2>
-                <p>Posso ajudar você a consultar informações sobre solicitações de crédito, contas, usuários e muito mais. Escolha uma sugestão abaixo ou digite sua pergunta.</p>
+                <p>Posso ajudar com simulações de crédito agrícola e barter. Escolha uma opção abaixo ou escreva sua dúvida.</p>
                 
                 <div class="suggestion-chips-grid">
-                    <button type="button" class="chip-btn highlight-chip" onclick="startBarterSimulationFlow()">Quero simular uma oferta de barter</button>
-                    <button type="button" class="chip-btn" onclick="handleSuggestion('Comparar modalidades de crédito')">Comparar modalidades de crédito</button>
+                    <button type="button" class="chip-btn highlight-chip" onclick="startCreditSimulationFlow()">Simular Crédito</button>
+                    <button type="button" class="chip-btn" onclick="handleSuggestion('Comparar modalidades de crédito')">Comparar modalidades</button>
                     <button type="button" class="chip-btn" onclick="handleSuggestion('Quais são as garantias exigidas?')">Garantias exigidas</button>
                     <button type="button" class="chip-btn" onclick="handleSuggestion('O que é desconto VPAN?')">O que é desconto VPAN?</button>
                 </div>
@@ -1385,25 +1376,36 @@ function startNewChat() {
     if (defaultHistItem) defaultHistItem.classList.add('active');
 }
 
-// Start Barter Simulation Flow guided questions
-function startBarterSimulationFlow() {
-    chatState.step = 'waiting_currency';
+// Keep backward compat alias
+function startBarterSimulationFlow() { startCreditSimulationFlow(); }
+
+// Start Credit Simulation Flow
+function startCreditSimulationFlow() {
+    chatState.step = 'waiting_campanha';
     chatState.data = {};
     
-    // Fetch live currency if available, as a default
+    // Fetch live exchange rate as default
     const cambioInput = document.getElementById('sim-cambio');
-    const cambio = cambioInput ? parseFloat(cambioInput.value) : 5.15;
-    chatState.data.cambio = cambio;
+    chatState.data.cambio = cambioInput ? (parseFloat(cambioInput.value) || 5.15) : 5.15;
+    chatState.data.currency = 'BRL';
+
+    // Build campaign choices from the global campaigns array
+    const activeCamps = campaigns.filter(c => c.status === 'Ativa');
+    const campChoices = activeCamps.map(c => ({ text: c.nome, value: String(c.id) }));
     
-    // Add bot greeting and first choices
+    if (campChoices.length === 0) {
+        addMessageToChat(
+            "Não há campanhas ativas cadastradas no momento. Acesse a aba **Campanhas** para cadastrar uma campanha antes de simular.",
+            "bot"
+        );
+        return;
+    }
+
     addMessageToChat(
-        "Muito bem! Vamos iniciar o fluxo de simulação de barter.\nPrimeiro, qual é a **moeda** que você gostaria de utilizar para a operação?",
+        "Olá! Vamos simular o crédito.\n\nPrimeiro, selecione a **campanha** desejada:",
         "bot",
         "choices",
-        [
-            { text: "Real (R$)", value: "BRL" },
-            { text: "Dólar (USD)", value: "USD" }
-        ]
+        campChoices
     );
 }
 
@@ -1523,77 +1525,41 @@ function handleSendButton() {
 
 // Main conversation state transition flow
 function processChatStep(input) {
-    const currency = chatState.data.currency || 'BRL';
     const cambio = chatState.data.cambio || 5.15;
-    
-    if (chatState.step === 'waiting_currency') {
-        chatState.data.currency = input;
-        chatState.step = 'waiting_commodity';
-        
-        addMessageToChat(
-            `Moeda selecionada: **${input === 'BRL' ? 'Real (BRL)' : 'Dólar (USD)'}**.\n\nQual é a **commodity** da sua safra que será utilizada para o barter?`,
-            "bot",
-            "choices",
-            [
-                { text: "Soja (sc)", value: "Soja" },
-                { text: "Algodão (lp)", value: "Algodão" }
-            ]
-        );
-    } 
-    else if (chatState.step === 'waiting_commodity') {
-        // Handle custom flow buttons
-        if (input === 'simular_soja') {
-            chatState.data.currency = 'BRL';
-            input = 'Soja';
-        }
-        
-        if (input === 'cancel') {
-            startNewChat();
+
+    // ── STEP 1: Campaign ──────────────────────────────────────────
+    if (chatState.step === 'waiting_campanha') {
+        const campId = parseInt(input, 10);
+        const campObj = campaigns.find(c => c.id === campId);
+        if (!campObj) {
+            addMessageToChat("Campanha não encontrada. Por favor, selecione uma das opções.", "bot");
             return;
         }
-        
-        chatState.data.commodity = input;
-        
-        // Define default values based on commodity
-        if (input === 'Soja') {
-            chatState.data.prazo = 216;
-            chatState.data.jurosAnual = 14.40;
-            chatState.data.precoCommodity = currentQuotes.soybeans * (chatState.data.currency === 'BRL' ? cambio : 1.0);
-            chatState.data.freteKm = 10.30 * (chatState.data.currency === 'BRL' ? cambio : 1.0);
+        chatState.data.campId = campId;
+        chatState.data.campObj = campObj;
+
+        // Derive prazo from campaign dates if available
+        if (campObj.desembolso && campObj.vencimento) {
+            const d1 = new Date(campObj.desembolso);
+            const d2 = new Date(campObj.vencimento);
+            chatState.data.prazo = Math.max(1, Math.round((d2 - d1) / (1000 * 60 * 60 * 24)));
         } else {
-            chatState.data.prazo = 249;
-            chatState.data.jurosAnual = 14.40;
-            chatState.data.precoCommodity = currentQuotes.cotton * (chatState.data.currency === 'BRL' ? cambio : 1.0);
-            chatState.data.freteKm = 10.30 * (chatState.data.currency === 'BRL' ? cambio : 1.0);
+            chatState.data.prazo = 216;
         }
-        
-        chatState.step = 'waiting_region';
-        
+
+        // Pull default juros from campaign taxes if available
+        const anyTax = campObj.taxas && campObj.taxas.length > 0 ? campObj.taxas[0] : null;
+        chatState.data.jurosAnual = anyTax ? (anyTax.jurosMensais * 12) : 14.40;
+
+        chatState.step = 'waiting_credito';
         addMessageToChat(
-            `Entendido! Commodity: **${input}**.\n\nQual é a sua **praça / região** de entrega de grãos? (Isso é crucial para calcularmos o benefício dos impostos estaduais no Barter):`,
-            "bot",
-            "choices",
-            [
-                { text: "Campo Novo do Parecis (MT)", value: "Campo Novo do Parecis (MT)" },
-                { text: "Sorriso (MT)", value: "Sorriso (MT)" },
-                { text: "Querência (MT)", value: "Querência (MT)" },
-                { text: "Rio Verde (GO)", value: "Rio Verde (GO)" },
-                { text: "Dourados (MS)", value: "Dourados (MS)" },
-                { text: "Cascavel (PR) [Isento]", value: "Cascavel (PR)" }
-            ]
-        );
-    } 
-    else if (chatState.step === 'waiting_region') {
-        chatState.data.region = input;
-        chatState.step = 'waiting_credit';
-        
-        addMessageToChat(
-            `Região configurada: **${input}**.\n\nAgora, por favor, me informe qual o **valor de crédito contratado a prazo** que deseja simular. Digite apenas o valor em números.\n*(Exemplo: 1.000.000 ou 500000)*`,
+            `Campanha **"${campObj.nome}"** selecionada.\nPrazo da campanha: **${chatState.data.prazo} dias**.\n\nQual o **valor do crédito** a simular? Digite apenas números.\n*(Ex: 1.000.000 ou 500000)*`,
             "bot"
         );
-    } 
-    else if (chatState.step === 'waiting_credit') {
-        // Clean and parse credit input using robust Portuguese/English currency parser
+    }
+
+    // ── STEP 2: Credit Value ─────────────────────────────────────
+    else if (chatState.step === 'waiting_credito') {
         let clean = input.replace(/R\$\s*|USD\s*|\$/g, '').trim();
         if (clean.includes(',')) {
             clean = clean.replace(/\./g, '').replace(',', '.');
@@ -1603,111 +1569,152 @@ function processChatStep(input) {
                 clean = clean.replace(/\./g, '');
             }
         }
-        let valCredit = parseFloat(clean);
-        
-        if (valCredit <= 0 || isNaN(valCredit)) {
-            addMessageToChat(
-                "Desculpe, não consegui identificar um valor numérico válido. Por favor, digite o valor da operação novamente. Ex: 1.000.000 ou 1000000",
-                "bot"
-            );
+        const valCredit = parseFloat(clean);
+        if (!valCredit || valCredit <= 0) {
+            addMessageToChat("Não identifiquei um valor válido. Por favor, tente novamente. Ex: 500000", "bot");
             return;
         }
-        
         chatState.data.credit = valCredit;
-        chatState.step = 'waiting_confirmation';
-        
-        // Ensure default distances are set
-        if (chatState.data.distChao === undefined) chatState.data.distChao = 15;
-        if (chatState.data.distAsfalto === undefined) chatState.data.distAsfalto = 35;
-        if (chatState.data.freteChao === undefined) chatState.data.freteChao = currency === 'BRL' ? 15.00 * cambio : 15.00;
-        if (chatState.data.freteAsfalto === undefined) chatState.data.freteAsfalto = currency === 'BRL' ? 8.00 * cambio : 8.00;
-        
-        const formattedCredit = currency === 'BRL' ? formatBRL(valCredit) : formatUSD(valCredit);
-        const formattedPrice = currency === 'BRL' ? formatBRL(chatState.data.precoCommodity) : formatUSD(chatState.data.precoCommodity);
-        
+        chatState.step = 'waiting_commodity';
+
+        // Check if campaign has commodities defined
+        const campObj = chatState.data.campObj;
+        const hasCampComm = campObj && campObj.taxas && campObj.taxas.some(t => t.produtoFinanceiro);
+
         addMessageToChat(
-            `Perfeito! Registrei o crédito de **${formattedCredit}**.\n\nPara o cálculo, usaremos os parâmetros padrão abaixo (safra 2026):\n` +
-            `- **Moeda da Operação:** ${currency}\n` +
-            `- **Commodity:** ${chatState.data.commodity}\n` +
-            `- **Praça:** ${chatState.data.region}\n` +
-            `- **Prazo:** ${chatState.data.prazo} dias\n` +
-            `- **Taxa de Juros:** ${chatState.data.jurosAnual}% a.a.\n` +
-            `- **Preço Bruto FOB Ref:** ${formattedPrice} / ${(chatState.data.commodity === 'Soja' ? 'sc' : 'lp')}\n` +
-            `- **Estrada de Chão:** ${chatState.data.distChao} KM\n` +
-            `- **Estrada de Asfalto:** ${chatState.data.distAsfalto} KM\n\n` +
-            `Podemos rodar o cálculo da simulação ou você gostaria de customizar as distâncias, prazo ou juros?`,
+            `Crédito de **${formatBRL(valCredit)}** registrado.\n\nQual a **commodity** da operação? *(Necessário para calcular a modalidade Barter)*\nSe não houver commodity ou não for aplicável, selecione **Pular**.`,
             "bot",
             "choices",
             [
-                { text: "Calcular Simulação", value: "calculate" },
-                { text: "Alterar Distâncias", value: "alterar_distancias" },
-                { text: "Alterar Prazo (Dias)", value: "alterar_prazo" },
-                { text: "Alterar Juros (% a.a.)", value: "alterar_juros" },
-                { text: "Cancelar", value: "cancel" }
+                { text: "Soja (sc)", value: "Soja" },
+                { text: "Algodão (lp)", value: "Algodão" },
+                { text: "Pular (sem Barter)", value: "sem_commodity" }
             ]
         );
     }
-    else if (chatState.step === 'waiting_confirmation') {
-        if (input === 'calculate') {
-            runBarterSimulationCalculation();
-        } else if (input === 'alterar_distancias') {
-            chatState.step = 'waiting_custom_dist_chao';
-            addMessageToChat("Por favor, digite a distância de estrada de chão (em KM) da fazenda até a rodovia. Ex: 10", "bot");
-        } else if (input === 'alterar_prazo') {
-            chatState.step = 'waiting_custom_prazo';
-            addMessageToChat("Por favor, digite o novo prazo da operação em dias. Ex: 180", "bot");
-        } else if (input === 'alterar_juros') {
-            chatState.step = 'waiting_custom_juros';
-            addMessageToChat("Por favor, digite a nova taxa de juros anual (% a.a.). Ex: 12.5", "bot");
-        } else if (input === 'show_params') {
-            const formattedCredit = currency === 'BRL' ? formatBRL(chatState.data.credit) : formatUSD(chatState.data.credit);
-            const formattedPrice = currency === 'BRL' ? formatBRL(chatState.data.precoCommodity) : formatUSD(chatState.data.precoCommodity);
-            addMessageToChat(
-                `Perfeito! Parâmetros atualizados da simulação:\n` +
-                `- **Moeda da Operação:** ${currency}\n` +
-                `- **Commodity:** ${chatState.data.commodity}\n` +
-                `- **Praça:** ${chatState.data.region}\n` +
-                `- **Prazo:** ${chatState.data.prazo} dias\n` +
-                `- **Taxa de Juros:** ${chatState.data.jurosAnual}% a.a.\n` +
-                `- **Preço Bruto FOB Ref:** ${formattedPrice} / ${(chatState.data.commodity === 'Soja' ? 'sc' : 'lp')}\n` +
-                `- **Estrada de Chão:** ${chatState.data.distChao} KM\n` +
-                `- **Estrada de Asfalto:** ${chatState.data.distAsfalto} KM\n\n` +
-                `Podemos rodar o cálculo da simulação agora?`,
-                "bot",
-                "choices",
-                [
-                    { text: "Calcular Simulação", value: "calculate" },
-                    { text: "Alterar Distâncias", value: "alterar_distancias" },
-                    { text: "Alterar Prazo (Dias)", value: "alterar_prazo" },
-                    { text: "Alterar Juros (% a.a.)", value: "alterar_juros" },
-                    { text: "Cancelar", value: "cancel" }
-                ]
-            );
+
+    // ── STEP 3: Commodity (optional) ─────────────────────────────
+    else if (chatState.step === 'waiting_commodity') {
+        if (input === 'sem_commodity') {
+            chatState.data.commodity = null;
+            chatState.data.precoCommodity = null;
         } else {
-            addMessageToChat("Simulação cancelada. Como posso ajudar você agora?", "bot");
-            startNewChat();
+            chatState.data.commodity = input;
+            chatState.data.precoCommodity = input === 'Soja'
+                ? currentQuotes.soybeans * cambio
+                : currentQuotes.cotton * cambio;
+        }
+
+        chatState.step = 'waiting_regiao';
+
+        // Build region choices from wsysPlazas
+        const plazaChoices = wsysPlazas.map(p => ({ text: `${p.nome} (${p.estado})`, value: `${p.nome}|${p.estado}` }));
+        plazaChoices.push({ text: "Pular (sem Barter)", value: "sem_regiao" });
+
+        const commMsg = chatState.data.commodity
+            ? `Commodity: **${chatState.data.commodity}**.\n\n`
+            : `Sem commodity — modalidades Barter **não** serão calculadas.\n\n`;
+
+        addMessageToChat(
+            commMsg + `Qual a **praça de entrega**? *(Necessário para o Barter)*\nPule se não for calcular Barter:`,
+            "bot",
+            "choices",
+            plazaChoices
+        );
+    }
+
+    // ── STEP 4: Region/Praça (optional) ──────────────────────────
+    else if (chatState.step === 'waiting_regiao') {
+        if (input === 'sem_regiao') {
+            chatState.data.region = null;
+            chatState.data.plaza = null;
+            chatState.step = 'waiting_confirmacao';
+            processChatStep('show_params');
+        } else {
+            const [nome, estado] = input.split('|');
+            chatState.data.region = `${nome} (${estado})`;
+            chatState.data.plaza = wsysPlazas.find(p => p.nome === nome && p.estado === estado);
+            chatState.step = 'waiting_distancias';
+            addMessageToChat(
+                `Praça: **${chatState.data.region}**.\n\nDigite a **distância de estrada de chão** (KM fazenda → rodovia). Pule digitando **0** se não houver chão:`,
+                "bot"
+            );
         }
     }
-    else if (chatState.step === 'waiting_custom_dist_chao') {
+
+    // ── STEP 5: Estrada de Chão (optional) ───────────────────────
+    else if (chatState.step === 'waiting_distancias') {
         const val = parseInt(input.replace(/[^0-9]/g, ''), 10);
         if (isNaN(val) || val < 0) {
-            addMessageToChat("Por favor, insira um número inteiro de KM válido. Ex: 10", "bot");
+            addMessageToChat("Por favor, insira um número inteiro. Ex: 15 ou 0", "bot");
             return;
         }
         chatState.data.distChao = val;
-        chatState.step = 'waiting_custom_dist_asfalto';
-        addMessageToChat("Agora, digite a distância de estrada de asfalto (em KM) até a nossa base. Ex: 40", "bot");
+        chatState.step = 'waiting_dist_asfalto';
+        addMessageToChat("Agora, a **distância de estrada de asfalto** (KM até a base/armazém). Ex: 40", "bot");
     }
-    else if (chatState.step === 'waiting_custom_dist_asfalto') {
+
+    // ── STEP 6: Estrada de Asfalto (optional) ────────────────────
+    else if (chatState.step === 'waiting_dist_asfalto') {
         const val = parseInt(input.replace(/[^0-9]/g, ''), 10);
         if (isNaN(val) || val < 0) {
-            addMessageToChat("Por favor, insira um número inteiro de KM válido. Ex: 40", "bot");
+            addMessageToChat("Por favor, insira um número inteiro. Ex: 40 ou 0", "bot");
             return;
         }
         chatState.data.distAsfalto = val;
-        chatState.step = 'waiting_confirmation';
+
+        // Derive frete values from plaza or default
+        const plaza = chatState.data.plaza;
+        chatState.data.freteChao = plaza ? plaza.freteChao : 15.00;
+        chatState.data.freteAsfalto = plaza ? plaza.freteAsfalto : 8.00;
+
+        chatState.step = 'waiting_confirmacao';
         processChatStep('show_params');
     }
+
+    // ── STEP 7: Confirmação / Ajustes ─────────────────────────────
+    else if (chatState.step === 'waiting_confirmacao') {
+        if (input === 'show_params') {
+            const d = chatState.data;
+            const canBarter = !!(d.commodity && d.region);
+            let msg = `**Resumo dos parâmetros da simulação:**\n` +
+                `- **Campanha:** ${d.campObj ? d.campObj.nome : '—'}\n` +
+                `- **Crédito:** ${formatBRL(d.credit)}\n` +
+                `- **Commodity:** ${d.commodity || '_(não informado — Barter não calculado)_'}\n` +
+                `- **Praça:** ${d.region || '_(não informado — Barter não calculado)_'}\n` +
+                (d.distChao !== undefined ? `- **Chão / Asfalto:** ${d.distChao} KM / ${d.distAsfalto} KM\n` : '') +
+                `- **Prazo:** ${d.prazo} dias\n` +
+                `- **Taxa de Juros:** ${d.jurosAnual.toFixed(2)}% a.a.\n\n` +
+                (canBarter
+                    ? `✅ **Todas as modalidades serão calculadas** (incluindo Barter).`
+                    : `⚠️ **Barter não será calculado** — commodity e/ou praça não informados. Somente FISO, Syngenta e Syde serão mostrados.`) +
+                `\n\nDeseja prosseguir ou ajustar algum parâmetro?`;
+
+            addMessageToChat(msg, "bot", "choices", [
+                { text: "✅ Calcular Simulação", value: "calculate" },
+                { text: "Alterar Prazo", value: "alterar_prazo" },
+                { text: "Alterar Juros", value: "alterar_juros" },
+                { text: "Cancelar", value: "cancel" }
+            ]);
+
+        } else if (input === 'calculate') {
+            runCreditSimulationCalculation();
+
+        } else if (input === 'alterar_prazo') {
+            chatState.step = 'waiting_custom_prazo';
+            addMessageToChat("Digite o novo prazo em dias. Ex: 180", "bot");
+
+        } else if (input === 'alterar_juros') {
+            chatState.step = 'waiting_custom_juros';
+            addMessageToChat("Digite a nova taxa de juros anual (% a.a.). Ex: 12.5", "bot");
+
+        } else {
+            addMessageToChat("Simulação cancelada. Como posso ajudar?", "bot");
+            startNewChat();
+        }
+    }
+
+    // ── STEP 8: Ajustes customizados ─────────────────────────────
     else if (chatState.step === 'waiting_custom_prazo') {
         const val = parseInt(input.replace(/[^0-9]/g, ''), 10);
         if (isNaN(val) || val <= 0) {
@@ -1715,100 +1722,211 @@ function processChatStep(input) {
             return;
         }
         chatState.data.prazo = val;
-        chatState.step = 'waiting_confirmation';
+        chatState.step = 'waiting_confirmacao';
         processChatStep('show_params');
     }
     else if (chatState.step === 'waiting_custom_juros') {
         const val = parseFloat(input.replace(/[^0-9.,]/g, '').replace(',', '.'));
         if (isNaN(val) || val <= 0) {
-            addMessageToChat("Por favor, insira um número válido de taxa (%). Ex: 13.75", "bot");
+            addMessageToChat("Por favor, insira um percentual válido. Ex: 13.75", "bot");
             return;
         }
         chatState.data.jurosAnual = val;
-        chatState.step = 'waiting_confirmation';
+        chatState.step = 'waiting_confirmacao';
         processChatStep('show_params');
-    }
-    else if (input === 'show_params') {
-        const formattedCredit = currency === 'BRL' ? formatBRL(chatState.data.credit) : formatUSD(chatState.data.credit);
-        const formattedPrice = currency === 'BRL' ? formatBRL(chatState.data.precoCommodity) : formatUSD(chatState.data.precoCommodity);
-        
-        addMessageToChat(
-            `Ajustes aplicados! Parâmetros atuais da simulação:\n` +
-            `- **Moeda da Operação:** ${currency}\n` +
-            `- **Commodity:** ${chatState.data.commodity}\n` +
-            `- **Praça:** ${chatState.data.region}\n` +
-            `- **Prazo:** ${chatState.data.prazo} dias\n` +
-            `- **Taxa de Juros:** ${chatState.data.jurosAnual}% a.a.\n` +
-            `- **Preço Bruto FOB Ref:** ${formattedPrice} / ${(chatState.data.commodity === 'Soja' ? 'sc' : 'lp')}\n\n` +
-            `Deseja calcular a simulação agora?`,
-            "bot",
-            "choices",
-            [
-                { text: "Calcular Simulação", value: "calculate" },
-                { text: "Alterar Prazo (Dias)", value: "alterar_prazo" },
-                { text: "Alterar Juros (% a.a.)", value: "alterar_juros" },
-                { text: "Cancelar", value: "cancel" }
-            ]
-        );
     }
 }
 
-// Executes the simulation engine math and renders the rich result card bubble in chat
-function runBarterSimulationCalculation() {
-    const d = chatState.data;
-    
-    // Ensure default distances are set if not customized
-    if (d.distChao === undefined) d.distChao = 15;
-    if (d.distAsfalto === undefined) d.distAsfalto = 35;
-    if (d.freteChao === undefined) d.freteChao = d.currency === 'BRL' ? 15.00 * d.cambio : 15.00;
-    if (d.freteAsfalto === undefined) d.freteAsfalto = d.currency === 'BRL' ? 8.00 * d.cambio : 8.00;
+// Keep backward compat
+function runBarterSimulationCalculation() { runCreditSimulationCalculation(); }
 
-    const results = runSimulationMath({
-        commodity: d.commodity,
-        regiao: d.region,
-        creditRaw: d.credit,
-        commBrutoRaw: d.precoCommodity,
-        descontoAtivo: true,
-        prazo: d.prazo,
-        jurosAnual: d.jurosAnual,
-        valPctProposta: 4.50,
-        distChao: d.distChao,
-        distAsfalto: d.distAsfalto,
-        freteChaoRaw: d.freteChao,
-        freteAsfaltoRaw: d.freteAsfalto,
-        cambio: d.cambio,
-        currency: d.currency
-    });
-    
-    const factor = d.currency === 'BRL' ? d.cambio : 1.0;
-    
-    const simSummary = {
-        inputs: {
-            currency: d.currency,
+// Executes the simulation and renders result card in chat (new rules)
+function runCreditSimulationCalculation() {
+    const d = chatState.data;
+    const cambio = d.cambio || 5.15;
+
+    const canBarter = !!(d.commodity && d.region && d.distChao !== undefined && d.distAsfalto !== undefined);
+
+    // Set defaults for distances if not set
+    const distChao = d.distChao !== undefined ? d.distChao : 0;
+    const distAsfalto = d.distAsfalto !== undefined ? d.distAsfalto : 0;
+    const freteChao = d.freteChao || 15.00;
+    const freteAsfalto = d.freteAsfalto || 8.00;
+    const precoCommodity = d.precoCommodity || (currentQuotes.soybeans * cambio);
+
+    // Select campaign in the simulator dropdown so calculateSimulation uses it
+    const campSelect = document.getElementById('sim-campanha-select');
+    if (campSelect && d.campId) {
+        campSelect.value = String(d.campId);
+    }
+
+    // Build the financial modalities using campaign tax data
+    const campObj = d.campObj;
+    function getFinancialResult(productKey, defaultRate, defaultDiscount, defaultIncentive, defaultTipoJuros, defaultContagem) {
+        let tax = null;
+        if (campObj && campObj.taxas) {
+            tax = campObj.taxas.find(t => {
+                const name = (t.produtoFinanceiro || '').toLowerCase();
+                const key = productKey.toLowerCase();
+                return name.includes(key) || (key === 'syde' && name.includes('fidc')) || (key === 'fiso' && name.includes('fiso')) || (key === 'syngenta' && name.includes('prazo'));
+            });
+        }
+        const taxaMensal = tax ? tax.jurosMensais : defaultRate;
+        const descontoVPAN = tax ? (tax.desconto || 0) : defaultDiscount;
+        const incentivo = tax ? (tax.incentivo || 0) : defaultIncentive;
+        const tipoJuros = tax ? tax.tipoJuros : defaultTipoJuros;
+        const nMeses = d.prazo / 30.0;
+        const vfIntermed = d.credit * (1.0 - descontoVPAN / 100.0);
+        let vfComJuros;
+        if (tipoJuros === 'Composto') {
+            vfComJuros = vfIntermed * Math.pow(1 + taxaMensal / 100.0, nMeses);
+        } else {
+            vfComJuros = vfIntermed * (1 + (taxaMensal / 100.0) * nMeses);
+        }
+        const valorTotal = vfComJuros * (1 - incentivo / 100.0);
+        const custoTotalPct = (valorTotal / d.credit - 1) * 100;
+        const custoAmPct = nMeses > 0 ? custoTotalPct / nMeses : 0;
+        return { taxaMensal, jurosAnual: taxaMensal * 12, descontoVPAN, incentivo, valorTotal, custoTotal: valorTotal - d.credit, custoTotalPct, custoAmPct };
+    }
+
+    const calcFiso = getFinancialResult('Fiso', 1.85, 0, 3.0, 'Simples', 'Dias corridos');
+    const calcSyngenta = getFinancialResult('Syngenta', 1.85, 0, 0, 'Simples', 'Dias corridos');
+    const calcSyde = getFinancialResult('Syde', 1.85, 4.0, 0, 'Composto', 'Dias úteis');
+
+    // Build result modalities list
+    const resultModalities = [
+        { name: 'FISO', custoAmPct: calcFiso.custoAmPct, custoTotalPct: calcFiso.custoTotalPct, valorTotal: calcFiso.valorTotal, type: 'financial' },
+        { name: 'Syngenta', custoAmPct: calcSyngenta.custoAmPct, custoTotalPct: calcSyngenta.custoTotalPct, valorTotal: calcSyngenta.valorTotal, type: 'financial' },
+        { name: 'Syde (FIDC)', custoAmPct: calcSyde.custoAmPct, custoTotalPct: calcSyde.custoTotalPct, valorTotal: calcSyde.valorTotal, type: 'financial' }
+    ];
+
+    let barterResultMsg = '';
+    let totalRetorno = 0;
+    let precoFinal = 0;
+    let economia = 0;
+    let unitSymbol = 'sc';
+
+    if (canBarter) {
+        const results = runSimulationMath({
             commodity: d.commodity,
-            region: d.region,
-            creditRaw: d.credit
-        },
-        totalRetorno: results.totalRetornoUSDProposta * factor,
-        precoFinal: results.precoFinalUSDProposta * factor,
-        precoMarket: results.precoFinalUSDMarket * factor,
-        economia: results.volFinalMarket - results.volFinalProposta,
-        unitSymbol: results.unitSymbol,
+            regiao: d.region,
+            creditRaw: d.credit,
+            commBrutoRaw: precoCommodity,
+            descontoAtivo: true,
+            prazo: d.prazo,
+            jurosAnual: d.jurosAnual,
+            valPctProposta: campObj && campObj.taxas && campObj.taxas.length > 0 ? (campObj.taxas[0].incentivo || 4.50) : 4.50,
+            distChao,
+            distAsfalto,
+            freteChaoRaw: freteChao,
+            freteAsfaltoRaw: freteAsfalto,
+            cambio,
+            currency: 'BRL'
+        });
+        totalRetorno = results.totalRetornoUSDProposta * cambio;
+        precoFinal = results.precoFinalUSDProposta * cambio;
+        economia = results.volFinalMarket - results.volFinalProposta;
+        unitSymbol = results.unitSymbol;
+
+        const barterCustoTotal = ((results.totalRetornoUSDProposta * cambio) - d.credit);
+        const barterCustoPct = (barterCustoTotal / d.credit) * 100;
+        const barterCustoAm = barterCustoPct / (d.prazo / 30);
+
+        resultModalities.unshift(
+            { name: 'Barter (Nutrade)', custoAmPct: barterCustoAm, custoTotalPct: barterCustoPct, valorTotal: results.totalRetornoUSDProposta * cambio, type: 'barter' }
+        );
+    }
+
+    // Sort best first (lowest total cost)
+    resultModalities.sort((a, b) => a.custoTotalPct - b.custoTotalPct);
+
+    // Build result card HTML
+    let modalitiesHTML = resultModalities.map((m, i) => {
+        const badge = i === 0 ? ' <span style="background:#0d9488;color:#fff;font-size:10px;padding:2px 6px;border-radius:20px;margin-left:6px;">Melhor opção</span>' : '';
+        const typeColor = m.type === 'barter' ? '#0d9488' : '#1e40af';
+        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:8px;background:rgba(0,0,0,0.03);margin-bottom:6px;">
+            <span style="font-size:13px;font-weight:600;color:${typeColor}">${m.name}${badge}</span>
+            <span style="font-size:12px;color:#374151;">${formatBRL(m.valorTotal)} &nbsp;|&nbsp; <strong>${m.custoAmPct.toFixed(2)}% a.m.</strong></span>
+        </div>`;
+    }).join('');
+
+    const campNome = d.campObj ? d.campObj.nome : '—';
+    const creditFormatted = formatBRL(d.credit);
+    const commLabel = d.commodity ? `${d.commodity} — ${d.region}` : '_(sem Barter)_';
+
+    const simSummary = {
+        inputs: { currency: 'BRL', commodity: d.commodity || '', region: d.region || '', creditRaw: d.credit },
+        totalRetorno,
+        precoFinal,
+        precoMarket: 0,
+        economia,
+        unitSymbol,
         fullInputs: Object.assign({}, d)
     };
-    
     chatHistorySessions.push(simSummary);
     const sessionIndex = chatHistorySessions.length - 1;
-    
-    addMessageToChat(
-        "**Simulação finalizada com sucesso!** Veja a comparação de vantagens com a Nossa Estrutura versus Concorrência:",
-        "bot",
-        "result",
-        simSummary
-    );
-    
-    updateHistorySidebar(sessionIndex, d.commodity, d.region);
-    
+
+    // Build result bubble using raw HTML type
+    const card = document.createElement('div');
+    card.className = 'chat-result-card';
+    card.innerHTML = `
+        <div class="result-card-header">
+            <h4>Simulação Concluída</h4>
+            <span class="result-badge">${campNome}</span>
+        </div>
+        <div class="result-card-body">
+            <div class="result-item">
+                <span class="result-label">Crédito</span>
+                <span class="result-val">${creditFormatted}</span>
+            </div>
+            <div class="result-item">
+                <span class="result-label">Modalidades (ordem: melhor → pior custo)</span>
+                <span class="result-val"></span>
+            </div>
+            <div style="width:100%;margin-bottom:8px;">${modalitiesHTML}</div>
+            ${canBarter ? `<div class="result-item"><span class="result-label">Total Retorno Barter</span><span class="result-val highlight-val">${formatBRL(totalRetorno)}</span></div>` : ''}
+            <div class="result-disclaimer" style="font-size:11px;color:var(--text-secondary);margin-top:10px;border-top:1px dashed var(--border-color);padding-top:8px;text-align:center;font-style:italic;">
+                ${!canBarter ? '⚠️ Commodity ou praça não informados — Barter não calculado.<br>' : ''}
+                Gerado em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}
+            </div>
+        </div>
+        <div class="result-card-actions">
+            <button type="button" class="result-action-btn primary-action" onclick="openSimulationInForm(${sessionIndex})">Ver no Simulador</button>
+            <button type="button" class="result-action-btn" onclick="startCreditSimulationFlow()">Nova Simulação</button>
+        </div>
+    `;
+
+    // Append directly to chat
+    const messagesContainer = document.getElementById('chat-messages');
+    if (messagesContainer) {
+        const welcomeBox = document.getElementById('chat-welcome-box');
+        if (welcomeBox) welcomeBox.style.display = 'none';
+
+        const messageRow = document.createElement('div');
+        messageRow.className = 'message-row bot-row';
+        const bubbleWrapper = document.createElement('div');
+        bubbleWrapper.className = 'bubble-wrapper';
+        const botAvatar = document.createElement('div');
+        botAvatar.className = 'bot-avatar-bubble';
+        botAvatar.innerHTML = '<i class="fa-solid fa-robot"></i>';
+        const bubble = document.createElement('div');
+        bubble.className = 'message-bubble bot-bubble';
+        const timeSpan = document.createElement('span');
+        timeSpan.className = 'message-time';
+        timeSpan.textContent = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+
+        bubble.appendChild(card);
+        bubble.appendChild(timeSpan);
+        bubbleWrapper.appendChild(botAvatar);
+        bubbleWrapper.appendChild(bubble);
+        messageRow.appendChild(bubbleWrapper);
+        messagesContainer.appendChild(messageRow);
+
+        const chatBody = document.getElementById('chat-window-body');
+        if (chatBody) chatBody.scrollTop = chatBody.scrollHeight;
+    }
+
+    updateHistorySidebar(sessionIndex, d.commodity || 'Crédito', d.region || 'Diversas');
     chatState.step = null;
 }
 
