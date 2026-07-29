@@ -1138,7 +1138,7 @@ function calculateSimulation() {
 
         // Elevate the hovered card so its tooltips always appear on top of neighbors
         bindCardTooltipElevation(cardsContainer);
-    }
+    });
 }
 
 // Attach mouseover elevation logic to the cards grid after each render
