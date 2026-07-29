@@ -611,9 +611,13 @@ function handleFormSimulate(e) {
     hasSimulated = true;
     calculateSimulation();
     
-    const resultsWrapper = document.getElementById('sim-results-wrapper');
-    if (resultsWrapper && window.innerWidth < 1024) {
-        resultsWrapper.scrollIntoView({ behavior: 'smooth' });
+    // Scroll to the results of whichever layout is currently active
+    const isV2Active = document.getElementById('page-simulador-v2') &&
+        document.getElementById('page-simulador-v2').style.display !== 'none';
+    const targetId = isV2Active ? 'v2-sim-results-wrapper' : 'sim-results-wrapper';
+    const target = document.getElementById(targetId);
+    if (target && window.innerWidth < 1024) {
+        target.scrollIntoView({ behavior: 'smooth' });
     }
 }
 window.handleFormSimulate = handleFormSimulate;
@@ -621,15 +625,29 @@ window.handleFormSimulate = handleFormSimulate;
 function calculateSimulation() {
     const placeholder = document.getElementById('sim-placeholder-card');
     const resultsWrapper = document.getElementById('sim-results-wrapper');
+    const v2ResultsWrapper = document.getElementById('v2-sim-results-wrapper');
+
+    // Determine which layout is visible
+    const v2Page = document.getElementById('page-simulador-v2');
+    const isV2Active = v2Page && v2Page.style.display !== 'none';
 
     if (!window.hasSimulated && !hasSimulated) {
         if (placeholder) placeholder.style.display = 'block';
         if (resultsWrapper) resultsWrapper.style.display = 'none';
+        if (v2ResultsWrapper) v2ResultsWrapper.style.display = 'none';
         return;
     }
 
     if (placeholder) placeholder.style.display = 'none';
-    if (resultsWrapper) resultsWrapper.style.display = 'block';
+    // Show results in the active layout's container
+    if (isV2Active) {
+        if (v2ResultsWrapper) v2ResultsWrapper.style.display = 'flex';
+        // Keep layout 1 results hidden while on layout 2
+        if (resultsWrapper) resultsWrapper.style.display = 'none';
+    } else {
+        if (resultsWrapper) resultsWrapper.style.display = 'block';
+        if (v2ResultsWrapper) v2ResultsWrapper.style.display = 'none';
+    }
 
     const commoditySelect = document.getElementById('sim-commodity');
     if (!commoditySelect) return;
