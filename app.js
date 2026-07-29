@@ -155,6 +155,8 @@ function setupMasks() {
 function showPage(pageId) {
     const assistPage = document.getElementById('page-assistente');
     const simPage = document.getElementById('page-simulador');
+    const simV2Page = document.getElementById('page-simulador-v2');
+    const simCreativePage = document.getElementById('page-simulador-criativo');
     const rulesPage = document.getElementById('page-regras');
     const campaignsPage = document.getElementById('page-campanhas');
     const pracasPage = document.getElementById('page-pracas');
@@ -162,6 +164,8 @@ function showPage(pageId) {
     
     const assistLink = document.getElementById('nav-link-assistente');
     const simLink = document.getElementById('nav-link-simulador');
+    const simV2Link = document.getElementById('nav-link-simulador-v2');
+    const simCreativeLink = document.getElementById('nav-link-simulador-criativo');
     const rulesLink = document.getElementById('nav-link-regras');
     const campaignsLink = document.getElementById('nav-link-campanhas');
     const pracasLink = document.getElementById('nav-link-pracas');
@@ -170,6 +174,8 @@ function showPage(pageId) {
     // Hide all pages
     if (assistPage) assistPage.style.display = 'none';
     if (simPage) simPage.style.display = 'none';
+    if (simV2Page) simV2Page.style.display = 'none';
+    if (simCreativePage) simCreativePage.style.display = 'none';
     if (rulesPage) rulesPage.style.display = 'none';
     if (campaignsPage) campaignsPage.style.display = 'none';
     if (pracasPage) pracasPage.style.display = 'none';
@@ -178,6 +184,8 @@ function showPage(pageId) {
     // Remove active class from links
     if (assistLink) assistLink.classList.remove('active');
     if (simLink) simLink.classList.remove('active');
+    if (simV2Link) simV2Link.classList.remove('active');
+    if (simCreativeLink) simCreativeLink.classList.remove('active');
     if (rulesLink) rulesLink.classList.remove('active');
     if (campaignsLink) campaignsLink.classList.remove('active');
     if (pracasLink) pracasLink.classList.remove('active');
@@ -189,10 +197,16 @@ function showPage(pageId) {
     } else if (pageId === 'simulador') {
         if (simPage) simPage.style.display = 'grid';
         if (simLink) simLink.classList.add('active');
-        
-        // Redraw TradingView widget when returning to simulation page
         const commodity = document.getElementById('sim-commodity').value;
         initTradingViewWidget(commodity);
+    } else if (pageId === 'simulador-v2') {
+        if (simV2Page) simV2Page.style.display = 'flex';
+        if (simV2Link) simV2Link.classList.add('active');
+        if (window.hasSimulated) calculateSimulation();
+    } else if (pageId === 'simulador-criativo') {
+        if (simCreativePage) simCreativePage.style.display = 'flex';
+        if (simCreativeLink) simCreativeLink.classList.add('active');
+        calculateSimulation();
     } else if (pageId === 'regras') {
         if (rulesPage) rulesPage.style.display = 'block';
         if (rulesLink) rulesLink.classList.add('active');
@@ -670,13 +684,22 @@ function calculateSimulation() {
 
     const factor = selectedCurrency === 'BRL' ? cambio : 1.0;
     
-    // 1. Update Resumo da Operação Banner
+    // 1. Update Resumo da Operação Banner across all layouts
     const today = new Date();
     const validityDate = new Date();
     validityDate.setDate(today.getDate() + 30);
-    document.getElementById('summary-value').textContent = formatSelectedCurrency(creditRaw);
-    document.getElementById('summary-date').textContent = today.toLocaleDateString('pt-BR');
-    document.getElementById('summary-validity').textContent = validityDate.toLocaleDateString('pt-BR');
+    ['summary-value', 'v2-summary-value'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = formatSelectedCurrency(creditRaw);
+    });
+    ['summary-date', 'v2-summary-date'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = today.toLocaleDateString('pt-BR');
+    });
+    ['summary-validity', 'v2-summary-validity'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = validityDate.toLocaleDateString('pt-BR');
+    });
 
     // 2. Update Summary metrics (safely handling missing ref card)
     if (document.getElementById('ref-preco')) document.getElementById('ref-preco').textContent = formatSelectedCurrency(commBrutoRaw);
@@ -936,9 +959,14 @@ function calculateSimulation() {
     // Save modalities list globally
     window.modalitiesData = availableModalities;
 
-    // Render sorted modality cards with question marks (?) and tooltips in every line
-    const cardsContainer = document.getElementById('modality-cards-list');
-    if (cardsContainer) {
+    // Render sorted modality cards in all active layout containers
+    const containers = [
+        document.getElementById('modality-cards-list'),
+        document.getElementById('v2-modality-cards-list'),
+        document.getElementById('creative-modality-cards-list')
+    ].filter(Boolean);
+
+    containers.forEach(cardsContainer => {
         cardsContainer.innerHTML = '';
         availableModalities.forEach((m, idx) => {
             const isBest = idx === 0;
@@ -2189,12 +2217,11 @@ function initTradingViewWidget(commodity) {
     }
 }
 
-// Generate PDF by screenshotting result cards + disclaimer + CFD chart using html2canvas
+// Generate PDF by capturing simulation elements with off-screen rendering
 function downloadSimulationPDF(dataInput = null) {
     if (!hasSimulated && !dataInput) {
         handleFormSimulate();
     }
-    // Load html2canvas if not already available
     function ensureHtml2Canvas(cb) {
         if (window.html2canvas) { cb(); return; }
         const s = document.createElement('script');
@@ -2204,81 +2231,100 @@ function downloadSimulationPDF(dataInput = null) {
     }
 
     ensureHtml2Canvas(() => {
-        const canBarter = window.lastCanBarter !== false; // default true for legacy calls
-        const hasCommodity = !!(window.lastSimCommodity || (dataInput && dataInput.commodity));
+        const summaryCard = document.querySelector('#sim-results-wrapper .card:first-child, .results-card:first-child, #v2-summary-card');
+        const cardsContainer = document.getElementById('modality-cards-list') || document.getElementById('v2-modality-cards-list') || document.getElementById('creative-modality-cards-list');
 
-        // Elements to capture
-        const cardsContainer = document.getElementById('modality-cards-list');
-        const disclaimerEl = document.querySelector('.simulation-disclaimer, .disclaimer-section, [class*="disclaimer"]');
-        const chartCard = document.getElementById('chart-card-cfd');
-
-        // Build a wrapper div containing the elements to capture
+        // Off-screen container for crisp capture
         const wrapper = document.createElement('div');
-        wrapper.style.cssText = 'position:fixed;top:0;left:0;width:900px;background:#ffffff;padding:24px;box-sizing:border-box;font-family:Inter,sans-serif;z-index:-9999;opacity:0;pointer-events:none;';
+        wrapper.style.cssText = 'position:absolute;left:-9999px;top:0;width:950px;background:#ffffff;padding:30px;box-sizing:border-box;font-family:Inter,sans-serif;color:#111827;';
 
         // Header
         const header = document.createElement('div');
-        header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #0d9488;padding-bottom:16px;margin-bottom:24px;';
+        header.style.cssText = 'display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #088395;padding-bottom:16px;margin-bottom:24px;';
         header.innerHTML = `
-            <div style="font-size:26px;font-weight:800;color:#0d9488;letter-spacing:-1.5px;">barter hub</div>
-            <div style="font-size:15px;font-weight:600;color:#374151;">Simulação de Crédito — ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}</div>
+            <div>
+                <div style="font-size:28px;font-weight:800;color:#053B43;letter-spacing:-1px;">barter hub</div>
+                <div style="font-size:13px;color:#088395;font-weight:600;margin-top:2px;">Relatório Executivo de Simulação de Crédito & Barter</div>
+            </div>
+            <div style="text-align:right;font-size:13px;color:#4b5563;">
+                <div><strong>Data:</strong> ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}</div>
+                <div style="font-size:11px;color:#6b7280;margin-top:2px;">Validade: 30 dias</div>
+            </div>
         `;
         wrapper.appendChild(header);
 
-        // Modality cards clone
+        // Summary Banner
+        if (summaryCard) {
+            const summaryClone = summaryCard.cloneNode(true);
+            summaryClone.style.cssText = 'background-color:#053B43 !important;color:#ffffff !important;padding:20px;border-radius:12px;margin-bottom:24px;box-shadow:none;';
+            wrapper.appendChild(summaryClone);
+        }
+
+        // Modality Cards Clone
         if (cardsContainer) {
             const cardsClone = cardsContainer.cloneNode(true);
-            cardsClone.style.cssText = 'display:flex;flex-wrap:wrap;gap:12px;margin-bottom:20px;';
-            // Strip interactive elements
+            cardsClone.style.cssText = 'display:grid;grid-template-columns:repeat(2, 1fr);gap:16px;margin-bottom:24px;';
             cardsClone.querySelectorAll('button, .tooltip-container').forEach(el => el.style.display = 'none');
             wrapper.appendChild(cardsClone);
         }
 
         // Disclaimer
         const disclaimerDiv = document.createElement('div');
-        disclaimerDiv.style.cssText = 'font-size:11px;color:#6b7280;text-align:center;border-top:1px solid #e5e7eb;padding-top:12px;margin-bottom:20px;font-style:italic;line-height:1.6;';
+        disclaimerDiv.style.cssText = 'font-size:11px;color:#6b7280;text-align:center;border-top:1px solid #e5e7eb;padding-top:14px;margin-bottom:20px;font-style:italic;line-height:1.6;';
         disclaimerDiv.innerHTML = `
-            Necessário consulta prévia de limite disponível com o time de crédito.<br>
-            Simulação meramente informativa, sem efeito contratual. Valores sujeitos a validação final. Baseado em taxa incluída em 27/07/2026.
+            * Necessário consulta prévia de limite disponível com o time de crédito.<br>
+            Simulação meramente informativa, sem efeito contratual. Valores sujeitos a validação final conforme política de originação e regras de campanha 2026.
         `;
         wrapper.appendChild(disclaimerDiv);
 
-        // CFD Chart (only if commodity selected and chart visible)
-        if (hasCommodity && chartCard && chartCard.style.display !== 'none') {
-            const chartClone = chartCard.cloneNode(true);
-            chartClone.style.cssText = 'margin-top:16px;border:1px solid #e5e7eb;border-radius:8px;padding:12px;';
-            wrapper.appendChild(chartClone);
-        }
-
         document.body.appendChild(wrapper);
 
-        // Small delay to allow rendering
         setTimeout(() => {
-            html2canvas(wrapper, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff' }).then(canvas => {
+            html2canvas(wrapper, { scale: 2, useCORS: true, allowTaint: true, backgroundColor: '#ffffff', logging: false }).then(canvas => {
                 document.body.removeChild(wrapper);
 
-                // Convert to image and open print window
                 const imgData = canvas.toDataURL('image/png');
                 const printWindow = window.open('', '_blank');
-                printWindow.document.write(`
-                    <html><head><title>Simulação Barter Hub</title>
-                    <style>
-                        body { margin: 0; background: #fff; display: flex; flex-direction: column; align-items: center; padding: 20px; font-family: Inter, sans-serif; }
-                        img { max-width: 100%; border: 1px solid #e5e7eb; border-radius: 8px; box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
-                        .btn-print { display: block; margin: 16px auto; padding: 10px 24px; background:#0d9488; color:#fff; border:none; border-radius:6px; font-weight:700; cursor:pointer; font-size:14px; }
-                        @media print { .btn-print { display: none; } body { padding: 0; } }
-                    </style></head>
-                    <body>
-                        <button class="btn-print" onclick="window.print()">Imprimir / Salvar PDF</button>
-                        <img src="${imgData}" alt="Simulação Barter Hub" />
-                    </body></html>
-                `);
-                printWindow.document.close();
+                if (printWindow) {
+                    printWindow.document.write(`
+                        <!DOCTYPE html>
+                        <html>
+                        <head>
+                            <title>Relatório de Simulação - Barter Hub</title>
+                            <style>
+                                body { margin: 0; padding: 20px; background: #f3f4f6; display: flex; flex-direction: column; align-items: center; font-family: Inter, sans-serif; }
+                                .print-actions { margin-bottom: 20px; display: flex; gap: 12px; }
+                                .btn-print { padding: 12px 28px; background: #088395; color: #ffffff; border: none; border-radius: 8px; font-weight: 700; font-size: 15px; cursor: pointer; box-shadow: 0 4px 12px rgba(8, 131, 149, 0.3); }
+                                .btn-print:hover { background: #053B43; }
+                                .img-container { background: #ffffff; padding: 20px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.1); max-width: 950px; width: 100%; box-sizing: border-box; }
+                                img { width: 100%; height: auto; display: block; }
+                                @media print {
+                                    body { padding: 0; background: #ffffff; }
+                                    .print-actions { display: none; }
+                                    .img-container { padding: 0; box-shadow: none; border-radius: 0; }
+                                }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="print-actions">
+                                <button class="btn-print" onclick="window.print()"><i class="fa-solid fa-print"></i> Imprimir / Salvar PDF</button>
+                            </div>
+                            <div class="img-container">
+                                <img src="${imgData}" alt="Relatório de Simulação Barter Hub" />
+                            </div>
+                        </body>
+                        </html>
+                    `);
+                    printWindow.document.close();
+                } else {
+                    alert("Permita popups no navegador para abrir o PDF.");
+                }
             }).catch(err => {
                 console.error('html2canvas error:', err);
-                alert('Não foi possível gerar a imagem. Tente novamente.');
+                if (document.body.contains(wrapper)) document.body.removeChild(wrapper);
+                alert('Não foi possível gerar a imagem do PDF. Tente novamente.');
             });
-        }, 200);
+        }, 250);
     });
 }
 
@@ -3396,6 +3442,67 @@ function downloadTooltipsMD() {
         window._cardTooltipElevationReady = true;
     }
 })();
+
+// Helper functions for Creative Pro Simulator
+function loadCreativePreset(presetKey) {
+    window.hasSimulated = true;
+    if (presetKey === 'soja_mt_1m') {
+        document.getElementById('sim-credito').value = 'R$ 1.000.000,00';
+        const range = document.getElementById('creative-credit-range');
+        if (range) range.value = 1000000;
+        const val = document.getElementById('creative-credit-val');
+        if (val) val.textContent = 'R$ 1.000.000,00';
+        document.getElementById('sim-commodity').value = 'Soja';
+        document.getElementById('sim-estado').value = 'MT';
+        onEstadoChange('MT');
+        onCulturaChange('Soja');
+    } else if (presetKey === 'soja_go_2m') {
+        document.getElementById('sim-credito').value = 'R$ 2.500.000,00';
+        const range = document.getElementById('creative-credit-range');
+        if (range) range.value = 2500000;
+        const val = document.getElementById('creative-credit-val');
+        if (val) val.textContent = 'R$ 2.500.000,00';
+        document.getElementById('sim-commodity').value = 'Soja';
+        document.getElementById('sim-estado').value = 'GO';
+        onEstadoChange('GO');
+        onCulturaChange('Soja');
+    } else if (presetKey === 'algodao_mt_15m') {
+        document.getElementById('sim-credito').value = 'R$ 1.500.000,00';
+        const range = document.getElementById('creative-credit-range');
+        if (range) range.value = 1500000;
+        const val = document.getElementById('creative-credit-val');
+        if (val) val.textContent = 'R$ 1.500.000,00';
+        document.getElementById('sim-commodity').value = 'Algodão';
+        document.getElementById('sim-estado').value = 'MT';
+        onEstadoChange('MT');
+        onCulturaChange('Algodão');
+    }
+    calculateSimulation();
+}
+
+function onCreativeRangeInput(val) {
+    window.hasSimulated = true;
+    const numVal = parseFloat(val);
+    const formatted = formatCurrencyValue(numVal, selectedCurrency);
+    document.getElementById('sim-credito').value = formatted;
+    const v2Cred = document.getElementById('v2-sim-credito');
+    if (v2Cred) v2Cred.value = formatted;
+    const label = document.getElementById('creative-credit-val');
+    if (label) label.textContent = formatted;
+    calculateSimulation();
+}
+
+function selectCreativeCommodity(comm) {
+    window.hasSimulated = true;
+    document.getElementById('sim-commodity').value = comm;
+    const btnSoja = document.getElementById('creative-pill-soja');
+    const btnAlg = document.getElementById('creative-pill-algodao');
+    const btnNone = document.getElementById('creative-pill-none');
+    if (btnSoja) btnSoja.classList.toggle('active', comm === 'Soja');
+    if (btnAlg) btnAlg.classList.toggle('active', comm === 'Algodão');
+    if (btnNone) btnNone.classList.toggle('active', comm === '');
+    onCulturaChange(comm);
+}
 
 
 
