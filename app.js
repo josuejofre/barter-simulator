@@ -3504,5 +3504,34 @@ function selectCreativeCommodity(comm) {
     onCulturaChange(comm);
 }
 
+// ==================== EXPOSE ALL INLINE-ONCLICK FUNCTIONS TO GLOBAL SCOPE ====================
+// Required because GitHub Pages may serve the script in a context where functions are not
+// automatically available to inline HTML onclick="" attributes.
+window.showPage = showPage;
+window.handleFormSimulate = handleFormSimulate;
+window.hasSimulated = hasSimulated;
+window.setCurrency = setCurrency;
+window.downloadSimulationPDF = downloadSimulationPDF;
+window.openSharePopup = openSharePopup;
+window.startNewChat = startNewChat;
+window.loadChatHistory = loadChatHistory;
+window.handleSendButton = handleSendButton;
+window.handleSuggestion = handleSuggestion;
+window.startBarterSimulationFlow = startBarterSimulationFlow;
+window.showCreateCampaignForm = showCreateCampaignForm;
+window.cancelCreateCampaign = cancelCreateCampaign;
+window.openTaxModal = openTaxModal;
+window.closeTaxModal = closeTaxModal;
+window.showCreatePracaForm = showCreatePracaForm;
+window.cancelCreatePraca = cancelCreatePraca;
+window.toggleAdvancedFilters = toggleAdvancedFilters;
+window.exportTooltipsJSON = exportTooltipsJSON;
+window.downloadTooltipsMD = downloadTooltipsMD;
+window.resetTooltipsToDefault = resetTooltipsToDefault;
+window.loadCreativePreset = loadCreativePreset;
+window.onCreativeRangeInput = onCreativeRangeInput;
+window.selectCreativeCommodity = selectCreativeCommodity;
+
+
 
 
