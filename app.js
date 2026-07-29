@@ -1092,10 +1092,28 @@ function calculateSimulation() {
                         </div>
                         <span class="modality-card-total-value">
                             ${formatSelectedCurrency(m.valorTotal)}
-                            ${m.type === 'barter' ? `<span style="display: flex; align-items: center; justify-content: flex-end; gap: 5px; font-size: 12.5px; font-weight: 600; color: var(--primary-medium); margin-top: 4px; letter-spacing: -0.2px;">
-                                <i class="fa-solid fa-wheat-awn" style="font-size: 11px;"></i>
-                                ${formatNumber(m.volFinal, 0)} ${m.unitAbbr} (${formatNumber(m.volEconomia, 0)} ${m.unitAbbr} de economia)
+                            ${m.type === 'barter' ? `
+                            <span style="display:flex; align-items:center; gap:6px; margin-top:8px; padding:8px 12px; background:rgba(14,165,118,0.12); border:1px solid rgba(14,165,118,0.3); border-radius:8px;">
+                                <i class="fa-solid fa-wheat-awn" style="font-size:15px; color:var(--primary-medium);"></i>
+                                <span style="display:flex; flex-direction:column; line-height:1.3;">
+                                    <strong style="font-size:16px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>
+                                    <span style="font-size:11.5px; color:#0d9488; font-weight:600;">+${formatNumber(m.volEconomia, 0)} ${m.unitAbbr} de economia</span>
+                                </span>
+                                <span class="tooltip-container" style="margin-left:auto;">
+                                    <i class="fa-regular fa-circle-question" style="font-size:14px; color:var(--text-secondary); cursor:help;"></i>
+                                    <span class="tooltip-text" style="width:280px;">
+                                        <strong>Sacas Equivalentes — Fórmula:</strong><br>
+                                        1️⃣ <strong>Vol. Inicial:</strong> Crédito ÷ Preço Livre = ${formatNumber(m.volInicial, 0)} ${m.unitAbbr}<br>
+                                        2️⃣ <strong>Cashback em ${m.unitAbbr}:</strong> Cashback USD ÷ Preço Livre<br>
+                                        3️⃣ <strong>Incentivo em ${m.unitAbbr}:</strong> Incentivo USD ÷ Preço Livre<br>
+                                        4️⃣ <strong>Vol. Final = Vol. Inicial − (Cashback sc + Incentivo sc)</strong><br>
+                                        ✅ <em>Fórmula alinhada com a planilha Simulador_CashBack_Barter_2026</em><br><br>
+                                        <strong>Valor Total Equivalente — Fórmula:</strong><br>
+                                        (Vol. Final × Preço FOB Bruto) + Frete Total
+                                    </span>
+                                </span>
                             </span>` : ''}
+
                         </span>
                     </div>
                 </div>
