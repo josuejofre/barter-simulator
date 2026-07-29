@@ -421,7 +421,7 @@
 
                             <!-- Section 2: Informações financeiras -->
                             <div style="background:var(--bg-hover); padding:16px; border-radius:8px; border:1px solid var(--border-color);">
-                                <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:12px;">Informações Financeiras & Localização</span>
+                                <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:12px;">Informações Financeiras &amp; Localização</span>
                                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:15px;">
                                     <div class="input-group" style="margin-bottom:0;">
                                         <label>Moeda da Operação</label>
@@ -455,9 +455,39 @@
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
 
-                            <!-- Footer Action Buttons matching user screenshot -->
+                            <!-- Section 3: Frete & Deduções -->
+                            <div style="background:var(--bg-hover); padding:16px; border-radius:8px; border:1px solid var(--border-color);">
+                                <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:12px;">Frete &amp; Deduções Fiscais</span>
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:15px; align-items:end;">
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v2-sim-dist-chao">Distância Estrada de Chão (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
+                                        <div class="input-wrapper">
+                                            <input type="number" id="v2-sim-dist-chao" value="" min="0" placeholder="Ex: 15" oninput="document.getElementById('sim-dist-chao').value=this.value;">
+                                            <span class="input-suffix">KM</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v2-sim-dist-asfalto">Distância Estrada de Asfalto (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
+                                        <div class="input-wrapper">
+                                            <input type="number" id="v2-sim-dist-asfalto" value="" min="0" placeholder="Ex: 35" oninput="document.getElementById('sim-dist-asfalto').value=this.value;">
+                                            <span class="input-suffix">KM</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v2-sim-descontos">Deduções Fiscais de Barter</label>
+                                        <div class="toggle-switch" style="margin-top:6px;">
+                                            <input type="checkbox" id="v2-sim-descontos" checked onchange="document.getElementById('sim-descontos').checked=this.checked;">
+                                            <label for="v2-sim-descontos" class="toggle-slider"></label>
+                                            <span class="toggle-label">Ativo (Senar + Fethab)</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Footer Action Buttons -->
                             <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
                                 <button type="button" class="btn-submit" onclick="showPage('assistente')" style="width:auto; padding:10px 24px; background-color:var(--bg-card); color:var(--primary-deep); border:1px solid var(--primary-deep); box-shadow:none;">
                                     Voltar

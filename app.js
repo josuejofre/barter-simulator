@@ -2807,20 +2807,30 @@ function initEstadoSelect() {
 }
 
 function onEstadoChange(estado) {
-    const pracaSelect = document.getElementById('sim-regiao');
-    if (!pracaSelect) return;
-    
-    pracaSelect.innerHTML = '';
-    const filtered = wsysPlazas.filter(p => p.estado === estado).sort((a,b) => a.nome.localeCompare(b.nome));
-    filtered.forEach(p => {
-        const opt = document.createElement('option');
-        opt.value = p.nome;
-        opt.textContent = p.nome;
-        pracaSelect.appendChild(opt);
+    // Populate both Layout 1 and Layout 2 Praça selects
+    const selIds = ['sim-regiao', 'v2-sim-regiao'];
+    selIds.forEach(selId => {
+        const pracaSelect = document.getElementById(selId);
+        if (!pracaSelect) return;
+        pracaSelect.innerHTML = '';
+        const filtered = wsysPlazas.filter(p => p.estado === estado).sort((a,b) => a.nome.localeCompare(b.nome));
+        filtered.forEach(p => {
+            const opt = document.createElement('option');
+            opt.value = p.nome;
+            opt.textContent = p.nome;
+            pracaSelect.appendChild(opt);
+        });
+        if (filtered.length > 0) {
+            pracaSelect.value = filtered[0].nome;
+        }
     });
-    
+
+    // Sync v2-sim-estado if needed
+    const v2Estado = document.getElementById('v2-sim-estado');
+    if (v2Estado && v2Estado.value !== estado) v2Estado.value = estado;
+
+    const filtered = wsysPlazas.filter(p => p.estado === estado).sort((a,b) => a.nome.localeCompare(b.nome));
     if (filtered.length > 0) {
-        pracaSelect.value = filtered[0].nome;
         onPracaChange(filtered[0].nome);
     } else {
         calculateSimulation();
@@ -2834,6 +2844,9 @@ function onPracaChange(pracaNome) {
         document.getElementById('sim-frete-chao').value = plaza.freteChao;
         document.getElementById('sim-frete-asfalto').value = plaza.freteAsfalto;
     }
+    // Sync v2-sim-regiao if needed
+    const v2Regiao = document.getElementById('v2-sim-regiao');
+    if (v2Regiao && v2Regiao.value !== pracaNome) v2Regiao.value = pracaNome;
     calculateSimulation();
 }
 
@@ -3531,6 +3544,13 @@ window.resetTooltipsToDefault = resetTooltipsToDefault;
 window.loadCreativePreset = loadCreativePreset;
 window.onCreativeRangeInput = onCreativeRangeInput;
 window.selectCreativeCommodity = selectCreativeCommodity;
+window.onEstadoChange = onEstadoChange;
+window.onPracaChange = onPracaChange;
+window.onCampanhaSelectChange = onCampanhaSelectChange;
+window.onCulturaChange = onCulturaChange;
+window.editPraca = typeof editPraca !== 'undefined' ? editPraca : () => {};
+window.deletePraca = typeof deletePraca !== 'undefined' ? deletePraca : () => {};
+
 
 
 
