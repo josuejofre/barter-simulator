@@ -352,10 +352,13 @@ async function fetchLiveQuotes() {
 // When commodity changes in unified mode
 function onCulturaChange(value) {
     // Toggle chart card visibility based on commodity selection
-    const chartCard = document.getElementById('chart-card-cfd');
-    if (chartCard) {
-        chartCard.style.display = value ? 'block' : 'none';
-    }
+    ['chart-card-cfd', 'v2-chart-card-cfd'].forEach(id => {
+        const card = document.getElementById(id);
+        if (card) {
+            card.style.display = value ? 'block' : 'none';
+        }
+    });
+
 
     if (!value) {
         // No commodity selected — clear barter-specific labels and recalculate
@@ -2224,34 +2227,37 @@ function openSimulationInForm(index) {
 // Initialize and redraw TradingView chart widget (CFDs for free widgets)
 function initTradingViewWidget(commodity) {
     const symbol = commodity === 'Soja' ? 'OANDA:SOYBNUSD' : 'PEPPERSTONE:COTTON';
-    const containerId = 'tradingview_widget';
+    const subtitleText = `Gráfico CFD em tempo real de Chicago para ${commodity === 'Soja' ? 'Soja (OANDA:SOYBNUSD)' : 'Algodão (PEPPERSTONE:COTTON)'}`;
     
-    document.getElementById('chart-subtitle').textContent = `Gráfico CFD em tempo real de Chicago para ${commodity === 'Soja' ? 'Soja (OANDA:SOYBNUSD)' : 'Algodão (PEPPERSTONE:COTTON)'}`;
-    
-    // Clear container
-    const container = document.getElementById(containerId);
-    if (container) {
-        container.innerHTML = '';
-    }
-    
-    // Construct widget
-    if (typeof TradingView !== 'undefined') {
-        tvWidget = new TradingView.widget({
-            "width": "100%",
-            "height": 350,
-            "symbol": symbol,
-            "interval": "D",
-            "timezone": "America/Sao_Paulo",
-            "theme": "light", // Matches the light theme!
-            "style": "1",
-            "locale": "br",
-            "toolbar_bg": "#f1f3f6",
-            "enable_publishing": false,
-            "hide_sideimpl": true,
-            "container_id": containerId
-        });
-    }
+    ['chart-subtitle', 'v2-chart-subtitle'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = subtitleText;
+    });
+
+    ['tradingview_widget', 'v2_tradingview_widget'].forEach(containerId => {
+        const container = document.getElementById(containerId);
+        if (container) {
+            container.innerHTML = '';
+            if (typeof TradingView !== 'undefined') {
+                new TradingView.widget({
+                    "width": "100%",
+                    "height": 350,
+                    "symbol": symbol,
+                    "interval": "D",
+                    "timezone": "America/Sao_Paulo",
+                    "theme": "light", // Matches the light theme!
+                    "style": "1",
+                    "locale": "br",
+                    "toolbar_bg": "#f1f3f6",
+                    "enable_publishing": false,
+                    "hide_sideimpl": true,
+                    "container_id": containerId
+                });
+            }
+        }
+    });
 }
+
 
 // Generate PDF by capturing simulation elements with off-screen rendering
 function downloadSimulationPDF(dataInput = null) {
