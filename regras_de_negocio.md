@@ -108,7 +108,9 @@ Calcula a equivalência de troca física para amortizar um financiamento/crédit
 
 ## 6. Comparativo das 5 Modalidades de Crédito e Desconto VPAN
 
-O simulador apresenta o comparativo ordenado por melhor benefício entre 5 modalidades de crédito: **Barter (Nutrade)**, **Barter (Outras Tradings)**, **FISO**, **Syngenta** e **Syde**.
+O simulador apresenta o comparativo ordenado por benefício financeiro entre 5 modalidades de crédito: **Barter (Nutrade)**, **Barter (Outras Tradings)**, **FISO**, **Syngenta** e **Syde**.
+
+*Nota de Apresentação:* A opção de menor custo recebe um destaque visual de borda verde, porém sem o selo fixo "Melhor Opção", reconhecendo que a viabilidade técnica e financeira de cada modalidade depende das condições operacionais e garantias disponíveis de cada produtor.
 
 ### Conceito de Desconto VPAN (Desconto à Vista)
 * **O que é o Desconto VPAN?** VPAN é a sigla para **Valor Presente À Vista** (Desconto à vista). Representa a dedução percentual concedida para liquidação antecipada/à vista sobre o valor bruto contratado da operação:
@@ -151,3 +153,33 @@ Para a validação conceitual (protótipo), são utilizadas fontes públicas e s
 2. **Cotação do Dólar (Câmbio BRL/USD) em Produção:**
    - Deverá integrar-se à API oficial do **Banco Central do Brasil (BACEN)** para obter a taxa **PTAX de fechamento/venda**, ou feeds de câmbio futuro da **B3** (contrato de dólar futuro) se a liquidação for a termo.
    - *No Protótipo:* Buscamos a taxa em tempo real através da AwesomeAPI (economia.awesomeapi.com.br/last/USD-BRL) diretamente pelo navegador do usuário (com CORS liberado, sem necessidade de backend ou chaves expostas). O timestamp da última captura do dólar é atualizado dinamicamente logo abaixo do campo de câmbio. Se a API estiver inacessível, o sistema usa o valor de fallback cambial de R$ 5,1500.
+
+---
+
+## 8. Cruzamento de Preço de Commodity Wsys por Vencimento da Campanha
+
+No sistema **Wsys (Monitor de Mercado / Originação Syngenta)**, os preços praticados para commodities agrícolas (Soja, Milho e Algodão) são exibidos de acordo com a **Data de Pagamento** (data em que o produto físico de fato precisa ser entregue e liquidado na base logística).
+
+```mermaid
+sequenceDiagram
+    participant App as Barter Simulator / Hub
+    participant Camp as Cadastro de Campanha
+    participant Wsys as Wsys (Monitor de Mercado)
+
+    App->>Camp: Obtém Data de Vencimento da Campanha (ex: 31/05/2027)
+    App->>Wsys: Consulta Tabela de Originação por Praça/Corredor
+    Wsys-->>App: Retorna Tabela de Cotações com coluna "Data Pagamento"
+    App->>App: Cruza Mês/Ano (MM/YYYY) do Vencimento com a Data Pagamento Wsys
+    App->>App: Aplica Cotação (R$/saca ou USD/sc) correspondente ao mês de entrega no cálculo de equivalência
+```
+
+### Regra de Negócio e Algoritmo de Cruzamento:
+1. **Identificação do Vencimento da Campanha**: Cada campanha de crédito possui uma `Data de Vencimento` pré-definida (ex: `31/05/2027`).
+2. **Filtro Temporal no Wsys por Mês**: O sistema realiza a busca na grade de preços do Wsys filtrando pela coluna `Data Pagamento` cujo Mês/Ano coincida com a `Data de Vencimento` da campanha.
+3. **Mapeamento de Preço**:
+   - Exemplo 1: Campanha com Vencimento em **Maio/2027** (`31/05/2027`) $\rightarrow$ Cruza com Wsys `Data Pagamento = 31/05/2027` $\rightarrow$ Cotação: **R$ 128,27/sc**.
+   - Exemplo 2: Campanha com Vencimento em **Abril/2027** (`30/04/2027`) $\rightarrow$ Cruza com Wsys `Data Pagamento = 30/04/2027` $\rightarrow$ Cotação: **R$ 125,42/sc**.
+   - Exemplo 3: Campanha com Vencimento em **Março/2027** (`31/03/2027`) $\rightarrow$ Cruza com Wsys `Data Pagamento = 31/03/2027` $\rightarrow$ Cotação: **R$ 123,70/sc**.
+   - Exemplo 4: Campanha com Vencimento em **Fevereiro/2027** (`01/02/2027`) $\rightarrow$ Cruza com Wsys `Data Pagamento = 01/02/2027` $\rightarrow$ Cotação: **R$ 126,75/sc**.
+4. **Fallback e Ajuste**: Caso a data exata não conste na tabela, utiliza-se a cotação da `Data Pagamento` no mesmo mês ou no mês útil mais próximo imediatamente anterior ao vencimento da campanha.
+

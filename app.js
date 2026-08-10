@@ -34,7 +34,7 @@ function calculateBusinessDays(startDate, endDate) {
     const start = new Date(startDate);
     const end = new Date(endDate);
     if (isNaN(start.getTime()) || isNaN(end.getTime()) || start > end) return 0;
-    
+
     let count = 0;
     let cur = new Date(start.getTime());
     while (cur <= end) {
@@ -43,7 +43,7 @@ function calculateBusinessDays(startDate, endDate) {
         const mm = String(cur.getMonth() + 1).padStart(2, '0');
         const dd = String(cur.getDate()).padStart(2, '0');
         const dateStr = `${yyyy}-${mm}-${dd}`;
-        
+
         if (dayOfWeek !== 0 && dayOfWeek !== 6 && !FERIADOS_NACIONAIS.includes(dateStr)) {
             count++;
         }
@@ -161,7 +161,7 @@ function showPage(pageId) {
     const campaignsPage = document.getElementById('page-campanhas');
     const pracasPage = document.getElementById('page-pracas');
     const tooltipsPage = document.getElementById('page-tooltips');
-    
+
     const assistLink = document.getElementById('nav-link-assistente');
     const simLink = document.getElementById('nav-link-simulador');
     const simV2Link = document.getElementById('nav-link-simulador-v2');
@@ -170,7 +170,7 @@ function showPage(pageId) {
     const campaignsLink = document.getElementById('nav-link-campanhas');
     const pracasLink = document.getElementById('nav-link-pracas');
     const tooltipsLink = document.getElementById('nav-link-tooltips');
-    
+
     // Hide all pages
     if (assistPage) assistPage.style.display = 'none';
     if (simPage) simPage.style.display = 'none';
@@ -180,7 +180,7 @@ function showPage(pageId) {
     if (campaignsPage) campaignsPage.style.display = 'none';
     if (pracasPage) pracasPage.style.display = 'none';
     if (tooltipsPage) tooltipsPage.style.display = 'none';
-    
+
     // Remove active class from links
     if (assistLink) assistLink.classList.remove('active');
     if (simLink) simLink.classList.remove('active');
@@ -190,7 +190,7 @@ function showPage(pageId) {
     if (campaignsLink) campaignsLink.classList.remove('active');
     if (pracasLink) pracasLink.classList.remove('active');
     if (tooltipsLink) tooltipsLink.classList.remove('active');
-    
+
     if (pageId === 'assistente') {
         if (assistPage) assistPage.style.display = 'grid';
         if (assistLink) assistLink.classList.add('active');
@@ -228,31 +228,31 @@ function showPage(pageId) {
 // Set Active Currency Toggle (recalculates immediately for ease of conversion viewing)
 function setCurrency(currency) {
     if (selectedCurrency === currency) return;
-    
+
     const btnBrl = document.getElementById('btn-currency-brl');
     const btnUsd = document.getElementById('btn-currency-usd');
     const creditInput = document.getElementById('sim-credito');
     const priceInput = document.getElementById('sim-preco-bruto');
     const freteChaoInput = document.getElementById('sim-frete-chao');
     const freteAsfaltoInput = document.getElementById('sim-frete-asfalto');
-    
+
     const cambio = parseFloat(document.getElementById('sim-cambio').value) || 1.0;
-    
+
     // Save current raw values
     const currentCreditRaw = getRawCurrencyValue(creditInput.value);
     const currentPriceRaw = parseFloat(priceInput.value) || 0;
     const currentFreteChaoRaw = parseFloat(freteChaoInput.value) || 0;
     const currentFreteAsfaltoRaw = parseFloat(freteAsfaltoInput.value) || 0;
-    
+
     let newCredit, newPrice, newFreteChao, newFreteAsfalto;
-    
+
     if (currency === 'BRL') {
         // Converting from USD to BRL
         newCredit = currentCreditRaw * cambio;
         newPrice = currentPriceRaw * cambio;
         newFreteChao = currentFreteChaoRaw * cambio;
         newFreteAsfalto = currentFreteAsfaltoRaw * cambio;
-        
+
         btnBrl.classList.add('active');
         btnUsd.classList.remove('active');
     } else {
@@ -261,26 +261,26 @@ function setCurrency(currency) {
         newPrice = currentPriceRaw / cambio;
         newFreteChao = currentFreteChaoRaw / cambio;
         newFreteAsfalto = currentFreteAsfaltoRaw / cambio;
-        
+
         btnUsd.classList.add('active');
         btnBrl.classList.remove('active');
     }
-    
+
     // Update global selection
     selectedCurrency = currency;
-    
+
     // Update labels and suffixes
     const isSoy = document.getElementById('sim-commodity').value === 'Soja';
     document.getElementById('sim-preco-bruto-suffix').textContent = currency === 'BRL' ? 'R$/' + (isSoy ? 'sc' : 'lp') : 'USD/' + (isSoy ? 'sc' : 'lp');
     document.getElementById('sim-frete-chao-suffix').textContent = currency === 'BRL' ? 'R$/KM' : 'USD/KM';
     document.getElementById('sim-frete-asfalto-suffix').textContent = currency === 'BRL' ? 'R$/KM' : 'USD/KM';
-    
+
     // Write back converted values formatted correctly
     creditInput.value = formatCurrencyValue(newCredit, currency);
     priceInput.value = newPrice.toFixed(2);
     freteChaoInput.value = newFreteChao.toFixed(2);
     freteAsfaltoInput.value = newFreteAsfalto.toFixed(2);
-    
+
     // Recalculate immediately when converting currencies
     calculateSimulation();
 }
@@ -290,9 +290,9 @@ async function fetchLiveQuotes() {
     const statusEl = document.getElementById('sim-quote-status');
     const cambioEl = document.getElementById('sim-cambio');
     const cambioStatusEl = document.getElementById('sim-cambio-status');
-    
+
     if (statusEl) statusEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Atualizando cotações...';
-    
+
     // 1. Fetch live currency exchange rate from public AwesomeAPI (CORS-friendly, client-side safe)
     try {
         const response = await fetch('https://economia.awesomeapi.com.br/last/USD-BRL');
@@ -313,28 +313,28 @@ async function fetchLiveQuotes() {
             cambioStatusEl.innerHTML = `<span class="text-secondary"><i class="fa-solid fa-triangle-exclamation"></i> Usando câmbio padrão (R$ 5,1500)</span>`;
         }
     }
-    
+
     // 2. Fetch commodity prices via local proxy (fails gracefully on GitHub Pages static mode)
     try {
         const response = await fetch('/api/quotes');
         const data = await response.json();
-        
+
         if (data.success) {
             currentQuotes.soybeans = data.soybeans.usd_per_saca;
             currentQuotes.cotton = data.cotton.usd_per_lb;
-            
+
             const commodity = document.getElementById('sim-commodity').value;
             const livePriceUSD = currentQuotes[commodity === 'Soja' ? 'soybeans' : 'cotton'];
-            
+
             const cambio = parseFloat(document.getElementById('sim-cambio').value) || 1.0;
             const priceInput = document.getElementById('sim-preco-bruto');
-            
+
             if (selectedCurrency === 'BRL') {
                 priceInput.value = (livePriceUSD * cambio).toFixed(2);
             } else {
                 priceInput.value = livePriceUSD.toFixed(2);
             }
-            
+
             const timeStr = new Date().toLocaleTimeString('pt-BR');
             if (statusEl) statusEl.innerHTML = `<span class="text-green"><i class="fa-solid fa-circle-check"></i> Cotações reais obtidas às ${timeStr} (Yahoo Finance)</span>`;
         } else {
@@ -344,7 +344,7 @@ async function fetchLiveQuotes() {
         console.error("Failed to fetch live quotes:", e);
         if (statusEl) statusEl.innerHTML = `<span class="text-secondary"><i class="fa-solid fa-triangle-exclamation"></i> Usando valores de referência padrão para simulação offline</span>`;
     }
-    
+
     // Perform initial calculation on load
     calculateSimulation();
 }
@@ -369,7 +369,7 @@ function onCulturaChange(value) {
     const isSoy = value === 'Soja';
     const currencySign = selectedCurrency === 'BRL' ? 'R$' : 'USD';
     const unitSymbol = isSoy ? 'sc' : 'lp';
-    
+
     // Update labels and suffixes
     const labelEl = document.getElementById('sim-preco-bruto-label');
     if (labelEl) labelEl.textContent = `Preço Commodity Bruto (FOB) (${currencySign}/${unitSymbol})`;
@@ -377,10 +377,10 @@ function onCulturaChange(value) {
     if (suffixEl) suffixEl.textContent = `${currencySign}/${unitSymbol}`;
     const descLabelEl = document.getElementById('sim-descontos-label');
     if (descLabelEl) descLabelEl.textContent = isSoy ? 'Ativo (Senar + Fethab)' : 'Ativo (Senar + Fial)';
-    
+
     const cambio = parseFloat(document.getElementById('sim-cambio').value) || 1.0;
     const basePriceUSD = isSoy ? currentQuotes.soybeans : currentQuotes.cotton;
-    
+
     // Fill commodity price input
     const priceInput = document.getElementById('sim-preco-bruto');
     if (selectedCurrency === 'BRL') {
@@ -388,16 +388,16 @@ function onCulturaChange(value) {
     } else {
         priceInput.value = basePriceUSD.toFixed(2);
     }
-    
+
     // Set typical default days
     document.getElementById('sim-prazo').value = isSoy ? 216 : 249;
-    
+
     // Set typical campaign rates:
     document.getElementById('sim-campanha-val').value = isSoy ? 4.50 : 4.50;
-    
+
     // Update TradingView widget symbol
     initTradingViewWidget(value);
-    
+
     // Recalculate commodity price and reset values
     calculateSimulation();
 }
@@ -457,43 +457,43 @@ function runSimulationMath(inputs) {
 
     // Competitor campaign cashback rate is from the campaign or fallback to activeCampanhaValorizacaoOutras
     const valPctMarket = inputs.valPctOutras !== undefined ? inputs.valPctOutras : activeCampanhaValorizacaoOutras;
-    
+
     // Competitor commodity price is typically lower by 1.0% in market (from spreadsheet E11 vs B11)
     const commBrutoUSDMarket = commBrutoUSD * 0.99;
-    
+
     // Annual interest rate converted to period rate: Juros Período = (Prazo / 360) * Juros Anual
     const jurosPeriodo = (prazo / 360.0) * (jurosAnual / 100.0);
-    
+
     // Preço Pedido TP (Valor Presente) in USD
     const precoTpUSDProposta = credLimitUSD / (1.0 + jurosPeriodo);
     const precoTpUSDMarket = precoTpUSDProposta;
-    
+
     // Preço Pedido Vista (Desconto 4% over TP) in USD
     const precoVistaUSDProposta = precoTpUSDProposta * (1.0 - 0.04);
     const precoVistaUSDMarket = precoVistaUSDProposta;
-    
+
     // Custo Financeiro da Operação ($) in USD = Credit Limit - Preço Pedido TP
     const custoFinUSDProposta = credLimitUSD - precoTpUSDProposta;
     const custoFinUSDMarket = custoFinUSDProposta;
-    
+
     // Incentivo Barter % = (Prazo / 30) * 0.5%
     const incentivoBarterPct = (prazo / 30.0) * 0.005;
-    
+
     // Incentivo Barter $ in USD = Preço TP * Incentivo Barter %
     const incentivoBarterUsd = precoTpUSDProposta * incentivoBarterPct;
-    
+
     // Cashback $ in USD = Credit Limit * Cashback %
     const cashbackUsdProposta = credLimitUSD * (valPctProposta / 100.0);
     const cashbackUsdMarket = credLimitUSD * (valPctMarket / 100.0);
-    
+
     // Total Retorno $ in USD = Cashback $ + Incentivo $
     const totalRetornoUSDProposta = cashbackUsdProposta + incentivoBarterUsd;
     const totalRetornoUSDMarket = cashbackUsdMarket + incentivoBarterUsd;
-    
+
     // Preço Pedido Barter Cashback equivalente in USD = Credit Limit - Total Retorno
     const precoBarterEquivUSDProposta = credLimitUSD - totalRetornoUSDProposta;
     const precoBarterEquivUSDMarket = credLimitUSD - totalRetornoUSDMarket;
-    
+
     // Regional tax split
     const plaza = wsysPlazas.find(p => p.nome === regiao || `${p.nome} (${p.estado})` === regiao);
     let fixedTaxUSDProposta = 0;
@@ -526,52 +526,52 @@ function runSimulationMath(inputs) {
     }
     const taxDeductionUSDProposta = fixedTaxUSDProposta + pctTaxUSDProposta;
     const taxDeductionUSDMarket = fixedTaxUSDMarket + pctTaxUSDMarket;
-    
+
     const commLivreUSDProposta = commBrutoUSD - taxDeductionUSDProposta;
     const commLivreUSDMarket = commBrutoUSDMarket - taxDeductionUSDMarket;
-    
+
     // Volume de Troca Físico Inicial rounded UP
     const volTrocaProposta = commLivreUSDProposta > 0 ? Math.ceil(credLimitUSD / commLivreUSDProposta) : 0;
     const volTrocaMarket = commLivreUSDMarket > 0 ? Math.ceil(credLimitUSD / commLivreUSDMarket) : 0;
-    
+
     // Custo de Transporte (Frete) in USD
     // Nossa Estrutura: Estrada de Chão + Estrada de Asfalto
     // Outras Tradings (Competidor): Estrada de Chão + Estrada de Asfalto (+30km adicionais de asfalto)
     const freteTotalUSDProposta = (distChao * freteChaoUSD) + (distAsfalto * freteAsfaltoUSD);
     const freteTotalUSDMarket = (distChao * freteChaoUSD) + ((distAsfalto + 30) * freteAsfaltoUSD);
-    
+
     // Freight unit cost derived from swap volume in USD
     const freteUnitUSDProposta = volTrocaProposta > 0 ? (freteTotalUSDProposta / volTrocaProposta) : 0;
     const freteUnitUSDMarket = volTrocaMarket > 0 ? (freteTotalUSDMarket / volTrocaMarket) : 0;
-    
+
     // Cashback equivalência em sacas/libras
     const cashbackScProposta = commLivreUSDProposta > 0 ? (cashbackUsdProposta / commLivreUSDProposta) : 0;
     const cashbackScMarket = commLivreUSDMarket > 0 ? (cashbackUsdMarket / commLivreUSDMarket) : 0;
-    
+
     // Ganho de Valorização Unitária (Cashback) in USD
     const valUnitCashbackUSDProposta = volTrocaProposta > 0 ? (cashbackUsdProposta / volTrocaProposta) : 0;
     const valUnitCashbackUSDMarket = volTrocaMarket > 0 ? (cashbackUsdMarket / volTrocaMarket) : 0;
-    
+
     // Cessão de Crédito Parcial = Volume Inicial - Cashback sc
     const cessaoProposta = volTrocaProposta - cashbackScProposta;
     const cessaoMarket = volTrocaMarket - cashbackScMarket;
-    
+
     // Incentivo equivalência em sacas/libras
     const incentivoScProposta = commLivreUSDProposta > 0 ? (incentivoBarterUsd / commLivreUSDProposta) : 0;
     const incentivoScMarket = commLivreUSDMarket > 0 ? (incentivoBarterUsd / commLivreUSDMarket) : 0;
-    
+
     // Ganho de Valorização Unitária (Incentivo) in USD
     const valUnitIncentivoUSDProposta = volTrocaProposta > 0 ? (incentivoBarterUsd / volTrocaProposta) : 0;
     const valUnitIncentivoUSDMarket = volTrocaMarket > 0 ? (incentivoBarterUsd / volTrocaMarket) : 0;
-    
+
     // Preço Equivalente Final (Valorizado) in USD
     const precoFinalUSDProposta = commLivreUSDProposta + valUnitCashbackUSDProposta + valUnitIncentivoUSDProposta - freteUnitUSDProposta;
     const precoFinalUSDMarket = commLivreUSDMarket + valUnitCashbackUSDMarket + valUnitIncentivoUSDMarket - freteUnitUSDMarket;
-    
+
     // Volume de Troca Equivalente Final (Sacas/Libras)
     const volFinalProposta = volTrocaProposta - (cashbackScProposta + incentivoScProposta);
     const volFinalMarket = volTrocaMarket - (cashbackScMarket + incentivoScMarket);
-    
+
     // Valorização Real sobre Commodity Livre (%)
     const valRealProposta = commLivreUSDProposta > 0 ? (precoFinalUSDProposta / commLivreUSDProposta - 1.0) : 0;
     const valRealMarket = commLivreUSDMarket > 0 ? (precoFinalUSDMarket / commLivreUSDMarket - 1.0) : 0;
@@ -613,7 +613,7 @@ function handleFormSimulate(e) {
     window.hasSimulated = true;
     hasSimulated = true;
     calculateSimulation();
-    
+
     // Scroll to the results of whichever layout is currently active
     const isV2Active = document.getElementById('page-simulador-v2') &&
         document.getElementById('page-simulador-v2').style.display !== 'none';
@@ -698,13 +698,13 @@ function calculateSimulation() {
     const formatSelectedCurrency = (val) => {
         return selectedCurrency === 'BRL' ? formatBRL(val) : formatUSD(val);
     };
-    
+
     const formatSelectedCurrencyExtended = (val) => {
         return selectedCurrency === 'BRL' ? formatBRLExtended(val) : formatUSDExtended(val);
     };
 
     const factor = selectedCurrency === 'BRL' ? cambio : 1.0;
-    
+
     // 1. Update Resumo da Operação Banner across all layouts
     const today = new Date();
     const validityDate = new Date();
@@ -735,7 +735,7 @@ function calculateSimulation() {
     // 3. Modalidades Tab calculations and structures (incorporating Simulador_outras_Modalidades.xlsx formulas)
     const campSelect = document.getElementById('sim-campanha-select');
     const campId = campSelect ? campSelect.value : 'custom';
-    
+
     let campObj = (campId !== 'custom') ? campaigns.find(c => c.id == campId) : null;
 
     // Helper to calculate a financial product using Simulador_outras_Modalidades.xlsx formulas
@@ -987,6 +987,8 @@ function calculateSimulation() {
         document.getElementById('creative-modality-cards-list')
     ].filter(Boolean);
 
+    if (!window.pdfSelectedModalities) window.pdfSelectedModalities = {};
+
     containers.forEach(cardsContainer => {
         cardsContainer.innerHTML = '';
         availableModalities.forEach((m, idx) => {
@@ -996,17 +998,29 @@ function calculateSimulation() {
                 selectedModalityId = m.id;
             }
 
+            if (window.pdfSelectedModalities[m.id] === undefined) {
+                window.pdfSelectedModalities[m.id] = true;
+            }
+            const isPdfChecked = window.pdfSelectedModalities[m.id] !== false;
+
             const card = document.createElement('div');
             card.className = `modality-card ${isBest ? 'best-option' : ''} ${isSelected ? 'selected' : ''}`;
+            card.setAttribute('data-modality-id', m.id);
             card.onclick = (e) => {
-                if (e.target.closest('.tooltip-container')) return;
+                if (e.target.closest('.tooltip-container') || e.target.closest('.modality-card-checkbox-wrapper')) return;
                 selectModality(m.id);
             };
 
             card.innerHTML = `
                 <div class="modality-card-header">
-                    <div class="modality-card-title-row">
+                    <div class="modality-card-title-row" style="padding-right: 80px;">
                         <span class="modality-card-title">${m.name}</span>
+                    </div>
+                    <div class="modality-card-checkbox-wrapper" onclick="event.stopPropagation();">
+                        <label class="modality-card-checkbox-label" title="Marcar para incluir no PDF compartilhado">
+                            <input type="checkbox" class="modality-pdf-checkbox" data-modality-id="${m.id}" ${isPdfChecked ? 'checked' : ''} onchange="toggleModalityPdfSelection('${m.id}', this.checked)">
+                            <span><i class="fa-solid fa-file-pdf"></i> PDF</span>
+                        </label>
                     </div>
                     <div class="modality-card-dates">Data de carência <strong>${carenciaStr}</strong> &nbsp;|&nbsp; Vencimento <strong>${vencimentoStr}</strong></div>
                 </div>
@@ -1188,7 +1202,7 @@ function bindCardTooltipElevation(grid) {
     fresh.id = grid.id; // Preserve the id (e.g. modality-cards-list)
     grid.parentNode.replaceChild(fresh, grid);
 
-    fresh.addEventListener('mouseover', function(e) {
+    fresh.addEventListener('mouseover', function (e) {
         const tooltipIcon = e.target.closest('.tooltip-container');
         if (!tooltipIcon) return;
         const card = tooltipIcon.closest('.modality-card');
@@ -1196,12 +1210,12 @@ function bindCardTooltipElevation(grid) {
         fresh.querySelectorAll('.modality-card').forEach(c => { c.style.zIndex = '1'; });
         card.style.zIndex = '9999';
     });
-    fresh.addEventListener('mouseleave', function() {
+    fresh.addEventListener('mouseleave', function () {
         fresh.querySelectorAll('.modality-card').forEach(c => { c.style.zIndex = '1'; });
     });
 
     // Re-attach click delegation since cloneNode stripped inline onclick
-    fresh.addEventListener('click', function(e) {
+    fresh.addEventListener('click', function (e) {
         if (e.target.closest('.tooltip-container')) return;
         const card = e.target.closest('.modality-card');
         if (!card || !window.modalitiesData) return;
@@ -1228,7 +1242,7 @@ function showDetailedBreakdown(modId) {
     const card = document.getElementById('detailed-breakdown-card');
     const tableBarter = document.getElementById('detailed-table-barter');
     const tableFinancial = document.getElementById('detailed-table-financial');
-    
+
     if (!card) return;
     card.style.display = 'block';
 
@@ -1249,52 +1263,52 @@ function showDetailedBreakdown(modId) {
         // Load Barter detail fields
         document.getElementById('td-fob-nutrade').textContent = formatSelectedCurrency(res.credLimitUSD * factor);
         document.getElementById('td-fob-market').textContent = formatSelectedCurrency(res.credLimitUSD * factor);
-        
+
         document.getElementById('td-bruto-nutrade').textContent = formatSelectedCurrency(res.commBrutoUSD * factor);
         document.getElementById('td-bruto-market').textContent = formatSelectedCurrency(res.commBrutoUSDMarket * factor);
-        
+
         // Split region discounts
         document.getElementById('td-desc-nutrade-estadual').textContent = `- ${formatSelectedCurrency(res.fixedTaxUSDProposta * factor)}`;
         document.getElementById('td-desc-market-estadual').textContent = `- ${formatSelectedCurrency(res.fixedTaxUSDMarket * factor)}`;
-        
+
         document.getElementById('td-desc-nutrade-demais').textContent = `- ${formatSelectedCurrency(res.pctTaxUSDProposta * factor)}`;
         document.getElementById('td-desc-market-demais').textContent = `- ${formatSelectedCurrency(res.pctTaxUSDMarket * factor)}`;
-        
+
         document.getElementById('td-livre-nutrade').textContent = formatSelectedCurrency(res.commLivreUSDProposta * factor);
         document.getElementById('td-livre-market').textContent = formatSelectedCurrency(res.commLivreUSDMarket * factor);
-        
+
         document.getElementById('td-vol-troca-nutrade').textContent = `${formatNumber(res.volTrocaProposta)} ${unitSymbol}`;
         document.getElementById('td-vol-troca-market').textContent = `${formatNumber(res.volTrocaMarket)} ${unitSymbol}`;
-        
+
         const valPctProposta = parseFloat(document.getElementById('sim-campanha-val').value) || 0;
         document.getElementById('td-valcamp-nutrade').textContent = `${valPctProposta.toFixed(2)}%`;
         document.getElementById('td-valcamp-market').textContent = `${res.valPctMarket.toFixed(2)}%`;
-        
+
         document.getElementById('td-cashback-usd-nutrade').textContent = formatSelectedCurrency(res.cashbackUsdProposta * factor);
         document.getElementById('td-cashback-usd-market').textContent = formatSelectedCurrency(res.cashbackUsdMarket * factor);
-        
+
         document.getElementById('td-incbarter-pct-nutrade').textContent = `${(res.incentivoBarterPct * 100).toFixed(2)}%`;
         document.getElementById('td-incbarter-pct-market').textContent = `${(res.incentivoBarterPct * 100).toFixed(2)}%`;
-        
+
         document.getElementById('td-incbarter-usd-nutrade').textContent = formatSelectedCurrency(res.incentivoBarterUsd * factor);
         document.getElementById('td-incbarter-usd-market').textContent = formatSelectedCurrency(res.incentivoBarterUsd * factor);
-        
+
         document.getElementById('td-totalret-nutrade').textContent = formatSelectedCurrency(res.totalRetornoUSDProposta * factor);
         document.getElementById('td-totalret-market').textContent = formatSelectedCurrency(res.totalRetornoUSDMarket * factor);
-        
+
         document.getElementById('td-finalpreco-nutrade').textContent = formatSelectedCurrencyExtended(res.precoFinalUSDProposta * factor);
         document.getElementById('td-finalpreco-market').textContent = formatSelectedCurrencyExtended(res.precoFinalUSDMarket * factor);
-        
+
         document.getElementById('td-finalvol-nutrade').textContent = `${formatNumber(res.volFinalProposta)} ${unitSymbol}`;
         document.getElementById('td-finalvol-market').textContent = `${formatNumber(res.volFinalMarket)} ${unitSymbol}`;
-        
+
         document.getElementById('td-valreal-nutrade').textContent = `+${(res.valRealProposta * 100).toFixed(2)}%`;
         document.getElementById('td-valreal-market').textContent = `+${(res.valRealMarket * 100).toFixed(2)}%`;
 
         // Highlight selected column
         const colNutrade = tableBarter.querySelectorAll('tbody td.val-nutrade');
         const colMarket = tableBarter.querySelectorAll('tbody td:nth-child(3)');
-        
+
         if (modId === 'barter_nutrade') {
             colNutrade.forEach(el => el.style.backgroundColor = 'rgba(34, 197, 94, 0.08)');
             colMarket.forEach(el => el.style.backgroundColor = 'transparent');
@@ -1337,13 +1351,13 @@ function showDetailedBreakdown(modId) {
                     cells[i].style.backgroundColor = 'transparent';
                     cells[i].style.fontWeight = 'normal';
                 }
-                
+
                 // apply highlights
                 let colIdx = 1;
                 if (modId === 'fidc') colIdx = 2;
                 else if (modId === 'fiso') colIdx = 3;
                 else if (modId === 'prazo') colIdx = 4;
-                
+
                 cells[colIdx].style.backgroundColor = 'rgba(34, 197, 94, 0.08)';
                 cells[colIdx].style.fontWeight = 'bold';
             }
@@ -1378,31 +1392,31 @@ let chatHistorySessions = []; // Stores completed simulation data objects
 function addMessageToChat(text, sender, type = 'text', payload = null) {
     const messagesContainer = document.getElementById('chat-messages');
     if (!messagesContainer) return;
-    
+
     // Hide the welcome box if there are active messages
     const welcomeBox = document.getElementById('chat-welcome-box');
     if (welcomeBox && welcomeBox.style.display !== 'none') {
         welcomeBox.style.display = 'none';
     }
-    
+
     const messageRow = document.createElement('div');
     messageRow.className = `message-row ${sender}-row`;
-    
+
     const bubbleWrapper = document.createElement('div');
     bubbleWrapper.className = sender === 'bot' ? 'bubble-wrapper' : '';
-    
+
     if (sender === 'bot') {
         const botAvatar = document.createElement('div');
         botAvatar.className = 'bot-avatar-bubble';
         botAvatar.innerHTML = '<i class="fa-solid fa-robot"></i>';
         bubbleWrapper.appendChild(botAvatar);
     }
-    
+
     const bubble = document.createElement('div');
     bubble.className = `message-bubble ${sender}-bubble`;
-    
+
     const timeStr = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
-    
+
     if (type === 'text') {
         const messageText = document.createElement('span');
         messageText.innerHTML = text.replace(/\n/g, '<br>');
@@ -1411,10 +1425,10 @@ function addMessageToChat(text, sender, type = 'text', payload = null) {
         const messageText = document.createElement('span');
         messageText.innerHTML = text.replace(/\n/g, '<br>');
         bubble.appendChild(messageText);
-        
+
         const choicesDiv = document.createElement('div');
         choicesDiv.className = 'chat-choices';
-        
+
         payload.forEach(choice => {
             const btn = document.createElement('button');
             btn.type = 'button';
@@ -1423,23 +1437,23 @@ function addMessageToChat(text, sender, type = 'text', payload = null) {
             btn.onclick = () => handleChoiceClick(choice.value, choice.text);
             choicesDiv.appendChild(btn);
         });
-        
+
         bubble.appendChild(choicesDiv);
     } else if (type === 'result') {
         const messageText = document.createElement('span');
         messageText.innerHTML = text.replace(/\n/g, '<br>');
         bubble.appendChild(messageText);
-        
+
         const card = document.createElement('div');
         card.className = 'chat-result-card';
-        
+
         const isBRL = payload.inputs.currency === 'BRL';
         const formattedCredit = isBRL ? formatBRL(payload.inputs.creditRaw) : formatUSD(payload.inputs.creditRaw);
         const formattedTotalReturn = isBRL ? formatBRL(payload.totalRetorno) : formatUSD(payload.totalRetorno);
         const formattedFinalPrice = isBRL ? formatBRLExtended(payload.precoFinal) : formatUSDExtended(payload.precoFinal);
         const formattedMarketPrice = isBRL ? formatBRLExtended(payload.precoMarket) : formatUSDExtended(payload.precoMarket);
         const formattedEconomia = formatNumber(payload.economia) + ' ' + payload.unitSymbol;
-        
+
         card.innerHTML = `
             <div class="result-card-header">
                 <h4>Simulação Concluída</h4>
@@ -1488,21 +1502,21 @@ function addMessageToChat(text, sender, type = 'text', payload = null) {
         `;
         bubble.appendChild(card);
     }
-    
+
     const timeSpan = document.createElement('span');
     timeSpan.className = 'message-time';
     timeSpan.textContent = timeStr;
     bubble.appendChild(timeSpan);
-    
+
     if (sender === 'bot') {
         bubbleWrapper.appendChild(bubble);
         messageRow.appendChild(bubbleWrapper);
     } else {
         messageRow.appendChild(bubble);
     }
-    
+
     messagesContainer.appendChild(messageRow);
-    
+
     // Auto-scroll chat body
     const chatBody = document.getElementById('chat-window-body');
     if (chatBody) {
@@ -1514,7 +1528,7 @@ function addMessageToChat(text, sender, type = 'text', payload = null) {
 function startNewChat() {
     chatState.step = null;
     chatState.data = {};
-    
+
     const messagesContainer = document.getElementById('chat-messages');
     if (messagesContainer) {
         messagesContainer.innerHTML = `
@@ -1535,7 +1549,7 @@ function startNewChat() {
             </div>
         `;
     }
-    
+
     // Set first sidebar history item active if exists
     const histItems = document.querySelectorAll('.chat-history-item');
     histItems.forEach(item => item.classList.remove('active'));
@@ -1550,7 +1564,7 @@ function startBarterSimulationFlow() { startCreditSimulationFlow(); }
 function startCreditSimulationFlow() {
     chatState.step = 'waiting_campanha';
     chatState.data = {};
-    
+
     // Fetch live exchange rate as default
     const cambioInput = document.getElementById('sim-cambio');
     chatState.data.cambio = cambioInput ? (parseFloat(cambioInput.value) || 5.15) : 5.15;
@@ -1559,7 +1573,7 @@ function startCreditSimulationFlow() {
     // Build campaign choices from the global campaigns array
     const activeCamps = campaigns.filter(c => c.status === 'Ativa');
     const campChoices = activeCamps.map(c => ({ text: c.nome, value: String(c.id) }));
-    
+
     if (campChoices.length === 0) {
         addMessageToChat(
             "Não há campanhas ativas cadastradas no momento. Acesse a aba **Campanhas** para cadastrar uma campanha antes de simular.",
@@ -1579,10 +1593,10 @@ function startCreditSimulationFlow() {
 // Handles clicked suggestion buttons
 function handleSuggestion(text) {
     addMessageToChat(text, "user");
-    
+
     setTimeout(() => {
         const query = text.toLowerCase();
-        
+
         if (query.includes('vpan') || query.includes('desconto à vista') || query.includes('à vista')) {
             addMessageToChat(
                 "### O que é o Desconto VPAN?\n\n" +
@@ -1663,7 +1677,7 @@ function handleSuggestion(text) {
 // Handle clicking option buttons in conversation
 function handleChoiceClick(value, label) {
     addMessageToChat(label, "user");
-    
+
     // Process input after a short delay for conversational flow
     setTimeout(() => {
         processChatStep(value);
@@ -1674,13 +1688,13 @@ function handleChoiceClick(value, label) {
 function handleSendButton() {
     const inputField = document.getElementById('chat-input-field');
     if (!inputField) return;
-    
+
     const text = inputField.value.trim();
     if (text === '') return;
-    
+
     inputField.value = '';
     addMessageToChat(text, "user");
-    
+
     setTimeout(() => {
         if (chatState.step) {
             processChatStep(text);
@@ -1967,7 +1981,6 @@ function runCreditSimulationCalculation() {
         { name: 'Syde (FIDC)', custoAmPct: calcSyde.custoAmPct, custoTotalPct: calcSyde.custoTotalPct, valorTotal: calcSyde.valorTotal, type: 'financial' }
     ];
 
-    let barterResultMsg = '';
     let totalRetorno = 0;
     let precoFinal = 0;
     let economia = 0;
@@ -2009,17 +2022,15 @@ function runCreditSimulationCalculation() {
 
     // Build result card HTML
     let modalitiesHTML = resultModalities.map((m, i) => {
-        const badge = i === 0 ? ' <span style="background:#0d9488;color:#fff;font-size:10px;padding:2px 6px;border-radius:20px;margin-left:6px;">Melhor opção</span>' : '';
         const typeColor = m.type === 'barter' ? '#0d9488' : '#1e40af';
         return `<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;border-radius:8px;background:rgba(0,0,0,0.03);margin-bottom:6px;">
-            <span style="font-size:13px;font-weight:600;color:${typeColor}">${m.name}${badge}</span>
+            <span style="font-size:13px;font-weight:600;color:${typeColor}">${m.name}</span>
             <span style="font-size:12px;color:#374151;">${formatBRL(m.valorTotal)} &nbsp;|&nbsp; <strong>${m.custoAmPct.toFixed(2)}% a.m.</strong></span>
         </div>`;
     }).join('');
 
     const campNome = d.campObj ? d.campObj.nome : '—';
     const creditFormatted = formatBRL(d.credit);
-    const commLabel = d.commodity ? `${d.commodity} — ${d.region}` : '_(sem Barter)_';
 
     const simSummary = {
         inputs: { currency: 'BRL', commodity: d.commodity || '', region: d.region || '', creditRaw: d.credit },
@@ -2047,7 +2058,7 @@ function runCreditSimulationCalculation() {
                 <span class="result-val">${creditFormatted}</span>
             </div>
             <div class="result-item">
-                <span class="result-label">Modalidades (ordem: melhor → pior custo)</span>
+                <span class="result-label">Modalidades Comparadas (Ordem de Benefício)</span>
                 <span class="result-val"></span>
             </div>
             <div style="width:100%;margin-bottom:8px;">${modalitiesHTML}</div>
@@ -2101,14 +2112,14 @@ function runCreditSimulationCalculation() {
 function updateHistorySidebar(index, commodity, region) {
     const list = document.getElementById('chat-history-list');
     if (!list) return;
-    
+
     const currentActive = list.querySelector('.chat-history-item.active');
     if (currentActive) currentActive.classList.remove('active');
-    
+
     const newItem = document.createElement('div');
     newItem.className = 'chat-history-item active animate-fade-in';
     newItem.onclick = () => loadChatHistory(index + 1);
-    
+
     newItem.innerHTML = `
         <i class="fa-solid fa-wheat-awn"></i>
         <div class="history-details">
@@ -2116,7 +2127,7 @@ function updateHistorySidebar(index, commodity, region) {
             <span class="history-time">agora</span>
         </div>
     `;
-    
+
     const defaultItem = document.getElementById('hist-item-default');
     if (defaultItem) {
         defaultItem.classList.remove('active');
@@ -2132,10 +2143,10 @@ function loadChatHistory(sessionIndex) {
         startNewChat();
         return;
     }
-    
+
     const session = chatHistorySessions[sessionIndex - 1];
     if (!session) return;
-    
+
     const histItems = document.querySelectorAll('.chat-history-item');
     histItems.forEach((item, idx) => {
         if (idx === (chatHistorySessions.length - sessionIndex + 1)) {
@@ -2144,19 +2155,19 @@ function loadChatHistory(sessionIndex) {
             item.classList.remove('active');
         }
     });
-    
+
     const messagesContainer = document.getElementById('chat-messages');
     if (messagesContainer) {
         messagesContainer.innerHTML = '';
         const welcomeBox = document.getElementById('chat-welcome-box');
         if (welcomeBox) welcomeBox.style.display = 'none';
-        
+
         addMessageToChat(
             `Você está visualizando o histórico da simulação realizada em **${session.inputs.commodity}** para a praça de **${session.inputs.region}**.\n` +
             `Moeda da operação: **${session.inputs.currency}**`,
             "bot"
         );
-        
+
         addMessageToChat(
             "Resumo dos valores salvos no histórico:",
             "bot",
@@ -2170,9 +2181,9 @@ function loadChatHistory(sessionIndex) {
 function openSimulationInForm(index) {
     const session = chatHistorySessions[index];
     if (!session) return;
-    
+
     const d = session.fullInputs;
-    
+
     selectedCurrency = d.currency;
     const btnBrl = document.getElementById('btn-currency-brl');
     const btnUsd = document.getElementById('btn-currency-usd');
@@ -2183,7 +2194,7 @@ function openSimulationInForm(index) {
         if (btnUsd) btnUsd.classList.add('active');
         if (btnBrl) btnBrl.classList.remove('active');
     }
-    
+
     const inputComm = document.getElementById('sim-commodity');
     const inputRegion = document.getElementById('sim-regiao');
     const inputCredit = document.getElementById('sim-credito');
@@ -2195,7 +2206,7 @@ function openSimulationInForm(index) {
     const inputFreteChao = document.getElementById('sim-frete-chao');
     const inputFreteAsfalto = document.getElementById('sim-frete-asfalto');
     const inputCambio = document.getElementById('sim-cambio');
-    
+
     if (inputComm) inputComm.value = d.commodity;
     if (inputRegion) inputRegion.value = d.region;
     if (inputCredit) inputCredit.value = formatCurrencyValue(d.credit, d.currency);
@@ -2207,18 +2218,18 @@ function openSimulationInForm(index) {
     if (inputFreteChao) inputFreteChao.value = (d.freteChao !== undefined ? d.freteChao : 15).toFixed(2);
     if (inputFreteAsfalto) inputFreteAsfalto.value = (d.freteAsfalto !== undefined ? d.freteAsfalto : 8).toFixed(2);
     if (inputCambio) inputCambio.value = d.cambio.toFixed(4);
-    
+
     const isSoy = d.commodity === 'Soja';
     const unitSymbol = isSoy ? 'sc' : 'lp';
     const currencySign = d.currency === 'BRL' ? 'R$' : 'USD';
     const suffixEl = document.getElementById('sim-preco-bruto-suffix');
     if (suffixEl) suffixEl.textContent = d.currency === 'BRL' ? 'R$/' + unitSymbol : 'USD/' + unitSymbol;
-    
+
     const chaoSuffixEl = document.getElementById('sim-frete-chao-suffix');
     if (chaoSuffixEl) chaoSuffixEl.textContent = d.currency === 'BRL' ? 'R$/KM' : 'USD/KM';
     const asfaltoSuffixEl = document.getElementById('sim-frete-asfalto-suffix');
     if (asfaltoSuffixEl) asfaltoSuffixEl.textContent = d.currency === 'BRL' ? 'R$/KM' : 'USD/KM';
-    
+
     showPage('simulador');
     hasSimulated = true;
     calculateSimulation();
@@ -2228,7 +2239,7 @@ function openSimulationInForm(index) {
 function initTradingViewWidget(commodity) {
     const symbol = commodity === 'Soja' ? 'OANDA:SOYBNUSD' : 'PEPPERSTONE:COTTON';
     const subtitleText = `Gráfico CFD em tempo real de Chicago para ${commodity === 'Soja' ? 'Soja (OANDA:SOYBNUSD)' : 'Algodão (PEPPERSTONE:COTTON)'}`;
-    
+
     ['chart-subtitle', 'v2-chart-subtitle'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = subtitleText;
@@ -2306,7 +2317,26 @@ function downloadSimulationPDF(dataInput = null) {
         if (cardsContainer) {
             const cardsClone = cardsContainer.cloneNode(true);
             cardsClone.style.cssText = 'display:grid;grid-template-columns:repeat(2, 1fr);gap:16px;margin-bottom:24px;';
-            cardsClone.querySelectorAll('button, .tooltip-container').forEach(el => el.style.display = 'none');
+
+            // Filter modalities for PDF export based on checkbox selection
+            const pdfSelected = window.pdfSelectedModalities || {};
+            cardsClone.querySelectorAll('.modality-card').forEach(cardEl => {
+                const modId = cardEl.getAttribute('data-modality-id');
+                const chk = cardEl.querySelector('.modality-pdf-checkbox');
+                const isChecked = chk ? chk.checked : true;
+                if ((modId && pdfSelected[modId] === false) || !isChecked) {
+                    cardEl.remove();
+                }
+            });
+
+            // Ocultar botões, tooltips e checkboxes na imagem do PDF
+            cardsClone.querySelectorAll('button, .tooltip-container, .modality-card-checkbox-wrapper').forEach(el => el.style.display = 'none');
+
+            if (cardsClone.children.length === 0) {
+                alert('Por favor, selecione ao menos uma modalidade (marcando o checkbox "PDF") para gerar o relatório.');
+                return;
+            }
+
             wrapper.appendChild(cardsClone);
         }
 
@@ -2515,7 +2545,7 @@ function filterCampaignsByStatus(status) {
 function showCreateCampaignForm() {
     document.getElementById('campanhas-list-view').style.display = 'none';
     document.getElementById('campanhas-create-view').style.display = 'block';
-    
+
     // Clear form inputs
     document.getElementById('create-campaign-form').reset();
     tempTaxes = [];
@@ -2535,12 +2565,12 @@ function openTaxModal(index = null) {
     if (modal) {
         modal.style.display = 'flex';
     }
-    
+
     if (form) form.reset();
-    
+
     // Set default start date to today in calendar (2026-07-21)
     document.getElementById('tax-modal-inicio').value = "2026-07-21";
-    
+
     if (index !== null) {
         editingTaxIndex = index;
         const tax = tempTaxes[index];
@@ -2576,7 +2606,7 @@ function parsePercentInput(val) {
 // Save tax inside modal
 function handleSaveTax(e) {
     e.preventDefault();
-    
+
     const produtoFinanceiro = document.getElementById('tax-modal-financeiro').value;
     const produtoAgricola = document.getElementById('tax-modal-agricola').value || 'Soja';
     const jurosMensais = parsePercentInput(document.getElementById('tax-modal-juros').value);
@@ -2589,18 +2619,18 @@ function handleSaveTax(e) {
     const fim = document.getElementById('tax-modal-fim').value;
     const desembolso = document.getElementById('tax-modal-desembolso').value;
     const vencimento = document.getElementById('tax-modal-vencimento').value;
-    
+
     const taxObj = {
         produtoFinanceiro, produtoAgricola, jurosMensais, tipoJuros, contagemDias,
         moeda, incentivo, desconto, inicio, fim, desembolso, vencimento
     };
-    
+
     if (editingTaxIndex !== null) {
         tempTaxes[editingTaxIndex] = taxObj;
     } else {
         tempTaxes.push(taxObj);
     }
-    
+
     closeTaxModal();
     renderTempTaxesTable();
 }
@@ -2609,7 +2639,7 @@ function handleSaveTax(e) {
 function renderTempTaxesTable() {
     const tbody = document.getElementById('camp-taxas-table-body');
     if (!tbody) return;
-    
+
     if (tempTaxes.length === 0) {
         tbody.innerHTML = `
             <tr>
@@ -2618,7 +2648,7 @@ function renderTempTaxesTable() {
         `;
         return;
     }
-    
+
     tbody.innerHTML = '';
     tempTaxes.forEach((tax, index) => {
         const tr = document.createElement('tr');
@@ -2654,23 +2684,23 @@ function deleteTempTax(index) {
 // Saves the entire Campaign object into the global array and returns to main list
 function handleSaveCampaign(e) {
     e.preventDefault();
-    
+
     const nome = document.getElementById('camp-nome').value;
     const titulo = document.getElementById('camp-titulo').value;
     const status = document.getElementById('camp-status').value;
     const desembolso = document.getElementById('camp-desembolso').value;
     const vencimento = document.getElementById('camp-vencimento').value;
     const visivelRTV = document.getElementById('camp-rtv').checked;
-    
+
     const nextId = campaigns.length > 0 ? (Math.max(...campaigns.map(c => c.id)) + 1) : 1;
-    
+
     const newCamp = {
         id: nextId, nome, titulo, status, desembolso, vencimento, visivelRTV,
         taxas: [...tempTaxes]
     };
-    
+
     campaigns.unshift(newCamp); // Insert at beginning of list to see immediately
-    
+
     cancelCreateCampaign();
     renderCampaignsTable();
     updateCampaignSelectOptions();
@@ -2688,7 +2718,7 @@ function formatDateBR(dateStr) {
 function renderCampaignsTable() {
     const tbody = document.getElementById('campaigns-table-body');
     if (!tbody) return;
-    
+
     tbody.innerHTML = '';
     campaigns.forEach(camp => {
         const tr = document.createElement('tr');
@@ -2730,13 +2760,13 @@ function deleteCampaign(id) {
 function updateCampaignSelectOptions() {
     const select = document.getElementById('sim-campanha-select');
     if (!select) return;
-    
+
     // Save current selection value
     const curVal = select.value;
-    
+
     // Re-fill with options
     select.innerHTML = '<option value="custom">Campanha Customizada (Manual)</option>';
-    
+
     campaigns.forEach(camp => {
         if (camp.status === 'Ativa') {
             const opt = document.createElement('option');
@@ -2745,10 +2775,55 @@ function updateCampaignSelectOptions() {
             select.appendChild(opt);
         }
     });
-    
+
     // Re-apply value if exists
     select.value = curVal;
 }
+
+function toggleModalityPdfSelection(modalityId, isChecked) {
+    if (!window.pdfSelectedModalities) window.pdfSelectedModalities = {};
+    window.pdfSelectedModalities[modalityId] = isChecked;
+    document.querySelectorAll(`.modality-pdf-checkbox[data-modality-id="${modalityId}"]`).forEach(chk => {
+        chk.checked = isChecked;
+    });
+}
+window.toggleModalityPdfSelection = toggleModalityPdfSelection;
+
+function updateWsysMonthIndicator(vencimentoDateStr) {
+    const containers = [
+        document.getElementById('wsys-month-info'),
+        document.getElementById('v2-wsys-month-info')
+    ].filter(Boolean);
+
+    if (!vencimentoDateStr) {
+        containers.forEach(el => { el.style.display = 'none'; });
+        return;
+    }
+
+    const parts = vencimentoDateStr.split('-');
+    let dateObj;
+    if (parts.length === 3) {
+        dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
+    } else {
+        dateObj = new Date(vencimentoDateStr);
+    }
+
+    if (isNaN(dateObj.getTime())) {
+        containers.forEach(el => { el.style.display = 'none'; });
+        return;
+    }
+
+    const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+    const monthStr = monthNames[dateObj.getMonth()];
+    const yearStr = dateObj.getFullYear();
+    const formatted = `${monthStr}/${yearStr}`;
+
+    containers.forEach(el => {
+        el.style.display = 'inline-flex';
+        el.innerHTML = `<i class="fa-solid fa-calendar-check" style="color:#2563eb;"></i> Preço Wsys (Data Pagamento): <strong>${formatted}</strong> &nbsp;•&nbsp; <span style="font-weight:normal;opacity:0.9;">(Cruzado com Vencimento da Campanha)</span>`;
+    });
+}
+window.updateWsysMonthIndicator = updateWsysMonthIndicator;
 
 // Refactored onCampanhaSelectChange to handle autofilling of parameters
 function onCampanhaSelectChange(val) {
@@ -2756,18 +2831,26 @@ function onCampanhaSelectChange(val) {
     const jurosInput = document.getElementById('sim-juros-anual');
     const campanhaValInput = document.getElementById('sim-campanha-val');
     const prazoInput = document.getElementById('sim-prazo');
-    
+
     if (val === 'custom') {
         // Unlock inputs
         if (commoditySelect) commoditySelect.disabled = false;
         if (jurosInput) jurosInput.disabled = false;
         if (campanhaValInput) campanhaValInput.disabled = false;
+        updateWsysMonthIndicator(null);
         return;
     }
-    
+
     const camp = campaigns.find(c => c.id == val);
     if (!camp) return;
-    
+
+    // Update Wsys Month indicator crossing by campaign maturity date
+    if (camp.vencimento) {
+        updateWsysMonthIndicator(camp.vencimento);
+    } else {
+        updateWsysMonthIndicator(null);
+    }
+
     // Find Barter tax parameters (Nutrade or generic Barter)
     const barterTax = camp.taxas.find(t => t.produtoFinanceiro === 'Barter Nutrade' || t.produtoFinanceiro === 'Barter');
     const barterMarketTax = camp.taxas.find(t => t.produtoFinanceiro === 'Barter Outras Tradings');
@@ -2775,7 +2858,7 @@ function onCampanhaSelectChange(val) {
     if (barterMarketTax && barterMarketTax.incentivo !== undefined) {
         activeCampanhaValorizacaoOutras = barterMarketTax.incentivo;
     }
-    
+
     if (barterTax) {
         if (commoditySelect) {
             commoditySelect.value = barterTax.produtoAgricola || 'Soja';
@@ -2797,7 +2880,7 @@ function onCampanhaSelectChange(val) {
         if (jurosInput) jurosInput.disabled = false;
         if (campanhaValInput) campanhaValInput.disabled = false;
     }
-    
+
     // Calculate term in days if dates are present
     if (camp.desembolso && camp.vencimento && prazoInput) {
         const desembolsoDate = new Date(camp.desembolso);
@@ -2814,7 +2897,7 @@ function onCampanhaSelectChange(val) {
     } else if (prazoInput) {
         prazoInput.value = 216;
     }
-    
+
     calculateSimulation();
 }
 
@@ -2830,7 +2913,7 @@ function initWsysPlazas() {
 function initEstadoSelect() {
     const estadoSelect = document.getElementById('sim-estado');
     if (!estadoSelect) return;
-    
+
     // Populate states
     const states = [...new Set(wsysPlazas.map(p => p.estado))].sort();
     estadoSelect.innerHTML = '';
@@ -2840,7 +2923,7 @@ function initEstadoSelect() {
         opt.textContent = st;
         estadoSelect.appendChild(opt);
     });
-    
+
     // Trigger first state load
     if (states.length > 0) {
         estadoSelect.value = states[0];
@@ -2855,7 +2938,7 @@ function onEstadoChange(estado) {
         const pracaSelect = document.getElementById(selId);
         if (!pracaSelect) return;
         pracaSelect.innerHTML = '';
-        const filtered = wsysPlazas.filter(p => p.estado === estado).sort((a,b) => a.nome.localeCompare(b.nome));
+        const filtered = wsysPlazas.filter(p => p.estado === estado).sort((a, b) => a.nome.localeCompare(b.nome));
         filtered.forEach(p => {
             const opt = document.createElement('option');
             opt.value = p.nome;
@@ -2871,7 +2954,7 @@ function onEstadoChange(estado) {
     const v2Estado = document.getElementById('v2-sim-estado');
     if (v2Estado && v2Estado.value !== estado) v2Estado.value = estado;
 
-    const filtered = wsysPlazas.filter(p => p.estado === estado).sort((a,b) => a.nome.localeCompare(b.nome));
+    const filtered = wsysPlazas.filter(p => p.estado === estado).sort((a, b) => a.nome.localeCompare(b.nome));
     if (filtered.length > 0) {
         onPracaChange(filtered[0].nome);
     } else {
@@ -2895,13 +2978,13 @@ function onPracaChange(pracaNome) {
 function renderPracasTable() {
     const tbody = document.getElementById('pracas-table-body');
     if (!tbody) return;
-    
+
     tbody.innerHTML = '';
     if (wsysPlazas.length === 0) {
         tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 20px;">Nenhuma praça cadastrada.</td></tr>`;
         return;
     }
-    
+
     wsysPlazas.forEach((p, idx) => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -2942,14 +3025,14 @@ function handleSavePraca(e) {
     const freteAsfalto = parseFloat(document.getElementById('praca-frete-asfalto').value) || 0;
     const impPct = parseFloat(document.getElementById('praca-tax-pct').value) || 0;
     const impFixo = parseFloat(document.getElementById('praca-tax-fixo').value) || 0;
-    
+
     if (!nome) {
         alert("Preencha o nome da praça");
         return;
     }
-    
+
     const pracaData = { estado, nome, freteChao, freteAsfalto, impPct, impFixo };
-    
+
     if (idx === '') {
         // Create new
         wsysPlazas.push(pracaData);
@@ -2957,7 +3040,7 @@ function handleSavePraca(e) {
         // Edit existing
         wsysPlazas[parseInt(idx)] = pracaData;
     }
-    
+
     localStorage.setItem('wsysPlazas', JSON.stringify(wsysPlazas));
     cancelCreatePraca();
     renderPracasTable();
@@ -2974,7 +3057,7 @@ function editPraca(index) {
     document.getElementById('praca-frete-asfalto').value = p.freteAsfalto;
     document.getElementById('praca-tax-pct').value = p.impPct;
     document.getElementById('praca-tax-fixo').value = p.impFixo;
-    
+
     document.getElementById('pracas-list-view').style.display = 'none';
     document.getElementById('pracas-create-view').style.display = 'block';
 }
@@ -3006,23 +3089,23 @@ function buildShareMessageText() {
     const praca = document.getElementById('sim-regiao') ? document.getElementById('sim-regiao').value : '';
     const campSelect = document.getElementById('sim-campanha-select');
     const campNome = campSelect && campSelect.options[campSelect.selectedIndex] ? campSelect.options[campSelect.selectedIndex].text : '';
-    
+
     let text = `*Simulação de Barter Hub 2026*\n\n`;
     text += `• *Campanha:* ${campNome}\n`;
     text += `• *Crédito:* ${credInput} (${selectedCurrency})\n`;
     text += `• *Local:* ${praca} (${estado})\n\n`;
-    
+
     // Add best modality
     const cardEl = document.querySelector('.modality-card');
     if (cardEl) {
         const titleEl = cardEl.querySelector('.modality-card-title');
         const totalEl = cardEl.querySelector('.modality-card-total-value');
         if (titleEl && totalEl) {
-            text += `*Melhor Opção:* ${titleEl.textContent}\n`;
+            text += `*Modalidade Destacada:* ${titleEl.textContent}\n`;
             text += `• Valor Total Equivalente: ${totalEl.textContent}\n\n`;
         }
     }
-    
+
     text += `_Gerado automaticamente pelo Barter Hub Simulator._`;
     return encodeURIComponent(text);
 }
@@ -3037,29 +3120,29 @@ function shareNative() {
     const credInput = document.getElementById('sim-credito') ? document.getElementById('sim-credito').value : '';
     const praca = document.getElementById('sim-regiao') ? document.getElementById('sim-regiao').value : '';
     const rawText = decodeURIComponent(buildShareMessageText().replace(/\+/g, ' '));
-    
+
     if (navigator.share) {
         navigator.share({
             title: 'Simulação Barter Hub 2026',
             text: rawText,
             url: window.location.href
         })
-        .then(() => closeSharePopup())
-        .catch((err) => {
-            if (err.name !== 'AbortError') {
-                console.log('Erro ao compartilhar via sistema:', err);
-            }
-        });
+            .then(() => closeSharePopup())
+            .catch((err) => {
+                if (err.name !== 'AbortError') {
+                    console.log('Erro ao compartilhar via sistema:', err);
+                }
+            });
     } else {
         // Fallback: Copy to clipboard
         navigator.clipboard.writeText(rawText)
-        .then(() => {
-            alert("Resumo da simulação copiado para a área de transferência!");
-            closeSharePopup();
-        })
-        .catch(() => {
-            alert("Não foi possível acessar a área de transferência para compartilhamento.");
-        });
+            .then(() => {
+                alert("Resumo da simulação copiado para a área de transferência!");
+                closeSharePopup();
+            })
+            .catch(() => {
+                alert("Não foi possível acessar a área de transferência para compartilhamento.");
+            });
     }
 }
 
@@ -3463,7 +3546,7 @@ function downloadTooltipsMD() {
         const grid = document.getElementById('modality-cards-list');
         if (!grid) return;
 
-        grid.addEventListener('mouseover', function(e) {
+        grid.addEventListener('mouseover', function (e) {
             const tooltipIcon = e.target.closest('.tooltip-container');
             if (!tooltipIcon) return;
 
@@ -3477,7 +3560,7 @@ function downloadTooltipsMD() {
             card.style.zIndex = '9999';
         });
 
-        grid.addEventListener('mouseleave', function() {
+        grid.addEventListener('mouseleave', function () {
             document.querySelectorAll('#modality-cards-list .modality-card').forEach(c => {
                 c.style.zIndex = '1';
             });
@@ -3590,8 +3673,8 @@ window.onEstadoChange = onEstadoChange;
 window.onPracaChange = onPracaChange;
 window.onCampanhaSelectChange = onCampanhaSelectChange;
 window.onCulturaChange = onCulturaChange;
-window.editPraca = typeof editPraca !== 'undefined' ? editPraca : () => {};
-window.deletePraca = typeof deletePraca !== 'undefined' ? deletePraca : () => {};
+window.editPraca = typeof editPraca !== 'undefined' ? editPraca : () => { };
+window.deletePraca = typeof deletePraca !== 'undefined' ? deletePraca : () => { };
 
 
 
