@@ -222,6 +222,34 @@
                             <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block;">Detalhes da operação</span>
                         </div>
 
+                        <!-- Hidden legacy inputs: JS engine reads from these sim-* IDs as source of truth -->
+                        <div style="display:none;">
+                            <input type="text" id="sim-credito" value="R$ 1.000.000,00">
+                            <select id="sim-campanha-select"><option value="custom">Campanha Customizada (Manual)</option></select>
+                            <select id="sim-commodity">
+                                <option value="">— Sem commodity —</option>
+                                <option value="Soja">Soja</option>
+                                <option value="Algodão">Algodão</option>
+                            </select>
+                            <select id="sim-estado">
+                                <option value="MT">Mato Grosso (MT)</option>
+                                <option value="GO">Goiás (GO)</option>
+                                <option value="MS">Mato Grosso do Sul (MS)</option>
+                                <option value="PR">Paraná (PR)</option>
+                            </select>
+                            <select id="sim-regiao"></select>
+                            <input type="checkbox" id="sim-descontos" checked>
+                            <input type="number" id="sim-preco-bruto" value="103.00">
+                            <input type="number" id="sim-prazo" value="216">
+                            <input type="number" id="sim-juros-anual" value="14.40">
+                            <input type="number" id="sim-campanha-val" value="4.50">
+                            <input type="number" id="sim-frete-chao" value="15.00">
+                            <input type="number" id="sim-frete-asfalto" value="8.00">
+                            <input type="number" id="sim-cambio" value="5.1500">
+                            <input type="number" id="sim-dist-chao" value="" min="0">
+                            <input type="number" id="sim-dist-asfalto" value="" min="0">
+                        </div>
+
                         <form novalidate onsubmit="event.preventDefault(); window.handleFormSimulate(event);"
                             style="display:flex; flex-direction:column; gap:20px;">
                             <!-- Section 1: Campanha da Operação -->
