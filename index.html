@@ -122,11 +122,7 @@
                 </div>
             </header>
 
-            <!-- Subtitle and Intro -->
-            <div class="intro-section container">
-                <p class="intro-text">Esta ferramenta auxilia na simulação de taxas, cotações e visualização dos
-                    benefícios financeiros da modalidade Barter com nossa plataforma integrada.</p>
-            </div>
+
 
             <main class="main-content container">
 
@@ -214,15 +210,16 @@
                 <!-- ==================== PAGE: SIMULADOR ==================== -->
                 <div class="simulator-v2-container" id="page-simulador-v2"
                     style="display:flex; flex-direction:column; gap:20px;">
+                    <!-- Page Title -->
+                    <div style="margin-bottom:4px;">
+                        <h2 style="font-family:var(--font-heading); color:var(--primary-deep); font-size:18px; font-weight:700; margin:0 0 4px 0;">Simulador de taxas</h2>
+                        <p style="color:var(--text-secondary); font-size:13px; margin:0;">Conheça as melhores taxas disponíveis para você</p>
+                    </div>
                     <!-- Top Card: Full width operations parameters form -->
                     <div class="card animate-fade-in" style="padding:24px;">
-                        <div class="card-header"
-                            style="margin-bottom:20px; border-bottom:1px solid var(--border-color); padding-bottom:12px;">
-                            <h2
-                                style="font-family:var(--font-heading); color:var(--primary-deep); font-size:18px; margin:0;">
-                                Parâmetros da Operação (Layout Empilhado)</h2>
-                            <p style="color:var(--text-secondary); font-size:13px; margin:4px 0 0 0;">Preencha com o
-                                crédito demandado e os dados da sua safra na parte superior.</p>
+                        <div style="margin-bottom:20px;">
+                            <h2 style="font-family:var(--font-heading); color:var(--primary-deep); font-size:20px; margin:0 0 16px 0; font-weight:700;">Simulação de crédito</h2>
+                            <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block;">Detalhes da operação</span>
                         </div>
 
                         <form novalidate onsubmit="event.preventDefault(); window.handleFormSimulate(event);"
