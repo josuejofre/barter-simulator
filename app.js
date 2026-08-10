@@ -231,7 +231,11 @@ function setCurrency(currency) {
 
     const btnBrl = document.getElementById('btn-currency-brl');
     const btnUsd = document.getElementById('btn-currency-usd');
+    const v2BtnBrl = document.getElementById('v2-btn-currency-brl');
+    const v2BtnUsd = document.getElementById('v2-btn-currency-usd');
+
     const creditInput = document.getElementById('sim-credito');
+    const v2CreditInput = document.getElementById('v2-sim-credito');
     const priceInput = document.getElementById('sim-preco-bruto');
     const freteChaoInput = document.getElementById('sim-frete-chao');
     const freteAsfaltoInput = document.getElementById('sim-frete-asfalto');
@@ -239,47 +243,61 @@ function setCurrency(currency) {
     const cambio = parseFloat(document.getElementById('sim-cambio').value) || 1.0;
 
     // Save current raw values
-    const currentCreditRaw = getRawCurrencyValue(creditInput.value);
-    const currentPriceRaw = parseFloat(priceInput.value) || 0;
-    const currentFreteChaoRaw = parseFloat(freteChaoInput.value) || 0;
-    const currentFreteAsfaltoRaw = parseFloat(freteAsfaltoInput.value) || 0;
+    const currentCreditRaw = creditInput ? getRawCurrencyValue(creditInput.value) : (v2CreditInput ? getRawCurrencyValue(v2CreditInput.value) : 1000000);
+    const currentPriceRaw = priceInput ? (parseFloat(priceInput.value) || 0) : 0;
+    const currentFreteChaoRaw = freteChaoInput ? (parseFloat(freteChaoInput.value) || 0) : 0;
+    const currentFreteAsfaltoRaw = freteAsfaltoInput ? (parseFloat(freteAsfaltoInput.value) || 0) : 0;
 
-    let newCredit, newPrice, newFreteChao, newFreteAsfalto;
+    // Preserve nominal credit input value (e.g. 1.000.000) so simulating 1 Milhão em Reais vs 1 Milhão em Dólares
+    // calculates the physical volume of sacas for that currency as expected by the user.
+    let newCredit = currentCreditRaw;
+    let newPrice, newFreteChao, newFreteAsfalto;
 
     if (currency === 'BRL') {
-        // Converting from USD to BRL
-        newCredit = currentCreditRaw * cambio;
+        // Converting price and freight from USD to BRL
         newPrice = currentPriceRaw * cambio;
         newFreteChao = currentFreteChaoRaw * cambio;
         newFreteAsfalto = currentFreteAsfaltoRaw * cambio;
 
-        btnBrl.classList.add('active');
-        btnUsd.classList.remove('active');
+        if (btnBrl) btnBrl.classList.add('active');
+        if (btnUsd) btnUsd.classList.remove('active');
+        if (v2BtnBrl) v2BtnBrl.classList.add('active');
+        if (v2BtnUsd) v2BtnUsd.classList.remove('active');
     } else {
-        // Converting from BRL to USD
-        newCredit = currentCreditRaw / cambio;
+        // Converting price and freight from BRL to USD
         newPrice = currentPriceRaw / cambio;
         newFreteChao = currentFreteChaoRaw / cambio;
         newFreteAsfalto = currentFreteAsfaltoRaw / cambio;
 
-        btnUsd.classList.add('active');
-        btnBrl.classList.remove('active');
+        if (btnUsd) btnUsd.classList.add('active');
+        if (btnBrl) btnBrl.classList.remove('active');
+        if (v2BtnUsd) v2BtnUsd.classList.add('active');
+        if (v2BtnBrl) v2BtnBrl.classList.remove('active');
     }
 
     // Update global selection
     selectedCurrency = currency;
 
-    // Update labels and suffixes
-    const isSoy = document.getElementById('sim-commodity').value === 'Soja';
-    document.getElementById('sim-preco-bruto-suffix').textContent = currency === 'BRL' ? 'R$/' + (isSoy ? 'sc' : 'lp') : 'USD/' + (isSoy ? 'sc' : 'lp');
-    document.getElementById('sim-frete-chao-suffix').textContent = currency === 'BRL' ? 'R$/KM' : 'USD/KM';
-    document.getElementById('sim-frete-asfalto-suffix').textContent = currency === 'BRL' ? 'R$/KM' : 'USD/KM';
+    // Safely update labels and suffixes if elements exist
+    const commEl = document.getElementById('sim-commodity');
+    const isSoy = commEl ? commEl.value === 'Soja' : true;
+    const unitSymbol = isSoy ? 'sc' : 'lp';
 
-    // Write back converted values formatted correctly
-    creditInput.value = formatCurrencyValue(newCredit, currency);
-    priceInput.value = newPrice.toFixed(2);
-    freteChaoInput.value = newFreteChao.toFixed(2);
-    freteAsfaltoInput.value = newFreteAsfalto.toFixed(2);
+    const suffixEl = document.getElementById('sim-preco-bruto-suffix');
+    if (suffixEl) suffixEl.textContent = currency === 'BRL' ? 'R$/' + unitSymbol : 'USD/' + unitSymbol;
+    const chaoSuffixEl = document.getElementById('sim-frete-chao-suffix');
+    if (chaoSuffixEl) chaoSuffixEl.textContent = currency === 'BRL' ? 'R$/KM' : 'USD/KM';
+    const asfaltoSuffixEl = document.getElementById('sim-frete-asfalto-suffix');
+    if (asfaltoSuffixEl) asfaltoSuffixEl.textContent = currency === 'BRL' ? 'R$/KM' : 'USD/KM';
+
+    // Write back values formatted correctly for both layout inputs
+    const formattedCredit = formatCurrencyValue(newCredit, currency);
+    if (creditInput) creditInput.value = formattedCredit;
+    if (v2CreditInput) v2CreditInput.value = formattedCredit;
+
+    if (priceInput) priceInput.value = newPrice.toFixed(2);
+    if (freteChaoInput) freteChaoInput.value = newFreteChao.toFixed(2);
+    if (freteAsfaltoInput) freteAsfaltoInput.value = newFreteAsfalto.toFixed(2);
 
     // Recalculate immediately when converting currencies
     calculateSimulation();
@@ -1191,6 +1209,192 @@ function calculateSimulation() {
 
         // Elevate the hovered card so its tooltips always appear on top of neighbors
         bindCardTooltipElevation(cardsContainer);
+    });
+
+    // Render internal validation table at bottom of page
+    renderValidationTable(res, campObj, {
+        commodity, regiao, creditRaw, commBrutoRaw, descontoAtivo,
+        prazo, jurosAnual, valPctProposta, distChao, distAsfalto,
+        freteChaoRaw, freteAsfaltoRaw, cambio, currency: selectedCurrency
+    });
+}
+
+// Render internal validation table for calculations validation (uso interno)
+function renderValidationTable(res, campObj, inputs) {
+    const valSection = document.getElementById('validation-section');
+    const v2ValSection = document.getElementById('v2-validation-section');
+    if (!valSection && !v2ValSection) return;
+
+    if (!res) {
+        if (valSection) valSection.style.display = 'none';
+        if (v2ValSection) v2ValSection.style.display = 'none';
+        return;
+    }
+
+    if (valSection) valSection.style.display = 'block';
+    if (v2ValSection) v2ValSection.style.display = 'block';
+
+    const factor = selectedCurrency === 'BRL' ? (parseFloat(document.getElementById('sim-cambio').value) || 1.0) : 1.0;
+    const cambio = parseFloat(document.getElementById('sim-cambio').value) || 5.15;
+    const isSoy = inputs.commodity === 'Soja';
+    const unitSymbol = res.unitSymbol || (isSoy ? 'sc' : 'lp');
+
+    const fmtCurr = (val) => selectedCurrency === 'BRL' ? formatBRL(val) : formatUSD(val);
+    const fmtExt = (val) => selectedCurrency === 'BRL' ? formatBRLExtended(val) : formatUSDExtended(val);
+
+    const campName = campObj ? campObj.nome : 'Planilha 2026';
+    const carenciaStr = campObj && campObj.desembolso ? formatDateBR(campObj.desembolso) : '01/10/2025';
+    const vencimentoStr = campObj && campObj.vencimento ? formatDateBR(campObj.vencimento) : '05/05/2026';
+    const moedaStr = `${selectedCurrency === 'BRL' ? 'Real (R$)' : 'Dólar (USD)'} (Câmbio: R$ ${formatNumber(cambio, 4)})`;
+    
+    // WSys price in both USD and BRL
+    const commUSD = res.commBrutoUSD;
+    const commBRL = commUSD * cambio;
+    const wsysPriceStr = `USD $${formatNumber(commUSD, 2)} / ${unitSymbol} (R$ ${formatNumber(commBRL, 2)} / ${unitSymbol})`;
+
+    const impPct = (res.commBrutoUSD > 0) ? (res.pctTaxUSDProposta / res.commBrutoUSD * 100).toFixed(2) : '0.20';
+    const plazaInfo = `${inputs.regiao || 'Campo Novo do Parecis (MT)'} (Fixo: ${fmtCurr(res.fixedTaxUSDProposta * factor)} + ${impPct}%)`;
+    const freteInfo = `Chão: ${isNaN(inputs.distChao) ? 0 : inputs.distChao} km | Asfalto: ${isNaN(inputs.distAsfalto) ? 0 : inputs.distAsfalto} km | Total: ${fmtCurr(res.freteTotalUSDProposta * factor)}`;
+
+    // Populate header info cards
+    ['val', 'v2-val'].forEach(prefix => {
+        const elName = document.getElementById(`${prefix}-camp-nome`);
+        if (elName) elName.textContent = campName;
+
+        const elDatas = document.getElementById(`${prefix}-camp-datas`);
+        if (elDatas) elDatas.textContent = `${carenciaStr} a ${vencimentoStr} (${inputs.prazo}d)`;
+
+        const elMoeda = document.getElementById(`${prefix}-moeda-cambio`);
+        if (elMoeda) elMoeda.textContent = moedaStr;
+
+        const elWsys = document.getElementById(`${prefix}-preco-wsys`);
+        if (elWsys) elWsys.textContent = wsysPriceStr;
+
+        const elPraca = document.getElementById(`${prefix}-praca-imposto`);
+        if (elPraca) elPraca.textContent = plazaInfo;
+
+        const elFrete = document.getElementById(`${prefix}-frete-info`);
+        if (elFrete) elFrete.textContent = freteInfo;
+    });
+
+    const rows = [
+        {
+            name: '1. Crédito Demandado (Valor da Operação)',
+            formula: 'Crédito base contratado pelo produtor',
+            nutrade: fmtCurr(res.credLimitUSD * factor),
+            market: fmtCurr(res.credLimitUSD * factor)
+        },
+        {
+            name: '2. Taxa de Juros Anual & Período',
+            formula: 'Juros Período = (Prazo / 360) × Juros Anual (14,40%)',
+            nutrade: `${inputs.jurosAnual.toFixed(2)}% a.a. (${(res.jurosPeriodo * 100).toFixed(2)}% no período)`,
+            market: `${inputs.jurosAnual.toFixed(2)}% a.a. (${(res.jurosPeriodo * 100).toFixed(2)}% no período)`
+        },
+        {
+            name: '3. Preço Pedido TP (Valor Presente)',
+            formula: 'Crédito / (1 + Juros Período)',
+            nutrade: fmtCurr(res.precoTpUSDProposta * factor),
+            market: fmtCurr(res.precoTpUSDMarket * factor)
+        },
+        {
+            name: '4. Preço Commodity Bruto FOB (WSys)',
+            formula: 'Cotação WSys de Originação Nutrade vs Mercado (-1,0%)',
+            nutrade: fmtExt(res.commBrutoUSD * factor),
+            market: fmtExt(res.commBrutoUSDMarket * factor)
+        },
+        {
+            name: '5. Dedução Impostos Fiscais da Praça',
+            formula: 'Senar + Fethab (Fixo R$/sc + Pct sobre Bruto)',
+            nutrade: `- ${fmtExt(res.taxDeductionUSDProposta * factor)}`,
+            market: `- ${fmtExt(res.taxDeductionUSDMarket * factor)}`
+        },
+        {
+            name: '6. Preço Commodity Livre',
+            formula: 'Preço Bruto - Deduções Impostos Praça',
+            nutrade: fmtExt(res.commLivreUSDProposta * factor),
+            market: fmtExt(res.commLivreUSDMarket * factor)
+        },
+        {
+            name: '7. Valorização Comercial (Cashback % e $)',
+            formula: 'Crédito × Taxa Cashback da Campanha (4,5% vs 3,0%)',
+            nutrade: `+${inputs.valPctProposta.toFixed(2)}% (${fmtCurr(res.cashbackUsdProposta * factor)})`,
+            market: `+${res.valPctMarket.toFixed(2)}% (${fmtCurr(res.cashbackUsdMarket * factor)})`
+        },
+        {
+            name: '8. Sacas Equivalentes a Cashback',
+            formula: 'Cashback ($) / Preço Commodity Livre',
+            nutrade: `${formatNumber(res.cashbackScProposta, 2)} ${unitSymbol}`,
+            market: `${formatNumber(res.cashbackScMarket, 2)} ${unitSymbol}`
+        },
+        {
+            name: '9. Incentivo Barter (% e $)',
+            formula: 'Preço TP × (Prazo / 30 × 0,5% a.m.) = 3,60%',
+            nutrade: `+${(res.incentivoBarterPct * 100).toFixed(2)}% (${fmtCurr(res.incentivoBarterUsd * factor)})`,
+            market: `0,00% (${fmtCurr(0)})`
+        },
+        {
+            name: '10. Sacas Equivalentes a Incentivo Barter',
+            formula: 'Incentivo ($) / Preço Commodity Livre',
+            nutrade: `${formatNumber(res.incentivoScProposta, 2)} ${unitSymbol}`,
+            market: `0,00 ${unitSymbol}`
+        },
+        {
+            name: '11. Total Retorno Comercial ($)',
+            formula: 'Cashback ($) + Incentivo Barter ($)',
+            nutrade: fmtCurr(res.totalRetornoUSDProposta * factor),
+            market: fmtCurr(res.totalRetornoUSDMarket * factor)
+        },
+        {
+            name: '12. Volume TROCA Inicial (sem valorização)',
+            formula: 'Crédito / Preço Commodity Livre (arredondado pra cima)',
+            nutrade: `${formatNumber(res.volTrocaProposta)} ${unitSymbol}`,
+            market: `${formatNumber(res.volTrocaMarket)} ${unitSymbol}`
+        },
+        {
+            name: '13. Cessão Syngenta CROP (Sacas)',
+            formula: 'Volume Inicial - Sacas Cashback',
+            nutrade: `${formatNumber(res.cessaoProposta, 2)} ${unitSymbol}`,
+            market: `${formatNumber(res.cessaoMarket, 2)} ${unitSymbol}`
+        },
+        {
+            name: '14. Volume TROCA Equivalente Final',
+            formula: 'Volume Inicial - (Sacas Cashback + Sacas Incentivo)',
+            nutrade: `<strong>${formatNumber(res.volFinalProposta)} ${unitSymbol}</strong>`,
+            market: `<strong>${formatNumber(res.volFinalMarket)} ${unitSymbol}</strong>`
+        },
+        {
+            name: '15. Preço Barter Equivalente Final',
+            formula: 'Preço Livre + Val Cashback + Val Incentivo - Frete Unit.',
+            nutrade: `<strong>${fmtExt(res.precoFinalUSDProposta * factor)} / ${unitSymbol}</strong>`,
+            market: `<strong>${fmtExt(res.precoFinalUSDMarket * factor)} / ${unitSymbol}</strong>`
+        },
+        {
+            name: '16. Economia em Grãos (Nutrade vs Mercado)',
+            formula: 'Volume Final Mercado - Volume Final Nutrade',
+            nutrade: `<strong class="text-green">+${formatNumber(res.volFinalMarket - res.volFinalProposta)} ${unitSymbol} economizados</strong>`,
+            market: '-'
+        },
+        {
+            name: '17. Benefício Financeiro Total da Estrutura',
+            formula: 'Volume Economizado × Preço Commodity Bruto',
+            nutrade: `<strong class="text-green">+${fmtCurr((res.volFinalMarket - res.volFinalProposta) * (res.commBrutoUSD * factor))}</strong>`,
+            market: '-'
+        }
+    ];
+
+    const generateRowsHtml = () => rows.map(r => `
+        <tr style="border-bottom: 1px solid #fef08a;">
+            <td style="padding: 8px 10px; font-weight: 600; color: #334155;">${r.name}</td>
+            <td style="padding: 8px 10px; color: #64748b; font-size: 11px;">${r.formula}</td>
+            <td style="padding: 8px 10px; background: rgba(34, 197, 94, 0.06); color: #15803d; font-weight: 600;">${r.nutrade}</td>
+            <td style="padding: 8px 10px; color: #334155;">${r.market}</td>
+        </tr>
+    `).join('');
+
+    const htmlContent = generateRowsHtml();
+    ['val-table-body', 'v2-val-table-body'].forEach(tbodyId => {
+        const tbody = document.getElementById(tbodyId);
+        if (tbody) tbody.innerHTML = htmlContent;
     });
 }
 
@@ -2866,33 +3070,7 @@ function updateWsysMonthIndicator(vencimentoDateStr) {
         document.getElementById('v2-wsys-month-info')
     ].filter(Boolean);
 
-    if (!vencimentoDateStr) {
-        containers.forEach(el => { el.style.display = 'none'; });
-        return;
-    }
-
-    const parts = vencimentoDateStr.split('-');
-    let dateObj;
-    if (parts.length === 3) {
-        dateObj = new Date(parseInt(parts[0]), parseInt(parts[1]) - 1, parseInt(parts[2]));
-    } else {
-        dateObj = new Date(vencimentoDateStr);
-    }
-
-    if (isNaN(dateObj.getTime())) {
-        containers.forEach(el => { el.style.display = 'none'; });
-        return;
-    }
-
-    const monthNames = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-    const monthStr = monthNames[dateObj.getMonth()];
-    const yearStr = dateObj.getFullYear();
-    const formatted = `${monthStr}/${yearStr}`;
-
-    containers.forEach(el => {
-        el.style.display = 'inline-flex';
-        el.innerHTML = `<i class="fa-solid fa-calendar-check" style="color:#2563eb;"></i> Preço Wsys (Data Pagamento): <strong>${formatted}</strong> &nbsp;•&nbsp; <span style="font-weight:normal;opacity:0.9;">(Cruzado com Vencimento da Campanha)</span>`;
-    });
+    containers.forEach(el => { el.style.display = 'none'; });
 }
 window.updateWsysMonthIndicator = updateWsysMonthIndicator;
 
