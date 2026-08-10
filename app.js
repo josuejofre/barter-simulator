@@ -920,17 +920,17 @@ function calculateSimulation() {
         },
         {
             id: 'fiso',
-            name: 'FISO',
+            name: 'Fiso',
             type: 'financial',
             jurosAnual: calcFiso.jurosAnual,
             jurosPeriodo: calcFiso.custoTotalPct / 100,
             jurosMensal: calcFiso.taxaMensal,
             prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
             prazoExplicacao: `Prazo financeiro calculado de ${prazo} dias corridos (base /30).`,
-            vpanDisplay: '0,00%',
+            vpanDisplay: 'Não aplicado',
             vpanExplicacao: 'A modalidade FISO não concede desconto à vista VPAN.',
             incentivoLabel: 'Incentivo',
-            incentivoDisplay: calcFiso.incentivo > 0 ? `-${calcFiso.incentivo.toFixed(2)}%` : '0,00%',
+            incentivoDisplay: calcFiso.incentivo > 0 ? `${calcFiso.incentivo.toFixed(2).replace('.', ',')} %` : 'Não aplicado',
             incentivoExplicacao: calcFiso.incentivo > 0 ? `Rebate de incentivo comercial de campanha de -${calcFiso.incentivo.toFixed(2)}% aplicado à taxa/operação FISO.` : 'Sem rebate de incentivo aplicável.',
             cashbackDisplay: '0,00%',
             cashbackExplicacao: 'Sem programa de cashback em grãos.',
@@ -949,15 +949,15 @@ function calculateSimulation() {
             jurosPeriodo: calcSyngenta.custoTotalPct / 100,
             jurosMensal: calcSyngenta.taxaMensal,
             prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
-            prazoExplicacao: `Prazo financeiro calculado de ${prazo} dias corridos (On-Balance).`,
-            vpanDisplay: '0,00%',
+            prazoExplicacao: `Prazo financeiro calculated de ${prazo} dias corridos (On-Balance).`,
+            vpanDisplay: 'Não aplicado',
             vpanExplicacao: 'Faturamento a prazo direto On-Balance Syngenta sem concessão de desconto à vista (VPAN).',
             incentivoLabel: 'Incentivo',
-            incentivoDisplay: '0,00%',
+            incentivoDisplay: 'Não aplicado',
             incentivoExplicacao: 'Sem incentivo de campanha aplicável.',
             cashbackDisplay: '0,00%',
             cashbackExplicacao: 'Sem programa de cashback em grãos.',
-            garantia: 'Garantia alinhada diretamente com o time de crédito',
+            garantia: 'Garantia alinhada diretamente com o time de crédito Syngenta',
             garantiaExplicacao: 'Estrutura de garantias alinhada diretamente com a mesa de crédito corporativa Syngenta.',
             custoTotal: calcSyngenta.custoTotal,
             custoTotalPct: calcSyngenta.custoTotalPct,
@@ -973,10 +973,10 @@ function calculateSimulation() {
             jurosMensal: calcSyde.taxaMensal,
             prazoDisplay: `${prazo} dias (${diasUteisSyde} úteis)`,
             prazoExplicacao: `Prazo financeiro de ${prazo} dias corridos, correspondendo a ${diasUteisSyde} dias úteis no cálculo de juros FIDC.`,
-            vpanDisplay: calcSyde.descontoVPAN > 0 ? `-${calcSyde.descontoVPAN.toFixed(2)}% à vista` : '0,00%',
+            vpanDisplay: calcSyde.descontoVPAN > 0 ? `${calcSyde.descontoVPAN.toFixed(2).replace('.', ',')} %` : 'Não aplicado',
             vpanExplicacao: calcSyde.descontoVPAN > 0 ? `Desconto VPAN (Valor Presente À Vista) de -${calcSyde.descontoVPAN.toFixed(2)}% aplicado à vista sobre o valor base da operação antes dos juros.` : 'Sem desconto VPAN à vista.',
             incentivoLabel: 'Incentivo',
-            incentivoDisplay: '0,00%',
+            incentivoDisplay: 'Não aplicado',
             incentivoExplicacao: 'Sem incentivo adicional aplicável.',
             cashbackDisplay: '0,00%',
             cashbackExplicacao: 'Sem programa de cashback em grãos.',
@@ -1029,181 +1029,255 @@ function calculateSimulation() {
                 selectModality(m.id);
             };
 
-            card.innerHTML = `
-                <div class="modality-card-header">
-                    <div class="modality-card-title-row" style="padding-right: 80px;">
-                        <span class="modality-card-title">${m.name}</span>
-                    </div>
-                    <div class="modality-card-checkbox-wrapper" onclick="event.stopPropagation();">
-                        <label class="modality-card-checkbox-label" title="Marcar para incluir no PDF compartilhado">
-                            <input type="checkbox" class="modality-pdf-checkbox" data-modality-id="${m.id}" ${isPdfChecked ? 'checked' : ''} onchange="toggleModalityPdfSelection('${m.id}', this.checked)">
-                            <span><i class="fa-solid fa-file-pdf"></i> PDF</span>
-                        </label>
-                    </div>
-                    <div class="modality-card-dates">Data de carência <strong>${carenciaStr}</strong> &nbsp;|&nbsp; Vencimento <strong>${vencimentoStr}</strong></div>
-                </div>
-                <div class="modality-card-body">
-                    <ul class="modality-bullet-list">
-                        <li class="modality-bullet-item">
-                            <span class="modality-bullet-label">
-                                Taxa Juros Anual
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text"><strong>Fórmula:</strong> Taxa de juros anualizada contratual da modalidade (${m.jurosAnual.toFixed(2)}% a.a.).</span>
-                                </span>
-                            </span>
-                            <strong class="modality-bullet-val">${m.jurosAnual.toFixed(2)}% a.a.</strong>
-                        </li>
-                        <li class="modality-bullet-item">
-                            <span class="modality-bullet-label">
-                                Taxa Efetiva a.m.
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text"><strong>Fórmula:</strong> Taxa de juros efetiva mensal da operação (${m.jurosMensal.toFixed(2)}% a.m.).</span>
-                                </span>
-                            </span>
-                            <strong class="modality-bullet-val">${m.jurosMensal.toFixed(2)}% a.m.</strong>
-                        </li>
-                        <li class="modality-bullet-item">
-                            <span class="modality-bullet-label">
-                                Prazo Calculado
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text"><strong>Prazo Calculado:</strong> ${m.prazoExplicacao}</span>
-                                </span>
-                            </span>
-                            <strong class="modality-bullet-val">${m.prazoDisplay}</strong>
-                        </li>
-                        ${m.type !== 'barter' ? `<li class="modality-bullet-item">
-                            <span class="modality-bullet-label">
-                                Desconto VPAN
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text"><strong>Desconto VPAN:</strong> ${m.vpanExplicacao}</span>
-                                </span>
-                            </span>
-                            <strong class="modality-bullet-val ${m.vpanDisplay.includes('-') ? 'text-teal' : ''}">${m.vpanDisplay}</strong>
-                        </li>` : ''}
-                        <li class="modality-bullet-item">
-                            <span class="modality-bullet-label">
-                                ${m.incentivoLabel}
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text"><strong>${m.incentivoLabel}:</strong> ${m.incentivoExplicacao}</span>
-                                </span>
-                            </span>
-                            <strong class="modality-bullet-val ${m.incentivoDisplay.includes('+') || m.incentivoDisplay.includes('-') ? 'text-teal' : ''}">${m.incentivoDisplay}</strong>
-                        </li>
-                        <li class="modality-bullet-item">
-                            <span class="modality-bullet-label">
-                                Cashback
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text"><strong>Cashback:</strong> ${m.cashbackExplicacao}</span>
-                                </span>
-                            </span>
-                            <strong class="modality-bullet-val ${m.cashbackDisplay.includes('+') ? 'text-teal' : ''}">${m.cashbackDisplay}</strong>
-                        </li>
-                        ${m.type === 'barter' ? `<li class="modality-bullet-item">
-                            <span class="modality-bullet-label">
-                                Volume Final Equivalente
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text">Volume de troca físico final líquido de grãos a ser entregue na liquidação da safra.</span>
-                                </span>
-                            </span>
-                            <strong class="modality-bullet-val text-teal">${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>
-                        </li>
-                        <li class="modality-bullet-item">
-                            <span class="modality-bullet-label">
-                                Economia em Grãos
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text">Quantidade total de sacas/libras economizadas graças aos benefícios de Cashback e Incentivo de prazo.</span>
-                                </span>
-                            </span>
-                            <strong class="modality-bullet-val text-teal">+${formatNumber(m.volEconomia, 0)} ${m.unitAbbr} economizados</strong>
-                        </li>` : ''}
-                        <li class="modality-bullet-item modality-guarantee-item">
-                            <span class="modality-bullet-label">
-                                Garantias Exigidas
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text"><strong>Garantias Exigidas:</strong> ${m.garantiaExplicacao}</span>
-                                </span>
-                            </span>
-                            <strong class="modality-guarantee-text">${m.garantia}</strong>
-                        </li>
-                    </ul>
-                    <div class="modality-card-total-box">
-                        <div class="modality-card-total-header">
-                            <span class="modality-card-total-label">Valor Total Equivalente</span>
-                            <span class="tooltip-container">
-                                <i class="fa-regular fa-circle-question"></i>
-                                <span class="tooltip-text"><strong>Fórmula:</strong> ${m.type === 'barter' ? '(Volume Final × Preço Grão FOB) + Frete Total' : 'Crédito × (1 - Desc. VPAN) × (1 + Taxa × Meses) × (1 - Incentivo)'}. Total de ${formatSelectedCurrency(m.valorTotal)}</span>
-                            </span>
+            const isFinancial = m.type !== 'barter';
+
+            if (isFinancial) {
+                card.innerHTML = `
+                    <div class="modality-card-header">
+                        <div class="modality-card-title-row" style="padding-right: 80px;">
+                            <span class="modality-card-title">${m.name}</span>
                         </div>
-                        <span class="modality-card-total-value">
-                            ${formatSelectedCurrency(m.valorTotal)}
-                            ${m.type === 'barter' ? `
-                            <span style="display:flex; align-items:center; gap:6px; margin-top:8px; padding:8px 12px; background:rgba(14,165,118,0.12); border:1px solid rgba(14,165,118,0.3); border-radius:8px;">
-                                <i class="fa-solid fa-wheat-awn" style="font-size:15px; color:var(--primary-medium);"></i>
-                                <span style="display:flex; flex-direction:column; line-height:1.3;">
-                                    <strong style="font-size:16px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>
-                                    <span style="font-size:11.5px; color:#0d9488; font-weight:600;">+${formatNumber(m.volEconomia, 0)} ${m.unitAbbr} de economia</span>
-                                </span>
-                                <span class="tooltip-container" style="margin-left:auto;">
-                                    <i class="fa-regular fa-circle-question" style="font-size:14px; color:var(--text-secondary); cursor:help;"></i>
-                                    <span class="tooltip-text" style="width:280px;">
-                                        <strong>Sacas Equivalentes — Fórmula:</strong><br>
-                                        1️⃣ <strong>Vol. Inicial:</strong> Crédito ÷ Preço Livre = ${formatNumber(m.volInicial, 0)} ${m.unitAbbr}<br>
-                                        2️⃣ <strong>Cashback em ${m.unitAbbr}:</strong> Cashback USD ÷ Preço Livre<br>
-                                        3️⃣ <strong>Incentivo em ${m.unitAbbr}:</strong> Incentivo USD ÷ Preço Livre<br>
-                                        4️⃣ <strong>Vol. Final = Vol. Inicial − (Cashback sc + Incentivo sc)</strong><br>
-                                        ✅ <em>Fórmula alinhada com a planilha Simulador_CashBack_Barter_2026</em><br><br>
-                                        <strong>Valor Total Equivalente — Fórmula:</strong><br>
-                                        (Vol. Final × Preço FOB Bruto) + Frete Total
+                        <div class="modality-card-checkbox-wrapper" onclick="event.stopPropagation();">
+                            <label class="modality-card-checkbox-label" title="Marcar para incluir no PDF compartilhado">
+                                <input type="checkbox" class="modality-pdf-checkbox" data-modality-id="${m.id}" ${isPdfChecked ? 'checked' : ''} onchange="toggleModalityPdfSelection('${m.id}', this.checked)">
+                                <span><i class="fa-solid fa-file-pdf"></i> PDF</span>
+                            </label>
+                        </div>
+                        <div class="modality-card-dates">Data de carência <strong>${carenciaStr}</strong> &nbsp;|&nbsp; Vencimento <strong>${vencimentoStr}</strong></div>
+                    </div>
+                    <div class="modality-card-body">
+                        <ul class="modality-bullet-list">
+                            <li class="modality-bullet-item">
+                                <span class="modality-bullet-label">
+                                    *Taxa mensal
+                                    <span class="tooltip-container">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                        <span class="tooltip-text"><strong>Taxa mensal:</strong> Taxa de juros efetiva mensal da operação (${m.jurosMensal.toFixed(2).replace('.', ',')}% a.m.).</span>
                                     </span>
                                 </span>
-                            </span>` : ''}
-
-                        </span>
+                                <strong class="modality-bullet-val">${m.jurosMensal.toFixed(2).replace('.', ',')} %</strong>
+                            </li>
+                            <li class="modality-bullet-item">
+                                <span class="modality-bullet-label">
+                                    *Incentivo
+                                    <span class="tooltip-container">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                        <span class="tooltip-text"><strong>Incentivo:</strong> ${m.incentivoExplicacao}</span>
+                                    </span>
+                                </span>
+                                <strong class="modality-bullet-val ${m.incentivoDisplay && m.incentivoDisplay !== 'Não aplicado' ? 'text-teal' : ''}">${m.incentivoDisplay}</strong>
+                            </li>
+                            <li class="modality-bullet-item">
+                                <span class="modality-bullet-label">
+                                    *Desconto VPAN
+                                    <span class="tooltip-container">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                        <span class="tooltip-text"><strong>Desconto VPAN:</strong> ${m.vpanExplicacao}</span>
+                                    </span>
+                                </span>
+                                <strong class="modality-bullet-val ${m.vpanDisplay && m.vpanDisplay !== 'Não aplicado' ? 'text-teal' : ''}">${m.vpanDisplay}</strong>
+                            </li>
+                            <li class="modality-bullet-item modality-guarantee-item">
+                                <span class="modality-bullet-label">
+                                    Garantias exigidas
+                                    <span class="tooltip-container">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                        <span class="tooltip-text"><strong>Garantias Exigidas:</strong> ${m.garantiaExplicacao}</span>
+                                    </span>
+                                </span>
+                                <strong class="modality-guarantee-text">${m.garantia}</strong>
+                            </li>
+                        </ul>
+                        <div class="modality-card-total-box">
+                            <div class="modality-card-total-header">
+                                <span class="modality-card-total-label">Valor Total</span>
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text"><strong>Fórmula:</strong> Crédito × (1 - Desc. VPAN) × (1 + Taxa × Meses) × (1 - Incentivo). Total de ${formatSelectedCurrency(m.valorTotal)}</span>
+                                </span>
+                            </div>
+                            <span class="modality-card-total-value">${formatSelectedCurrency(m.valorTotal)}</span>
+                        </div>
                     </div>
-                </div>
-                <div class="modality-card-footer">
-                    <div class="modality-cost-row modality-cost-total">
-                        <span>
-                            Custo Real Total
-                            <span class="tooltip-container">
-                                <i class="fa-regular fa-circle-question"></i>
-                                <span class="tooltip-text">
-                                    <strong>Fórmula do Custo Real Total:</strong><br>
-                                    • Valor Total: ${formatSelectedCurrency(m.valorTotal)}<br>
-                                    • Valor da Operação: ${formatSelectedCurrency(creditRaw)}<br>
-                                    • Custo Acumulado: ((${formatSelectedCurrency(m.valorTotal)} / ${formatSelectedCurrency(creditRaw)}) - 1) × 100 = <strong>${m.custoTotalPct.toFixed(2)}%</strong>
+                    <div class="modality-card-footer">
+                        <div class="modality-cost-row modality-cost-total">
+                            <span>
+                                CUSTO TOTAL
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text">
+                                        <strong>Fórmula do Custo Total:</strong><br>
+                                        • Valor Total: ${formatSelectedCurrency(m.valorTotal)}<br>
+                                        • Valor da Operação: ${formatSelectedCurrency(creditRaw)}<br>
+                                        • Custo Acumulado: ((${formatSelectedCurrency(m.valorTotal)} / ${formatSelectedCurrency(creditRaw)}) - 1) × 100 = <strong>${m.custoTotalPct.toFixed(2).replace('.', ',')}%</strong>
+                                    </span>
                                 </span>
                             </span>
-                        </span>
-                        <span>${m.custoTotalPct.toFixed(2)}%</span>
-                    </div>
-                    <div class="modality-cost-row modality-cost-operation">
-                        <span>
-                            Custo Real Operação
-                            <span class="tooltip-container" style="color: #ffffff;">
-                                <i class="fa-regular fa-circle-question" style="color: #ffffff;"></i>
-                                <span class="tooltip-text">
-                                    <strong>Fórmula do Custo Real da Operação:</strong><br>
-                                    • Custo Real Total (%): <strong>${m.custoTotalPct.toFixed(2)}%</strong><br>
-                                    • Prazo em Meses: ${prazo} dias / 30 = <strong>${nMesesCorridos.toFixed(2)} meses</strong><br>
-                                    • Taxa Efetiva da Operação: ${m.custoTotalPct.toFixed(2)}% / ${nMesesCorridos.toFixed(2)} = <strong>${m.custoAmPct.toFixed(3)}% a.m.</strong><br><br>
-                                    <em>Mede a taxa mensal efetiva ponderada real da operação.</em>
+                            <span>${m.custoTotalPct.toFixed(2).replace('.', ',')} %</span>
+                        </div>
+                        <div class="modality-cost-row modality-cost-operation">
+                            <span>
+                                CUSTO OPERAÇÃO (a.m)
+                                <span class="tooltip-container" style="color: #ffffff;">
+                                    <i class="fa-regular fa-circle-question" style="color: #ffffff;"></i>
+                                    <span class="tooltip-text">
+                                        <strong>Fórmula do Custo Real da Operação:</strong><br>
+                                        • Custo Total (%): <strong>${m.custoTotalPct.toFixed(2).replace('.', ',')}%</strong><br>
+                                        • Prazo em Meses: ${prazo} dias / 30 = <strong>${nMesesCorridos.toFixed(2)} meses</strong><br>
+                                        • Taxa Efetiva da Operação: ${m.custoTotalPct.toFixed(2).replace('.', ',')}% / ${nMesesCorridos.toFixed(2)} = <strong>${m.custoAmPct.toFixed(2).replace('.', ',')}% a.m.</strong><br><br>
+                                        <em>Mede a taxa mensal efetiva ponderada real da operação.</em>
+                                    </span>
                                 </span>
                             </span>
-                        </span>
-                        <span>${m.custoAmPct.toFixed(3)}% a.m.</span>
+                            <span>${m.custoAmPct.toFixed(2).replace('.', ',')} %</span>
+                        </div>
                     </div>
-                </div>
-            `;
+                `;
+            } else {
+                card.innerHTML = `
+                    <div class="modality-card-header">
+                        <div class="modality-card-title-row" style="padding-right: 80px;">
+                            <span class="modality-card-title">${m.name}</span>
+                        </div>
+                        <div class="modality-card-checkbox-wrapper" onclick="event.stopPropagation();">
+                            <label class="modality-card-checkbox-label" title="Marcar para incluir no PDF compartilhado">
+                                <input type="checkbox" class="modality-pdf-checkbox" data-modality-id="${m.id}" ${isPdfChecked ? 'checked' : ''} onchange="toggleModalityPdfSelection('${m.id}', this.checked)">
+                                <span><i class="fa-solid fa-file-pdf"></i> PDF</span>
+                            </label>
+                        </div>
+                        <div class="modality-card-dates">Data de carência <strong>${carenciaStr}</strong> &nbsp;|&nbsp; Vencimento <strong>${vencimentoStr}</strong></div>
+                    </div>
+                    <div class="modality-card-body">
+                        <ul class="modality-bullet-list">
+                            <li class="modality-bullet-item">
+                                <span class="modality-bullet-label">
+                                    Taxa mensal
+                                    <span class="tooltip-container">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                        <span class="tooltip-text"><strong>Taxa mensal:</strong> Taxa de juros efetiva mensal da operação (${m.jurosMensal.toFixed(2).replace('.', ',')}% a.m.).</span>
+                                    </span>
+                                </span>
+                                <strong class="modality-bullet-val">${m.jurosMensal.toFixed(2).replace('.', ',')} %</strong>
+                            </li>
+                            <li class="modality-bullet-item">
+                                <span class="modality-bullet-label">
+                                    ${m.incentivoLabel}
+                                    <span class="tooltip-container">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                        <span class="tooltip-text"><strong>${m.incentivoLabel}:</strong> ${m.incentivoExplicacao}</span>
+                                    </span>
+                                </span>
+                                <strong class="modality-bullet-val ${m.incentivoDisplay.includes('+') || m.incentivoDisplay.includes('-') ? 'text-teal' : ''}">${m.incentivoDisplay}</strong>
+                            </li>
+                            <li class="modality-bullet-item">
+                                <span class="modality-bullet-label">
+                                    Cashback
+                                    <span class="tooltip-container">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                        <span class="tooltip-text"><strong>Cashback:</strong> ${m.cashbackExplicacao}</span>
+                                    </span>
+                                </span>
+                                <strong class="modality-bullet-val ${m.cashbackDisplay.includes('+') ? 'text-teal' : ''}">${m.cashbackDisplay}</strong>
+                            </li>
+                            <li class="modality-bullet-item">
+                                <span class="modality-bullet-label">
+                                    Volume Final Equivalente
+                                    <span class="tooltip-container">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                        <span class="tooltip-text">Volume de troca físico final líquido de grãos a ser entregue na liquidação da safra.</span>
+                                    </span>
+                                </span>
+                                <strong class="modality-bullet-val text-teal">${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>
+                            </li>
+                            <li class="modality-bullet-item">
+                                <span class="modality-bullet-label">
+                                    Economia em Grãos
+                                    <span class="tooltip-container">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                        <span class="tooltip-text">Quantidade total de sacas/libras economizadas graças aos benefícios de Cashback e Incentivo de prazo.</span>
+                                    </span>
+                                </span>
+                                <strong class="modality-bullet-val text-teal">+${formatNumber(m.volEconomia, 0)} ${m.unitAbbr} economizados</strong>
+                            </li>
+                            <li class="modality-bullet-item modality-guarantee-item">
+                                <span class="modality-bullet-label">
+                                    Garantias Exigidas
+                                    <span class="tooltip-container">
+                                        <i class="fa-regular fa-circle-question"></i>
+                                        <span class="tooltip-text"><strong>Garantias Exigidas:</strong> ${m.garantiaExplicacao}</span>
+                                    </span>
+                                </span>
+                                <strong class="modality-guarantee-text">${m.garantia}</strong>
+                            </li>
+                        </ul>
+                        <div class="modality-card-total-box">
+                            <div class="modality-card-total-header">
+                                <span class="modality-card-total-label">Valor Total Equivalente</span>
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text"><strong>Fórmula:</strong> (Volume Final × Preço Grão FOB) + Frete Total. Total de ${formatSelectedCurrency(m.valorTotal)}</span>
+                                </span>
+                            </div>
+                            <span class="modality-card-total-value">
+                                ${formatSelectedCurrency(m.valorTotal)}
+                                <span style="display:flex; align-items:center; gap:6px; margin-top:8px; padding:8px 12px; background:rgba(14,165,118,0.12); border:1px solid rgba(14,165,118,0.3); border-radius:8px;">
+                                    <i class="fa-solid fa-wheat-awn" style="font-size:15px; color:var(--primary-medium);"></i>
+                                    <span style="display:flex; flex-direction:column; line-height:1.3;">
+                                        <strong style="font-size:16px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>
+                                        <span style="font-size:11.5px; color:#0d9488; font-weight:600;">+${formatNumber(m.volEconomia, 0)} ${m.unitAbbr} de economia</span>
+                                    </span>
+                                    <span class="tooltip-container" style="margin-left:auto;">
+                                        <i class="fa-regular fa-circle-question" style="font-size:14px; color:var(--text-secondary); cursor:help;"></i>
+                                        <span class="tooltip-text" style="width:280px;">
+                                            <strong>Sacas Equivalentes — Fórmula:</strong><br>
+                                            1️⃣ <strong>Vol. Inicial:</strong> Crédito ÷ Preço Livre = ${formatNumber(m.volInicial, 0)} ${m.unitAbbr}<br>
+                                            2️⃣ <strong>Cashback em ${m.unitAbbr}:</strong> Cashback USD ÷ Preço Livre<br>
+                                            3️⃣ <strong>Incentivo em ${m.unitAbbr}:</strong> Incentivo USD ÷ Preço Livre<br>
+                                            4️⃣ <strong>Vol. Final = Vol. Inicial − (Cashback sc + Incentivo sc)</strong><br>
+                                            ✅ <em>Fórmula alinhada com a planilha Simulador_CashBack_Barter_2026</em><br><br>
+                                            <strong>Valor Total Equivalente — Fórmula:</strong><br>
+                                            (Vol. Final × Preço FOB Bruto) + Frete Total
+                                        </span>
+                                    </span>
+                                </span>
+                            </span>
+                        </div>
+                    </div>
+                    <div class="modality-card-footer">
+                        <div class="modality-cost-row modality-cost-total">
+                            <span>
+                                Custo Real Total
+                                <span class="tooltip-container">
+                                    <i class="fa-regular fa-circle-question"></i>
+                                    <span class="tooltip-text">
+                                        <strong>Fórmula do Custo Real Total:</strong><br>
+                                        • Valor Total: ${formatSelectedCurrency(m.valorTotal)}<br>
+                                        • Valor da Operação: ${formatSelectedCurrency(creditRaw)}<br>
+                                        • Custo Acumulado: ((${formatSelectedCurrency(m.valorTotal)} / ${formatSelectedCurrency(creditRaw)}) - 1) × 100 = <strong>${m.custoTotalPct.toFixed(2)}%</strong>
+                                    </span>
+                                </span>
+                            </span>
+                            <span>${m.custoTotalPct.toFixed(2)}%</span>
+                        </div>
+                        <div class="modality-cost-row modality-cost-operation">
+                            <span>
+                                Custo Real Operação
+                                <span class="tooltip-container" style="color: #ffffff;">
+                                    <i class="fa-regular fa-circle-question" style="color: #ffffff;"></i>
+                                    <span class="tooltip-text">
+                                        <strong>Fórmula do Custo Real da Operação:</strong><br>
+                                        • Custo Real Total (%): <strong>${m.custoTotalPct.toFixed(2)}%</strong><br>
+                                        • Prazo em Meses: ${prazo} dias / 30 = <strong>${nMesesCorridos.toFixed(2)} meses</strong><br>
+                                        • Taxa Efetiva da Operação: ${m.custoTotalPct.toFixed(2)}% / ${nMesesCorridos.toFixed(2)} = <strong>${m.custoAmPct.toFixed(3)}% a.m.</strong><br><br>
+                                        <em>Mede a taxa mensal efetiva ponderada real da operação.</em>
+                                    </span>
+                                </span>
+                            </span>
+                            <span>${m.custoAmPct.toFixed(3)}% a.m.</span>
+                        </div>
+                    </div>
+                `;
+            }
             cardsContainer.appendChild(card);
         });
 
@@ -3031,28 +3105,28 @@ function deleteCampaign(id) {
     }
 }
 
-// Updates selector dropdown inside classic simulator page
+// Updates selector dropdown inside classic simulator page and Layout 2
 function updateCampaignSelectOptions() {
-    const select = document.getElementById('sim-campanha-select');
-    if (!select) return;
+    ['sim-campanha-select', 'v2-sim-campanha-select'].forEach(id => {
+        const select = document.getElementById(id);
+        if (!select) return;
 
-    // Save current selection value
-    const curVal = select.value;
+        const curVal = select.value;
+        select.innerHTML = '<option value="custom">Campanha Customizada (Manual)</option>';
 
-    // Re-fill with options
-    select.innerHTML = '<option value="custom">Campanha Customizada (Manual)</option>';
+        campaigns.forEach(camp => {
+            if (camp.status === 'Ativa') {
+                const opt = document.createElement('option');
+                opt.value = camp.id;
+                opt.textContent = `${camp.nome} (${formatDateBR(camp.desembolso)} - ${formatDateBR(camp.vencimento)})`;
+                select.appendChild(opt);
+            }
+        });
 
-    campaigns.forEach(camp => {
-        if (camp.status === 'Ativa') {
-            const opt = document.createElement('option');
-            opt.value = camp.id;
-            opt.textContent = `${camp.nome} (${formatDateBR(camp.desembolso)} - ${formatDateBR(camp.vencimento)})`;
-            select.appendChild(opt);
+        if (curVal && select.querySelector(`option[value="${curVal}"]`)) {
+            select.value = curVal;
         }
     });
-
-    // Re-apply value if exists
-    select.value = curVal;
 }
 
 function toggleModalityPdfSelection(modalityId, isChecked) {
@@ -3074,9 +3148,15 @@ function updateWsysMonthIndicator(vencimentoDateStr) {
 }
 window.updateWsysMonthIndicator = updateWsysMonthIndicator;
 
-// Refactored onCampanhaSelectChange to handle autofilling of parameters
+// Refactored onCampanhaSelectChange to handle autofilling of parameters and syncing across layouts
 function onCampanhaSelectChange(val) {
+    const s1 = document.getElementById('sim-campanha-select');
+    const s2 = document.getElementById('v2-sim-campanha-select');
+    if (s1 && s1.value !== val) s1.value = val;
+    if (s2 && s2.value !== val) s2.value = val;
+
     const commoditySelect = document.getElementById('sim-commodity');
+    const v2CommoditySelect = document.getElementById('v2-sim-commodity');
     const jurosInput = document.getElementById('sim-juros-anual');
     const campanhaValInput = document.getElementById('sim-campanha-val');
     const prazoInput = document.getElementById('sim-prazo');
@@ -3084,6 +3164,7 @@ function onCampanhaSelectChange(val) {
     if (val === 'custom') {
         // Unlock inputs
         if (commoditySelect) commoditySelect.disabled = false;
+        if (v2CommoditySelect) v2CommoditySelect.disabled = false;
         if (jurosInput) jurosInput.disabled = false;
         if (campanhaValInput) campanhaValInput.disabled = false;
         updateWsysMonthIndicator(null);
@@ -3109,11 +3190,17 @@ function onCampanhaSelectChange(val) {
     }
 
     if (barterTax) {
+        const prodAgricola = barterTax.produtoAgricola || 'Soja';
         if (commoditySelect) {
-            commoditySelect.value = barterTax.produtoAgricola || 'Soja';
+            commoditySelect.value = prodAgricola;
             commoditySelect.disabled = true;
-            onCulturaChange(barterTax.produtoAgricola || 'Soja');
         }
+        if (v2CommoditySelect) {
+            v2CommoditySelect.value = prodAgricola;
+            v2CommoditySelect.disabled = true;
+        }
+        onCulturaChange(prodAgricola);
+
         if (jurosInput) {
             // Annual interest rate = monthly rate * 12
             jurosInput.value = (barterTax.jurosMensais * 12).toFixed(2);
@@ -3126,6 +3213,7 @@ function onCampanhaSelectChange(val) {
     } else {
         // No barter tax found, unlock
         if (commoditySelect) commoditySelect.disabled = false;
+        if (v2CommoditySelect) v2CommoditySelect.disabled = false;
         if (jurosInput) jurosInput.disabled = false;
         if (campanhaValInput) campanhaValInput.disabled = false;
     }
