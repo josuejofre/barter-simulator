@@ -127,7 +127,7 @@ window.addEventListener('DOMContentLoaded', () => {
     setupMasks();
     initTradingViewWidget('Soja');
     fetchLiveQuotes();
-    showPage('assistente'); // Active by default matching the screenshot
+    showPage('simulador-v2'); // Simulador page is the default
     startNewChat(); // Initialize default chat welcome state
     initWsysPlazas(); // Initialize WSys database
     initEstadoSelect(); // Initialize Estado and Praça selects
@@ -173,9 +173,7 @@ function showPage(pageId) {
 
     // Hide all pages
     if (assistPage) assistPage.style.display = 'none';
-    if (simPage) simPage.style.display = 'none';
     if (simV2Page) simV2Page.style.display = 'none';
-    if (simCreativePage) simCreativePage.style.display = 'none';
     if (rulesPage) rulesPage.style.display = 'none';
     if (campaignsPage) campaignsPage.style.display = 'none';
     if (pracasPage) pracasPage.style.display = 'none';
@@ -183,9 +181,7 @@ function showPage(pageId) {
 
     // Remove active class from links
     if (assistLink) assistLink.classList.remove('active');
-    if (simLink) simLink.classList.remove('active');
     if (simV2Link) simV2Link.classList.remove('active');
-    if (simCreativeLink) simCreativeLink.classList.remove('active');
     if (rulesLink) rulesLink.classList.remove('active');
     if (campaignsLink) campaignsLink.classList.remove('active');
     if (pracasLink) pracasLink.classList.remove('active');
@@ -194,19 +190,10 @@ function showPage(pageId) {
     if (pageId === 'assistente') {
         if (assistPage) assistPage.style.display = 'grid';
         if (assistLink) assistLink.classList.add('active');
-    } else if (pageId === 'simulador') {
-        if (simPage) simPage.style.display = 'grid';
-        if (simLink) simLink.classList.add('active');
-        const commodity = document.getElementById('sim-commodity').value;
-        initTradingViewWidget(commodity);
-    } else if (pageId === 'simulador-v2') {
+    } else if (pageId === 'simulador-v2' || pageId === 'simulador') {
         if (simV2Page) simV2Page.style.display = 'flex';
         if (simV2Link) simV2Link.classList.add('active');
         if (window.hasSimulated) calculateSimulation();
-    } else if (pageId === 'simulador-criativo') {
-        if (simCreativePage) simCreativePage.style.display = 'flex';
-        if (simCreativeLink) simCreativeLink.classList.add('active');
-        calculateSimulation();
     } else if (pageId === 'regras') {
         if (rulesPage) rulesPage.style.display = 'block';
         if (rulesLink) rulesLink.classList.add('active');
@@ -2508,7 +2495,7 @@ function openSimulationInForm(index) {
     const asfaltoSuffixEl = document.getElementById('sim-frete-asfalto-suffix');
     if (asfaltoSuffixEl) asfaltoSuffixEl.textContent = d.currency === 'BRL' ? 'R$/KM' : 'USD/KM';
 
-    showPage('simulador');
+    showPage('simulador-v2');
     hasSimulated = true;
     calculateSimulation();
 }
