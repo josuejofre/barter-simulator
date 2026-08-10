@@ -2413,6 +2413,77 @@ function downloadSimulationPDFFromIndex(index) {
 // Default Campaigns Array populated to match the provided screens
 let campaigns = [
     {
+        id: 0,
+        nome: "Planilha 2026 (216 dias)",
+        titulo: "Planilha Barter 2026 (Carência 01/10/2025 - 05/05/2026)",
+        status: "Ativa",
+        desembolso: "2025-10-01",
+        vencimento: "2026-05-05",
+        visivelRTV: true,
+        taxas: [
+            {
+                produtoFinanceiro: "Barter Nutrade",
+                produtoAgricola: "Soja",
+                moeda: "USD",
+                jurosMensais: 1.20,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 4.50,
+                desconto: 0.00,
+                inicio: "2025-10-01",
+                fim: "2026-05-05"
+            },
+            {
+                produtoFinanceiro: "Barter Outras Tradings",
+                produtoAgricola: "Soja",
+                moeda: "USD",
+                jurosMensais: 1.20,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 3.00,
+                desconto: 0.00,
+                inicio: "2025-10-01",
+                fim: "2026-05-05"
+            },
+            {
+                produtoFinanceiro: "Syde",
+                produtoAgricola: "Soja",
+                moeda: "USD",
+                jurosMensais: 1.85,
+                tipoJuros: "Composto",
+                contagemDias: "Dias úteis",
+                incentivo: 0.00,
+                desconto: 4.00,
+                inicio: "2025-10-01",
+                fim: "2026-05-05"
+            },
+            {
+                produtoFinanceiro: "Fiso",
+                produtoAgricola: "Soja",
+                moeda: "USD",
+                jurosMensais: 1.85,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 1.00,
+                desconto: 0.00,
+                inicio: "2025-10-01",
+                fim: "2026-05-05"
+            },
+            {
+                produtoFinanceiro: "Syngenta",
+                produtoAgricola: "Soja",
+                moeda: "USD",
+                jurosMensais: 1.85,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 0.00,
+                desconto: 0.00,
+                inicio: "2025-10-01",
+                fim: "2026-05-05"
+            }
+        ]
+    },
+    {
         id: 1,
         nome: "Verão",
         titulo: "Verão",
