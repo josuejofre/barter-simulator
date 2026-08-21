@@ -25,6 +25,44 @@ graph TD
 
 ---
 
+## ⚡ Fórmula Simplificada do Barter (Passo a Passo)
+
+A mecânica de cálculo da operação de Barter é compreendida em 8 passos simples e sequenciais:
+
+1. **Preço Líquido da Saca:**
+   $$\text{Preço Bruto da Soja} - \text{Impostos da Região} = \text{Preço Líquido da Saca}$$
+   *(Ex: $\text{R\$\ } 120{,}00 - \text{R\$\ } 2{,}00 = \text{R\$\ } 118{,}00/\text{sc}$)*
+
+2. **Custo do Frete Logístico:**
+   $$(\text{Km Asfalto} \times \text{Custo/Km}) + (\text{Km Chão} \times \text{Custo/Km}) = \text{Frete Total}$$
+   *(Ex: $(80 \times \text{R\$\ } 8{,}00) + (20 \times \text{R\$\ } 15{,}00) = \text{R\$\ } 940{,}00$)*
+
+3. **Quantidade Inicial de Sacas:**
+   $$\text{Valor do Crédito dos Insumos} \div \text{Preço Líquido da Saca} = \text{Sacas Iniciais}$$
+   *(Ex: $\text{R\$\ } 1.000.000{,}00 \div \text{R\$\ } 118{,}00 = 8.475\text{ sacas}$)*
+
+4. **Bônus de Incentivo de Prazo (R$):**
+   $$\text{Valor Presente TP} \times (\text{Dias de Prazo} \div 30 \times 0{,}5\%) = \text{Ganho de Incentivo (R\$)}$$
+   *(Ex: $\text{R\$\ } 900.000{,}00 \times 3{,}5\% = \text{R\$\ } 31.500{,}00$)*
+
+5. **Bônus de Cashback da Campanha (R$):**
+   $$\text{Valor do Crédito} \times \%\text{ de Cashback} = \text{Ganho de Cashback (R\$)}$$
+   *(Ex: $\text{R\$\ } 1.000.000{,}00 \times 4{,}5\% = \text{R\$\ } 45.000{,}00$)*
+
+6. **Sacas Economizadas (Desconto em Grãos):**
+   $$(\text{Ganho de Incentivo} + \text{Ganho de Cashback}) \div \text{Preço Líquido da Saca} = \text{Sacas Economizadas}$$
+   *(Ex: $(\text{R\$\ } 31.500 + \text{R\$\ } 45.000) \div \text{R\$\ } 118{,}00 = 648\text{ sacas economizadas}$)*
+
+7. **Volume Final a Entregar:**
+   $$\text{Sacas Iniciais} - \text{Sacas Economizadas} = \text{Sacas Finais a Entregar}$$
+   *(Ex: $8.475 - 648 = 7.827\text{ sacas}$)*
+
+8. **Valor Total e Custo da Operação:**
+   $$(\text{Sacas Finais} \times \text{Preço Bruto da Soja}) + \text{Frete Total} = \text{Valor Final a Prazo}$$
+   *(Ex: $(7.827 \times \text{R\$\ } 120{,}00) + \text{R\$\ } 940{,}00 = \text{R\$\ } 940.180{,}00$)*
+
+---
+
 ## 2. Seleção de Moeda (Real R$ vs. Dólar USD)
 
 O simulador permite definir a moeda padrão da operação. O sistema converte automaticamente as entradas usando a **Taxa Cambial Futura (BRL/USD)** configurada:
