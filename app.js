@@ -292,7 +292,6 @@ function initDefaultQuotes() {
         statusEl.innerHTML = `<span class="text-green"><i class="fa-solid fa-circle-check"></i> Cotações WSys Futuras aplicadas</span>`;
     }
     calculateSimulation();
-}lculateSimulation();
 }
 
 // When commodity changes in unified mode
@@ -304,7 +303,6 @@ function onCulturaChange(value) {
             card.style.display = value ? 'block' : 'none';
         }
     });
-
 
     if (!value) {
         // No commodity selected — clear barter-specific labels and recalculate
@@ -324,22 +322,26 @@ function onCulturaChange(value) {
     const descLabelEl = document.getElementById('sim-descontos-label');
     if (descLabelEl) descLabelEl.textContent = isSoy ? 'Ativo (Senar + Fethab)' : 'Ativo (Senar + Fial)';
 
-    const cambio = parseFloat(document.getElementById('sim-cambio').value) || 1.0;
-    const basePriceUSD = isSoy ? currentQuotes.soybeans : currentQuotes.cotton;
+    const quoteObj = isSoy ? currentQuotes.soybeans : currentQuotes.cotton;
+    const basePrice = typeof quoteObj === 'object' ? quoteObj[selectedCurrency] : quoteObj;
 
     // Fill commodity price input
     const priceInput = document.getElementById('sim-preco-bruto');
-    if (selectedCurrency === 'BRL') {
-        priceInput.value = (basePriceUSD * cambio).toFixed(2);
-    } else {
-        priceInput.value = basePriceUSD.toFixed(2);
+    if (priceInput) {
+        priceInput.value = basePrice.toFixed(2);
     }
 
     // Set typical default days
-    document.getElementById('sim-prazo').value = isSoy ? 216 : 249;
+    const prazoEl = document.getElementById('sim-prazo');
+    if (prazoEl && (!prazoEl.value || prazoEl.value === '0')) {
+        prazoEl.value = isSoy ? 216 : 249;
+    }
 
     // Set typical campaign rates:
-    document.getElementById('sim-campanha-val').value = isSoy ? 4.50 : 4.50;
+    const campValEl = document.getElementById('sim-campanha-val');
+    if (campValEl && (!campValEl.value || campValEl.value === '0')) {
+        campValEl.value = isSoy ? 4.50 : 4.50;
+    }
 
     // Update TradingView widget symbol
     initTradingViewWidget(value);
