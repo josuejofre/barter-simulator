@@ -23,11 +23,14 @@ Este documento centraliza as funcionalidades, melhorias comerciais e integraçõ
 
 ---
 
-### 3. 🏢 Comparativo Segmentado: Nutrade vs. Trade ABC (Outras Tradings)
-- **Origem**: Planilha `SIMULADOR CAMPANHA VD RETA FINAL 15.06.2026.xlsx`.
-- **Descrição**: Apresentar a comparação explícita entre a estrutura própria (**Nutrade**) e os parceiros/concorrentes de mercado (**Trade ABC / Outras Tradings**).
-  - **Nutrade**: Taxas de juros preferenciais (`0,7% a.m. USD` / `1,45% a.m. BRL`) e Cashback de `4,0% a 5,0%`.
-  - **Trade ABC**: Taxas de juros de mercado e Cashback reduzido (`2,0% a 3,0%`).
+### 3. 🏢 Comparativo com Outras Tradings (Entrada Manual de Preço pelo Usuário)
+- **Origem / Decisão 21/08**: Removido da simulação ativa e mantido em backlog.
+- **Motivação**: Como não dispomos da cotação e taxas praticadas em tempo real pelas outras tradings concorrentes, estimar valores arbitrários pode distorcer a realidade comercial.
+- **Solução Futura**: Criar um toggle ou aba "Comparar com Outra Trading", permitindo que o usuário informe manualmente:
+  - Nome da trading concorrente;
+  - Preço da saca ofertado pela trading concorrente (R$ ou USD);
+  - Taxa de juros / desconto de prazo praticado pela concorrente;
+  - Percentual de valorização / cashback ofertado.
 
 ---
 

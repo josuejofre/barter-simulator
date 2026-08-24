@@ -27,142 +27,102 @@ graph TD
 
 ## ⚡ Fórmula Simplificada do Barter (Passo a Passo)
 
-A mecânica de cálculo da operação de Barter é compreendida em 8 passos simples e sequenciais:
+## ⚡ Fórmula Simplificada do Barter e Devolução Financeira (Passo a Passo)
+
+A mecânica de cálculo da operação de Barter com Devolução de Cashback financeiro é compreendida nos seguintes passos:
 
 1. **Preço Líquido da Saca:**
-   $$\text{Preço Bruto da Soja} - \text{Impostos da Região} = \text{Preço Líquido da Saca}$$
-   *(Ex: $\text{R\$\ } 120{,}00 - \text{R\$\ } 2{,}00 = \text{R\$\ } 118{,}00/\text{sc}$)*
+   $$\text{Preço Bruto da Soja} - \text{Impostos da Região (Funrural + Taxas Estaduais)} = \text{Preço Líquido da Saca}$$
+   *(Ex: $\text{R\$\ } 120{,}00 - (\text{R\$\ } 120{,}00 \times 1{,}63\% + \text{R\$\ } 3{,}09) = \text{R\$\ } 114{,}95/\text{sc}$)*
 
 2. **Custo do Frete Logístico:**
    $$(\text{Km Asfalto} \times \text{Custo/Km}) + (\text{Km Chão} \times \text{Custo/Km}) = \text{Frete Total}$$
    *(Ex: $(80 \times \text{R\$\ } 8{,}00) + (20 \times \text{R\$\ } 15{,}00) = \text{R\$\ } 940{,}00$)*
 
-3. **Quantidade Inicial de Sacas:**
-   $$\text{Valor do Crédito dos Insumos} \div \text{Preço Líquido da Saca} = \text{Sacas Iniciais}$$
-   *(Ex: $\text{R\$\ } 1.000.000{,}00 \div \text{R\$\ } 118{,}00 = 8.475\text{ sacas}$)*
+3. **Quantidade de Sacas Contratuais a Entregar:**
+   $$\text{Valor do Crédito dos Insumos} \div \text{Preço Líquido da Saca} = \text{Sacas a Entregar}$$
+   *(Ex: $\text{R\$\ } 1.000.000{,}00 \div \text{R\$\ } 114{,}95 = 8.699\text{ sacas}$)*
+   *Nota Operacional (Ata 21/08): O volume físico de grãos a entregar não é reduzido na CPR, pois o produtor liquida a totalidade dos insumos com grãos.*
 
-4. **Bônus de Incentivo de Prazo (R$):**
-   $$\text{Valor Presente TP} \times (\text{Dias de Prazo} \div 30 \times 0{,}5\%) = \text{Ganho de Incentivo (R\$)}$$
-   *(Ex: $\text{R\$\ } 900.000{,}00 \times 3{,}5\% = \text{R\$\ } 31.500{,}00$)*
+4. **Devolução Financeira de Cashback da Campanha (R$ ou USD):**
+   $$\text{Valor do Crédito} \times \%\text{ de Cashback} = \text{Devolução Financeira (R\$)}$$
+   *(Ex: $\text{R\$\ } 1.000.000{,}00 \times 4{,}5\% = \mathbf{R\$\ 45.000{,}00\text{ devolvidos ao produtor}}$)*
 
-5. **Bônus de Cashback da Campanha (R$):**
-   $$\text{Valor do Crédito} \times \%\text{ de Cashback} = \text{Ganho de Cashback (R\$)}$$
-   *(Ex: $\text{R\$\ } 1.000.000{,}00 \times 4{,}5\% = \text{R\$\ } 45.000{,}00$)*
+5. **Incentivo de Prazo Barter (R$ ou USD):**
+   $$\text{Valor Presente TP} \times (\text{Dias de Prazo} \div 30 \times 0{,}5\%) = \text{Incentivo de Prazo (R\$)}$$
+   *(Ex: $\text{R\$\ } 920.471{,}28 \times 3{,}6\% = \mathbf{R\$\ 33.136{,}97}$)*
 
-6. **Sacas Economizadas (Desconto em Grãos):**
-   $$(\text{Ganho de Incentivo} + \text{Ganho de Cashback}) \div \text{Preço Líquido da Saca} = \text{Sacas Economizadas}$$
-   *(Ex: $(\text{R\$\ } 31.500 + \text{R\$\ } 45.000) \div \text{R\$\ } 118{,}00 = 648\text{ sacas economizadas}$)*
+6. **Benefício Total Devolvido ao Produtor:**
+   $$\text{Devolução Cashback} + \text{Incentivo Barter} = \text{Retorno Financeiro Total}$$
+   *(Ex: $\text{R\$\ } 45.000{,}00 + \text{R\$\ } 33.136{,}97 = \mathbf{R\$\ 78.136{,}97}$)*
 
-7. **Volume Final a Entregar:**
-   $$\text{Sacas Iniciais} - \text{Sacas Economizadas} = \text{Sacas Finais a Entregar}$$
-   *(Ex: $8.475 - 648 = 7.827\text{ sacas}$)*
-
-8. **Valor Total e Custo da Operação:**
-   $$(\text{Sacas Finais} \times \text{Preço Bruto da Soja}) + \text{Frete Total} = \text{Valor Final a Prazo}$$
-   *(Ex: $(7.827 \times \text{R\$\ } 120{,}00) + \text{R\$\ } 940{,}00 = \text{R\$\ } 940.180{,}00$)*
+7. **Sacas Equivalentes à Devolução:**
+   $$\text{Retorno Financeiro Total} \div \text{Preço Líquido da Saca} = \text{Sacas Equivalentes Economizadas}$$
+   *(Ex: $\text{R\$\ } 78.136{,}97 \div \text{R\$\ } 114{,}95 = 680\text{ sacas equivalentes}$)*
 
 ---
 
 ## 2. Seleção de Moeda (Real R$ vs. Dólar USD)
 
-O simulador permite definir a moeda padrão da operação. O sistema converte automaticamente as entradas usando a **Taxa Cambial Futura (BRL/USD)** configurada:
-
-* **Ao selecionar Real (R$):**
-  - O crédito contratado é definido em BRL (ex: `R$ 1.000.000,00`).
-  - O preço da commodity e o valor de frete por KM são digitados em BRL.
-  - Para o cálculo matemático (que usa a base estruturada em USD da planilha), convertemos:
-    $$Credito\_(USD) = \frac{Credito\_(BRL)}{C\hat{a}mbio}$$
-    $$Pre\c{c}o\_Commodity\_(USD) = \frac{Pre\c{c}o\_Commodity\_(BRL)}{C\hat{a}mbio}$$
-  - Após os cálculos, os resultados monetários da tabela de comparação e dos cartões de destaque são multiplicados pelo câmbio e exibidos em Real (R$).
-* **Ao selecionar Dólar (USD):**
-  - Todas as entradas e saídas permanecem em USD ($).
-
-*Nota: Os volumes físicos de commodities (sacas ou libras) não se alteram pela moeda selecionada, garantindo a integridade dos volumes da planilha.*
+O simulador permite definir a moeda padrão da operação:
+* **Ao selecionar Real (R$):** Todas as entradas e saídas monetárias operam em BRL (R$).
+* **Ao selecionar Dólar (USD):** Todas as entradas e saídas monetárias operam em USD ($).
 
 ---
 
-## 3. Detalhamento das Regras de Impostos Regionais (Praças)
+## 3. Matriz de Impostos Regionais (Praças - Planilha "Impostos 1")
 
-Para simular o desconto tributário, o sistema calcula a dedução com base na região/praça selecionada:
+Para cada estado e praça logística, o simulador calcula a dedução tributária combinando tributos federais e estaduais:
 
-* **Campo Novo do Parecis (MT)**:
-  $$Imposto = (Pre\c{c}o\_Bruto \times 0,2\%) + 0,60\ / saca$$
-* **Sorriso (MT)**:
-  $$Imposto = (Pre\c{c}o\_Bruto \times 0,25\%) + 0,65\ / saca$$
-* **Querência (MT)**:
-  $$Imposto = (Pre\c{c}o\_Bruto \times 0,22\%) + 0,70\ / saca$$
-* **Rio Verde (GO)**:
-  $$Imposto = (Pre\c{c}o\_Bruto \times 0,15\%) + 0,40\ / saca$$
-* **Dourados (MS)**:
-  $$Imposto = (Pre\c{c}o\_Bruto \times 0,10\%) + 0,30\ / saca$$
-* **Cascavel (PR)**:
-  $$Imposto = 0.00\ (Isento\ de\ taxas\ de\ Barter)$$
+* **Funrural Federal:** $1,63\%$ sobre a comercialização bruta.
+* **Mato Grosso (MT):** Funrural ($1,63\%$) + FETHAB ($10\%$ UPF/MT) + FETHAB Adicional ($10\%$ UPF/MT) + IAGRO ($1,15\%$ UPF/MT).
+  - Com UPF|MT em $\text{R\$\ } 243,49/\text{ton} \rightarrow \text{R\$\ } 51,50/\text{ton}$ ($\approx \text{R\$\ } 3,09/\text{sc}$).
+* **Mato Grosso do Sul (MS):** Funrural ($1,63\%$) + FUNDEMS ($2,8\%$ UFERMS) + FUNDERSUL ($49,20\%$ UFERMS).
+  - Com UFERMS em $\text{R\$\ } 52,98/\text{ton} \rightarrow \text{R\$\ } 27,55/\text{ton}$ ($\approx \text{R\$\ } 1,65/\text{sc}$).
+* **Goiás (GO):** Funrural ($1,63\%$) + FUNDEINFRA ($1,65\%$ sobre a NF).
+* **Piauí (PI):** Funrural ($1,63\%$) + FDI ($1,20\%$ sobre a NF).
+* **Paraná (PR), Bahia (BA), Rondônia (RO), Maranhão (MA), Tocantins (TO), São Paulo (SP), Minas Gerais (MG), Rio Grande do Sul (RS):** Funrural ($1,63\%$).
 
 ---
 
 ## 4. Custo de Transporte (Frete)
 
-O custo logístico de buscar a commodity na propriedade e entregar na nossa base ou na do concorrente é deduzido do preço final do produto (Porteira Aberta):
-
-1. **Custo de Frete Total:**
-   $$Custo\_Frete\_Total = Dist\hat{a}ncia\_Base\_(KM) \times Valor\_KM$$
-2. **Custo de Frete Unitário:**
-   $$Frete\_Unitario = \frac{Custo\_Frete\_Total}{Volume\_Comercializado}$$
+O frete da fazenda até a base logística cadastrada no WSys é deduzido:
+$$\text{Custo de Frete Total} = (\text{Km Chão} \times \text{Tarifa Chão}) + (\text{Km Asfalto} \times \text{Tarifa Asfalto})$$
 
 ---
 
-## 5. Fórmulas de Simulação por Crédito
+## 5. Comparativo das 4 Modalidades Ativas de Crédito e Sacas Equivalentes
 
-Calcula a equivalência de troca física para amortizar um financiamento/crédito fixado a prazo (ex. **USD 1.000.000,00** ou **R$ 1.000.000,00**):
+O simulador compara 4 modalidades de crédito: **Barter (Nutrade)**, **Syde (FIDC)**, **Fiso (Bancário)** e **Syngenta (On-Balance)**.
 
-1. **Preço Pedido TP (Valor Presente):**
-   $$Juros\_Periodo = \frac{Dias}{360} \times Juros\_Anual\_(14,40\%)$$
-   $$Pre\c{c}o\_TP = \frac{Credito}{1 + Juros\_Periodo}$$
-   *Exemplo para USD 1.000.000,00 e 216 dias:* $\frac{1.000.000}{1 + 8,64\%} = \mathbf{USD\ 920.471,28}$
+### Sacas Equivalentes nas Modalidades Financeiras
+Para permitir a comparação direta com o Barter, cada modalidade financeira exibe a equivalência em sacas:
+$$\text{Sacas Equivalentes} = \frac{\text{Valor Total da Modalidade (R\$)}}{\text{Preço de Referência da Saca (R\$/sc)}}$$
 
-2. **Retorno Total do Produtor:**
-   Soma da valorização da campanha (4,5% sobre crédito) e do incentivo Barter (proporcional ao prazo sobre Preço TP).
-   $$Cashback = Credito \times 4,5\% = \mathbf{USD\ 45.000,00}$$
-   $$Incentivo\_Barter = Pre\c{c}o\_TP \times \left(\frac{Dias}{30} \times 0,5\%\right) = \mathbf{USD\ 33.136,97}$$
-   $$Total\_Retorno = 45.000 + 33.136,97 = \mathbf{USD\ 78.136,97}$$
+### Conceitos de Custo:
+1. **Custo Real Total (%):**
+   $$\text{Custo Real Total (\%)} = \left(\frac{\text{Valor Total} - \text{Crédito Demandado}}{\text{Crédito Demandado}}\right) \times 100$$
+2. **Custo Real da Operação (% a.m.):**
+   $$\text{Custo Real da Operação (\% a.m.)} = \frac{\text{Custo Real Total (\%)}}{\text{Prazo em Meses Corridos (dias / 30)}}$$
 
-3. **Preço Equivalente Final com Descontos e Frete:**
-   $$Pre\c{c}o\_Livre = Pre\c{c}o\_Bruto - Imposto\_Regi\tilde{a}o$$
-   $$Pre\c{c}o\_Equiv\_Final = Pre\c{c}o\_Livre + Cashback\_Unitario + Incentivo\_Unitario - Frete\_Unitario$$
-   *Exemplo Campo Novo (MT) na nossa estrutura:*
-   $$19,36 + 0,8712 (cb) + 0,6415 (inc) - 0,0019 (frete) = \mathbf{USD\ 20,8708\ / sc}$$
-
-4. **Volume de Troca Equivalente Final:**
-   $$Volume\_Troca\_Final = Volume\_Inicial - (Equival\hat{e}ncia\_Cashback + Equival\hat{e}ncia\_Incentivo)$$
-   *Exemplo:* $51.652,89 - (2.324,38 + 1.711,62) = \mathbf{47.616,89\ sacas}$
-   *Diferença para Outras Tradings (Volume Economizado):* $\mathbf{1.278,91\ sacas}$.
-
-5. **Benefício Financeiro Total da Estrutura (Barter Hub):**
-   Representa a economia em volume físico convertida em moeda (BRL/USD) com base no preço bruto de spot da commodity:
-   $$Beneficio\_Financeiro = Volume\_Economizado \times Pre\c{c}o\_Bruto$$
-   *Exemplo:* $1.278,91\ sacas \times USD\ 20,00 = \mathbf{USD\ 25.578,20}$
-
----
-
-## 6. Comparativo das 5 Modalidades de Crédito e Desconto VPAN
-
-O simulador apresenta o comparativo ordenado por benefício financeiro entre 5 modalidades de crédito: **Barter (Nutrade)**, **Barter (Outras Tradings)**, **FISO**, **Syngenta** e **Syde**.
-
-*Nota de Apresentação:* A opção de menor custo recebe um destaque visual de borda verde, porém sem o selo fixo "Melhor Opção", reconhecendo que a viabilidade técnica e financeira de cada modalidade depende das condições operacionais e garantias disponíveis de cada produtor.
-
-### Conceito de Desconto VPAN (Desconto à Vista)
-* **O que é o Desconto VPAN?** VPAN é a sigla para **Valor Presente À Vista** (Desconto à vista). Representa a dedução percentual concedida para liquidação antecipada/à vista sobre o valor bruto contratado da operação:
-  $$Valor\_Intermediario = Credito \times (1 - VPAN\%)$$
-  $$Total\_a\_Pagar\_Financeiro = Valor\_Intermediario \times (1 + Taxa\_Mensal \times MesesCalculo) \times (1 - Incentivo\%)$$
-* Na modalidade **Syde**, o simulador contabiliza o desconto VPAN à vista (ex: $4,0\%$ à vista), reduzindo o saldo base devedor antes da incidência dos juros.
-
-### Detalhamento das Modalidades e Garantias Exigidas
+### Detalhamento das 4 Modalidades Ativas:
 
 1. **Barter (Nutrade):**
-   - **Garantias Exigidas:** CPR Física e Seguro Agrícola.
-   - **Incentivos:** Cashback de campanha ($4,5\%$) + Incentivo Barter regressivo de prazo.
+   - **Garantias:** CPR Física e Seguro Agrícola.
+   - **Mecânica:** Entrega física de grãos com devolução financeira de Cashback ($4,5\%$) e Incentivo de prazo.
 
-2. **Barter (Outras Tradings):**
+2. **Syde:**
+   - **Garantias:** Nota promissória ou CPR financeira sem penhor.
+   - **Mecânica:** Desconto VPAN à vista de $-4,0\%$, juros compostos em dias úteis (/22).
+
+3. **FISO:**
+   - **Garantias:** Sem garantia patrimonial (cessão comercial a parceiro).
+   - **Mecânica:** Juros simples em dias corridos com rebate de incentivo comercial ($-3,0\%$).
+
+4. **Syngenta:**
+   - **Garantias:** Alinhadas diretamente com a mesa de crédito corporativa.
+   - **Mecânica:** Faturamento a prazo On-Balance sobre preço de tabela.
    - **Garantias Exigidas:** CPR Física e Seguro Agrícola.
    - **Incentivos:** Valorização comercial padrão de mercado concorrente.
 

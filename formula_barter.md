@@ -38,49 +38,39 @@ Este documento apresenta a fórmula matemática da simulação de Barter do **Si
 
 ---
 
-### 5. Bônus 2: Ganho de Cashback da Campanha (R$)
-> **Valor do Crédito × % de Cashback da Nutrade = Ganho de Cashback (R$)**
-* **O que faz:** Devolve parte do valor financiado na forma de abatimento direto em grãos.
+### 5. Bônus 2: Ganho de Cashback da Campanha (Devolução Financeira R$ / USD)
+> **Valor do Crédito × % de Cashback da Nutrade = Devolução Financeira de Cashback (R$)**
+* **O que faz:** Devolve o valor financeiro do cashback diretamente ao produtor (em R$ ou USD).
 * **Exemplo:** Com campanha de $4{,}5\%$: 
-  $$\text{R\$\ } 1.000.000{,}00 \times 4{,}5\% = \mathbf{\text{R\$\ } 45.000{,}00}$$
+  $$\text{R\$\ } 1.000.000{,}00 \times 4{,}5\% = \mathbf{\text{R\$\ } 45.000{,}00\text{ devolvidos}}$$
 
 ---
 
-### 6. Sacas Economizadas (Desconto em Grãos)
-> **(Ganho de Incentivo + Ganho de Cashback) ÷ Preço Líquido da Saca = Sacas Economizadas**
-* **O que faz:** Converte o total de bonificações financeiras (em R$) diretamente em sacas de grãos a menos que o produtor precisa entregar.
+### 6. Sacas Equivalentes à Devolução e Retorno Total
+> **(Ganho de Incentivo + Devolução de Cashback) ÷ Preço Líquido da Saca = Sacas Equivalentes Economizadas**
+* **O que faz:** Converte o total de bonificações financeiras devolvidas ao produtor em sacas de grãos equivalentes para medir o ganho de eficiência.
 * **Exemplo:** 
-  $$(\text{R\$\ } 31.500{,}00 + \text{R\$\ } 45.000{,}00) \div \text{R\$\ } 118{,}00 = \mathbf{648\text{ sacas economizadas}}$$
+  $$(\text{R\$\ } 31.500{,}00 + \text{R\$\ } 45.000{,}00) \div \text{R\$\ } 118{,}00 = \mathbf{648\text{ sacas equivalentes economizadas}}$$
 
 ---
 
-### 7. Volume Final a Entregar
-> **Sacas Iniciais − Sacas Economizadas = Sacas Finais a Entregar**
-* **O que faz:** Representa o volume físico real que o produtor entrega na liquidação da operação.
+### 7. Volume Contratual de Sacas a Entregar
+> **Valor do Crédito ÷ Preço Líquido da Saca = Volume Contratual a Entregar**
+* **O que faz:** Representa o volume físico contratual fixado na CPR/operação para liquidação dos insumos.
 * **Exemplo:** 
-  $$8.475 - 648 = \mathbf{7.827\text{ sacas}}$$
+  $$\text{R\$\ } 1.000.000{,}00 \div \text{R\$\ } 118{,}00 = \mathbf{8.475\text{ sacas}}$$
 
 ---
 
 ### 8. Valor Total e Custo da Operação
-> **(Sacas Finais × Preço Bruto da Soja) + Frete Total = Valor Final a Prazo**
-* **O que faz:** Calcula o valor financeiro total que a produção entregue representa, incluindo a logística.
+> **(Sacas a Entregar × Preço Bruto da Soja) + Frete Total = Valor Final a Prazo**
+* **O que faz:** Calcula o valor financeiro total da produção física contratada, incluindo logística.
 * **Exemplo:** 
-  $$(7.827 \times \text{R\$\ } 120{,}00) + \text{R\$\ } 940{,}00 = \mathbf{\text{R\$\ } 940.180{,}00}$$
+  $$(8.475 \times \text{R\$\ } 120{,}00) + \text{R\$\ } 940{,}00 = \mathbf{\text{R\$\ } 1.017.940{,}00}$$
 
 ---
 
-## 🎯 Fórmula Geral em Uma Linha
+## 🎯 Sacas Equivalentes nas Modalidades Financeiras (Syde, Fiso, Syngenta)
 
-$$\text{Volume Final a Entregar (sc)} = \frac{\text{Crédito}}{\text{Preço Líquido}} - \left( \frac{\text{Incentivo de Prazo (R\$) + Cashback (R\$)}}{\text{Preço Líquido}} \right)$$
-
----
-
-## ⚖️ Diferença Comercial: Nutrade vs. Outras Tradings
-
-| Indicador | Nutrade (Nossa Estrutura) | Outras Tradings (Mercado) |
-| :--- | :--- | :--- |
-| **Cashback de Campanha** | **4,0% a 5,0%** | **2,0% a 3,0%** |
-| **Incentivo de Prazo** | **+0,5% a cada 30 dias** | **0,0% (Não aplicado)** |
-| **Distância de Frete** | **Distância Real** | **Distância Real + 30 km de asfalto** (armazém mais distante) |
-| **Preço Base do Grão** | **Preço Cheio FOB** | **Deságio médio de ~1,0%** |
+Para comparar com a modalidade Barter, calculamos a quantidade de sacas que o produtor precisaria vender para quitar cada meio de pagamento:
+$$\text{Sacas Equivalentes} = \frac{\text{Valor Total a Pagar da Modalidade (R\$)}}{\text{Preço da Saca (R\$/sc)}}$$

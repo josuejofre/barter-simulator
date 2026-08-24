@@ -9,17 +9,111 @@ let currentQuotes = {
     cotton: { BRL: 4.38, USD: 0.85 }       // Preço Futuro WSys por libra-peso (lp)
 };
 
-// WSys Praças Data Store
+// WSys Praças Data Store (Matriz Tributária e Logística - Planilha Impostos 1)
 let wsysPlazas = [
-    { estado: 'MT', nome: 'Campo Novo do Parecis', freteChao: 15.00, freteAsfalto: 8.00, impPct: 0.20, impFixo: 0.60 },
-    { estado: 'MT', nome: 'Sorriso', freteChao: 15.00, freteAsfalto: 8.00, impPct: 0.25, impFixo: 0.65 },
-    { estado: 'MT', nome: 'Querência', freteChao: 15.00, freteAsfalto: 8.00, impPct: 0.22, impFixo: 0.70 },
-    { estado: 'GO', nome: 'Rio Verde', freteChao: 15.00, freteAsfalto: 8.00, impPct: 0.15, impFixo: 0.40 },
-    { estado: 'MS', nome: 'Dourados', freteChao: 15.00, freteAsfalto: 8.00, impPct: 0.10, impFixo: 0.30 },
-    { estado: 'PR', nome: 'Cascavel', freteChao: 15.00, freteAsfalto: 8.00, impPct: 0.0, impFixo: 0.0 }
+    // MT - Funrural 1.63%, FETHAB/IAGRO (UPF MT 243.49 -> R$ 51.50/ton = R$ 3.09/saca)
+    { estado: 'MT', nome: 'Campo Novo do Parecis', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Sorriso', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Querência', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Rondonópolis', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Primavera do Leste', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Nova Mutum', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Sinop', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Lucas do Rio Verde', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Diamantino', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Sapezal', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+
+    // MS - Funrural 1.63%, FUNDEMS/FUNDERSUL (UFERMS 52.98 -> R$ 27.55/ton = R$ 1.65/saca)
+    { estado: 'MS', nome: 'Dourados', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
+    { estado: 'MS', nome: 'Maracaju', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
+    { estado: 'MS', nome: 'São Gabriel do Oeste', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
+    { estado: 'MS', nome: 'Chapadão do Sul', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
+    { estado: 'MS', nome: 'Sidrolândia', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
+    { estado: 'MS', nome: 'Ponta Porã', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
+
+    // GO - Funrural 1.63% + FUNDEINFRA 1.65% (sobre NF)
+    { estado: 'GO', nome: 'Rio Verde', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
+    { estado: 'GO', nome: 'Jataí', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
+    { estado: 'GO', nome: 'Cristalina', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
+    { estado: 'GO', nome: 'Montividiu', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
+    { estado: 'GO', nome: 'Mineiros', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
+
+    // PI - Funrural 1.63% + FDI 1.20% (sobre NF)
+    { estado: 'PI', nome: 'Bom Jesus', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.20, impFixo: 0.00, observacao: 'FDI (1,20% s/ NF) + Funrural' },
+    { estado: 'PI', nome: 'Uruçuí', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.20, impFixo: 0.00, observacao: 'FDI (1,20% s/ NF) + Funrural' },
+
+    // PR - Funrural 1.63%
+    { estado: 'PR', nome: 'Cascavel', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
+    { estado: 'PR', nome: 'Londrina', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
+    { estado: 'PR', nome: 'Maringá', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
+    { estado: 'PR', nome: 'Ponta Grossa', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
+    { estado: 'PR', nome: 'Toledo', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
+    { estado: 'PR', nome: 'Guarapuava', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
+
+    // BA - Funrural 1.63%
+    { estado: 'BA', nome: 'Luís Eduardo Magalhães', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'BA', nome: 'Barreiras', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'BA', nome: 'São Desidério', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+
+    // MA - Funrural 1.63%
+    { estado: 'MA', nome: 'Balsas', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'MA', nome: 'Tasso Fragoso', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+
+    // TO - Funrural 1.63%
+    { estado: 'TO', nome: 'Pedro Afonso', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'TO', nome: 'Porto Nacional', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'TO', nome: 'Gurupi', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+
+    // RO - Funrural 1.63%
+    { estado: 'RO', nome: 'Vilhena', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'RO', nome: 'Cerejeiras', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+
+    // MG - Funrural 1.63%
+    { estado: 'MG', nome: 'Unaí', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'MG', nome: 'Paracatu', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'MG', nome: 'Patos de Minas', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+
+    // SP - Funrural 1.63%
+    { estado: 'SP', nome: 'Assis', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'SP', nome: 'Itapeva', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+
+    // RS - Funrural 1.63%
+    { estado: 'RS', nome: 'Passo Fundo', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'RS', nome: 'Cruz Alta', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'RS', nome: 'Santa Maria', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' }
 ];
 
+let selectedSubcategoria = 'venda_direta_crop';
 let activeCampanhaValorizacaoOutras = 3.00;
+
+function onSubcategoriaChange(val) {
+    selectedSubcategoria = val;
+    calculateSimulation();
+}
+window.onSubcategoriaChange = onSubcategoriaChange;
+
+function resetFormToDefaults() {
+    if (document.getElementById('sim-credito')) {
+        document.getElementById('sim-credito').value = selectedCurrency === 'BRL' ? 'R$ 1.000.000,00' : '$ 1,000,000.00';
+    }
+    if (document.getElementById('v2-sim-credito')) {
+        document.getElementById('v2-sim-credito').value = selectedCurrency === 'BRL' ? 'R$ 1.000.000,00' : '$ 1,000,000.00';
+    }
+    if (document.getElementById('v2-sim-dist-chao')) document.getElementById('v2-sim-dist-chao').value = '0';
+    if (document.getElementById('v2-sim-dist-asfalto')) document.getElementById('v2-sim-dist-asfalto').value = '0';
+    if (document.getElementById('sim-dist-chao')) document.getElementById('sim-dist-chao').value = '0';
+    if (document.getElementById('sim-dist-asfalto')) document.getElementById('sim-dist-asfalto').value = '0';
+
+    window.hasSimulated = false;
+    hasSimulated = false;
+    const resWrapper = document.getElementById('v2-sim-results-wrapper');
+    if (resWrapper) resWrapper.style.display = 'none';
+    const legacyWrapper = document.getElementById('sim-results-wrapper');
+    if (legacyWrapper) legacyWrapper.style.display = 'none';
+    const placeholder = document.getElementById('sim-placeholder-card');
+    if (placeholder) placeholder.style.display = 'block';
+}
+window.resetFormToDefaults = resetFormToDefaults;
 
 // Lista de Feriados Nacionais (baseada na aba Feriados da planilha Simulador_outras_Modalidades.xlsx)
 const FERIADOS_NACIONAIS = [
@@ -433,74 +527,54 @@ function runSimulationMath(inputs) {
     const precoBarterEquivProposta = credLimit - totalRetornoProposta;
     const precoBarterEquivMarket = credLimit - totalRetornoMarket;
 
-    // Regional tax split
-    const plaza = wsysPlazas.find(p => p.nome === regiao || `${p.nome} (${p.estado})` === regiao);
+    // Regional tax split (Planilha Impostos 1)
+    const plaza = wsysPlazas.find(p => p.nome === regiao || `${p.nome} (${p.estado})` === regiao) || wsysPlazas[0];
     let fixedTaxProposta = 0;
     let pctTaxProposta = 0;
-    let fixedTaxMarket = 0;
-    let pctTaxMarket = 0;
 
     if (descontoAtivo) {
-        const impFixo = plaza ? plaza.impFixo : 0.60;
-        const impPct = plaza ? plaza.impPct : 0.20;
+        const impFixo = plaza && plaza.impFixo !== undefined ? plaza.impFixo : 3.09;
+        const funruralPct = plaza && plaza.funruralPct !== undefined ? plaza.funruralPct : 1.63;
+        const impNfPct = plaza && plaza.impNfPct !== undefined ? plaza.impNfPct : 0.0;
+        const totalPctTax = funruralPct + impNfPct;
+
         const fixFactor = currency === 'BRL' ? 1.0 : (1.0 / 5.15);
 
         fixedTaxProposta = impFixo * fixFactor;
-        pctTaxProposta = commBruto * (impPct / 100.0);
-        fixedTaxMarket = fixedTaxProposta;
-        pctTaxMarket = commBrutoMarket * (impPct / 100.0);
+        pctTaxProposta = commBruto * (totalPctTax / 100.0);
     }
     const taxDeductionProposta = fixedTaxProposta + pctTaxProposta;
-    const taxDeductionMarket = fixedTaxMarket + pctTaxMarket;
+    const commLivreProposta = Math.max(0.01, commBruto - taxDeductionProposta);
 
-    const commLivreProposta = commBruto - taxDeductionProposta;
-    const commLivreMarket = commBrutoMarket - taxDeductionMarket;
-
-    // Volume de Troca Físico Inicial rounded UP
+    // Volume de Troca Físico Contratual Inicial (Sacas necessárias para cobrir o crédito demandado)
     const volTrocaProposta = commLivreProposta > 0 ? Math.ceil(credLimit / commLivreProposta) : 0;
-    const volTrocaMarket = commLivreMarket > 0 ? Math.ceil(credLimit / commLivreMarket) : 0;
 
     // Custo de Transporte (Frete)
-    // Nossa Estrutura: Estrada de Chão + Estrada de Asfalto
-    // Outras Tradings (Competidor): Estrada de Chão + Estrada de Asfalto (+30km adicionais de asfalto)
     const freteTotalProposta = (distChao * freteChao) + (distAsfalto * freteAsfalto);
-    const freteTotalMarket = (distChao * freteChao) + ((distAsfalto + 30) * freteAsfalto);
-
-    // Freight unit cost derived from swap volume
     const freteUnitProposta = volTrocaProposta > 0 ? (freteTotalProposta / volTrocaProposta) : 0;
-    const freteUnitMarket = volTrocaMarket > 0 ? (freteTotalMarket / volTrocaMarket) : 0;
 
-    // Cashback equivalência em sacas/libras
+    // Cashback equivalência em sacas/libras (Benefício comercial devolvido financeiramente)
     const cashbackScProposta = commLivreProposta > 0 ? (cashbackProposta / commLivreProposta) : 0;
-    const cashbackScMarket = commLivreMarket > 0 ? (cashbackMarket / commLivreMarket) : 0;
 
     // Ganho de Valorização Unitária (Cashback)
     const valUnitCashbackProposta = volTrocaProposta > 0 ? (cashbackProposta / volTrocaProposta) : 0;
-    const valUnitCashbackMarket = volTrocaMarket > 0 ? (cashbackMarket / volTrocaMarket) : 0;
-
-    // Cessão de Crédito Parcial = Volume Inicial - Cashback sc
-    const cessaoProposta = volTrocaProposta - cashbackScProposta;
-    const cessaoMarket = volTrocaMarket - cashbackScMarket;
 
     // Incentivo equivalência em sacas/libras
     const incentivoScProposta = commLivreProposta > 0 ? (incentivoBarter / commLivreProposta) : 0;
-    const incentivoScMarket = 0;
+    const totalSacasEquivEconomia = cashbackScProposta + incentivoScProposta;
 
     // Ganho de Valorização Unitária (Incentivo)
     const valUnitIncentivoProposta = volTrocaProposta > 0 ? (incentivoBarter / volTrocaProposta) : 0;
-    const valUnitIncentivoMarket = 0;
 
-    // Preço Equivalente Final (Valorizado)
+    // Preço Equivalente Final (Valorizado com todos os incentivos comerciais e frete)
     const precoFinalProposta = commLivreProposta + valUnitCashbackProposta + valUnitIncentivoProposta - freteUnitProposta;
-    const precoFinalMarket = commLivreMarket + valUnitCashbackMarket + valUnitIncentivoMarket - freteUnitMarket;
 
-    // Volume de Troca Equivalente Final (Sacas/Libras)
-    const volFinalProposta = volTrocaProposta - (cashbackScProposta + incentivoScProposta);
-    const volFinalMarket = volTrocaMarket - (cashbackScMarket + incentivoScMarket);
+    // Volume Contratual Final a Entregar (Ata 21/08: O volume de sacas não é reduzido artificialmente no contrato da CPR)
+    // O cashback de 4.5% e o incentivo são creditados/devolvidos em moeda (R$ ou USD) ao produtor
+    const volFinalProposta = volTrocaProposta;
 
     // Valorização Real sobre Commodity Livre (%)
     const valRealProposta = commLivreProposta > 0 ? (precoFinalProposta / commLivreProposta - 1.0) : 0;
-    const valRealMarket = commLivreMarket > 0 ? (precoFinalMarket / commLivreMarket - 1.0) : 0;
 
     return {
         credLimitUSD: credLimit,
@@ -508,52 +582,30 @@ function runSimulationMath(inputs) {
         freteChaoUSD: freteChao,
         freteAsfaltoUSD: freteAsfalto,
         valPctMarket,
-        commBrutoUSDMarket: commBrutoMarket,
         jurosPeriodo,
         precoTpUSDProposta: precoTpProposta,
-        precoTpUSDMarket: precoTpMarket,
         precoVistaUSDProposta: precoVistaProposta,
-        precoVistaUSDMarket: precoVistaMarket,
         custoFinUSDProposta: custoFinProposta,
-        custoFinUSDMarket: custoFinMarket,
         incentivoBarterPct,
         incentivoBarterUsd: incentivoBarter,
         cashbackUsdProposta: cashbackProposta,
-        cashbackUsdMarket: cashbackMarket,
         totalRetornoUSDProposta: totalRetornoProposta,
-        totalRetornoUSDMarket: totalRetornoMarket,
         precoBarterEquivUSDProposta: precoBarterEquivProposta,
-        precoBarterEquivUSDMarket: precoBarterEquivMarket,
         taxDeductionUSDProposta: taxDeductionProposta,
-        taxDeductionUSDMarket: taxDeductionMarket,
         fixedTaxUSDProposta: fixedTaxProposta,
-        fixedTaxUSDMarket: fixedTaxMarket,
         pctTaxUSDProposta: pctTaxProposta,
-        pctTaxUSDMarket: pctTaxMarket,
         commLivreUSDProposta: commLivreProposta,
-        commLivreUSDMarket: commLivreMarket,
         volTrocaProposta,
-        volTrocaMarket,
         freteTotalUSDProposta: freteTotalProposta,
-        freteTotalUSDMarket: freteTotalMarket,
         freteUnitUSDProposta: freteUnitProposta,
-        freteUnitUSDMarket: freteUnitMarket,
         cashbackScProposta,
-        cashbackScMarket,
         valUnitCashbackUSDProposta: valUnitCashbackProposta,
-        valUnitCashbackUSDMarket: valUnitCashbackMarket,
-        cessaoProposta,
-        cessaoMarket,
         incentivoScProposta,
-        incentivoScMarket,
         valUnitIncentivoUSDProposta: valUnitIncentivoProposta,
-        valUnitIncentivoUSDMarket: valUnitIncentivoMarket,
         precoFinalUSDProposta: precoFinalProposta,
-        precoFinalUSDMarket: precoFinalMarket,
         volFinalProposta,
-        volFinalMarket,
+        totalSacasEquivEconomia,
         valRealProposta,
-        valRealMarket,
         unitSymbol
     };
 }
@@ -814,7 +866,11 @@ function calculateSimulation() {
     let carenciaStr = campObj && campObj.desembolso ? formatDateBR(campObj.desembolso) : '01/10/2025';
     let vencimentoStr = campObj && campObj.vencimento ? formatDateBR(campObj.vencimento) : '05/05/2026';
 
-    // List all 5 modalities to show and sort (Barter Nutrade, Barter Outras Tradings, FISO, Syngenta, Syde)
+    // Reference commodity price for Sacas Equivalentes
+    const refPrecoSaca = commBrutoRaw > 0 ? commBrutoRaw : (currentQuotes.soybeans[selectedCurrency] || 103.00);
+    const unitSymbol = res ? res.unitSymbol : (commodity === 'Soja' ? 'sc' : 'lp');
+
+    // List 4 active modalities to show and sort (Barter Nutrade, FISO, Syngenta, Syde)
     const modalities = [
         {
             id: 'barter_nutrade',
@@ -824,51 +880,27 @@ function calculateSimulation() {
             jurosPeriodo: jurosPeriodoBarter,
             jurosMensal: jurosAnual / 12,
             prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
-            prazoExplicacao: `Prazo calculado de ${prazo} dias decorrido entre o desembolso e o vencimento da safra 2026.`,
+            prazoExplicacao: `Prazo calculado de ${prazo} dias decorrido entre o desembolso e o vencimento da safra.`,
             vpanDisplay: '0,00%',
             vpanExplicacao: 'Desconto à vista (VPAN) não é aplicável na modalidade Barter, pois o benefício comercial ocorre via Cashback de campanha e Incentivo de prazo.',
             incentivoLabel: 'Incentivo Barter',
             incentivoDisplay: res ? `+${(res.incentivoBarterPct * 100).toFixed(2)}%` : '0,00%',
-            incentivoExplicacao: res ? `Incentivo de prazo de +${(res.incentivoBarterPct * 100).toFixed(2)}% calculado sobre o Preço TP (Valor Presente) com base na carência.` : 'Sem incentivo.',
+            incentivoExplicacao: res ? `Incentivo de prazo de +${(res.incentivoBarterPct * 100).toFixed(2)}% (${formatSelectedCurrency(res.incentivoBarterUsd)}) calculado sobre o Preço TP.` : 'Sem incentivo.',
             cashbackDisplay: `+${valPctProposta.toFixed(2)}%`,
-            cashbackExplicacao: `Cashback de campanha comercial Nutrade de +${valPctProposta.toFixed(2)}% aplicado sobre o valor bruto da operação.`,
+            cashbackExplicacao: `Cashback de campanha comercial Nutrade de +${valPctProposta.toFixed(2)}% (${formatSelectedCurrency(res ? res.cashbackUsdProposta : 0)}) devolvido financeiramente ao produtor.`,
             garantia: 'CPR Física e Seguro Agrícola',
             garantiaExplicacao: 'Garantia vinculada à CPR Física da produção e seguro agrícola com a Nutrade.',
             volInicial: res ? res.volTrocaProposta : 0,
             volFinal: res ? res.volFinalProposta : 0,
-            volEconomia: res ? (res.volFinalMarket - res.volFinalProposta) : 0,
-            unitAbbr: res ? res.unitSymbol : 'sc',
+            volEconomia: res ? res.totalSacasEquivEconomia : 0,
+            cashbackFinanceiro: res ? res.cashbackUsdProposta : 0,
+            incentivoFinanceiro: res ? res.incentivoBarterUsd : 0,
+            totalRetorno: res ? res.totalRetornoUSDProposta : 0,
+            unitAbbr: unitSymbol,
             custoTotal: custoTotalBarter,
             custoTotalPct: custoTotalPctBarter,
             custoAmPct: custoAmPctBarter,
             valorTotal: totalBarter
-        },
-        {
-            id: 'barter_market',
-            name: 'Barter (Outras Tradings)',
-            type: 'barter',
-            jurosAnual: jurosAnual,
-            jurosPeriodo: jurosPeriodoBarter,
-            jurosMensal: jurosAnual / 12,
-            prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
-            prazoExplicacao: `Prazo calculado de ${prazo} dias corridos praticado pelas tradings de mercado.`,
-            vpanDisplay: '0,00%',
-            vpanExplicacao: 'Desconto à vista (VPAN) não aplicável nesta modalidade de entrega física.',
-            incentivoLabel: 'Incentivo Barter',
-            incentivoDisplay: '0,00%',
-            incentivoExplicacao: 'Sem incentivo de prazo adicional oferecido pelas tradings concorrentes.',
-            cashbackDisplay: `+${activeCampanhaValorizacaoOutras.toFixed(2)}%`,
-            cashbackExplicacao: `Valorização comercial padrão oferecida pelas tradings concorrentes de mercado (+${activeCampanhaValorizacaoOutras.toFixed(2)}%).`,
-            garantia: 'CPR Física e Seguro Agrícola',
-            garantiaExplicacao: 'Garantia padrão de mercado vinculada à CPR Física e seguro.',
-            volInicial: res ? res.volTrocaMarket : 0,
-            volFinal: res ? res.volFinalMarket : 0,
-            volEconomia: 0,
-            unitAbbr: res ? res.unitSymbol : 'sc',
-            custoTotal: custoTotalMarket,
-            custoTotalPct: custoTotalPctMarket,
-            custoAmPct: custoAmPctMarket,
-            valorTotal: totalMarket
         },
         {
             id: 'fiso',
@@ -888,6 +920,7 @@ function calculateSimulation() {
             cashbackExplicacao: 'Sem programa de cashback em grãos.',
             garantia: 'Sem garantia (venda a prazo cedida a um parceiro)',
             garantiaExplicacao: 'FISO não possui garantia patrimonial exigida. É uma cessão de crédito em que a venda a prazo é cedida a um parceiro.',
+            sacasEquivalentes: refPrecoSaca > 0 ? (calcFiso.valorTotal / refPrecoSaca) : 0,
             custoTotal: calcFiso.custoTotal,
             custoTotalPct: calcFiso.custoTotalPct,
             custoAmPct: calcFiso.custoAmPct,
@@ -901,7 +934,7 @@ function calculateSimulation() {
             jurosPeriodo: calcSyngenta.custoTotalPct / 100,
             jurosMensal: calcSyngenta.taxaMensal,
             prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
-            prazoExplicacao: `Prazo financeiro calculated de ${prazo} dias corridos (On-Balance).`,
+            prazoExplicacao: `Prazo financeiro calculado de ${prazo} dias corridos (On-Balance).`,
             vpanDisplay: 'Não aplicado',
             vpanExplicacao: 'Faturamento a prazo direto On-Balance Syngenta sem concessão de desconto à vista (VPAN).',
             incentivoLabel: 'Incentivo',
@@ -911,6 +944,7 @@ function calculateSimulation() {
             cashbackExplicacao: 'Sem programa de cashback em grãos.',
             garantia: 'Garantia alinhada diretamente com o time de crédito Syngenta',
             garantiaExplicacao: 'Estrutura de garantias alinhada diretamente com a mesa de crédito corporativa Syngenta.',
+            sacasEquivalentes: refPrecoSaca > 0 ? (calcSyngenta.valorTotal / refPrecoSaca) : 0,
             custoTotal: calcSyngenta.custoTotal,
             custoTotalPct: calcSyngenta.custoTotalPct,
             custoAmPct: calcSyngenta.custoAmPct,
@@ -934,6 +968,7 @@ function calculateSimulation() {
             cashbackExplicacao: 'Sem programa de cashback em grãos.',
             garantia: 'Nota promissória ou CPR financeira sem penhor',
             garantiaExplicacao: 'Formalizado via Nota Promissória (NP) ou CPR Financeira (CPR-F) sem exigência de penhor agrícola.',
+            sacasEquivalentes: refPrecoSaca > 0 ? (calcSyde.valorTotal / refPrecoSaca) : 0,
             custoTotal: calcSyde.custoTotal,
             custoTotalPct: calcSyde.custoTotalPct,
             custoAmPct: calcSyde.custoAmPct,
@@ -1042,23 +1077,39 @@ function calculateSimulation() {
                         </ul>
                         <div class="modality-card-total-box">
                             <div class="modality-card-total-header">
-                                <span class="modality-card-total-label">Valor Total</span>
+                                <span class="modality-card-total-label">Valor Total a Pagar</span>
                                 <span class="tooltip-container">
                                     <i class="fa-regular fa-circle-question"></i>
                                     <span class="tooltip-text"><strong>Fórmula:</strong> Crédito × (1 - Desc. VPAN) × (1 + Taxa × Meses) × (1 - Incentivo). Total de ${formatSelectedCurrency(m.valorTotal)}</span>
                                 </span>
                             </div>
                             <span class="modality-card-total-value">${formatSelectedCurrency(m.valorTotal)}</span>
+
+                            <div style="display:flex; align-items:center; gap:8px; margin-top:10px; padding:8px 12px; background:rgba(13,148,136,0.08); border:1px solid rgba(13,148,136,0.25); border-radius:8px;">
+                                <i class="fa-solid fa-wheat-awn" style="font-size:15px; color:var(--primary-medium);"></i>
+                                <span style="display:flex; flex-direction:column; line-height:1.2;">
+                                    <span style="font-size:11px; color:var(--text-secondary); font-weight:600; text-transform:uppercase;">Equivalente em Barter</span>
+                                    <strong style="font-size:15px; font-weight:800; color:var(--primary-deep);">${formatNumber(m.sacasEquivalentes, 0)} ${unitSymbol}</strong>
+                                </span>
+                                <span class="tooltip-container" style="margin-left:auto;">
+                                    <i class="fa-regular fa-circle-question" style="font-size:13px; color:var(--text-secondary); cursor:help;"></i>
+                                    <span class="tooltip-text" style="width:260px;">
+                                        <strong>Equivalente em Sacas (Barter):</strong><br>
+                                        Se esta modalidade for liquidada com a venda de grãos à cotação de ${formatSelectedCurrency(refPrecoSaca)}/sc:<br>
+                                        ${formatSelectedCurrency(m.valorTotal)} ÷ ${formatSelectedCurrency(refPrecoSaca)} = <strong>${formatNumber(m.sacasEquivalentes, 0)} ${unitSymbol}</strong>.
+                                    </span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="modality-card-footer">
                         <div class="modality-cost-row modality-cost-total">
                             <span>
-                                CUSTO TOTAL
+                                Custo Real Total
                                 <span class="tooltip-container">
                                     <i class="fa-regular fa-circle-question"></i>
                                     <span class="tooltip-text">
-                                        <strong>Fórmula do Custo Total:</strong><br>
+                                        <strong>Fórmula do Custo Real Total:</strong><br>
                                         • Valor Total: ${formatSelectedCurrency(m.valorTotal)}<br>
                                         • Valor da Operação: ${formatSelectedCurrency(creditRaw)}<br>
                                         • Custo Acumulado: ((${formatSelectedCurrency(m.valorTotal)} / ${formatSelectedCurrency(creditRaw)}) - 1) × 100 = <strong>${m.custoTotalPct.toFixed(2).replace('.', ',')}%</strong>
@@ -1069,19 +1120,19 @@ function calculateSimulation() {
                         </div>
                         <div class="modality-cost-row modality-cost-operation">
                             <span>
-                                CUSTO OPERAÇÃO (a.m)
+                                Custo Real Operação (a.m)
                                 <span class="tooltip-container" style="color: #ffffff;">
                                     <i class="fa-regular fa-circle-question" style="color: #ffffff;"></i>
                                     <span class="tooltip-text">
                                         <strong>Fórmula do Custo Real da Operação:</strong><br>
-                                        • Custo Total (%): <strong>${m.custoTotalPct.toFixed(2).replace('.', ',')}%</strong><br>
+                                        • Custo Real Total (%): <strong>${m.custoTotalPct.toFixed(2).replace('.', ',')}%</strong><br>
                                         • Prazo em Meses: ${prazo} dias / 30 = <strong>${nMesesCorridos.toFixed(2)} meses</strong><br>
-                                        • Taxa Efetiva da Operação: ${m.custoTotalPct.toFixed(2).replace('.', ',')}% / ${nMesesCorridos.toFixed(2)} = <strong>${m.custoAmPct.toFixed(2).replace('.', ',')}% a.m.</strong><br><br>
-                                        <em>Mede a taxa mensal efetiva ponderada real da operação.</em>
+                                        • Taxa Efetiva Mensal: ${m.custoTotalPct.toFixed(2).replace('.', ',')}% / ${nMesesCorridos.toFixed(2)} = <strong>${m.custoAmPct.toFixed(2).replace('.', ',')}% a.m.</strong><br><br>
+                                        <em>Representa a taxa de juros efetiva média por mês da operação.</em>
                                     </span>
                                 </span>
                             </span>
-                            <span>${m.custoAmPct.toFixed(2).replace('.', ',')} %</span>
+                            <span>${m.custoAmPct.toFixed(2).replace('.', ',')} % a.m.</span>
                         </div>
                     </div>
                 `;
@@ -1123,33 +1174,33 @@ function calculateSimulation() {
                             </li>
                             <li class="modality-bullet-item">
                                 <span class="modality-bullet-label">
-                                    Cashback
+                                    Cashback (Devolução R$/$)
                                     <span class="tooltip-container">
                                         <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Cashback:</strong> ${m.cashbackExplicacao}</span>
+                                        <span class="tooltip-text"><strong>Cashback da Campanha:</strong> ${m.cashbackExplicacao}</span>
                                     </span>
                                 </span>
-                                <strong class="modality-bullet-val ${m.cashbackDisplay.includes('+') ? 'text-teal' : ''}">${m.cashbackDisplay}</strong>
+                                <strong class="modality-bullet-val text-teal">${m.cashbackDisplay} (${formatSelectedCurrency(m.cashbackFinanceiro)})</strong>
                             </li>
                             <li class="modality-bullet-item">
                                 <span class="modality-bullet-label">
-                                    Volume Final Equivalente
+                                    Sacas Contratuais a Entregar
                                     <span class="tooltip-container">
                                         <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text">Volume de troca físico final líquido de grãos a ser entregue na liquidação da safra.</span>
+                                        <span class="tooltip-text">Volume de troca físico contratual fixado na CPR para liquidação dos insumos.</span>
                                     </span>
                                 </span>
                                 <strong class="modality-bullet-val text-teal">${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>
                             </li>
                             <li class="modality-bullet-item">
                                 <span class="modality-bullet-label">
-                                    Economia em Grãos
+                                    Retorno Total Devolvido
                                     <span class="tooltip-container">
                                         <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text">Quantidade total de sacas/libras economizadas graças aos benefícios de Cashback e Incentivo de prazo.</span>
+                                        <span class="tooltip-text">Soma do Cashback da Campanha + Incentivo de Prazo creditados financeiramente ao produtor.</span>
                                     </span>
                                 </span>
-                                <strong class="modality-bullet-val text-teal">+${formatNumber(m.volEconomia, 0)} ${m.unitAbbr} economizados</strong>
+                                <strong class="modality-bullet-val text-teal">+${formatSelectedCurrency(m.totalRetorno)}</strong>
                             </li>
                             <li class="modality-bullet-item modality-guarantee-item">
                                 <span class="modality-bullet-label">
@@ -1164,34 +1215,31 @@ function calculateSimulation() {
                         </ul>
                         <div class="modality-card-total-box">
                             <div class="modality-card-total-header">
-                                <span class="modality-card-total-label">Valor Total Equivalente</span>
+                                <span class="modality-card-total-label">Valor Total da Operação</span>
                                 <span class="tooltip-container">
                                     <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text"><strong>Fórmula:</strong> (Volume Final × Preço Grão FOB) + Frete Total. Total de ${formatSelectedCurrency(m.valorTotal)}</span>
+                                    <span class="tooltip-text"><strong>Fórmula:</strong> (Volume Contratual a Entregar × Preço FOB Bruto) + Frete Total. Total de ${formatSelectedCurrency(m.valorTotal)}</span>
                                 </span>
                             </div>
                             <span class="modality-card-total-value">
                                 ${formatSelectedCurrency(m.valorTotal)}
-                                <span style="display:flex; align-items:center; gap:6px; margin-top:8px; padding:8px 12px; background:rgba(14,165,118,0.12); border:1px solid rgba(14,165,118,0.3); border-radius:8px;">
-                                    <i class="fa-solid fa-wheat-awn" style="font-size:15px; color:var(--primary-medium);"></i>
-                                    <span style="display:flex; flex-direction:column; line-height:1.3;">
-                                        <strong style="font-size:16px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>
-                                        <span style="font-size:11.5px; color:#0d9488; font-weight:600;">+${formatNumber(m.volEconomia, 0)} ${m.unitAbbr} de economia</span>
+                                <div style="display:flex; align-items:center; gap:8px; margin-top:8px; padding:8px 12px; background:rgba(14,165,118,0.12); border:1px solid rgba(14,165,118,0.3); border-radius:8px;">
+                                    <i class="fa-solid fa-wheat-awn" style="font-size:16px; color:var(--primary-medium);"></i>
+                                    <span style="display:flex; flex-direction:column; line-height:1.2;">
+                                        <strong style="font-size:15px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volFinal, 0)} ${m.unitAbbr} a entregar</strong>
+                                        <span style="font-size:11.5px; color:#0d9488; font-weight:700;">+${formatSelectedCurrency(m.totalRetorno)} devolvidos ao produtor</span>
                                     </span>
                                     <span class="tooltip-container" style="margin-left:auto;">
-                                        <i class="fa-regular fa-circle-question" style="font-size:14px; color:var(--text-secondary); cursor:help;"></i>
+                                        <i class="fa-regular fa-circle-question" style="font-size:13px; color:var(--text-secondary); cursor:help;"></i>
                                         <span class="tooltip-text" style="width:280px;">
-                                            <strong>Sacas Equivalentes — Fórmula:</strong><br>
-                                            1️⃣ <strong>Vol. Inicial:</strong> Crédito ÷ Preço Livre = ${formatNumber(m.volInicial, 0)} ${m.unitAbbr}<br>
-                                            2️⃣ <strong>Cashback em ${m.unitAbbr}:</strong> Cashback ÷ Preço Livre<br>
-                                            3️⃣ <strong>Incentivo em ${m.unitAbbr}:</strong> Incentivo ÷ Preço Livre<br>
-                                            4️⃣ <strong>Vol. Final = Vol. Inicial − (Cashback sc + Incentivo sc)</strong><br>
-                                            ✅ <em>Fórmula alinhada com a planilha Simulador_CashBack_Barter_2026</em><br><br>
-                                            <strong>Valor Total Equivalente — Fórmula:</strong><br>
-                                            (Vol. Final × Preço FOB Bruto) + Frete Total
+                                            <strong>Mecânica do Barter Hub (Ata 21/08):</strong><br>
+                                            1️⃣ <strong>Volume Contratual CPR:</strong> Crédito ÷ Preço Líquido = <strong>${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>.<br>
+                                            2️⃣ <strong>Devolução Cashback:</strong> +${valPctProposta.toFixed(2)}% = <strong>${formatSelectedCurrency(m.cashbackFinanceiro)}</strong>.<br>
+                                            3️⃣ <strong>Incentivo de Prazo:</strong> +${(res ? res.incentivoBarterPct * 100 : 0).toFixed(2)}% = <strong>${formatSelectedCurrency(m.incentivoFinanceiro)}</strong>.<br>
+                                            4️⃣ <strong>Total Devolvido Financeiro:</strong> <strong>${formatSelectedCurrency(m.totalRetorno)}</strong> (equivale a ${formatNumber(m.volEconomia, 0)} ${m.unitAbbr} economizados).
                                         </span>
                                     </span>
-                                </span>
+                                </div>
                             </span>
                         </div>
                     </div>
@@ -1213,19 +1261,19 @@ function calculateSimulation() {
                         </div>
                         <div class="modality-cost-row modality-cost-operation">
                             <span>
-                                Custo Real Operação
+                                Custo Real Operação (a.m)
                                 <span class="tooltip-container" style="color: #ffffff;">
                                     <i class="fa-regular fa-circle-question" style="color: #ffffff;"></i>
                                     <span class="tooltip-text">
                                         <strong>Fórmula do Custo Real da Operação:</strong><br>
                                         • Custo Real Total (%): <strong>${m.custoTotalPct.toFixed(2)}%</strong><br>
                                         • Prazo em Meses: ${prazo} dias / 30 = <strong>${nMesesCorridos.toFixed(2)} meses</strong><br>
-                                        • Taxa Efetiva da Operação: ${m.custoTotalPct.toFixed(2)}% / ${nMesesCorridos.toFixed(2)} = <strong>${m.custoAmPct.toFixed(3)}% a.m.</strong><br><br>
-                                        <em>Mede a taxa mensal efetiva ponderada real da operação.</em>
+                                        • Taxa Efetiva Mensal: ${m.custoTotalPct.toFixed(2)}% / ${nMesesCorridos.toFixed(2)} = <strong>${m.custoAmPct.toFixed(2)}% a.m.</strong><br><br>
+                                        <em>Representa a taxa de juros efetiva média por mês da operação.</em>
                                     </span>
                                 </span>
                             </span>
-                            <span>${m.custoAmPct.toFixed(3)}% a.m.</span>
+                            <span>${m.custoAmPct.toFixed(2)}% a.m.</span>
                         </div>
                     </div>
                 `;
@@ -1275,7 +1323,7 @@ function renderValidationTable(res, campObj, inputs) {
     const commVal = res.commBrutoUSD;
     const wsysPriceStr = `${fmtExt(commVal)} / ${unitSymbol}`;
 
-    const impPct = (res.commBrutoUSD > 0) ? (res.pctTaxUSDProposta / res.commBrutoUSD * 100).toFixed(2) : '0.20';
+    const impPct = (res.commBrutoUSD > 0) ? (res.pctTaxUSDProposta / res.commBrutoUSD * 100).toFixed(2) : '1.63';
     const plazaInfo = `${inputs.regiao || 'Campo Novo do Parecis (MT)'} (Fixo: ${fmtCurr(res.fixedTaxUSDProposta)} + ${impPct}%)`;
     const freteInfo = `Chão: ${isNaN(inputs.distChao) ? 0 : inputs.distChao} km | Asfalto: ${isNaN(inputs.distAsfalto) ? 0 : inputs.distAsfalto} km | Total: ${fmtCurr(res.freteTotalUSDProposta)}`;
 
@@ -1304,113 +1352,80 @@ function renderValidationTable(res, campObj, inputs) {
         {
             name: '1. Crédito Demandado (Valor da Operação)',
             formula: 'Crédito base contratado pelo produtor',
-            nutrade: fmtCurr(res.credLimitUSD),
-            market: fmtCurr(res.credLimitUSD)
+            nutrade: fmtCurr(res.credLimitUSD)
         },
         {
             name: '2. Taxa de Juros Anual & Período',
             formula: 'Juros Período = (Prazo / 360) × Juros Anual',
-            nutrade: `${inputs.jurosAnual.toFixed(2)}% a.a. (${(res.jurosPeriodo * 100).toFixed(2)}% no período)`,
-            market: `${inputs.jurosAnual.toFixed(2)}% a.a. (${(res.jurosPeriodo * 100).toFixed(2)}% no período)`
+            nutrade: `${inputs.jurosAnual.toFixed(2)}% a.a. (${(res.jurosPeriodo * 100).toFixed(2)}% no período)`
         },
         {
             name: '3. Preço Pedido TP (Valor Presente)',
             formula: 'Crédito / (1 + Juros Período)',
-            nutrade: fmtCurr(res.precoTpUSDProposta),
-            market: fmtCurr(res.precoTpUSDMarket)
+            nutrade: fmtCurr(res.precoTpUSDProposta)
         },
         {
             name: '4. Preço Commodity Bruto FOB (WSys)',
-            formula: 'Cotação WSys de Originação Nutrade vs Mercado (-1,0%)',
-            nutrade: fmtExt(res.commBrutoUSD),
-            market: fmtExt(res.commBrutoUSDMarket)
+            formula: 'Cotação WSys de Originação Nutrade',
+            nutrade: fmtExt(res.commBrutoUSD)
         },
         {
             name: '5. Dedução Impostos Fiscais da Praça',
-            formula: 'Senar + Fethab (Fixo R$/sc + Pct sobre Bruto)',
-            nutrade: `- ${fmtExt(res.taxDeductionUSDProposta)}`,
-            market: `- ${fmtExt(res.taxDeductionUSDMarket)}`
+            formula: 'Funrural (1,63%) + Impostos Estaduais (FETHAB/FUNDEMS/FUNDEINFRA)',
+            nutrade: `- ${fmtExt(res.taxDeductionUSDProposta)}`
         },
         {
-            name: '6. Preço Commodity Livre',
+            name: '6. Preço Commodity Livre Líquido',
             formula: 'Preço Bruto - Deduções Impostos Praça',
-            nutrade: fmtExt(res.commLivreUSDProposta),
-            market: fmtExt(res.commLivreUSDMarket)
+            nutrade: fmtExt(res.commLivreUSDProposta)
         },
         {
-            name: '7. Valorização Comercial (Cashback % e $)',
-            formula: 'Crédito × Taxa Cashback da Campanha (4,5% vs 3,0%)',
-            nutrade: `+${inputs.valPctProposta.toFixed(2)}% (${fmtCurr(res.cashbackUsdProposta)})`,
-            market: `+${res.valPctMarket.toFixed(2)}% (${fmtCurr(res.cashbackUsdMarket)})`
+            name: '7. Devolução Financeira Cashback da Campanha',
+            formula: 'Crédito × Taxa Cashback da Campanha (4,5%)',
+            nutrade: `+${inputs.valPctProposta.toFixed(2)}% (${fmtCurr(res.cashbackUsdProposta)})`
         },
         {
-            name: '8. Sacas Equivalentes a Cashback',
-            formula: 'Cashback ($) / Preço Commodity Livre',
-            nutrade: `${formatNumber(res.cashbackScProposta, 2)} ${unitSymbol}`,
-            market: `${formatNumber(res.cashbackScMarket, 2)} ${unitSymbol}`
-        },
-        {
-            name: '9. Incentivo Barter (% e $)',
+            name: '8. Incentivo Barter Financeiro (% e $)',
             formula: `Preço TP × (Prazo / 30 × 0,5% a.m.) = ${(res.incentivoBarterPct * 100).toFixed(2)}%`,
-            nutrade: `+${(res.incentivoBarterPct * 100).toFixed(2)}% (${fmtCurr(res.incentivoBarterUsd)})`,
-            market: `0,00% (${fmtCurr(0)})`
+            nutrade: `+${(res.incentivoBarterPct * 100).toFixed(2)}% (${fmtCurr(res.incentivoBarterUsd)})`
         },
         {
-            name: '10. Sacas Equivalentes a Incentivo Barter',
-            formula: 'Incentivo ($) / Preço Commodity Livre',
-            nutrade: `${formatNumber(res.incentivoScProposta, 2)} ${unitSymbol}`,
-            market: `0,00 ${unitSymbol}`
+            name: '9. Total Retorno Financeiro Devolvido',
+            formula: 'Devolução Cashback ($) + Incentivo Barter ($)',
+            nutrade: `<strong>${fmtCurr(res.totalRetornoUSDProposta)}</strong>`
         },
         {
-            name: '11. Total Retorno Comercial ($)',
-            formula: 'Cashback ($) + Incentivo Barter ($)',
-            nutrade: fmtCurr(res.totalRetornoUSDProposta),
-            market: fmtCurr(res.totalRetornoUSDMarket)
-        },
-        {
-            name: '12. Volume TROCA Inicial (sem valorização)',
+            name: '10. Volume Contratual de Sacas a Entregar',
             formula: 'Crédito / Preço Commodity Livre (arredondado pra cima)',
-            nutrade: `${formatNumber(res.volTrocaProposta)} ${unitSymbol}`,
-            market: `${formatNumber(res.volTrocaMarket)} ${unitSymbol}`
+            nutrade: `<strong>${formatNumber(res.volTrocaProposta)} ${unitSymbol}</strong>`
         },
         {
-            name: '13. Cessão Syngenta CROP (Sacas)',
-            formula: 'Volume Inicial - Sacas Cashback',
-            nutrade: `${formatNumber(res.cessaoProposta, 2)} ${unitSymbol}`,
-            market: `${formatNumber(res.cessaoMarket, 2)} ${unitSymbol}`
+            name: '11. Sacas Equivalentes à Devolução Financeira',
+            formula: 'Total Retorno Devolvido ($) / Preço Commodity Livre',
+            nutrade: `<strong class="text-green">+${formatNumber(res.totalSacasEquivEconomia, 0)} ${unitSymbol} equivalentes</strong>`
         },
         {
-            name: '14. Volume TROCA Equivalente Final',
-            formula: 'Volume Inicial - (Sacas Cashback + Sacas Incentivo)',
-            nutrade: `<strong>${formatNumber(res.volFinalProposta)} ${unitSymbol}</strong>`,
-            market: `<strong>${formatNumber(res.volFinalMarket)} ${unitSymbol}</strong>`
+            name: '12. Custo Total de Frete Logístico',
+            formula: '(Dist. Chão × Tarifa Chão) + (Dist. Asfalto × Tarifa Asfalto)',
+            nutrade: fmtCurr(res.freteTotalUSDProposta)
         },
         {
-            name: '15. Preço Barter Equivalente Final',
+            name: '13. Preço Barter Equivalente Final Valorizado',
             formula: 'Preço Livre + Val Cashback + Val Incentivo - Frete Unit.',
-            nutrade: `<strong>${fmtExt(res.precoFinalUSDProposta)} / ${unitSymbol}</strong>`,
-            market: `<strong>${fmtExt(res.precoFinalUSDMarket)} / ${unitSymbol}</strong>`
+            nutrade: `<strong>${fmtExt(res.precoFinalUSDProposta)} / ${unitSymbol}</strong>`
         },
         {
-            name: '16. Economia em Grãos (Nutrade vs Mercado)',
-            formula: 'Volume Final Mercado - Volume Final Nutrade',
-            nutrade: `<strong class="text-green">+${formatNumber(res.volFinalMarket - res.volFinalProposta)} ${unitSymbol} economizados</strong>`,
-            market: '-'
-        },
-        {
-            name: '17. Benefício Financeiro Total da Estrutura',
-            formula: 'Volume Economizado × Preço Commodity Bruto',
-            nutrade: `<strong class="text-green">+${fmtCurr((res.volFinalMarket - res.volFinalProposta) * res.commBrutoUSD)}</strong>`,
-            market: '-'
+            name: '14. Valor Total da Operação',
+            formula: '(Volume Contratual a Entregar × Preço FOB Bruto) + Frete Total',
+            nutrade: `<strong>${fmtCurr((res.volFinalProposta * res.commBrutoUSD) + res.freteTotalUSDProposta)}</strong>`
         }
     ];
 
     const generateRowsHtml = () => rows.map(r => `
         <tr style="border-bottom: 1px solid #fef08a;">
-            <td style="padding: 8px 10px; font-weight: 600; color: #334155;">${r.name}</td>
-            <td style="padding: 8px 10px; color: #64748b; font-size: 11px;">${r.formula}</td>
-            <td style="padding: 8px 10px; background: rgba(34, 197, 94, 0.06); color: #15803d; font-weight: 600;">${r.nutrade}</td>
-            <td style="padding: 8px 10px; color: #334155;">${r.market}</td>
+            <td style="padding: 10px 12px; font-weight: 600; color: #334155;">${r.name}</td>
+            <td style="padding: 10px 12px; color: #64748b; font-size: 11px;">${r.formula}</td>
+            <td style="padding: 10px 12px; background: rgba(34, 197, 94, 0.06); color: #15803d; font-weight: 700;">${r.nutrade}</td>
         </tr>
     `).join('');
 
@@ -1483,116 +1498,86 @@ function showDetailedBreakdown(modId) {
     const activeMod = window.modalitiesData.find(m => m.id === modId);
     document.getElementById('detailed-breakdown-title').innerHTML = `Detalhamento da Modalidade: <strong>${activeMod ? activeMod.name : ''}</strong>`;
 
-    if (modId === 'barter_nutrade' || modId === 'barter_market') {
+    if (modId === 'barter_nutrade') {
         if (tableBarter) tableBarter.style.display = 'block';
         if (tableFinancial) tableFinancial.style.display = 'none';
 
         // Load Barter detail fields
-        document.getElementById('td-fob-nutrade').textContent = formatSelectedCurrency(res.credLimitUSD);
-        document.getElementById('td-fob-market').textContent = formatSelectedCurrency(res.credLimitUSD);
+        if (document.getElementById('td-fob-nutrade')) document.getElementById('td-fob-nutrade').textContent = formatSelectedCurrency(res.credLimitUSD);
+        if (document.getElementById('td-bruto-nutrade')) document.getElementById('td-bruto-nutrade').textContent = formatSelectedCurrency(res.commBrutoUSD);
+        if (document.getElementById('td-desc-nutrade-estadual')) document.getElementById('td-desc-nutrade-estadual').textContent = `- ${formatSelectedCurrency(res.fixedTaxUSDProposta)}`;
+        if (document.getElementById('td-desc-nutrade-demais')) document.getElementById('td-desc-nutrade-demais').textContent = `- ${formatSelectedCurrency(res.pctTaxUSDProposta)}`;
+        if (document.getElementById('td-livre-nutrade')) document.getElementById('td-livre-nutrade').textContent = formatSelectedCurrency(res.commLivreUSDProposta);
+        if (document.getElementById('td-vol-troca-nutrade')) document.getElementById('td-vol-troca-nutrade').textContent = `${formatNumber(res.volTrocaProposta)} ${unitSymbol}`;
 
-        document.getElementById('td-bruto-nutrade').textContent = formatSelectedCurrency(res.commBrutoUSD);
-        document.getElementById('td-bruto-market').textContent = formatSelectedCurrency(res.commBrutoUSDMarket);
+        const valPctProposta = parseFloat(document.getElementById('sim-campanha-val') ? document.getElementById('sim-campanha-val').value : 4.5) || 4.5;
+        if (document.getElementById('td-valcamp-nutrade')) document.getElementById('td-valcamp-nutrade').textContent = `${valPctProposta.toFixed(2)}%`;
+        if (document.getElementById('td-cashback-usd-nutrade')) document.getElementById('td-cashback-usd-nutrade').textContent = formatSelectedCurrency(res.cashbackUsdProposta);
+        if (document.getElementById('td-incbarter-pct-nutrade')) document.getElementById('td-incbarter-pct-nutrade').textContent = `+${(res.incentivoBarterPct * 100).toFixed(2)}%`;
+        if (document.getElementById('td-incbarter-usd-nutrade')) document.getElementById('td-incbarter-usd-nutrade').textContent = formatSelectedCurrency(res.incentivoBarterUsd);
+        if (document.getElementById('td-totalret-nutrade')) document.getElementById('td-totalret-nutrade').textContent = formatSelectedCurrency(res.totalRetornoUSDProposta);
+        if (document.getElementById('td-finalpreco-nutrade')) document.getElementById('td-finalpreco-nutrade').textContent = formatSelectedCurrencyExtended(res.precoFinalUSDProposta);
+        if (document.getElementById('td-finalvol-nutrade')) document.getElementById('td-finalvol-nutrade').textContent = `${formatNumber(res.volFinalProposta)} ${unitSymbol}`;
+        if (document.getElementById('td-valreal-nutrade')) document.getElementById('td-valreal-nutrade').textContent = `+${(res.valRealProposta * 100).toFixed(2)}%`;
 
-        // Split region discounts
-        document.getElementById('td-desc-nutrade-estadual').textContent = `- ${formatSelectedCurrency(res.fixedTaxUSDProposta)}`;
-        document.getElementById('td-desc-market-estadual').textContent = `- ${formatSelectedCurrency(res.fixedTaxUSDMarket)}`;
-
-        document.getElementById('td-desc-nutrade-demais').textContent = `- ${formatSelectedCurrency(res.pctTaxUSDProposta)}`;
-        document.getElementById('td-desc-market-demais').textContent = `- ${formatSelectedCurrency(res.pctTaxUSDMarket)}`;
-
-        document.getElementById('td-livre-nutrade').textContent = formatSelectedCurrency(res.commLivreUSDProposta);
-        document.getElementById('td-livre-market').textContent = formatSelectedCurrency(res.commLivreUSDMarket);
-
-        document.getElementById('td-vol-troca-nutrade').textContent = `${formatNumber(res.volTrocaProposta)} ${unitSymbol}`;
-        document.getElementById('td-vol-troca-market').textContent = `${formatNumber(res.volTrocaMarket)} ${unitSymbol}`;
-
-        const valPctProposta = parseFloat(document.getElementById('sim-campanha-val').value) || 0;
-        document.getElementById('td-valcamp-nutrade').textContent = `${valPctProposta.toFixed(2)}%`;
-        document.getElementById('td-valcamp-market').textContent = `${res.valPctMarket.toFixed(2)}%`;
-
-        document.getElementById('td-cashback-usd-nutrade').textContent = formatSelectedCurrency(res.cashbackUsdProposta);
-        document.getElementById('td-cashback-usd-market').textContent = formatSelectedCurrency(res.cashbackUsdMarket);
-
-        document.getElementById('td-incbarter-pct-nutrade').textContent = `+${(res.incentivoBarterPct * 100).toFixed(2)}%`;
-        document.getElementById('td-incbarter-pct-market').textContent = `0,00%`;
-
-        document.getElementById('td-incbarter-usd-nutrade').textContent = formatSelectedCurrency(res.incentivoBarterUsd);
-        document.getElementById('td-incbarter-usd-market').textContent = formatSelectedCurrency(0);
-
-        document.getElementById('td-totalret-nutrade').textContent = formatSelectedCurrency(res.totalRetornoUSDProposta);
-        document.getElementById('td-totalret-market').textContent = formatSelectedCurrency(res.totalRetornoUSDMarket);
-
-        document.getElementById('td-finalpreco-nutrade').textContent = formatSelectedCurrencyExtended(res.precoFinalUSDProposta);
-        document.getElementById('td-finalpreco-market').textContent = formatSelectedCurrencyExtended(res.precoFinalUSDMarket);
-
-        document.getElementById('td-finalvol-nutrade').textContent = `${formatNumber(res.volFinalProposta)} ${unitSymbol}`;
-        document.getElementById('td-finalvol-market').textContent = `${formatNumber(res.volFinalMarket)} ${unitSymbol}`;
-
-        document.getElementById('td-valreal-nutrade').textContent = `+${(res.valRealProposta * 100).toFixed(2)}%`;
-        document.getElementById('td-valreal-market').textContent = `+${(res.valRealMarket * 100).toFixed(2)}%`;
-
-        // Highlight selected column
-        const colNutrade = tableBarter.querySelectorAll('tbody td.val-nutrade');
-        const colMarket = tableBarter.querySelectorAll('tbody td:nth-child(3)');
-
-        if (modId === 'barter_nutrade') {
+        if (tableBarter) {
+            const colNutrade = tableBarter.querySelectorAll('tbody td.val-nutrade');
             colNutrade.forEach(el => el.style.backgroundColor = 'rgba(34, 197, 94, 0.08)');
-            colMarket.forEach(el => el.style.backgroundColor = 'transparent');
-        } else {
-            colNutrade.forEach(el => el.style.backgroundColor = 'transparent');
-            colMarket.forEach(el => el.style.backgroundColor = 'rgba(234, 179, 8, 0.08)');
         }
     } else {
         if (tableBarter) tableBarter.style.display = 'none';
         if (tableFinancial) tableFinancial.style.display = 'block';
 
         // Load Financial detail fields
-        const jurosBarter = window.modalitiesData.find(m => m.id === 'barter_nutrade');
-        const jurosFidc = window.modalitiesData.find(m => m.id === 'fidc');
-        const jurosFiso = window.modalitiesData.find(m => m.id === 'fiso');
-        const jurosPrazo = window.modalitiesData.find(m => m.id === 'prazo');
+        const jurosBarter = window.modalitiesData.find(m => m.id === 'barter_nutrade') || window.modalitiesData[0];
+        const jurosSyde = window.modalitiesData.find(m => m.id === 'syde') || window.modalitiesData[0];
+        const jurosFiso = window.modalitiesData.find(m => m.id === 'fiso') || window.modalitiesData[0];
+        const jurosSyngenta = window.modalitiesData.find(m => m.id === 'syngenta') || window.modalitiesData[0];
 
-        document.getElementById('mod-juros-barter').textContent = `${jurosBarter.jurosAnual.toFixed(2)}% a.a.`;
-        document.getElementById('mod-juros-fidc').textContent = `${jurosFidc.jurosAnual.toFixed(2)}% a.a.`;
-        document.getElementById('mod-juros-fiso').textContent = `${jurosFiso.jurosAnual.toFixed(2)}% a.a.`;
-        document.getElementById('mod-juros-prazo').textContent = `${jurosPrazo.jurosAnual.toFixed(2)}% a.a.`;
+        if (document.getElementById('mod-juros-barter') && jurosBarter) document.getElementById('mod-juros-barter').textContent = `${jurosBarter.jurosAnual.toFixed(2)}% a.a.`;
+        if (document.getElementById('mod-juros-fidc') && jurosSyde) document.getElementById('mod-juros-fidc').textContent = `${jurosSyde.jurosAnual.toFixed(2)}% a.a.`;
+        if (document.getElementById('mod-juros-fiso') && jurosFiso) document.getElementById('mod-juros-fiso').textContent = `${jurosFiso.jurosAnual.toFixed(2)}% a.a.`;
+        if (document.getElementById('mod-juros-prazo') && jurosSyngenta) document.getElementById('mod-juros-prazo').textContent = `${jurosSyngenta.jurosAnual.toFixed(2)}% a.a.`;
 
-        document.getElementById('mod-custo-barter').textContent = formatSelectedCurrency(jurosBarter.custoTotal);
-        document.getElementById('mod-custo-fidc').textContent = formatSelectedCurrency(jurosFidc.custoTotal);
-        document.getElementById('mod-custo-fiso').textContent = formatSelectedCurrency(jurosFiso.custoTotal);
-        document.getElementById('mod-custo-prazo').textContent = formatSelectedCurrency(jurosPrazo.custoTotal);
+        if (document.getElementById('mod-custo-barter') && jurosBarter) document.getElementById('mod-custo-barter').textContent = formatSelectedCurrency(jurosBarter.custoTotal);
+        if (document.getElementById('mod-custo-fidc') && jurosSyde) document.getElementById('mod-custo-fidc').textContent = formatSelectedCurrency(jurosSyde.custoTotal);
+        if (document.getElementById('mod-custo-fiso') && jurosFiso) document.getElementById('mod-custo-fiso').textContent = formatSelectedCurrency(jurosFiso.custoTotal);
+        if (document.getElementById('mod-custo-prazo') && jurosSyngenta) document.getElementById('mod-custo-prazo').textContent = formatSelectedCurrency(jurosSyngenta.custoTotal);
 
-        document.getElementById('mod-total-barter').textContent = formatSelectedCurrency(jurosBarter.valorTotal);
-        document.getElementById('mod-total-fidc').textContent = formatSelectedCurrency(jurosFidc.valorTotal);
-        document.getElementById('mod-total-fiso').textContent = formatSelectedCurrency(jurosFiso.valorTotal);
-        document.getElementById('mod-total-prazo').textContent = formatSelectedCurrency(jurosPrazo.valorTotal);
+        if (document.getElementById('mod-total-barter') && jurosBarter) document.getElementById('mod-total-barter').textContent = formatSelectedCurrency(jurosBarter.valorTotal);
+        if (document.getElementById('mod-total-fidc') && jurosSyde) document.getElementById('mod-total-fidc').textContent = formatSelectedCurrency(jurosSyde.valorTotal);
+        if (document.getElementById('mod-total-fiso') && jurosFiso) document.getElementById('mod-total-fiso').textContent = formatSelectedCurrency(jurosFiso.valorTotal);
+        if (document.getElementById('mod-total-prazo') && jurosSyngenta) document.getElementById('mod-total-prazo').textContent = formatSelectedCurrency(jurosSyngenta.valorTotal);
 
         // Highlight selected column in Financial table
-        const rows = tableFinancial.querySelectorAll('tbody tr');
-        rows.forEach(row => {
-            const cells = row.querySelectorAll('td');
-            if (cells.length >= 5) {
-                // reset styles
-                for (let i = 1; i <= 4; i++) {
-                    cells[i].style.backgroundColor = 'transparent';
-                    cells[i].style.fontWeight = 'normal';
+        if (tableFinancial) {
+            const rows = tableFinancial.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 5) {
+                    for (let i = 1; i <= 4; i++) {
+                        if (cells[i]) {
+                            cells[i].style.backgroundColor = 'transparent';
+                            cells[i].style.fontWeight = 'normal';
+                        }
+                    }
+
+                    let colIdx = 1;
+                    if (modId === 'syde' || modId === 'fidc') colIdx = 2;
+                    else if (modId === 'fiso') colIdx = 3;
+                    else if (modId === 'syngenta' || modId === 'prazo') colIdx = 4;
+
+                    if (cells[colIdx]) {
+                        cells[colIdx].style.backgroundColor = 'rgba(34, 197, 94, 0.08)';
+                        cells[colIdx].style.fontWeight = 'bold';
+                    }
                 }
-
-                // apply highlights
-                let colIdx = 1;
-                if (modId === 'fidc') colIdx = 2;
-                else if (modId === 'fiso') colIdx = 3;
-                else if (modId === 'prazo') colIdx = 4;
-
-                cells[colIdx].style.backgroundColor = 'rgba(34, 197, 94, 0.08)';
-                cells[colIdx].style.fontWeight = 'bold';
-            }
-        });
+            });
+        }
     }
 
     // Scroll table into view
-    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    if (card) card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
 }
 
 // Tab switcher for comparison dashboard (kept for compatibility if any other script calls it)
@@ -3189,10 +3174,14 @@ function onCampanhaSelectChange(val) {
 
 // ==================== WSYS PRAÇAS DATABASE MANAGER ====================
 function initWsysPlazas() {
-    if (localStorage.getItem('wsysPlazas')) {
-        wsysPlazas = JSON.parse(localStorage.getItem('wsysPlazas'));
+    if (localStorage.getItem('wsysPlazas_v2')) {
+        try {
+            wsysPlazas = JSON.parse(localStorage.getItem('wsysPlazas_v2'));
+        } catch (e) {
+            localStorage.setItem('wsysPlazas_v2', JSON.stringify(wsysPlazas));
+        }
     } else {
-        localStorage.setItem('wsysPlazas', JSON.stringify(wsysPlazas));
+        localStorage.setItem('wsysPlazas_v2', JSON.stringify(wsysPlazas));
     }
 }
 
@@ -3249,11 +3238,11 @@ function onEstadoChange(estado) {
 }
 
 function onPracaChange(pracaNome) {
-    const estado = document.getElementById('sim-estado').value;
+    const estado = document.getElementById('sim-estado') ? document.getElementById('sim-estado').value : 'MT';
     const plaza = wsysPlazas.find(p => p.estado === estado && p.nome === pracaNome);
     if (plaza) {
-        document.getElementById('sim-frete-chao').value = plaza.freteChao;
-        document.getElementById('sim-frete-asfalto').value = plaza.freteAsfalto;
+        if (document.getElementById('sim-frete-chao')) document.getElementById('sim-frete-chao').value = plaza.freteChao;
+        if (document.getElementById('sim-frete-asfalto')) document.getElementById('sim-frete-asfalto').value = plaza.freteAsfalto;
     }
     // Sync v2-sim-regiao if needed
     const v2Regiao = document.getElementById('v2-sim-regiao');
@@ -3267,7 +3256,7 @@ function renderPracasTable() {
 
     tbody.innerHTML = '';
     if (wsysPlazas.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--text-secondary); padding: 20px;">Nenhuma praça cadastrada.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-secondary); padding: 20px;">Nenhuma praça cadastrada.</td></tr>`;
         return;
     }
 
@@ -3278,8 +3267,10 @@ function renderPracasTable() {
             <td>${p.nome}</td>
             <td class="font-mono">R$ ${p.freteChao.toFixed(2)}</td>
             <td class="font-mono">R$ ${p.freteAsfalto.toFixed(2)}</td>
-            <td class="font-mono">${p.impPct.toFixed(2)}%</td>
-            <td class="font-mono">R$ ${p.impFixo.toFixed(2)}</td>
+            <td class="font-mono">${(p.funruralPct !== undefined ? p.funruralPct : 1.63).toFixed(2)}%</td>
+            <td class="font-mono">${(p.impNfPct !== undefined ? p.impNfPct : 0.0).toFixed(2)}%</td>
+            <td class="font-mono">R$ ${(p.impFixo !== undefined ? p.impFixo : 0.0).toFixed(2)}</td>
+            <td style="font-size: 11.5px; color: var(--text-secondary);">${p.observacao || '-'}</td>
             <td style="text-align: center;">
                 <button type="button" class="btn-action btn-edit" onclick="editPraca(${idx})" style="padding: 4px 8px; font-size: 11px; margin-right: 5px; background-color: var(--primary-light); color: var(--primary-deep);"><i class="fa-solid fa-pen"></i> Editar</button>
                 <button type="button" class="btn-action btn-delete" onclick="deletePraca(${idx})" style="padding: 4px 8px; font-size: 11px; background-color: rgba(239, 68, 68, 0.1); color: #ef4444;"><i class="fa-solid fa-trash"></i> Excluir</button>
@@ -3309,15 +3300,17 @@ function handleSavePraca(e) {
     const nome = document.getElementById('praca-nome').value.trim();
     const freteChao = parseFloat(document.getElementById('praca-frete-chao').value) || 0;
     const freteAsfalto = parseFloat(document.getElementById('praca-frete-asfalto').value) || 0;
-    const impPct = parseFloat(document.getElementById('praca-tax-pct').value) || 0;
+    const funruralPct = parseFloat(document.getElementById('praca-funrural').value) || 0;
+    const impNfPct = parseFloat(document.getElementById('praca-imposto-nf').value) || 0;
     const impFixo = parseFloat(document.getElementById('praca-tax-fixo').value) || 0;
+    const observacao = document.getElementById('praca-observacao').value.trim();
 
     if (!nome) {
         alert("Preencha o nome da praça");
         return;
     }
 
-    const pracaData = { estado, nome, freteChao, freteAsfalto, impPct, impFixo };
+    const pracaData = { estado, nome, freteChao, freteAsfalto, funruralPct, impNfPct, impFixo, observacao };
 
     if (idx === '') {
         // Create new
@@ -3327,7 +3320,7 @@ function handleSavePraca(e) {
         wsysPlazas[parseInt(idx)] = pracaData;
     }
 
-    localStorage.setItem('wsysPlazas', JSON.stringify(wsysPlazas));
+    localStorage.setItem('wsysPlazas_v2', JSON.stringify(wsysPlazas));
     cancelCreatePraca();
     renderPracasTable();
     initEstadoSelect(); // Refresh selects
@@ -3341,8 +3334,10 @@ function editPraca(index) {
     document.getElementById('praca-nome').value = p.nome;
     document.getElementById('praca-frete-chao').value = p.freteChao;
     document.getElementById('praca-frete-asfalto').value = p.freteAsfalto;
-    document.getElementById('praca-tax-pct').value = p.impPct;
-    document.getElementById('praca-tax-fixo').value = p.impFixo;
+    document.getElementById('praca-funrural').value = p.funruralPct !== undefined ? p.funruralPct : 1.63;
+    document.getElementById('praca-imposto-nf').value = p.impNfPct !== undefined ? p.impNfPct : 0.0;
+    document.getElementById('praca-tax-fixo').value = p.impFixo !== undefined ? p.impFixo : 0.0;
+    document.getElementById('praca-observacao').value = p.observacao || '';
 
     document.getElementById('pracas-list-view').style.display = 'none';
     document.getElementById('pracas-create-view').style.display = 'block';
@@ -3351,7 +3346,7 @@ function editPraca(index) {
 function deletePraca(index) {
     if (!confirm(`Deseja realmente excluir a praça "${wsysPlazas[index].nome}"?`)) return;
     wsysPlazas.splice(index, 1);
-    localStorage.setItem('wsysPlazas', JSON.stringify(wsysPlazas));
+    localStorage.setItem('wsysPlazas_v2', JSON.stringify(wsysPlazas));
     renderPracasTable();
     initEstadoSelect(); // Refresh selects
 }

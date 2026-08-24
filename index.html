@@ -253,30 +253,33 @@
                             style="display:flex; flex-direction:column; gap:20px;">
                             <!-- Section 1: Campanha da Operação -->
                             <div
-                                style="background:var(--bg-hover); padding:16px; border-radius:8px; border:1px solid var(--border-color);">
+                                style="background:var(--bg-hover); padding:16px 20px; border-radius:10px; border:1px solid var(--border-color);">
                                 <span
-                                    style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:12px;">Campanha
-                                    da Operação</span>
+                                    style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:14px;">Campanha da Operação</span>
                                 <div
-                                    style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:15px;">
+                                    style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-campanha-select">Campanha de Referência</label>
+                                        <label for="v2-sim-campanha-select">Campanha</label>
                                         <div class="select-wrapper">
                                             <select id="v2-sim-campanha-select"
                                                 onchange="document.getElementById('sim-campanha-select').value=this.value; onCampanhaSelectChange(this.value);">
+                                                <option value="milho">Milho</option>
+                                                <option value="soja" selected>Soja</option>
+                                                <option value="safra-2026-cerrado">Safra 2026 - Soja Cerrado</option>
+                                                <option value="safra-2026-safrinha">Safra 2026 - Milho Safrinha</option>
+                                                <option value="campanha-vd-reta-final">Campanha VD Reta Final</option>
                                                 <option value="custom">Campanha Customizada (Manual)</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-commodity">Commodity / Produto <span
-                                                style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
+                                        <label for="v2-sim-subcategoria">Subcategoria</label>
                                         <div class="select-wrapper">
-                                            <select id="v2-sim-commodity"
-                                                onchange="document.getElementById('sim-commodity').value=this.value; onCulturaChange(this.value);">
-                                                <option value="">— Sem commodity (sem Barter) —</option>
-                                                <option value="Soja">Soja (sacas - sc)</option>
-                                                <option value="Algodão">Algodão (libras - lp)</option>
+                                            <select id="v2-sim-subcategoria" onchange="onSubcategoriaChange(this.value)">
+                                                <option value="venda_direta_crop" selected>Venda direta | Crop</option>
+                                                <option value="venda_indireta_dist">Venda indireta | Distribuição</option>
+                                                <option value="barter_nutrade">Barter Grãos | Nutrade</option>
+                                                <option value="grandes_contas">Grandes Contas | Key Account</option>
                                             </select>
                                         </div>
                                     </div>
@@ -285,28 +288,34 @@
 
                             <!-- Section 2: Informações financeiras -->
                             <div
-                                style="background:var(--bg-hover); padding:16px; border-radius:8px; border:1px solid var(--border-color);">
+                                style="background:var(--bg-hover); padding:16px 20px; border-radius:10px; border:1px solid var(--border-color);">
                                 <span
-                                    style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:12px;">Informações
-                                    Financeiras &amp; Localização</span>
-                                <div
-                                    style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:15px;">
-                                    <div class="input-group" style="margin-bottom:0;">
-                                        <label>Moeda da Operação</label>
-                                        <div class="currency-selector-group">
-                                            <button type="button" class="currency-btn active" id="v2-btn-currency-brl"
-                                                onclick="setCurrency('BRL')">Real (R$)</button>
-                                            <button type="button" class="currency-btn" id="v2-btn-currency-usd"
-                                                onclick="setCurrency('USD')">Dólar (USD)</button>
-                                        </div>
+                                    style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:14px;">Informações financeiras</span>
+                                <div style="display:flex; flex-direction:column; gap:16px;">
+                                    <div class="currency-selector-group" style="width:100%; max-width:100%; display:grid; grid-template-columns:1fr 1fr; background:rgba(0,0,0,0.04); padding:4px; border-radius:8px;">
+                                        <button type="button" class="currency-btn active" id="v2-btn-currency-brl"
+                                            onclick="setCurrency('BRL')" style="border-radius:6px; font-weight:600; font-size:13.5px; padding:10px;">Real (R$)</button>
+                                        <button type="button" class="currency-btn" id="v2-btn-currency-usd"
+                                            onclick="setCurrency('USD')" style="border-radius:6px; font-weight:600; font-size:13.5px; padding:10px;">Dólar (USD)</button>
                                     </div>
                                     <div class="input-group" style="margin-bottom:0;">
                                         <label for="v2-sim-credito">Valor da Operação (TP + Impostos)</label>
                                         <div class="input-wrapper">
                                             <input type="text" id="v2-sim-credito" value="R$ 1.000.000,00"
+                                                style="font-size:16px; font-weight:600; padding:12px 14px;"
                                                 oninput="document.getElementById('sim-credito').value=this.value; document.getElementById('sim-credito').dispatchEvent(new Event('input'));">
                                         </div>
                                     </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 3: Localização & Parâmetros da Praça (WSys) -->
+                            <div
+                                style="background:var(--bg-hover); padding:16px 20px; border-radius:10px; border:1px solid var(--border-color);">
+                                <span
+                                    style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:14px;">Localização &amp; Logística da Praça (WSys)</span>
+                                <div
+                                    style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; align-items:end;">
                                     <div class="input-group" style="margin-bottom:0;">
                                         <label for="v2-sim-estado">Estado</label>
                                         <div class="select-wrapper">
@@ -316,6 +325,14 @@
                                                 <option value="GO">Goiás (GO)</option>
                                                 <option value="MS">Mato Grosso do Sul (MS)</option>
                                                 <option value="PR">Paraná (PR)</option>
+                                                <option value="BA">Bahia (BA)</option>
+                                                <option value="MA">Maranhão (MA)</option>
+                                                <option value="TO">Tocantins (TO)</option>
+                                                <option value="PI">Piauí (PI)</option>
+                                                <option value="RO">Rondônia (RO)</option>
+                                                <option value="MG">Minas Gerais (MG)</option>
+                                                <option value="SP">São Paulo (SP)</option>
+                                                <option value="RS">Rio Grande do Sul (RS)</option>
                                             </select>
                                         </div>
                                     </div>
@@ -327,20 +344,8 @@
                                             </select>
                                         </div>
                                     </div>
-                                </div>
-
-                            </div>
-
-                            <!-- Section 3: Frete & Deduções -->
-                            <div
-                                style="background:var(--bg-hover); padding:16px; border-radius:8px; border:1px solid var(--border-color);">
-                                <span
-                                    style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:12px;">Frete
-                                    &amp; Deduções Fiscais</span>
-                                <div
-                                    style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:15px; align-items:end;">
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-dist-chao">Distância Estrada de Chão (KM) <span
+                                        <label for="v2-sim-dist-chao">Dist. Chão (KM) <span
                                                 style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
                                         <div class="input-wrapper">
                                             <input type="number" id="v2-sim-dist-chao" value="0" min="0"
@@ -350,7 +355,7 @@
                                         </div>
                                     </div>
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-dist-asfalto">Distância Estrada de Asfalto (KM) <span
+                                        <label for="v2-sim-dist-asfalto">Dist. Asfalto (KM) <span
                                                 style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
                                         <div class="input-wrapper">
                                             <input type="number" id="v2-sim-dist-asfalto" value="0" min="0"
@@ -360,12 +365,12 @@
                                         </div>
                                     </div>
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-descontos">Deduções Fiscais de Barter</label>
+                                        <label for="v2-sim-descontos">Deduções Fiscais</label>
                                         <div class="toggle-switch" style="margin-top:6px;">
                                             <input type="checkbox" id="v2-sim-descontos" checked
                                                 onchange="document.getElementById('sim-descontos').checked=this.checked;">
                                             <label for="v2-sim-descontos" class="toggle-slider"></label>
-                                            <span class="toggle-label">Ativo (Senar + Fethab)</span>
+                                            <span class="toggle-label" style="font-size:11.5px;">Funrural + Taxas</span>
                                         </div>
                                     </div>
                                 </div>
@@ -373,21 +378,27 @@
 
                             <!-- Footer Action Buttons -->
                             <div
-                                style="display:flex; justify-content:flex-end; align-items:center; flex-wrap:wrap; gap:12px; margin-top:10px;">
+                                style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:8px;">
+                                <div>
+                                    <button type="button" class="btn-outline" id="v2-btn-voltar" onclick="resetFormToDefaults()"
+                                        style="padding:10px 22px; min-height:42px; border-radius:8px; border:1px solid #0d9488; color:#0d9488; background:#ffffff; font-weight:600; font-size:13.5px; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
+                                        <i class="fa-solid fa-arrow-left"></i> Voltar
+                                    </button>
+                                </div>
                                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
                                     <button type="button" class="btn-submit" id="v2-btn-sim-calcular"
                                         onclick="window.handleFormSimulate(event)"
-                                        style="width:auto; padding:12px 28px; min-height:44px; background-color:var(--primary-medium);">
+                                        style="width:auto; padding:11px 28px; min-height:42px; background-color:#0284c7; border-radius:8px; font-weight:700; font-size:14px; box-shadow:0 4px 12px rgba(2,132,199,0.25);">
                                         <i class="fa-solid fa-calculator"></i> Simular
                                     </button>
                                     <button type="button" class="btn-submit btn-pdf" id="v2-btn-sim-pdf"
                                         onclick="downloadSimulationPDF()"
-                                        style="width:auto; padding:12px 24px; background-color: #4b5563; background-image: none; box-shadow: 0 4px 12px rgba(75, 85, 99, 0.2); min-height: 44px;">
+                                        style="width:auto; padding:11px 22px; background-color: #4b5563; background-image: none; box-shadow: 0 4px 12px rgba(75, 85, 99, 0.2); min-height: 42px; border-radius:8px;">
                                         <i class="fa-solid fa-file-pdf"></i> PDF
                                     </button>
                                     <button type="button" class="btn-submit btn-share" id="v2-btn-sim-share"
                                         onclick="openSharePopup()"
-                                        style="width:auto; padding:12px 24px; min-height: 44px;">
+                                        style="width:auto; padding:11px 22px; min-height: 42px; border-radius:8px;">
                                         <i class="fa-solid fa-share-nodes"></i> Compartilhar
                                     </button>
                                 </div>
@@ -506,8 +517,7 @@
                                         <tr style="background:#fef08a; color:#713f12; text-align:left;">
                                             <th style="padding:10px 12px; border-bottom:2px solid #fde047;">Indicador / Etapa do Racional</th>
                                             <th style="padding:10px 12px; border-bottom:2px solid #fde047;">Fórmula Aplicada</th>
-                                            <th style="padding:10px 12px; border-bottom:2px solid #fde047; background:#dcfce7; color:#14532d;">Nutrade (Nossa Estrutura)</th>
-                                            <th style="padding:10px 12px; border-bottom:2px solid #fde047;">Outras Tradings (Mercado)</th>
+                                            <th style="padding:10px 12px; border-bottom:2px solid #fde047; background:#dcfce7; color:#14532d;">Nutrade (Nossa Estrutura Barter Hub)</th>
                                         </tr>
                                     </thead>
                                     <tbody id="v2-val-table-body">
@@ -903,10 +913,12 @@
                                     <tr>
                                         <th>Estado</th>
                                         <th>Nome da Praça</th>
-                                        <th>Custo Frete Chão (R$/KM)</th>
-                                        <th>Custo Frete Asfalto (R$/KM)</th>
-                                        <th>Alíquota de Imposto (%)</th>
-                                        <th>Taxa de Imposto Fixa (por un)</th>
+                                        <th>Frete Chão (R$/KM)</th>
+                                        <th>Frete Asfalto (R$/KM)</th>
+                                        <th>Funrural (%)</th>
+                                        <th>Imposto Base NF (%)</th>
+                                        <th>Imposto Base UPF (R$/sc)</th>
+                                        <th>Enquadramento / Observação</th>
                                         <th style="text-align: center; width: 120px;">Ações</th>
                                     </tr>
                                 </thead>
@@ -921,7 +933,7 @@
                     <div id="pracas-create-view" class="card" style="display: none;">
                         <div class="card-header">
                             <h2 id="praca-form-title">Cadastrar nova praça no WSys</h2>
-                            <p>Preencha os campos abaixo para salvar a praça no sistema.</p>
+                            <p>Preencha os dados logísticos e tributários (conforme matriz fiscal de Barter).</p>
                         </div>
 
                         <form id="create-praca-form" onsubmit="handleSavePraca(event)" style="padding-top: 15px;">
@@ -936,23 +948,31 @@
                                             <option value="GO">Goiás (GO)</option>
                                             <option value="MS">Mato Grosso do Sul (MS)</option>
                                             <option value="PR">Paraná (PR)</option>
+                                            <option value="BA">Bahia (BA)</option>
+                                            <option value="MA">Maranhão (MA)</option>
+                                            <option value="TO">Tocantins (TO)</option>
+                                            <option value="PI">Piauí (PI)</option>
+                                            <option value="RO">Rondônia (RO)</option>
+                                            <option value="MG">Minas Gerais (MG)</option>
+                                            <option value="SP">São Paulo (SP)</option>
+                                            <option value="RS">Rio Grande do Sul (RS)</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="input-group">
                                     <label for="praca-nome">Nome da Praça*</label>
-                                    <input type="text" id="praca-nome" placeholder="Ex: Sorriso" required>
+                                    <input type="text" id="praca-nome" placeholder="Ex: Campo Novo do Parecis" required>
                                 </div>
                             </div>
 
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                                 <div class="input-group">
-                                    <label for="praca-frete-chao">Custo Frete Chão (por KM)*</label>
+                                    <label for="praca-frete-chao">Custo Frete Chão (R$/KM)*</label>
                                     <input type="number" id="praca-frete-chao" min="0" step="any" value="15.00"
                                         required>
                                 </div>
                                 <div class="input-group">
-                                    <label for="praca-frete-asfalto">Custo Frete Asfalto (por KM)*</label>
+                                    <label for="praca-frete-asfalto">Custo Frete Asfalto (R$/KM)*</label>
                                     <input type="number" id="praca-frete-asfalto" min="0" step="any" value="8.00"
                                         required>
                                 </div>
@@ -960,12 +980,26 @@
 
                             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                                 <div class="input-group">
-                                    <label for="praca-tax-pct">Dedução Regional Alíquota (%)*</label>
-                                    <input type="number" id="praca-tax-pct" min="0" step="any" value="0.25" required>
+                                    <label for="praca-funrural">Alíquota Funrural (%)*</label>
+                                    <input type="number" id="praca-funrural" min="0" step="any" value="1.63" required>
+                                    <small style="color:var(--text-secondary); font-size:11px;">Padrão: 1,63% comercialização (ou 0,20% folha)</small>
                                 </div>
                                 <div class="input-group">
-                                    <label for="praca-tax-fixo">Dedução Regional Fixa (por saca/libra)*</label>
-                                    <input type="number" id="praca-tax-fixo" min="0" step="any" value="0.60" required>
+                                    <label for="praca-imposto-nf">Outros Impostos - Base NF (%)</label>
+                                    <input type="number" id="praca-imposto-nf" min="0" step="any" value="0.00">
+                                    <small style="color:var(--text-secondary); font-size:11px;">Ex: FDI (PI) = 1,20% | FUNDEINFRA (GO) = 1,65%</small>
+                                </div>
+                            </div>
+
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                                <div class="input-group">
+                                    <label for="praca-tax-fixo">Impostos Estaduais / Base UPF (R$/saca)</label>
+                                    <input type="number" id="praca-tax-fixo" min="0" step="any" value="3.09">
+                                    <small style="color:var(--text-secondary); font-size:11px;">Ex: MT (FETHAB/IAGRO) ~ R$ 3,09/sc | MS (FUNDEMS) ~ R$ 1,65/sc</small>
+                                </div>
+                                <div class="input-group">
+                                    <label for="praca-observacao">Observação / Nome do Tributo</label>
+                                    <input type="text" id="praca-observacao" placeholder="Ex: FETHAB + FETHAB Adicional + IAGRO">
                                 </div>
                             </div>
 
