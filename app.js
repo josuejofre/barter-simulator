@@ -1203,30 +1203,30 @@ function calculateSimulation() {
                             </li>
                             <li class="modality-bullet-item">
                                 <span class="modality-bullet-label">
-                                    *Cashback (Devolução R$/$)
+                                    *Cashback da Campanha
                                     <span class="tooltip-container">
                                         <i class="fa-regular fa-circle-question"></i>
                                         <span class="tooltip-text"><strong>Cashback da Campanha:</strong> ${m.cashbackExplicacao}</span>
                                     </span>
                                 </span>
-                                <strong class="modality-bullet-val text-teal">${m.cashbackDisplay} (${formatSelectedCurrency(m.cashbackFinanceiro)})</strong>
+                                <strong class="modality-bullet-val text-teal">${m.cashbackDisplay} (Devolução de ${formatSelectedCurrency(m.cashbackFinanceiro)})</strong>
                             </li>
                             <li class="modality-bullet-item">
                                 <span class="modality-bullet-label">
                                     Sacas Contratuais a Entregar
                                     <span class="tooltip-container">
                                         <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text">Volume de troca físico contratual fixado na CPR para liquidação dos insumos.</span>
+                                        <span class="tooltip-text">Volume de troca físico integral fixado na CPR para liquidação de 100% dos insumos.</span>
                                     </span>
                                 </span>
                                 <strong class="modality-bullet-val text-teal">${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>
                             </li>
                             <li class="modality-bullet-item">
                                 <span class="modality-bullet-label">
-                                    Retorno Total Devolvido
+                                    Devolução Financeira ao Produtor
                                     <span class="tooltip-container">
                                         <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text">Soma do Cashback da Campanha + Incentivo de Prazo creditados financeiramente ao produtor.</span>
+                                        <span class="tooltip-text"><strong>Devolução em Dinheiro:</strong> Soma do Cashback da Campanha + Incentivo de Prazo creditados financeiramente na conta do produtor.</span>
                                     </span>
                                 </span>
                                 <strong class="modality-bullet-val text-teal">+${formatSelectedCurrency(m.totalRetorno)}</strong>
@@ -1255,8 +1255,8 @@ function calculateSimulation() {
                                 <div style="display:flex; align-items:center; gap:8px; margin-top:8px; padding:8px 12px; background:rgba(14,165,118,0.12); border:1px solid rgba(14,165,118,0.3); border-radius:8px;">
                                     <i class="fa-solid fa-wheat-awn" style="font-size:16px; color:var(--primary-medium);"></i>
                                     <span style="display:flex; flex-direction:column; line-height:1.2;">
-                                        <strong style="font-size:15px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volFinal, 0)} ${m.unitAbbr} a entregar</strong>
-                                        <span style="font-size:11.5px; color:#0d9488; font-weight:700;">+${formatSelectedCurrency(m.totalRetorno)} devolvidos ao produtor</span>
+                                        <strong style="font-size:15px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volFinal, 0)} ${m.unitAbbr} a entregar na CPR</strong>
+                                        <span style="font-size:11.5px; color:#0d9488; font-weight:700;">Devolução em dinheiro: +${formatSelectedCurrency(m.totalRetorno)}</span>
                                     </span>
                                     <span class="tooltip-container" style="margin-left:auto;">
                                         <i class="fa-regular fa-circle-question" style="font-size:13px; color:var(--text-secondary); cursor:help;"></i>
@@ -1265,7 +1265,7 @@ function calculateSimulation() {
                                             1️⃣ <strong>Volume Contratual CPR:</strong> Crédito ÷ Preço Líquido = <strong>${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>.<br>
                                             2️⃣ <strong>Devolução Cashback:</strong> +${valPctProposta.toFixed(2)}% = <strong>${formatSelectedCurrency(m.cashbackFinanceiro)}</strong>.<br>
                                             3️⃣ <strong>Incentivo de Prazo:</strong> +${(res ? res.incentivoBarterPct * 100 : 0).toFixed(2)}% = <strong>${formatSelectedCurrency(m.incentivoFinanceiro)}</strong>.<br>
-                                            4️⃣ <strong>Total Devolvido Financeiro:</strong> <strong>${formatSelectedCurrency(m.totalRetorno)}</strong> (equivale a ${formatNumber(m.volEconomia, 0)} ${m.unitAbbr} economizados).
+                                            4️⃣ <strong>Total Devolvido Financeiro:</strong> <strong>${formatSelectedCurrency(m.totalRetorno)}</strong> (creditado em dinheiro na conta do produtor).
                                         </span>
                                     </span>
                                 </div>
