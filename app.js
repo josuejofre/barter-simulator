@@ -563,15 +563,13 @@ function runSimulationMath(inputs) {
     const incentivoScProposta = commLivreProposta > 0 ? (incentivoBarter / commLivreProposta) : 0;
     const totalSacasEquivEconomia = cashbackScProposta + incentivoScProposta;
 
-    // Ganho de Valorização Unitária (Incentivo)
-    const valUnitIncentivoProposta = volTrocaProposta > 0 ? (incentivoBarter / volTrocaProposta) : 0;
+    // Incentivo de Prazo reduz o valor base a ser quitado em grãos (diminui as sacas da CPR)
+    const saldoComIncentivo = Math.max(0, credLimit - incentivoBarter);
+    const volFinalProposta = commLivreProposta > 0 ? Math.ceil(saldoComIncentivo / commLivreProposta) : 0;
+    const volEconomizadoIncentivo = Math.max(0, volTrocaProposta - volFinalProposta);
 
-    // Preço Equivalente Final (Valorizado com todos os incentivos comerciais e frete)
+    // Preço Equivalente Final (Valorizado com incentivos comerciais e frete)
     const precoFinalProposta = commLivreProposta + valUnitCashbackProposta + valUnitIncentivoProposta - freteUnitProposta;
-
-    // Volume Contratual Final a Entregar (Ata 21/08: O volume de sacas não é reduzido artificialmente no contrato da CPR)
-    // O cashback de 4.5% e o incentivo são creditados/devolvidos em moeda (R$ ou USD) ao produtor
-    const volFinalProposta = volTrocaProposta;
 
     // Valorização Real sobre Commodity Livre (%)
     const valRealProposta = commLivreProposta > 0 ? (precoFinalProposta / commLivreProposta - 1.0) : 0;
@@ -596,6 +594,9 @@ function runSimulationMath(inputs) {
         pctTaxUSDProposta: pctTaxProposta,
         commLivreUSDProposta: commLivreProposta,
         volTrocaProposta,
+        volFinalProposta,
+        volEconomizadoIncentivo,
+        totalSacasEquivEconomia,
         freteTotalUSDProposta: freteTotalProposta,
         freteUnitUSDProposta: freteUnitProposta,
         cashbackScProposta,
@@ -890,17 +891,17 @@ function calculateSimulation() {
             vpanExplicacao: 'Desconto à vista (VPAN) não é aplicável na modalidade Barter, pois o benefício comercial ocorre via Cashback de campanha e Incentivo de prazo.<br><strong>Fonte:</strong> Cadastro de campanha.',
             incentivoLabel: '*Incentivo Barter',
             incentivoDisplay: res ? `+${(res.incentivoBarterPct * 100).toFixed(2)}%` : '0,00%',
-            incentivoExplicacao: res ? `Incentivo de prazo de +${(res.incentivoBarterPct * 100).toFixed(2)}% (${formatSelectedCurrency(res.incentivoBarterUsd)}) calculado sobre o Preço TP.<br><strong>Fonte:</strong> Cadastro de campanha.` : 'Sem incentivo.<br><strong>Fonte:</strong> Cadastro de campanha.',
+            incentivoExplicacao: res ? `Incentivo de prazo de +${(res.incentivoBarterPct * 100).toFixed(2)}% (${formatSelectedCurrency(res.incentivoBarterUsd)}) concedido como desconto comercial que reduz as sacas a entregar na CPR.<br><strong>Fonte:</strong> Cadastro de campanha.` : 'Sem incentivo.<br><strong>Fonte:</strong> Cadastro de campanha.',
             cashbackDisplay: `+${valPctProposta.toFixed(2)}%`,
-            cashbackExplicacao: `Cashback de campanha comercial Nutrade de +${valPctProposta.toFixed(2)}% (${formatSelectedCurrency(res ? res.cashbackUsdProposta : 0)}) devolvido financeiramente ao produtor.<br><strong>Fonte:</strong> Cadastro de campanha.`,
+            cashbackExplicacao: `Cashback de campanha comercial Nutrade de +${valPctProposta.toFixed(2)}% (${formatSelectedCurrency(res ? res.cashbackUsdProposta : 0)}) creditado como devolução financeira em dinheiro ao produtor.<br><strong>Fonte:</strong> Cadastro de campanha.`,
             garantia: 'CPR Física e Seguro Agrícola',
             garantiaExplicacao: 'Garantia vinculada à CPR Física da produção e seguro agrícola com a Nutrade.',
             volInicial: res ? res.volTrocaProposta : 0,
             volFinal: res ? res.volFinalProposta : 0,
-            volEconomia: res ? res.totalSacasEquivEconomia : 0,
+            volEconomia: res ? res.volEconomizadoIncentivo : 0,
             cashbackFinanceiro: res ? res.cashbackUsdProposta : 0,
             incentivoFinanceiro: res ? res.incentivoBarterUsd : 0,
-            totalRetorno: res ? res.totalRetornoUSDProposta : 0,
+            totalRetorno: res ? res.cashbackUsdProposta : 0,
             unitAbbr: unitSymbol,
             custoTotal: custoTotalBarter,
             custoTotalPct: custoTotalPctBarter,
@@ -1202,44 +1203,44 @@ function calculateSimulation() {
                                 <strong class="modality-bullet-val ${m.incentivoDisplay.includes('+') || m.incentivoDisplay.includes('-') ? 'text-teal' : ''}">${m.incentivoDisplay}</strong>
                             </li>
                             <li class="modality-bullet-item">
-                                <span class="modality-bullet-label">
-                                    *Cashback da Campanha
-                                    <span class="tooltip-container">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Cashback da Campanha:</strong> ${m.cashbackExplicacao}</span>
-                                    </span>
-                                </span>
-                                <strong class="modality-bullet-val text-teal">${m.cashbackDisplay} (Devolução de ${formatSelectedCurrency(m.cashbackFinanceiro)})</strong>
+                                 <span class="modality-bullet-label">
+                                     *Cashback da Campanha
+                                     <span class="tooltip-container">
+                                         <i class="fa-regular fa-circle-question"></i>
+                                         <span class="tooltip-text"><strong>Cashback da Campanha:</strong> ${m.cashbackExplicacao}</span>
+                                     </span>
+                                 </span>
+                                 <strong class="modality-bullet-val text-teal">${m.cashbackDisplay} (Devolução de ${formatSelectedCurrency(m.cashbackFinanceiro)})</strong>
                             </li>
                             <li class="modality-bullet-item">
-                                <span class="modality-bullet-label">
-                                    Sacas Contratuais a Entregar
-                                    <span class="tooltip-container">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text">Volume de troca físico integral fixado na CPR para liquidação de 100% dos insumos.</span>
-                                    </span>
-                                </span>
-                                <strong class="modality-bullet-val text-teal">${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>
+                                 <span class="modality-bullet-label">
+                                     Sacas Contratuais a Entregar
+                                     <span class="tooltip-container">
+                                         <i class="fa-regular fa-circle-question"></i>
+                                         <span class="tooltip-text">Volume de troca físico na CPR já com o desconto do Incentivo de Prazo aplicado sobre o saldo.</span>
+                                     </span>
+                                 </span>
+                                 <strong class="modality-bullet-val text-teal">${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>
                             </li>
                             <li class="modality-bullet-item">
-                                <span class="modality-bullet-label">
-                                    Devolução Financeira ao Produtor
-                                    <span class="tooltip-container">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Devolução em Dinheiro:</strong> Soma do Cashback da Campanha + Incentivo de Prazo creditados financeiramente na conta do produtor.</span>
-                                    </span>
-                                </span>
-                                <strong class="modality-bullet-val text-teal">+${formatSelectedCurrency(m.totalRetorno)}</strong>
+                                 <span class="modality-bullet-label">
+                                     Devolução de Cashback (Dinheiro)
+                                     <span class="tooltip-container">
+                                         <i class="fa-regular fa-circle-question"></i>
+                                         <span class="tooltip-text"><strong>Devolução em Dinheiro:</strong> Valor do Cashback creditado financeiramente na conta do produtor.</span>
+                                     </span>
+                                 </span>
+                                 <strong class="modality-bullet-val text-teal">+${formatSelectedCurrency(m.cashbackFinanceiro)}</strong>
                             </li>
                             <li class="modality-bullet-item modality-guarantee-item">
-                                <span class="modality-bullet-label">
-                                    Garantias Exigidas
-                                    <span class="tooltip-container">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Garantias Exigidas:</strong> ${m.garantiaExplicacao}</span>
-                                    </span>
-                                </span>
-                                <strong class="modality-guarantee-text">${m.garantia}</strong>
+                                 <span class="modality-bullet-label">
+                                     Garantias Exigidas
+                                     <span class="tooltip-container">
+                                         <i class="fa-regular fa-circle-question"></i>
+                                         <span class="tooltip-text"><strong>Garantias Exigidas:</strong> ${m.garantiaExplicacao}</span>
+                                     </span>
+                                 </span>
+                                 <strong class="modality-guarantee-text">${m.garantia}</strong>
                             </li>
                         </ul>
                         <div class="modality-card-total-box">
@@ -1256,16 +1257,15 @@ function calculateSimulation() {
                                     <i class="fa-solid fa-wheat-awn" style="font-size:16px; color:var(--primary-medium);"></i>
                                     <span style="display:flex; flex-direction:column; line-height:1.2;">
                                         <strong style="font-size:15px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volFinal, 0)} ${m.unitAbbr} a entregar na CPR</strong>
-                                        <span style="font-size:11.5px; color:#0d9488; font-weight:700;">Devolução em dinheiro: +${formatSelectedCurrency(m.totalRetorno)}</span>
+                                        <span style="font-size:11.5px; color:#0d9488; font-weight:700;">Devolução em dinheiro (Cashback): +${formatSelectedCurrency(m.cashbackFinanceiro)}</span>
                                     </span>
                                     <span class="tooltip-container" style="margin-left:auto;">
                                         <i class="fa-regular fa-circle-question" style="font-size:13px; color:var(--text-secondary); cursor:help;"></i>
                                         <span class="tooltip-text" style="width:280px;">
-                                            <strong>Mecânica do Barter Hub (Ata 21/08):</strong><br>
-                                            1️⃣ <strong>Volume Contratual CPR:</strong> Crédito ÷ Preço Líquido = <strong>${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>.<br>
-                                            2️⃣ <strong>Devolução Cashback:</strong> +${valPctProposta.toFixed(2)}% = <strong>${formatSelectedCurrency(m.cashbackFinanceiro)}</strong>.<br>
-                                            3️⃣ <strong>Incentivo de Prazo:</strong> +${(res ? res.incentivoBarterPct * 100 : 0).toFixed(2)}% = <strong>${formatSelectedCurrency(m.incentivoFinanceiro)}</strong>.<br>
-                                            4️⃣ <strong>Total Devolvido Financeiro:</strong> <strong>${formatSelectedCurrency(m.totalRetorno)}</strong> (creditado em dinheiro na conta do produtor).
+                                            <strong>Mecânica do Barter Hub:</strong><br>
+                                            1️⃣ <strong>Incentivo de Prazo:</strong> Desconto de ${formatSelectedCurrency(m.incentivoFinanceiro)} aplicado no saldo da compra.<br>
+                                            2️⃣ <strong>Volume Contratual CPR:</strong> (Crédito - Incentivo) ÷ Preço Líquido = <strong>${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>.<br>
+                                            3️⃣ <strong>Devolução Cashback:</strong> +${valPctProposta.toFixed(2)}% = <strong>${formatSelectedCurrency(m.cashbackFinanceiro)}</strong> (creditado em dinheiro na conta do produtor).
                                         </span>
                                     </span>
                                 </div>

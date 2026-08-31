@@ -4,10 +4,10 @@ Este documento apresenta a fórmula matemática da simulação de Barter do **Si
 
 ---
 
-## ⚡ Resumo em 8 Passos Simples
+## ⚡ Resumo em 7 Passos Simples
 
 ### 1. Preço Líquido da Saca
-> **Preço Bruto da Soja − Impostos da Região = Preço Líquido da Saca**
+> **Preço Bruto da Soja (WSys) − Impostos da Região (WSys) = Preço Líquido da Saca**
 * **O que faz:** Deduz do preço de balcão os impostos estaduais incidentes sobre o grão (ex: Fethab e Senar no MT, Fundeagro em GO).
 * **Exemplo:** 
   $$\text{R\$\ } 120{,}00 - \text{R\$\ } 2{,}00 = \mathbf{\text{R\$\ } 118{,}00\text{ por saca}}$$
@@ -22,51 +22,36 @@ Este documento apresenta a fórmula matemática da simulação de Barter do **Si
 
 ---
 
-### 3. Quantidade Inicial de Sacas (Volume de Troca Base)
-> **Valor do Crédito dos Insumos ÷ Preço Líquido da Saca = Sacas Iniciais**
-* **O que faz:** Descobre quantas sacas de soja seriam necessárias para quitar a compra sem nenhum desconto ou benefício comercial.
+### 3. Incentivo de Prazo Barter (Desconto Comercial que Reduz Sacas)
+> **Preço Pedido TP × (Dias de Prazo ÷ 30 × 0,5%) = Incentivo Barter (R$)**
+* **O que faz:** Concede um **desconto comercial** na compra de insumos proporcional ao prazo até o vencimento da safra ($0{,}5\%$ ao mês sobre o Preço TP).
+* **Impacto:** Esse desconto reduz o saldo financeiro a ser quitado em grãos e **diminui a quantidade de sacas a entregar na CPR**.
+* **Exemplo:** Em 210 dias (7 meses a $0{,}5\% = 3{,}5\%$ sobre TP de R$ 900.000,00): 
+  $$\text{R\$\ } 900.000{,}00 \times 3{,}5\% = \mathbf{\text{R\$\ } 31.500{,}00\text{ de desconto no saldo}}$$
+
+---
+
+### 4. Volume Contratual de Sacas a Entregar na CPR
+> **(Valor do Crédito − Incentivo Barter) ÷ Preço Líquido da Saca = Sacas a Entregar na CPR**
+* **O que faz:** Representa o volume físico contratual fixado na CPR para liquidação da compra de insumos, já usufruindo do desconto de incentivo.
 * **Exemplo:** 
-  $$\text{R\$\ } 1.000.000{,}00 \div \text{R\$\ } 118{,}00 = \mathbf{8.475\text{ sacas}}$$
+  $$(\text{R\$\ } 1.000.000{,}00 - \text{R\$\ } 31.500{,}00) \div \text{R\$\ } 118{,}00 = \frac{\text{R\$\ } 968.500{,}00}{\text{R\$\ } 118{,}00} = \mathbf{8.208\text{ sacas a entregar}}$$
 
 ---
 
-### 4. Bônus 1: Ganho de Incentivo de Prazo (R$)
-> **Valor à Vista da Operação × (Dias de Prazo ÷ 30 × 0,5%) = Ganho de Incentivo (R$)**
-* **O que faz:** Concede um desconto financeiro para o produtor rural proporcional ao tempo até a liquidação da safra ($0{,}5\%$ ao mês sobre o Valor Presente TP).
-* **Exemplo:** Em 210 dias (7 meses a $0{,}5\% = 3{,}5\%$): 
-  $$\text{R\$\ } 900.000{,}00 \times 3{,}5\% = \mathbf{\text{R\$\ } 31.500{,}00}$$
-
----
-
-### 5. Bônus 2: Ganho de Cashback da Campanha (Devolução Financeira R$ / USD)
-> **Valor do Crédito × % de Cashback da Nutrade = Devolução Financeira de Cashback (R$)**
-* **O que faz:** Devolve o valor financeiro do cashback diretamente ao produtor (em R$ ou USD).
+### 5. Cashback de Campanha (Devolução Financeira em Dinheiro R$ / USD)
+> **Valor do Crédito × % de Cashback da Campanha = Devolução Financeira (R$)**
+* **O que faz:** Diferente do incentivo de prazo, o cashback não reduz sacas da CPR; ele é uma **devolução financeira monetária em dinheiro** creditada na conta do produtor.
 * **Exemplo:** Com campanha de $4{,}5\%$: 
-  $$\text{R\$\ } 1.000.000{,}00 \times 4{,}5\% = \mathbf{\text{R\$\ } 45.000{,}00\text{ devolvidos}}$$
+  $$\text{R\$\ } 1.000.000{,}00 \times 4{,}5\% = \mathbf{\text{R\$\ } 45.000{,}00\text{ devolvidos em dinheiro}}$$
 
 ---
 
-### 6. Sacas Equivalentes à Devolução e Retorno Total
-> **(Ganho de Incentivo + Devolução de Cashback) ÷ Preço Líquido da Saca = Sacas Equivalentes Economizadas**
-* **O que faz:** Converte o total de bonificações financeiras devolvidas ao produtor em sacas de grãos equivalentes para medir o ganho de eficiência.
+### 6. Valor Total e Custo da Operação
+> **(Sacas a Entregar × Preço Bruto da Soja) + Frete Total − Devolução de Cashback = Valor Final Efetivo**
+* **O que faz:** Calcula o valor financeiro total da produção física contratada, incluindo frete e abatendo o retorno de cashback devolvido em dinheiro.
 * **Exemplo:** 
-  $$(\text{R\$\ } 31.500{,}00 + \text{R\$\ } 45.000{,}00) \div \text{R\$\ } 118{,}00 = \mathbf{648\text{ sacas equivalentes economizadas}}$$
-
----
-
-### 7. Volume Contratual de Sacas a Entregar
-> **Valor do Crédito ÷ Preço Líquido da Saca = Volume Contratual a Entregar**
-* **O que faz:** Representa o volume físico contratual fixado na CPR/operação para liquidação dos insumos.
-* **Exemplo:** 
-  $$\text{R\$\ } 1.000.000{,}00 \div \text{R\$\ } 118{,}00 = \mathbf{8.475\text{ sacas}}$$
-
----
-
-### 8. Valor Total e Custo da Operação
-> **(Sacas a Entregar × Preço Bruto da Soja) + Frete Total = Valor Final a Prazo**
-* **O que faz:** Calcula o valor financeiro total da produção física contratada, incluindo logística.
-* **Exemplo:** 
-  $$(8.475 \times \text{R\$\ } 120{,}00) + \text{R\$\ } 940{,}00 = \mathbf{\text{R\$\ } 1.017.940{,}00}$$
+  $$(8.208 \times \text{R\$\ } 120{,}00) + \text{R\$\ } 940{,}00 - \text{R\$\ } 45.000{,}00 = \mathbf{\text{R\$\ } 940.900{,}00}$$
 
 ---
 
