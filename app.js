@@ -705,21 +705,23 @@ function calculateSimulation() {
     const freteAsfaltoRaw = parseFloat(document.getElementById('sim-frete-asfalto').value) || (selectedCurrency === 'BRL' ? 8.0 : 1.6);
     const cambio = 1.0;
 
-    // Determine if Barter can be calculated
-    const canBarter = !!(commodity && regiao);
+    // Determine if Barter can be calculated - Barter can ALWAYS be calculated (even with 0 km freight)
+    const canBarter = true;
 
     // Store canBarter for PDF
     window.lastCanBarter = canBarter;
-    window.lastSimCommodity = commodity;
+    window.lastSimCommodity = commodity || 'Soja';
 
     // Call standalone math calculator (only fully runs barter when canBarter)
-    const res = canBarter ? runSimulationMath({
-        commodity, regiao, creditRaw, commBrutoRaw, descontoAtivo,
+    const res = runSimulationMath({
+        commodity: commodity || 'Soja',
+        regiao: regiao || (wsysPlazas[0] ? wsysPlazas[0].nome : 'Campo Novo do Parecis'),
+        creditRaw, commBrutoRaw, descontoAtivo,
         prazo, jurosAnual, valPctProposta,
         distChao, distAsfalto,
         freteChaoRaw, freteAsfaltoRaw, cambio, currency: selectedCurrency,
         valPctOutras: activeCampanhaValorizacaoOutras
-    }) : null;
+    });
 
     lastSimulationResult = res;
 
@@ -767,7 +769,7 @@ function calculateSimulation() {
             tax = campObj.taxas.find(t => {
                 const name = (t.produtoFinanceiro || '').toLowerCase();
                 const key = productKey.toLowerCase();
-                return name.includes(key) || (key === 'syde' && name.includes('fidc')) || (key === 'fiso' && name.includes('fiso')) || (key === 'syngenta' && name.includes('prazo'));
+                return name.includes(key) || (key === 'syde' && name.includes('fidc')) || (key === 'fiso' && name.includes('fiso')) || (key === 'syngenta' && name.includes('prazo')) || (key === 'cra' && (name.includes('cra') || name.includes('banco')));
             });
         }
 
@@ -822,13 +824,16 @@ function calculateSimulation() {
     // 1. Syde (FIDC) - Formula: VPAN (4%), Composto, Dias Úteis (/22)
     const calcSyde = computeFinancialProduct('Syde', 1.85, 4.0, 0.0, 'Composto', 'Dias úteis');
 
-    // 2. Fiso (Bancário) - Formula: Simples, Dias Corridos (/30), Incentivo (3%)
-    const calcFiso = computeFinancialProduct('Fiso', 1.85, 0.0, 3.0, 'Simples', 'Dias corridos');
+    // 2. Fiso (Bancário) - Formula: Simples, Dias Corridos (/30), Incentivo (1%)
+    const calcFiso = computeFinancialProduct('Fiso', 1.85, 0.0, 1.0, 'Simples', 'Dias corridos');
 
     // 3. Syngenta (Prazo / On-Balance) - Formula: Simples, Dias Corridos (/30)
     const calcSyngenta = computeFinancialProduct('Syngenta', 1.85, 0.0, 0.0, 'Simples', 'Dias corridos');
 
-    // 4. Barter Nutrade & Barter Outras Tradings (only when canBarter)
+    // 4. CRA Agro / Banco Parceiro (Produto Financeiro Adicional com Incentivo de 2,00%)
+    const calcCra = computeFinancialProduct('cra', 1.70, 0.0, 2.0, 'Simples', 'Dias corridos');
+
+    // 5. Barter Nutrade & Barter Outras Tradings (only when canBarter)
     const nMesesCorridos = prazo / 30.0;
     const nMesesStr = nMesesCorridos.toFixed(1).replace('.', ',');
 
@@ -863,14 +868,14 @@ function calculateSimulation() {
         return dateStr;
     }
 
-    let carenciaStr = campObj && campObj.desembolso ? formatDateBR(campObj.desembolso) : '01/10/2025';
-    let vencimentoStr = campObj && campObj.vencimento ? formatDateBR(campObj.vencimento) : '05/05/2026';
+    let carenciaStr = campObj && campObj.desembolso ? formatDateBR(campObj.desembolso) : '05/12/2026';
+    let vencimentoStr = campObj && campObj.vencimento ? formatDateBR(campObj.vencimento) : '05/05/2027';
 
     // Reference commodity price for Sacas Equivalentes
     const refPrecoSaca = commBrutoRaw > 0 ? commBrutoRaw : (currentQuotes.soybeans[selectedCurrency] || 103.00);
     const unitSymbol = res ? res.unitSymbol : (commodity === 'Soja' ? 'sc' : 'lp');
 
-    // List 4 active modalities to show and sort (Barter Nutrade, FISO, Syngenta, Syde)
+    // List active modalities to show and sort (Barter Nutrade, FISO, Syngenta, Syde, CRA Agro)
     const modalities = [
         {
             id: 'barter_nutrade',
@@ -973,6 +978,30 @@ function calculateSimulation() {
             custoTotalPct: calcSyde.custoTotalPct,
             custoAmPct: calcSyde.custoAmPct,
             valorTotal: calcSyde.valorTotal
+        },
+        {
+            id: 'cra_parceiro',
+            name: 'CRA Agro / Banco Parceiro',
+            type: 'financial',
+            jurosAnual: calcCra.jurosAnual,
+            jurosPeriodo: calcCra.custoTotalPct / 100,
+            jurosMensal: calcCra.taxaMensal,
+            prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
+            prazoExplicacao: `Prazo financeiro calculado de ${prazo} dias corridos (via Mercado de Capitais / CRA Parceiro).`,
+            vpanDisplay: 'Não aplicado',
+            vpanExplicacao: 'Sem desconto VPAN à vista na modalidade CRA.',
+            incentivoLabel: 'Incentivo',
+            incentivoDisplay: calcCra.incentivo > 0 ? `${calcCra.incentivo.toFixed(2).replace('.', ',')} %` : 'Não aplicado',
+            incentivoExplicacao: calcCra.incentivo > 0 ? `Rebate de incentivo comercial de campanha de -${calcCra.incentivo.toFixed(2)}% concedido pelo banco parceiro.` : 'Sem rebate aplicável.',
+            cashbackDisplay: '0,00%',
+            cashbackExplicacao: 'Sem programa de cashback em grãos.',
+            garantia: 'Cessão de recebíveis ou CPR Financeira',
+            garantiaExplicacao: 'Estrutura formalizada via CPR Financeira ou Cessão de Direitos Creditórios.',
+            sacasEquivalentes: refPrecoSaca > 0 ? (calcCra.valorTotal / refPrecoSaca) : 0,
+            custoTotal: calcCra.custoTotal,
+            custoTotalPct: calcCra.custoTotalPct,
+            custoAmPct: calcCra.custoAmPct,
+            valorTotal: calcCra.valorTotal
         }
     ];
 
@@ -2626,12 +2655,180 @@ function downloadSimulationPDFFromIndex(index) {
 let campaigns = [
     {
         id: 0,
+        nome: "Sul Repique",
+        titulo: "Sul Repique (Safra 2026/27)",
+        status: "Ativa",
+        desembolso: "2026-12-05",
+        vencimento: "2027-05-05",
+        visivelRTV: true,
+        subcategorias: [
+            { id: "pr_ms_silver_crop", nome: "PR/MS | Silver +, Silver | Crop", desembolso: "2026-12-05", vencimento: "2027-05-05", regioes: "PR/MS", classificacao: "Silver, Silver +", produto: "Crop" },
+            { id: "rs_sc_silver_crop_maio", nome: "RS/SC | Silver +, Silver | Crop | Venc. Maio", desembolso: "2026-12-05", vencimento: "2027-05-05", regioes: "RS/SC", classificacao: "Silver, Silver +", produto: "Crop" },
+            { id: "rs_sc_black_crop_maio", nome: "RS/SC | Black | Crop | Venc. Maio", desembolso: "2026-12-05", vencimento: "2027-05-05", regioes: "RS/SC", classificacao: "Black", produto: "Crop" },
+            { id: "rs_sc_bio_maio", nome: "RS/SC | Bio | Venc. Maio", desembolso: "2026-12-05", vencimento: "2027-05-05", regioes: "RS/SC", classificacao: "Bio", produto: "Crop" },
+            { id: "rs_sc_silver_crop_junho", nome: "RS/SC | Silver +, Silver | Crop | Venc. Junho", desembolso: "2026-12-05", vencimento: "2027-06-30", regioes: "RS/SC", classificacao: "Silver, Silver +", produto: "Crop" },
+            { id: "rs_sc_bio_junho", nome: "RS/SC | Bio | Venc. Junho", desembolso: "2026-12-05", vencimento: "2027-06-30", regioes: "RS/SC", classificacao: "Bio", produto: "Crop" },
+            { id: "pr_ms_bio", nome: "PR/MS | Bio", desembolso: "2026-12-05", vencimento: "2027-05-05", regioes: "PR/MS", classificacao: "Bio", produto: "Crop" },
+            { id: "pr_ms_black_crop", nome: "PR/MS | Black | Crop", desembolso: "2026-12-05", vencimento: "2027-05-05", regioes: "PR/MS", classificacao: "Black", produto: "Crop" },
+            { id: "pr_ms_black_plus_crop", nome: "PR/MS | Black + | Crop", desembolso: "2026-12-05", vencimento: "2027-05-05", regioes: "PR/MS", classificacao: "Black +", produto: "Crop" },
+            { id: "rs_sc_black_crop_junho", nome: "RS/SC | Black | Crop | Venc. Junho", desembolso: "2026-12-05", vencimento: "2027-06-30", regioes: "RS/SC", classificacao: "Black", produto: "Crop" },
+            { id: "rs_sc_black_plus_crop_maio", nome: "RS/SC | Black + | Crop | Venc. Maio", desembolso: "2026-12-05", vencimento: "2027-05-05", regioes: "RS/SC", classificacao: "Black +", produto: "Crop" },
+            { id: "rs_sc_black_plus_crop_junho", nome: "RS/SC | Black + | Crop | Venc. Junho", desembolso: "2026-12-05", vencimento: "2027-06-30", regioes: "RS/SC", classificacao: "Black +", produto: "Crop" }
+        ],
+        taxas: [
+            {
+                produtoFinanceiro: "Barter Nutrade",
+                produtoAgricola: "Soja",
+                moeda: "Real",
+                jurosMensais: 1.20,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 4.50,
+                desconto: 4.50, // Campo desconto usado como Cashback do Barter (4,5%)
+                inicio: "2026-08-17",
+                fim: "2026-08-31"
+            },
+            {
+                produtoFinanceiro: "Fiso",
+                produtoAgricola: "Soja",
+                moeda: "Real",
+                jurosMensais: 1.85,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 1.00,
+                desconto: 0.00,
+                inicio: "2026-08-17",
+                fim: "2026-08-31"
+            },
+            {
+                produtoFinanceiro: "Syngenta",
+                produtoAgricola: "Soja",
+                moeda: "Real",
+                jurosMensais: 1.85,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 0.00,
+                desconto: 0.00,
+                inicio: "2026-08-17",
+                fim: "2026-08-31"
+            },
+            {
+                produtoFinanceiro: "Syde",
+                produtoAgricola: "Soja",
+                moeda: "Real",
+                jurosMensais: 1.85,
+                tipoJuros: "Composto",
+                contagemDias: "Dias úteis",
+                incentivo: 0.00,
+                desconto: 4.00,
+                inicio: "2026-08-17",
+                fim: "2026-08-31"
+            },
+            {
+                produtoFinanceiro: "CRA Agro / Banco Parceiro",
+                produtoAgricola: "Soja",
+                moeda: "Real",
+                jurosMensais: 1.70,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 2.00, // Exemplo de produto financeiro adicional com 2,00% de incentivo
+                desconto: 0.00,
+                inicio: "2026-08-17",
+                fim: "2026-08-31"
+            }
+        ]
+    },
+    {
+        id: 1,
+        nome: "Cerrado Safra 2026/27",
+        titulo: "Cerrado Safra 2026/27 (Carência 01/10/2026 - 30/05/2027)",
+        status: "Ativa",
+        desembolso: "2026-10-01",
+        vencimento: "2027-05-30",
+        visivelRTV: true,
+        subcategorias: [
+            { id: "mt_go_silver_crop", nome: "MT/GO | Silver +, Silver | Crop", desembolso: "2026-10-01", vencimento: "2027-05-30", regioes: "MT/GO", classificacao: "Silver, Silver +", produto: "Crop" },
+            { id: "mt_go_black_crop", nome: "MT/GO | Black + | Crop", desembolso: "2026-10-01", vencimento: "2027-05-30", regioes: "MT/GO", classificacao: "Black +", produto: "Crop" },
+            { id: "matopiba_crop_maio", nome: "BA/PI/MA/TO (Matopiba) | Crop | Venc. Maio", desembolso: "2026-10-01", vencimento: "2027-05-30", regioes: "BA/PI/MA/TO", classificacao: "Silver, Silver +", produto: "Crop" },
+            { id: "matopiba_bio_junho", nome: "BA/PI/MA/TO (Matopiba) | Bio | Venc. Junho", desembolso: "2026-10-01", vencimento: "2027-06-30", regioes: "BA/PI/MA/TO", classificacao: "Bio", produto: "Crop" }
+        ],
+        taxas: [
+            {
+                produtoFinanceiro: "Barter Nutrade",
+                produtoAgricola: "Soja",
+                moeda: "USD",
+                jurosMensais: 1.20,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 4.50,
+                desconto: 4.50,
+                inicio: "2026-08-01",
+                fim: "2027-05-30"
+            },
+            {
+                produtoFinanceiro: "Fiso",
+                produtoAgricola: "Soja",
+                moeda: "USD",
+                jurosMensais: 1.85,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 1.00,
+                desconto: 0.00,
+                inicio: "2026-08-01",
+                fim: "2027-05-30"
+            },
+            {
+                produtoFinanceiro: "Syngenta",
+                produtoAgricola: "Soja",
+                moeda: "USD",
+                jurosMensais: 1.85,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 0.00,
+                desconto: 0.00,
+                inicio: "2026-08-01",
+                fim: "2027-05-30"
+            },
+            {
+                produtoFinanceiro: "Syde",
+                produtoAgricola: "Soja",
+                moeda: "USD",
+                jurosMensais: 1.85,
+                tipoJuros: "Composto",
+                contagemDias: "Dias úteis",
+                incentivo: 0.00,
+                desconto: 4.00,
+                inicio: "2026-08-01",
+                fim: "2027-05-30"
+            },
+            {
+                produtoFinanceiro: "CRA Agro / Banco Parceiro",
+                produtoAgricola: "Soja",
+                moeda: "USD",
+                jurosMensais: 1.70,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 2.00,
+                desconto: 0.00,
+                inicio: "2026-08-01",
+                fim: "2027-05-30"
+            }
+        ]
+    },
+    {
+        id: 2,
         nome: "Planilha 2026 (216 dias)",
         titulo: "Planilha Barter 2026 (Carência 01/10/2025 - 05/05/2026)",
         status: "Ativa",
         desembolso: "2025-10-01",
         vencimento: "2026-05-05",
         visivelRTV: true,
+        subcategorias: [
+            { id: "venda_direta_crop", nome: "Venda direta | Crop", desembolso: "2025-10-01", vencimento: "2026-05-05", regioes: "Nacional", classificacao: "Geral", produto: "Crop" },
+            { id: "barter_nutrade", nome: "Barter Grãos | Nutrade", desembolso: "2025-10-01", vencimento: "2026-05-05", regioes: "Nacional", classificacao: "Geral", produto: "Crop" },
+            { id: "grandes_contas", nome: "Grandes Contas | Key Account", desembolso: "2025-10-01", vencimento: "2026-05-05", regioes: "Nacional", classificacao: "Geral", produto: "Crop" },
+            { id: "venda_indireta_dist", nome: "Venda indireta | Distribuição", desembolso: "2025-10-01", vencimento: "2026-05-05", regioes: "Nacional", classificacao: "Geral", produto: "Crop" }
+        ],
         taxas: [
             {
                 produtoFinanceiro: "Barter Nutrade",
@@ -2641,19 +2838,7 @@ let campaigns = [
                 tipoJuros: "Simples",
                 contagemDias: "Dias corridos",
                 incentivo: 4.50,
-                desconto: 0.00,
-                inicio: "2025-10-01",
-                fim: "2026-05-05"
-            },
-            {
-                produtoFinanceiro: "Barter Outras Tradings",
-                produtoAgricola: "Soja",
-                moeda: "USD",
-                jurosMensais: 1.20,
-                tipoJuros: "Simples",
-                contagemDias: "Dias corridos",
-                incentivo: 3.00,
-                desconto: 0.00,
+                desconto: 4.50,
                 inicio: "2025-10-01",
                 fim: "2026-05-05"
             },
@@ -2692,90 +2877,21 @@ let campaigns = [
                 desconto: 0.00,
                 inicio: "2025-10-01",
                 fim: "2026-05-05"
+            },
+            {
+                produtoFinanceiro: "CRA Agro / Banco Parceiro",
+                produtoAgricola: "Soja",
+                moeda: "USD",
+                jurosMensais: 1.70,
+                tipoJuros: "Simples",
+                contagemDias: "Dias corridos",
+                incentivo: 2.00,
+                desconto: 0.00,
+                inicio: "2025-10-01",
+                fim: "2026-05-05"
             }
         ]
-    },
-    {
-        id: 1,
-        nome: "Verão",
-        titulo: "Verão",
-        status: "Ativa",
-        desembolso: "2026-10-05",
-        vencimento: "2026-12-01",
-        visivelRTV: true,
-        taxas: [
-            {
-                produtoFinanceiro: "Barter Nutrade",
-                produtoAgricola: "Soja",
-                moeda: "BRL",
-                jurosMensais: 1.20, // 14.4% a.a.
-                tipoJuros: "Simples",
-                contagemDias: "Dias corridos",
-                incentivo: 4.50,
-                desconto: 0.00,
-                inicio: "2026-07-21",
-                fim: "2026-12-01"
-            },
-            {
-                produtoFinanceiro: "Barter Outras Tradings",
-                produtoAgricola: "Soja",
-                moeda: "BRL",
-                jurosMensais: 1.20, // 14.4% a.a.
-                tipoJuros: "Simples",
-                contagemDias: "Dias corridos",
-                incentivo: 3.00,
-                desconto: 0.00,
-                inicio: "2026-07-21",
-                fim: "2026-12-01"
-            },
-            {
-                produtoFinanceiro: "Syde",
-                produtoAgricola: "Soja",
-                moeda: "BRL",
-                jurosMensais: 1.85,
-                tipoJuros: "Composto",
-                contagemDias: "Dias úteis",
-                incentivo: 0.00,
-                desconto: 4.00,
-                inicio: "2026-07-21",
-                fim: "2026-12-01"
-            },
-            {
-                produtoFinanceiro: "Fiso",
-                produtoAgricola: "Soja",
-                moeda: "BRL",
-                jurosMensais: 1.85,
-                tipoJuros: "Simples",
-                contagemDias: "Dias corridos",
-                incentivo: 1.00,
-                desconto: 0.00,
-                inicio: "2026-07-21",
-                fim: "2026-12-01"
-            },
-            {
-                produtoFinanceiro: "Syngenta",
-                produtoAgricola: "Soja",
-                moeda: "BRL",
-                jurosMensais: 1.85,
-                tipoJuros: "Simples",
-                contagemDias: "Dias corridos",
-                incentivo: 0.00,
-                desconto: 0.00,
-                inicio: "2026-07-21",
-                fim: "2026-12-01"
-            }
-        ]
-    },
-    { id: 2, nome: "Campanha Teste", titulo: "Campanha Teste", status: "Ativa", desembolso: "2026-08-01", vencimento: "2026-08-02", visivelRTV: false, taxas: [] },
-    { id: 3, nome: "Campanha Fertilizante", titulo: "Campanha Fertilizante", status: "Ativa", desembolso: "2026-11-11", vencimento: "2026-11-11", visivelRTV: true, taxas: [] },
-    { id: 4, nome: "Atualizando excluindo taxas", titulo: "Teste Taxas 2", status: "Ativa", desembolso: "", vencimento: "", visivelRTV: true, taxas: [] },
-    { id: 5, nome: "Safra Inverno", titulo: "Safra Inverno", status: "Ativa", desembolso: "2025-12-01", vencimento: "2026-09-01", visivelRTV: true, taxas: [] },
-    { id: 6, nome: "campanha teste", titulo: "campanha teste", status: "Ativa", desembolso: "2026-08-19", vencimento: "2026-12-20", visivelRTV: false, taxas: [] },
-    { id: 7, nome: "Nova campanha [3]", titulo: "Nova campanha [3]", status: "Ativa", desembolso: "2026-07-01", vencimento: "2028-05-30", visivelRTV: true, taxas: [] },
-    { id: 8, nome: "Nova campanha [2]", titulo: "Nova campanha [2]", status: "Ativa", desembolso: "2026-07-30", vencimento: "2026-07-31", visivelRTV: true, taxas: [] },
-    { id: 9, nome: "teste", titulo: "teste", status: "Ativa", desembolso: "2026-10-05", vencimento: "2027-05-05", visivelRTV: true, taxas: [] },
-    { id: 10, nome: "Fessa teste 002", titulo: "Vascampanha 001", status: "Ativa", desembolso: "2026-12-26", vencimento: "2027-10-10", visivelRTV: true, taxas: [] },
-    { id: 11, nome: "Fessa Test 003", titulo: "VasCampanha", status: "Ativa", desembolso: "2026-06-28", vencimento: "2027-05-20", visivelRTV: true, taxas: [] }
+    }
 ];
 
 let tempTaxes = [];
@@ -3046,7 +3162,7 @@ function updateCampaignSelectOptions() {
         if (!select) return;
 
         const curVal = select.value;
-        select.innerHTML = '<option value="custom">Campanha Customizada (Manual)</option>';
+        select.innerHTML = '';
 
         campaigns.forEach(camp => {
             if (camp.status === 'Ativa') {
@@ -3057,8 +3173,15 @@ function updateCampaignSelectOptions() {
             }
         });
 
+        const customOpt = document.createElement('option');
+        customOpt.value = 'custom';
+        customOpt.textContent = 'Campanha Customizada (Manual)';
+        select.appendChild(customOpt);
+
         if (curVal && select.querySelector(`option[value="${curVal}"]`)) {
             select.value = curVal;
+        } else if (select.options.length > 0) {
+            select.value = select.options[0].value;
         }
     });
 }
@@ -3082,12 +3205,12 @@ function updateWsysMonthIndicator(vencimentoDateStr) {
 }
 window.updateWsysMonthIndicator = updateWsysMonthIndicator;
 
-// Refactored onCampanhaSelectChange to handle autofilling of parameters and syncing across layouts
+// Refactored onCampanhaSelectChange to handle autofilling of parameters, subcategories and syncing across layouts
 function onCampanhaSelectChange(val) {
     const s1 = document.getElementById('sim-campanha-select');
     const s2 = document.getElementById('v2-sim-campanha-select');
-    if (s1 && s1.value !== val) s1.value = val;
-    if (s2 && s2.value !== val) s2.value = val;
+    if (s1 && s1.value !== String(val)) s1.value = val;
+    if (s2 && s2.value !== String(val)) s2.value = val;
 
     const commoditySelect = document.getElementById('sim-commodity');
     const v2CommoditySelect = document.getElementById('v2-sim-commodity');
@@ -3105,8 +3228,21 @@ function onCampanhaSelectChange(val) {
         return;
     }
 
-    const camp = campaigns.find(c => c.id == val);
+    const camp = campaigns.find(c => c.id == val || c.nome.toLowerCase() === String(val).toLowerCase());
     if (!camp) return;
+
+    // Dynamically populate subcategories select
+    const subcatSelect = document.getElementById('v2-sim-subcategoria');
+    if (subcatSelect && camp.subcategorias && camp.subcategorias.length > 0) {
+        subcatSelect.innerHTML = '';
+        camp.subcategorias.forEach((sub, idx) => {
+            const opt = document.createElement('option');
+            opt.value = sub.id || sub.nome;
+            opt.textContent = sub.nome;
+            if (idx === 0) opt.selected = true;
+            subcatSelect.appendChild(opt);
+        });
+    }
 
     // Update Wsys Month indicator crossing by campaign maturity date
     if (camp.vencimento) {
@@ -3116,12 +3252,7 @@ function onCampanhaSelectChange(val) {
     }
 
     // Find Barter tax parameters (Nutrade or generic Barter)
-    const barterTax = camp.taxas.find(t => t.produtoFinanceiro === 'Barter Nutrade' || t.produtoFinanceiro === 'Barter');
-    const barterMarketTax = camp.taxas.find(t => t.produtoFinanceiro === 'Barter Outras Tradings');
-
-    if (barterMarketTax && barterMarketTax.incentivo !== undefined) {
-        activeCampanhaValorizacaoOutras = barterMarketTax.incentivo;
-    }
+    const barterTax = camp.taxas ? camp.taxas.find(t => (t.produtoFinanceiro || '').includes('Barter')) : null;
 
     if (barterTax) {
         const prodAgricola = barterTax.produtoAgricola || 'Soja';
@@ -3140,8 +3271,10 @@ function onCampanhaSelectChange(val) {
             jurosInput.value = (barterTax.jurosMensais * 12).toFixed(2);
             jurosInput.disabled = true;
         }
+        // Use field 'desconto' as Barter Cashback as requested (or fallback to 'incentivo')
+        const cashbackVal = (barterTax.desconto !== undefined && barterTax.desconto > 0) ? barterTax.desconto : (barterTax.incentivo || 4.50);
         if (campanhaValInput) {
-            campanhaValInput.value = barterTax.incentivo.toFixed(2);
+            campanhaValInput.value = cashbackVal.toFixed(2);
             campanhaValInput.disabled = true;
         }
     } else {
@@ -3152,10 +3285,19 @@ function onCampanhaSelectChange(val) {
         if (campanhaValInput) campanhaValInput.disabled = false;
     }
 
+    // Apply first subcategory dates if available, otherwise campaign dates
+    let desembolso = camp.desembolso;
+    let vencimento = camp.vencimento;
+    if (camp.subcategorias && camp.subcategorias.length > 0) {
+        const sub0 = camp.subcategorias[0];
+        if (sub0.desembolso) desembolso = sub0.desembolso;
+        if (sub0.vencimento) vencimento = sub0.vencimento;
+    }
+
     // Calculate term in days if dates are present
-    if (camp.desembolso && camp.vencimento && prazoInput) {
-        const desembolsoDate = new Date(camp.desembolso + 'T12:00:00');
-        const vencimentoDate = new Date(camp.vencimento + 'T12:00:00');
+    if (desembolso && vencimento && prazoInput) {
+        const desembolsoDate = new Date(desembolso + 'T12:00:00');
+        const vencimentoDate = new Date(vencimento + 'T12:00:00');
         if (!isNaN(desembolsoDate.getTime()) && !isNaN(vencimentoDate.getTime())) {
             const diffTime = vencimentoDate - desembolsoDate;
             const diffDays = Math.round(diffTime / (1000 * 60 * 60 * 24));
@@ -3171,6 +3313,28 @@ function onCampanhaSelectChange(val) {
 
     calculateSimulation();
 }
+
+function onSubcategoriaChange(val) {
+    const s2 = document.getElementById('v2-sim-campanha-select');
+    const campVal = s2 ? s2.value : null;
+    const camp = campaigns.find(c => c.id == campVal || c.nome.toLowerCase() === String(campVal).toLowerCase());
+    const prazoInput = document.getElementById('sim-prazo');
+
+    if (camp && camp.subcategorias) {
+        const sub = camp.subcategorias.find(s => (s.id === val || s.nome === val));
+        if (sub && sub.desembolso && sub.vencimento && prazoInput) {
+            const d1 = new Date(sub.desembolso + 'T12:00:00');
+            const d2 = new Date(sub.vencimento + 'T12:00:00');
+            if (!isNaN(d1.getTime()) && !isNaN(d2.getTime())) {
+                const diffDays = Math.round((d2 - d1) / (1000 * 60 * 60 * 24));
+                if (diffDays > 0) prazoInput.value = diffDays;
+            }
+        }
+    }
+
+    calculateSimulation();
+}
+window.onSubcategoriaChange = onSubcategoriaChange;
 
 // ==================== WSYS PRAÇAS DATABASE MANAGER ====================
 function initWsysPlazas() {
@@ -3953,9 +4117,24 @@ window.selectCreativeCommodity = selectCreativeCommodity;
 window.onEstadoChange = onEstadoChange;
 window.onPracaChange = onPracaChange;
 window.onCampanhaSelectChange = onCampanhaSelectChange;
-window.onCulturaChange = onCulturaChange;
+window.onSubcategoriaChange = onSubcategoriaChange;
+window.updateCampaignSelectOptions = updateCampaignSelectOptions;
 window.editPraca = typeof editPraca !== 'undefined' ? editPraca : () => { };
 window.deletePraca = typeof deletePraca !== 'undefined' ? deletePraca : () => { };
+
+// ==================== AUTO-INIT ON LOAD ====================
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof initWsysPlazas === 'function') initWsysPlazas();
+    if (typeof initEstadoSelect === 'function') initEstadoSelect();
+    if (typeof updateCampaignSelectOptions === 'function') updateCampaignSelectOptions();
+    if (typeof renderCampaignsTable === 'function') renderCampaignsTable();
+    if (typeof renderPracasTable === 'function') renderPracasTable();
+    
+    // Automatically select the first campaign (Sul Repique)
+    if (typeof campaigns !== 'undefined' && campaigns.length > 0) {
+        onCampanhaSelectChange(campaigns[0].id);
+    }
+});
 
 
 

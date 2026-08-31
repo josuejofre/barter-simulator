@@ -92,9 +92,9 @@ $$\text{Custo de Frete Total} = (\text{Km Chão} \times \text{Tarifa Chão}) + (
 
 ---
 
-## 5. Comparativo das 4 Modalidades Ativas de Crédito e Sacas Equivalentes
+## 5. Comparativo das 5 Modalidades Ativas de Crédito e Sacas Equivalentes
 
-O simulador compara 4 modalidades de crédito: **Barter (Nutrade)**, **Syde (FIDC)**, **Fiso (Bancário)** e **Syngenta (On-Balance)**.
+O simulador compara 5 modalidades de crédito: **Barter (Nutrade)**, **Syde (FIDC)**, **Fiso (Bancário)**, **Syngenta (On-Balance)** e **CRA Agro / Banco Parceiro** (novo produto financeiro com incentivo).
 
 ### Sacas Equivalentes nas Modalidades Financeiras
 Para permitir a comparação direta com o Barter, cada modalidade financeira exibe a equivalência em sacas:
@@ -106,37 +106,39 @@ $$\text{Sacas Equivalentes} = \frac{\text{Valor Total da Modalidade (R\$)}}{\tex
 2. **Custo Real da Operação (% a.m.):**
    $$\text{Custo Real da Operação (\% a.m.)} = \frac{\text{Custo Real Total (\%)}}{\text{Prazo em Meses Corridos (dias / 30)}}$$
 
-### Detalhamento das 4 Modalidades Ativas:
+### Detalhamento das 5 Modalidades Ativas:
 
 1. **Barter (Nutrade):**
    - **Garantias:** CPR Física e Seguro Agrícola.
    - **Mecânica:** Entrega física de grãos com devolução financeira de Cashback ($4,5\%$) e Incentivo de prazo.
+   - **Campo Desconto na Campanha:** O campo *Desconto* configurado na tabela de taxas da campanha é utilizado diretamente para alimentar o percentual de *Cashback Barter*.
+   - **Simulação com KM Zero:** A modalidade Barter pode ser simulada mesmo com quilometragem zero de frete (frete R$ 0,00), calculando as sacas e retornos sem impedimento logístico.
 
-2. **Syde:**
+2. **Syde (FIDC):**
    - **Garantias:** Nota promissória ou CPR financeira sem penhor.
    - **Mecânica:** Desconto VPAN à vista de $-4,0\%$, juros compostos em dias úteis (/22).
 
-3. **FISO:**
+3. **FISO (Bancário):**
    - **Garantias:** Sem garantia patrimonial (cessão comercial a parceiro).
-   - **Mecânica:** Juros simples em dias corridos com rebate de incentivo comercial ($-3,0\%$).
+   - **Mecânica:** Juros simples em dias corridos com rebate de incentivo comercial ($-1,0\%$).
 
-4. **Syngenta:**
+4. **Syngenta (On-Balance):**
    - **Garantias:** Alinhadas diretamente com a mesa de crédito corporativa.
    - **Mecânica:** Faturamento a prazo On-Balance sobre preço de tabela.
-   - **Garantias Exigidas:** CPR Física e Seguro Agrícola.
-   - **Incentivos:** Valorização comercial padrão de mercado concorrente.
 
-3. **FISO:**
-   - **Garantias Exigidas:** Não há garantia. É uma venda a prazo cedida a um parceiro.
-   - **Incentivos:** Venda a prazo dentro de uma campanha comercial com rebate/incentivo comercial (-3,0%).
+5. **CRA Agro / Banco Parceiro:**
+   - **Garantias:** Cessão de recebíveis ou CPR Financeira.
+   - **Mecânica:** Operação securitizada via mercado de capitais / banco parceiro com taxa atrativa ($1,70\%$ a.m.) e exemplo de bonificação/incentivo comercial da campanha ($-2,0\%$).
 
-4. **Syngenta:**
-   - **Garantias Exigidas:** Garantia alinhada diretamente com o time de crédito.
-   - **Incentivos:** Faturamento direto no balanço Syngenta (On-Balance) sob preço de tabela.
+---
 
-5. **Syde:**
-   - **Garantias Exigidas:** Nota promissória ou CPR financeira sem penhor.
-   - **Incentivos:** Desconto VPAN à vista de $-4,0\%$ com juros compostos calculados por dias úteis.
+## 6. Estrutura de Campanhas e Subcategorias (Interface Backoffice)
+
+As campanhas reproduzem fielmente o ecossistema corporativo (como a campanha **Sul Repique** e **Cerrado Safra 2026/27**), contendo subcategorias segmentadas por:
+- **Regiões:** PR/MS, RS/SC, MT/GO, Matopiba (BA/PI/MA/TO).
+- **Classificação:** Silver, Silver +, Black, Black +, Bio.
+- **Prazos:** Vencimentos diferenciados (Maio, Junho, etc.) que ajustam o prazo da simulação dinamicamente.
+- **Tabela de Taxas Multi-Produto:** Cada campanha parametriza taxas, incentivos e descontos para todas as 5 modalidades.
 
 ---
 

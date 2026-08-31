@@ -262,12 +262,10 @@
                                         <label for="v2-sim-campanha-select">Campanha</label>
                                         <div class="select-wrapper">
                                             <select id="v2-sim-campanha-select"
-                                                onchange="document.getElementById('sim-campanha-select').value=this.value; onCampanhaSelectChange(this.value);">
-                                                <option value="milho">Milho</option>
-                                                <option value="soja" selected>Soja</option>
-                                                <option value="safra-2026-cerrado">Safra 2026 - Soja Cerrado</option>
-                                                <option value="safra-2026-safrinha">Safra 2026 - Milho Safrinha</option>
-                                                <option value="campanha-vd-reta-final">Campanha VD Reta Final</option>
+                                                onchange="onCampanhaSelectChange(this.value);">
+                                                <option value="0" selected>Sul Repique (05/12/2026 - 05/05/2027)</option>
+                                                <option value="1">Cerrado Safra 2026/27 (01/10/2026 - 30/05/2027)</option>
+                                                <option value="2">Planilha 2026 (216 dias) (01/10/2025 - 05/05/2026)</option>
                                                 <option value="custom">Campanha Customizada (Manual)</option>
                                             </select>
                                         </div>
@@ -276,10 +274,18 @@
                                         <label for="v2-sim-subcategoria">Subcategoria</label>
                                         <div class="select-wrapper">
                                             <select id="v2-sim-subcategoria" onchange="onSubcategoriaChange(this.value)">
-                                                <option value="venda_direta_crop" selected>Venda direta | Crop</option>
-                                                <option value="venda_indireta_dist">Venda indireta | Distribuição</option>
-                                                <option value="barter_nutrade">Barter Grãos | Nutrade</option>
-                                                <option value="grandes_contas">Grandes Contas | Key Account</option>
+                                                <option value="pr_ms_silver_crop" selected>PR/MS | Silver +, Silver | Crop</option>
+                                                <option value="rs_sc_silver_crop_maio">RS/SC | Silver +, Silver | Crop | Venc. Maio</option>
+                                                <option value="rs_sc_black_crop_maio">RS/SC | Black | Crop | Venc. Maio</option>
+                                                <option value="rs_sc_bio_maio">RS/SC | Bio | Venc. Maio</option>
+                                                <option value="rs_sc_silver_crop_junho">RS/SC | Silver +, Silver | Crop | Venc. Junho</option>
+                                                <option value="rs_sc_bio_junho">RS/SC | Bio | Venc. Junho</option>
+                                                <option value="pr_ms_bio">PR/MS | Bio</option>
+                                                <option value="pr_ms_black_crop">PR/MS | Black | Crop</option>
+                                                <option value="pr_ms_black_plus_crop">PR/MS | Black + | Crop</option>
+                                                <option value="rs_sc_black_crop_junho">RS/SC | Black | Crop | Venc. Junho</option>
+                                                <option value="rs_sc_black_plus_crop_maio">RS/SC | Black + | Crop | Venc. Maio</option>
+                                                <option value="rs_sc_black_plus_crop_junho">RS/SC | Black + | Crop | Venc. Junho</option>
                                             </select>
                                         </div>
                                     </div>
