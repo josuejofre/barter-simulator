@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRD_SYDE-31 – Simulador de Taxas: Modalidade Barter e Multi-Modalidades</title>
+    <title>PRD_SYDE-31 – Simulador de Taxas: Modalidade Barter (Nutrade)</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -142,13 +142,6 @@
             font-weight: 700;
         }
 
-        h4 {
-            font-size: 14.5px;
-            color: var(--text-main);
-            margin: 16px 0 8px 0;
-            font-weight: 700;
-        }
-
         p, ul, ol {
             font-size: 14.5px;
             color: #334155;
@@ -211,12 +204,6 @@
             color: #92400e;
         }
 
-        .callout-danger {
-            background-color: var(--danger-subtle);
-            border: 1px solid rgba(220, 38, 38, 0.3);
-            color: #991b1b;
-        }
-
         .callout i {
             font-size: 18px;
             margin-top: 2px;
@@ -256,7 +243,17 @@
             font-weight: 600;
         }
 
-        /* Action Buttons for Print / Download */
+        /* Scope tags */
+        .tag-in {
+            color: #16a34a;
+            font-weight: 700;
+        }
+        .tag-out {
+            color: #dc2626;
+            font-weight: 700;
+        }
+
+        /* Action Buttons for Print */
         .action-bar {
             display: flex;
             justify-content: flex-end;
@@ -297,7 +294,6 @@
             background: #f8fafc;
         }
 
-        /* Print Media Styles */
         @media print {
             body {
                 background: white;
@@ -339,15 +335,15 @@
             <div class="badge-row">
                 <span class="badge badge-primary"><i class="fa-solid fa-file-code"></i> PRD_SYDE-31</span>
                 <span class="badge badge-success"><i class="fa-solid fa-circle-check"></i> v1.0 — Ready for Dev</span>
-                <span class="badge badge-amber"><i class="fa-solid fa-code-branch"></i> Ata 21/08 Consolidada</span>
+                <span class="badge badge-amber"><i class="fa-solid fa-users"></i> Alinhamento Produto & Negócio</span>
             </div>
-            <h1>Simulador de Taxas: Modalidade Barter (Nutrade) e Comparativo Multi-Modalidades</h1>
-            <p class="doc-subtitle">Especificação Técnica, Funcional e Regras de Negócio para o time de Engenharia e Produto.</p>
+            <h1>Simulador de Taxas: Modalidade Barter (Nutrade)</h1>
+            <p class="doc-subtitle">Especificação Técnica e Regras de Negócio para o time de Engenharia e Produto.</p>
 
             <div class="meta-grid">
                 <div class="meta-item">
                     <strong>Referência Cruzada</strong>
-                    PRD_FIN-12453 / SYDE-31
+                    PRD_FIN-12453 / Card SYDE-31
                 </div>
                 <div class="meta-item">
                     <strong>Data da Versão</strong>
@@ -371,7 +367,7 @@
                 <tr>
                     <th style="width: 80px;">Versão</th>
                     <th style="width: 110px;">Data</th>
-                    <th style="width: 160px;">Autor / Squad</th>
+                    <th style="width: 170px;">Autor / Origem</th>
                     <th>Principais Alterações Consolidadas</th>
                 </tr>
             </thead>
@@ -392,19 +388,19 @@
                     <td><strong>v0.3</strong></td>
                     <td>29/07/2026</td>
                     <td>Discovery / Negócio</td>
-                    <td>Ajustes de escopo para incluir Barter Nutrade e Outras Tradings, obrigatoriedade de commodity/praça e fretes WSys.</td>
+                    <td>Ajustes de escopo, fluxo do usuário, obrigatoriedade de commodity/praça para Barter e integração WSys.</td>
                 </tr>
                 <tr>
                     <td><strong style="color:var(--primary-light);">v1.0</strong></td>
                     <td><strong>31/08/2026</strong></td>
-                    <td><strong>Engenharia & Negócio</strong></td>
-                    <td><strong>Consolidação definitiva das Regras de Negócio:</strong><br>
-                        1. <strong>Cashback Financeiro:</strong> Cashback não reduz sacas da CPR física; o produtor entrega o volume integral dos insumos e recebe devolução financeira em conta ($ e R$).<br>
-                        2. <strong>5 Modalidades Ativas:</strong> Barter (Nutrade), Syde (FIDC), Fiso (Bancário), Syngenta (On-Balance) e CRA Agro / Banco Parceiro.<br>
-                        3. <strong>Mapeamento de Campanhas:</strong> Estrutura de campanhas (<em>Sul Repique, Cerrado 2026/27</em>) e subcategorias segmentadas (<em>PR/MS, RS/SC Silver, Black, Black+, Bio</em>).<br>
-                        4. <strong>Matriz Tributária:</strong> Motor fiscal (Funrural 1,63%, FETHAB/IAGRO MT, FUNDEMS MS, FUNDEINFRA GO, FDI PI).<br>
-                        5. <strong>Flexibilidade Logística:</strong> Suporte a frete zero (KM 0).<br>
-                        6. <strong>Identificação de Fontes:</strong> Tag <code>* Fonte: Cadastro de campanha</code> em todos os campos de campanha.
+                    <td><strong>Produto & Negócio (Ata 21/08)</strong></td>
+                    <td><strong>Consolidação das Regras de Negócio e Simplificação de Escopo:</strong><br>
+                        1. <strong>Mecânica de Cashback:</strong> O cashback não deduz sacas da CPR física; o produtor entrega o volume integral dos insumos e recebe a devolução financeira em conta ($ ou R$).<br>
+                        2. <strong>Foco do PRD em Barter Nutrade:</strong> Especificação exclusiva do motor de Barter Nutrade e sua apresentação no comparativo.<br>
+                        3. <strong>Barter Outras Tradings Fora de Escopo:</strong> Definido como entrega futura.<br>
+                        4. <strong>Origem dos Dados no WSys:</strong> Preço da commodity, tarifas de frete e custos por praça vêm diretamente do WSys.<br>
+                        5. <strong>Eliminação de Dependências Externas:</strong> Dispensada a dependência de feed externo de cotação do dólar (quando dados já são informados na moeda da operação pelo WSys) e removidas integrações de Salesforce/SAP deste escopo.<br>
+                        6. <strong>Identificação de Fontes:</strong> Tag <code>* Fonte: Cadastro de campanha</code> nos campos originados de campanha.
                     </td>
                 </tr>
             </tbody>
@@ -412,31 +408,48 @@
 
         <!-- Contexto & Problema -->
         <h2><i class="fa-solid fa-bullseye"></i> 1. Contexto & Problema de Negócio</h2>
-        <p>O simulador atual apoia negociações de crédito ao comparar modalidades de financiamento ao produtor rural. Entretanto, a modalidade <strong>Barter</strong> (especialmente na estrutura de originação <strong>Nutrade</strong>) dependia de planilhas manuais e cálculos descentralizados.</p>
-        
-        <div class="callout callout-warning">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-            <div>
-                <strong>Dores críticas sanadas por este PRD:</strong>
-                <ul style="margin: 6px 0 0 0; padding-left: 18px;">
-                    <li>Dificuldade de comparar instrumentos financeiros puros (FIDC, Banco, On-Balance) com operações estruturadas em grãos (Barter).</li>
-                    <li>Risco de inconsistência entre o discurso comercial e o cálculo financeiro real.</li>
-                    <li>Dificuldade em tangibilizar que o cashback de Barter é um retorno financeiro em dinheiro, e não uma redução antecipada de sacas na CPR.</li>
-                </ul>
-            </div>
-        </div>
+        <p>O simulador atual apoia negociações comerciais ao comparar opções de crédito ao produtor rural no ecossistema Syde. Entretanto, a modalidade <strong>Barter</strong>, especialmente na estrutura <strong>Nutrade</strong>, ainda não está contemplada de forma nativa na experiência do produto.</p>
+        <p>Na prática, isso faz com que RTVs, consultores e times comerciais dependam de cálculos manuais e planilhas paralelas para demonstrar o ganho econômico da operação ao produtor rural, gerando risco operacional e baixa padronização.</p>
 
         <!-- Objetivos -->
         <h2><i class="fa-solid fa-flag-checkered"></i> 2. Objetivos do Produto</h2>
-        <ul>
-            <li><strong>Comparador Unificado:</strong> Integrar a modalidade Barter (Nutrade) às 4 modalidades financeiras (Syde, Fiso, Syngenta e CRA Agro), ordenando por benefício econômico.</li>
-            <li><strong>Suporte Multi-Moeda:</strong> Simulação transparente em Real (BRL) e Dólar (USD) preservando os volumes físicos de grãos.</li>
-            <li><strong>Motor Fiscal Automático:</strong> Cálculo de impostos federais e estaduais por praça logística (WSys).</li>
-            <li><strong>Devolução Financeira Real:</strong> Apresentar a devolução de cashback e incentivo de prazo sem afetar o volume físico contratado na CPR.</li>
-        </ul>
+        <p>Incluir a modalidade <strong>Barter (Nutrade)</strong> no simulador, permitindo a comparação clara e confiável com as modalidades já existentes no produto (<strong>FISO</strong>, <strong>Syngenta</strong> e <strong>Syde</strong>), evidenciando o valor total da operação, volume contratual a entregar, devolução financeira de cashback e equivalência econômica em sacas.</p>
+
+        <!-- Escopo -->
+        <h2><i class="fa-solid fa-arrows-split-up-and-left"></i> 3. Escopo: O que está Dentro e Fora de Escopo</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 50%;">Itens no Escopo (Esta Entrega)</th>
+                    <th style="width: 50%;">Itens Fora do Escopo</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <ul>
+                            <li><span class="tag-in">✓</span> Motor de cálculo completo de <strong>Barter (Nutrade)</strong>.</li>
+                            <li><span class="tag-in">✓</span> Regra de CPR Física integral e devolução financeira de Cashback e Incentivo de prazo.</li>
+                            <li><span class="tag-in">✓</span> Consumo de <strong>preço da commodity</strong>, fretes e tributos da base do <strong>WSys</strong>.</li>
+                            <li><span class="tag-in">✓</span> Apresentação do Barter Nutrade integrado no comparativo de modalidades.</li>
+                            <li><span class="tag-in">✓</span> Suporte a simulações em Real (BRL) e Dólar (USD).</li>
+                            <li><span class="tag-in">✓</span> Flexibilidade de frete KM zero (frete R$ 0,00).</li>
+                        </ul>
+                    </td>
+                    <td>
+                        <ul>
+                            <li><span class="tag-out">✗</span> <strong>Barter (Outras Tradings):</strong> Entrega futura.</li>
+                            <li><span class="tag-out">✗</span> <strong>Fórmulas internas das demais modalidades:</strong> Fórmulas de Fiso, Syde e Syngenta já existem no produto e não são escopo deste PRD.</li>
+                            <li><span class="tag-out">✗</span> <strong>Integrações de CRM/ERP (Salesforce / SAP S/4HANA):</strong> Fora do escopo deste PRD.</li>
+                            <li><span class="tag-out">✗</span> <strong>Feed externo de câmbio (Dólar):</strong> Dispensado, pois os dados são providos na moeda da operação via WSys/cadastro.</li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
 
         <!-- Requisitos Funcionais -->
-        <h2><i class="fa-solid fa-gears"></i> 3. Requisitos Funcionais do Sistema</h2>
+        <h2><i class="fa-solid fa-gears"></i> 4. Requisitos Funcionais do Sistema</h2>
         <table>
             <thead>
                 <tr>
@@ -448,62 +461,56 @@
             <tbody>
                 <tr>
                     <td><code>RF-01</code></td>
-                    <td><strong>Seleção de Campanha & Subcategoria</strong></td>
-                    <td>Dropdown hierárquico com campanhas (<em>Sul Repique, Cerrado 2026/27, Planilha 2026</em>) e subcategorias (<em>PR/MS Silver, RS/SC Black, Bio, etc.</em>). Carrega automaticamente datas de desembolso, vencimento, taxas e prazos.</td>
+                    <td><strong>Campanha de Referência</strong></td>
+                    <td>Seleção da campanha comercial ativa (ex: <em>Sul Repique, Cerrado Safra 2026/27</em>) que define prazos, vigência e taxas de Barter.</td>
                 </tr>
                 <tr>
                     <td><code>RF-02</code></td>
                     <td><strong>Commodity & Moeda</strong></td>
-                    <td>Suporte a Soja (sacas 60kg) e Algodão (lp). Toggle BRL/USD convertendo inputs monetários com a taxa cambial futura PTAX.</td>
+                    <td>Seleção obrigatória de commodity para Barter (Soja em sacas ou Algodão em lp). Toggle BRL/USD para moeda da operação.</td>
                 </tr>
                 <tr>
                     <td><code>RF-03</code></td>
                     <td><strong>Praça Logística & Tributação</strong></td>
-                    <td>Seleção de UF e município. O sistema consome alíquotas percentuais (Funrural/estaduais) e valores fixos em UPF/UFERMS para apurar o Preço Líquido Porteira.</td>
+                    <td>Seleção de UF e município, consumindo tributos locais do catálogo WSys para apurar o Preço Líquido Porteira.</td>
                 </tr>
                 <tr>
                     <td><code>RF-04</code></td>
                     <td><strong>Frete Logístico Flexível</strong></td>
-                    <td>Entrada de KM chão e asfalto com tarifas configuradas. Permite <strong>KM 0</strong> sem bloquear ou zerar a simulação de Barter.</td>
+                    <td>Entrada de distâncias em estrada de chão e asfalto. Suporte a <strong>KM zero</strong> sem travar o cálculo.</td>
                 </tr>
                 <tr>
                     <td><code>RF-05</code></td>
-                    <td><strong>Exibição das 5 Modalidades</strong></td>
-                    <td>Gera os cards das modalidades ativas ordenados da mais vantajosa (menor custo real total) para a menos vantajosa.</td>
+                    <td><strong>Identificação de Fonte de Campanha</strong></td>
+                    <td>Campos oriundos do cadastro de campanha (Taxa mensal, Incentivo Barter, Cashback) exibem <code>*</code> e texto <code>Fonte: Cadastro de campanha</code>.</td>
                 </tr>
                 <tr>
                     <td><code>RF-06</code></td>
-                    <td><strong>Identificação de Fonte</strong></td>
-                    <td>Todos os campos oriundos da campanha (Taxa mensal, Incentivo, Cashback, VPAN) recebem <code>*</code> e indicação <code>Fonte: Cadastro de campanha</code> nos tooltips.</td>
-                </tr>
-                <tr>
-                    <td><code>RF-07</code></td>
-                    <td><strong>Exportação em PDF & Share</strong></td>
-                    <td>Gera PDF com seleção modular das modalidades e links compartilháveis via WhatsApp/E-mail.</td>
+                    <td><strong>Exportação & Compartilhamento</strong></td>
+                    <td>Geração de PDF da simulação e link compartilhável.</td>
                 </tr>
             </tbody>
         </table>
 
         <!-- Especificação Matemática -->
-        <h2><i class="fa-solid fa-calculator"></i> 4. Especificação Matemática & Motor de Cálculo</h2>
+        <h2><i class="fa-solid fa-calculator"></i> 5. Especificação Matemática da Modalidade Barter (Nutrade)</h2>
 
         <div class="callout callout-info">
             <i class="fa-solid fa-circle-info"></i>
             <div>
-                <strong>Regra de Ouro do Barter (Ata 21/08):</strong>
-                O volume de grãos fixado na CPR física é integral (<code>Crédito ÷ Preço Líquido</code>) para quitação de 100% dos insumos. O Cashback (4,5%) e o Incentivo de Prazo são <strong>devoluções financeiras em dinheiro ($ / R$) creditadas ao produtor</strong>.
+                <strong>Regra Operacional Consolidada (Ata 21/08 - Produto & Negócio):</strong>
+                O volume físico fixado na CPR é integral (<code>Crédito ÷ Preço Líquido</code>). O Cashback ($4,5\%$) e o Incentivo de Prazo são <strong>devoluções financeiras monetárias ($ ou R$) creditadas ao produtor</strong>, e não uma redução física de sacas na CPR.
             </div>
         </div>
 
-        <h3>4.1. Fórmulas de Barter (Nutrade)</h3>
         <div class="formula-box">
 <span class="comment">// 1. Preço Líquido Livre da Saca (Porteira)</span>
-Preço_Líquido = Preço_Bruto_FOB - Impostos_Totais_Praça
+Preço_Líquido = Preço_Bruto_FOB_WSys - Impostos_Região_WSys
 
 <span class="comment">// 2. Volume Contratual Integral a Entregar (CPR Física)</span>
 Volume_CPR_Entregar = Teto(Valor_Crédito ÷ Preço_Líquido)
 
-<span class="comment">// 3. Preço Pedido TP (Valor Presente da Safra)</span>
+<span class="comment">// 3. Preço Pedido TP (Valor Presente)</span>
 Juros_Período = (Dias_Prazo ÷ 360) × (Taxa_Anual_Barter ÷ 100)
 Preço_TP = Valor_Crédito ÷ (1 + Juros_Período)
 
@@ -513,144 +520,107 @@ Cashback_Devolvido = Valor_Crédito × (%_Cashback_Campanha ÷ 100)
 <span class="comment">// 5. Ganho de Incentivo de Prazo Barter (R$ ou USD)</span>
 Incentivo_Devolvido = Preço_TP × ((Dias_Prazo ÷ 30) × 0.5%)
 
-<span class="comment">// 6. Retorno Total Devolvido ao Produtor</span>
+<span class="comment">// 6. Benefício Total Devolvido ao Produtor</span>
 Retorno_Total_Devolvido = Cashback_Devolvido + Incentivo_Devolvido
 
 <span class="comment">// 7. Sacas Equivalentes Economizadas (Métrica Informativa)</span>
 Sacas_Equivalentes_Economia = Retorno_Total_Devolvido ÷ Preço_Líquido
 
-<span class="comment">// 8. Valor Total e Custo Real</span>
-Frete_Total = (Km_Chão × Tarifa_Chão) + (Km_Asfalto × Tarifa_Asfalto)
-Valor_Total_Barter = (Volume_CPR_Entregar × Preço_Bruto_FOB) + Frete_Total
+<span class="comment">// 8. Custo do Frete e Valor Total</span>
+Frete_Total = (Km_Chão × Tarifa_Chão_WSys) + (Km_Asfalto × Tarifa_Asfalto_WSys)
+Valor_Total_Barter = (Volume_CPR_Entregar × Preço_Bruto_FOB_WSys) + Frete_Total
 Custo_Real_Total_% = ((Valor_Total_Barter - Valor_Crédito) ÷ Valor_Crédito) × 100
 Custo_Real_Operação_am = Custo_Real_Total_% ÷ (Dias_Prazo ÷ 30)
         </div>
 
-        <h3>4.2. Fórmulas das Modalidades Financeiras (Syde, Fiso, Syngenta, CRA)</h3>
-        <div class="formula-box">
-<span class="comment">// 1. Valor Base com Desconto VPAN à Vista</span>
-Valor_Base = Valor_Crédito × (1 - %_VPAN)
-
-<span class="comment">// 2. Aplicação de Juros</span>
-<span class="comment">// Caso A: Juros Compostos em Dias Úteis (/22) - Ex: Syde (FIDC)</span>
-Valor_com_Juros = Valor_Base × (1 + Taxa_Mensal ÷ 100)^(Dias_Úteis ÷ 22)
-
-<span class="comment">// Caso B: Juros Simples em Dias Corridos (/30) - Ex: Fiso, Syngenta, CRA</span>
-Valor_com_Juros = Valor_Base × (1 + (Taxa_Mensal ÷ 100) × (Dias_Corridos ÷ 30))
-
-<span class="comment">// 3. Rebate / Incentivo Comercial da Campanha</span>
-Valor_Total_a_Pagar = Valor_com_Juros × (1 - %_Incentivo_Campanha)
-
-<span class="comment">// 4. Equivalente em Sacas na Modalidade Financeira</span>
-Sacas_Equivalentes = Valor_Total_a_Pagar ÷ Preço_Referência_Saca_FOB
-        </div>
-
-        <!-- Matriz Tributária -->
-        <h2><i class="fa-solid fa-landmark"></i> 5. Matriz Tributária por Estado / Praça (WSys)</h2>
+        <!-- Exemplo Numérico -->
+        <h2><i class="fa-solid fa-table"></i> 6. Exemplo Numérico Homologado (Teste de Mesa)</h2>
         <table>
             <thead>
                 <tr>
-                    <th>Estado</th>
-                    <th>Praças Exemplo</th>
-                    <th>Impostos Base NF (%)</th>
-                    <th>Impostos Fixos (UPF / saca)</th>
-                    <th>Fórmula Aplicada</th>
+                    <th>Parâmetro / Indicador</th>
+                    <th>Valor de Homologação</th>
+                    <th>Explicação do Racional</th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td><strong>MT</strong></td>
-                    <td>Campo Novo, Sorriso, Querência</td>
-                    <td>Funrural: 1,63%</td>
-                    <td>FETHAB + IAGRO: <strong>R$ 3,09 / sc</strong></td>
-                    <td><code>Preço × 1,63% + R$ 3,09</code></td>
+                    <td><strong>Valor da Operação (Crédito)</strong></td>
+                    <td>USD 1.000.000,00</td>
+                    <td>Valor total financiado em insumos</td>
                 </tr>
                 <tr>
-                    <td><strong>MS</strong></td>
-                    <td>Dourados, Maracaju</td>
-                    <td>Funrural: 1,63%</td>
-                    <td>FUNDEMS: <strong>R$ 1,65 / sc</strong></td>
-                    <td><code>Preço × 1,63% + R$ 1,65</code></td>
+                    <td><strong>Prazo da Safra</strong></td>
+                    <td>216 dias</td>
+                    <td>Período calculado até o vencimento</td>
                 </tr>
                 <tr>
-                    <td><strong>GO</strong></td>
-                    <td>Rio Verde, Jataí</td>
-                    <td>Funrural: 1,63% + FUNDEINFRA: 1,65%</td>
-                    <td>-</td>
-                    <td><code>Preço × 3,28%</code></td>
+                    <td><strong>Preço Commodity Bruto FOB (WSys)</strong></td>
+                    <td>USD 20,00 / sc</td>
+                    <td>Preço futuro consumido do WSys</td>
                 </tr>
                 <tr>
-                    <td><strong>PI</strong></td>
-                    <td>Uruçuí, Bom Jesus</td>
-                    <td>Funrural: 1,63% + FDI: 1,20%</td>
-                    <td>-</td>
-                    <td><code>Preço × 2,83%</code></td>
+                    <td><strong>Impostos da Praça (WSys)</strong></td>
+                    <td>USD 0,64 / sc</td>
+                    <td>Dedução tributária regional (Campo Novo do Parecis)</td>
                 </tr>
                 <tr>
-                    <td><strong>PR</strong></td>
-                    <td>Cascavel, Londrina, Maringá</td>
-                    <td>Funrural: 1,63%</td>
-                    <td>-</td>
-                    <td><code>Preço × 1,63%</code></td>
+                    <td><strong>Preço Commodity Livre (Porteira)</strong></td>
+                    <td><strong>USD 19,36 / sc</strong></td>
+                    <td>USD 20,00 - USD 0,64</td>
+                </tr>
+                <tr>
+                    <td><strong>Volume Contratual a Entregar na CPR</strong></td>
+                    <td><strong>51.653 sacas</strong></td>
+                    <td>USD 1.000.000 ÷ USD 19,36 <em>(Volume Integral da CPR)</em></td>
+                </tr>
+                <tr>
+                    <td><strong>Preço Pedido TP (Valor Presente)</strong></td>
+                    <td>USD 920.471,28</td>
+                    <td>USD 1.000.000 ÷ (1 + 8,64%)</td>
+                </tr>
+                <tr>
+                    <td><strong>Cashback Devolvido (4,5%)</strong></td>
+                    <td><strong>USD 45.000,00</strong></td>
+                    <td>Devolução financeira creditada ao produtor</td>
+                </tr>
+                <tr>
+                    <td><strong>Incentivo de Prazo Devolvido</strong></td>
+                    <td><strong>USD 33.136,97</strong></td>
+                    <td>Devolução financeira creditada ao produtor</td>
+                </tr>
+                <tr>
+                    <td><strong>Total Devolvido ao Produtor</strong></td>
+                    <td><strong>USD 78.136,97</strong></td>
+                    <td>USD 45.000,00 + USD 33.136,97</td>
+                </tr>
+                <tr>
+                    <td><strong>Sacas Equivalentes Economizadas</strong></td>
+                    <td><strong>4.036 sacas</strong></td>
+                    <td>USD 78.136,97 ÷ USD 19,36 <em>(Métrica de Ganho)</em></td>
                 </tr>
             </tbody>
         </table>
 
-        <!-- Comparativo das 5 Modalidades -->
-        <h2><i class="fa-solid fa-layer-group"></i> 6. Resumo das 5 Modalidades de Crédito</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Modalidade</th>
-                    <th>Garantias Exigidas</th>
-                    <th>Taxa / Mecânica</th>
-                    <th>Benefício / Característica Comercial</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td><strong>Barter (Nutrade)</strong></td>
-                    <td>CPR Física e Seguro Agrícola</td>
-                    <td>Juros a prazo da safra</td>
-                    <td><strong>Devolução de Cashback (4,5%)</strong> + Incentivo regressivo de prazo em $.</td>
-                </tr>
-                <tr>
-                    <td><strong>Syde (FIDC)</strong></td>
-                    <td>Nota Promissória ou CPR-F sem penhor</td>
-                    <td>Composto dias úteis (/22)</td>
-                    <td><strong>Desconto VPAN à vista de -4,0%</strong> sobre o valor base.</td>
-                </tr>
-                <tr>
-                    <td><strong>FISO (Bancário)</strong></td>
-                    <td>Sem garantia patrimonial</td>
-                    <td>Simples dias corridos (/30)</td>
-                    <td>Rebate de incentivo comercial de <strong>-1,0%</strong>.</td>
-                </tr>
-                <tr>
-                    <td><strong>Syngenta (On-Balance)</strong></td>
-                    <td>Alinhada com crédito corporativo</td>
-                    <td>Simples dias corridos (/30)</td>
-                    <td>Faturamento direto no balanço corporativo sob tabela.</td>
-                </tr>
-                <tr>
-                    <td><strong>CRA Agro / Banco</strong></td>
-                    <td>Cessão de recebíveis / CPR-F</td>
-                    <td>Taxa mercado 1,70% a.m.</td>
-                    <td>Rebate de incentivo de campanha de <strong>-2,0%</strong>.</td>
-                </tr>
-            </tbody>
-        </table>
+        <!-- Fontes de Dados -->
+        <h2><i class="fa-solid fa-database"></i> 7. Fontes de Dados & Integração WSys</h2>
+        <p>O <strong>WSys</strong> é a fonte oficial centralizada para os dados dinâmicos da modalidade Barter:</p>
+        <ul>
+            <li><strong>Preço da Commodity:</strong> Cotação futura de referência da saca/libra-peso por período;</li>
+            <li><strong>Tarifas de Frete:</strong> Custo por KM para estrada de chão e asfalto;</li>
+            <li><strong>Tributos por Praça:</strong> Alíquotas e tributos estaduais por município.</li>
+        </ul>
 
         <!-- Critérios de Aceite -->
-        <h2><i class="fa-solid fa-list-check"></i> 7. Critérios de Aceite para Engenharia</h2>
+        <h2><i class="fa-solid fa-list-check"></i> 8. Critérios de Aceite para Engenharia</h2>
         <ul style="line-height: 1.8;">
             <li>✅ <strong>CA-01:</strong> O volume físico da CPR em Barter deve ser calculado como <code>Crédito ÷ Preço Líquido</code>, sem abater o cashback das sacas a entregar.</li>
-            <li>✅ <strong>CA-02:</strong> O Cashback ($4,5\%$) e o Incentivo de Prazo devem ser creditados e exibidos como devolução financeira monetária ($ e R$).</li>
-            <li>✅ <strong>CA-03:</strong> Todas as 5 modalidades ativas devem ser processadas e ordenadas automaticamente pelo melhor benefício (menor custo real total).</li>
-            <li>✅ <strong>CA-04:</strong> Cada modalidade financeira deve exibir a equivalência em sacas correspondente ao valor total a pagar.</li>
-            <li>✅ <strong>CA-05:</strong> Campos oriundos de campanha devem conter o indicador visual <code>* Fonte: Cadastro de campanha</code>.</li>
-            <li>✅ <strong>CA-06:</strong> Simulações com frete KM 0 devem ser processadas normalmente sem erros ou divisão por zero.</li>
-            <li>✅ <strong>CA-07:</strong> Tolerância zero de divergência matemática contra a planilha homologada de teste de mesa (<code>Simulador_CashBack_Barter_2026.xlsx</code>).</li>
+            <li>✅ <strong>CA-02:</strong> O Cashback ($4,5\%$) e o Incentivo de Prazo devem ser creditados e exibidos como devolução financeira monetária ($ ou R$).</li>
+            <li>✅ <strong>CA-03:</strong> O sistema deve permitir simulações com frete KM zero sem gerar erros de cálculo.</li>
+            <li>✅ <strong>CA-04:</strong> Os dados de preço da commodity, frete e tributos devem ser consumidos da estrutura do WSys.</li>
+            <li>✅ <strong>CA-05:</strong> Campos derivados de campanha devem conter o indicador visual <code>* Fonte: Cadastro de campanha</code>.</li>
+            <li>✅ <strong>CA-06:</strong> O comparativo deve posicionar o Barter Nutrade junto com as modalidades existentes (Syde, Fiso, Syngenta), ordenado por menor custo real total.</li>
+            <li>✅ <strong>CA-07:</strong> Tolerância zero de divergência matemática contra a planilha de teste de mesa homologada (<code>Simulador_CashBack_Barter_2026.xlsx</code>).</li>
         </ul>
 
         <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border); font-size: 12px; color: var(--text-muted); text-align: center;">
