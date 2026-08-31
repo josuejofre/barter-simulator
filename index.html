@@ -455,8 +455,12 @@
                                 <h2
                                     style="font-family: var(--font-heading); color: var(--primary-deep); font-size: 16px; margin: 0;">
                                     Modalidades de Crédito (Ordenado por Benefício)</h2>
-                                <p style="color: var(--text-secondary); font-size: 12.5px; margin: 4px 0 0 0;">Confira
-                                    os indicadores, garantias exigidas e descontos VPAN em cada card.</p>
+                                <p style="color: var(--text-secondary); font-size: 12.5px; margin: 4px 0 0 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
+                                    <span>Confira os indicadores, garantias exigidas e descontos VPAN em cada card.</span>
+                                    <span style="font-size: 11.5px; font-weight: 600; color: var(--primary-medium); background: rgba(13,148,136,0.08); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(13,148,136,0.2);">
+                                        <i class="fa-solid fa-circle-info"></i> * Fonte: Cadastro de campanha
+                                    </span>
+                                </p>
                             </div>
                             <div class="modality-cards-grid" id="v2-modality-cards-list">
                             </div>
@@ -600,24 +604,22 @@
                                     Fundems em MS).</li>
                                 <li><strong>Cashback e Incentivo Barter</strong>: Retornos comerciais de campanha
                                     percentuais sobre o crédito contratado.</li>
-                                <li><strong>Logística (Custo de Transporte)</strong>: O frete da propriedade do produtor
-                                    até a respectiva base logística de recebimento da trading.</li>
-                            </ul>
-
-                            <!-- NOVO: FORMULA SIMPLIFICADA PASSO A PASSO -->
+                                <li><strong>Logística (Custo                             <!-- NOVO: FORMULA SIMPLIFICADA PASSO A PASSO (ATA 21/08) -->
                             <div style="background: var(--bg-hover); border: 1px solid var(--border-color); border-left: 4px solid var(--primary); border-radius: 8px; padding: 18px 20px; margin: 20px 0;">
                                 <h4 style="margin-top: 0; color: var(--primary); font-size: 16px; display: flex; align-items: center; gap: 8px;">
-                                    <i class="fa-solid fa-calculator"></i> Fórmula Simplificada da Simulação de Barter
+                                    <i class="fa-solid fa-calculator"></i> Fórmula da Simulação de Barter e Devolução Financeira
                                 </h4>
                                 <ol style="margin-bottom: 0; padding-left: 20px; line-height: 1.8;">
-                                    <li><strong>Preço Líquido da Saca:</strong> <code>Preço Bruto da Soja - Impostos da Região</code> <em>(Ex: R$ 120,00 - R$ 2,00 = R$ 118,00/sc)</em></li>
-                                    <li><strong>Custo do Frete:</strong> <code>(Km Asfalto × Custo/Km) + (Km Chão × Custo/Km)</code> <em>(Ex: 80×R$8 + 20×R$15 = R$ 940,00)</em></li>
-                                    <li><strong>Quantidade Inicial de Sacas:</strong> <code>Valor do Crédito ÷ Preço Líquido da Saca</code> <em>(Ex: R$ 1.000.000 ÷ R$ 118 = 8.475 sacas)</em></li>
-                                    <li><strong>Incentivo de Prazo:</strong> <code>Valor Presente TP × (Prazo ÷ 30 × 0,5%)</code> <em>(Ex: R$ 900.000 × 3,5% = R$ 31.500,00)</em></li>
-                                    <li><strong>Cashback da Campanha:</strong> <code>Valor do Crédito × % de Cashback</code> <em>(Ex: R$ 1.000.000 × 4,5% = R$ 45.000,00)</em></li>
-                                    <li><strong>Sacas Economizadas:</strong> <code>(Incentivo + Cashback) ÷ Preço Líquido</code> <em>(Ex: R$ 76.500 ÷ R$ 118 = 648 sacas)</em></li>
-                                    <li><strong>Volume Final a Entregar:</strong> <code>Sacas Iniciais - Sacas Economizadas</code> <em>(Ex: 8.475 - 648 = <strong>7.827 sacas</strong>)</em></li>
-                                    <li><strong>Valor Total e Custo:</strong> <code>(Sacas Finais × Preço Bruto) + Frete Total</code> <em>(Ex: 7.827 × R$ 120 + R$ 940 = R$ 940.180,00)</em></li>
+                                    <li><strong>Preço Líquido da Saca:</strong> <code>Preço Bruto da Soja - Impostos da Região (Funrural + Taxas Estaduais)</code> <em>(Ex: R$ 120,00 - R$ 5,05 = R$ 114,95/sc)</em></li>
+                                    <li><strong>Custo do Frete Logístico:</strong> <code>(Km Asfalto × Custo/Km) + (Km Chão × Custo/Km)</code> <em>(Ex: 80×R$8 + 20×R$15 = R$ 940,00)</em></li>
+                                    <li><strong>Volume Contratual a Entregar (CPR Física):</strong> <code>Valor do Crédito ÷ Preço Líquido da Saca</code> <em>(Ex: R$ 1.000.000 ÷ R$ 114,95 = <strong>8.699 sacas</strong>)</em><br>
+                                        <small style="color:var(--text-secondary);"><em>⚠️ Regra Operacional: O volume físico contratado na CPR não sofre abatimento de sacas; o produtor entrega as 8.699 sacas para quitação dos insumos.</em></small>
+                                    </li>
+                                    <li><strong>Devolução de Cashback da Campanha (R$ ou USD):</strong> <code>Valor do Crédito × % de Cashback da Campanha</code> <em>(Ex: R$ 1.000.000 × 4,5% = <strong>R$ 45.000,00 devolvidos em conta</strong>)</em></li>
+                                    <li><strong>Ganho de Incentivo de Prazo Barter:</strong> <code>Valor Presente TP × (Prazo ÷ 30 × 0,5%)</code> <em>(Ex: R$ 920.471,28 × 3,6% = <strong>R$ 33.136,97</strong>)</em></li>
+                                    <li><strong>Benefício Total Devolvido ao Produtor:</strong> <code>Devolução Cashback + Incentivo Barter</code> <em>(Ex: R$ 45.000,00 + R$ 33.136,97 = <strong>R$ 78.136,97 devolvidos</strong>)</em></li>
+                                    <li><strong>Sacas Equivalentes Economizadas (Indicador):</strong> <code>Benefício Total Devolvido ÷ Preço Líquido</code> <em>(Ex: R$ 78.136,97 ÷ R$ 114,95 = <strong>680 sacas equivalentes de economia</strong>)</em></li>
+                                    <li><strong>Valor Total da Operação:</strong> <code>(Volume Contratual a Entregar × Preço FOB Bruto) + Frete Total</code></li>
                                 </ol>
                             </div>
 
@@ -656,39 +658,34 @@
                                 selecionada:</p>
                             <ul>
                                 <li><strong>Campo Novo do Parecis (MT)</strong>:<br>
-                                    <div class="equation">Imposto = (Preço_Bruto * 0,2%) + 0,60 / saca</div>
+                                    <div class="equation">Imposto = Funrural (1,63%) + FETHAB/IAGRO (R$ 3,09 / saca)</div>
                                 </li>
                                 <li><strong>Sorriso (MT)</strong>:<br>
-                                    <div class="equation">Imposto = (Preço_Bruto * 0,25%) + 0,65 / saca</div>
+                                    <div class="equation">Imposto = Funrural (1,63%) + FETHAB/IAGRO (R$ 3,09 / saca)</div>
                                 </li>
                                 <li><strong>Querência (MT)</strong>:<br>
-                                    <div class="equation">Imposto = (Preço_Bruto * 0,22%) + 0,70 / saca</div>
+                                    <div class="equation">Imposto = Funrural (1,63%) + FETHAB/IAGRO (R$ 3,09 / saca)</div>
                                 </li>
                                 <li><strong>Rio Verde (GO)</strong>:<br>
-                                    <div class="equation">Imposto = (Preço_Bruto * 0,15%) + 0,40 / saca</div>
+                                    <div class="equation">Imposto = Funrural (1,63%) + FUNDEINFRA (1,65% sobre NF)</div>
                                 </li>
                                 <li><strong>Dourados (MS)</strong>:<br>
-                                    <div class="equation">Imposto = (Preço_Bruto * 0,10%) + 0,30 / saca</div>
+                                    <div class="equation">Imposto = Funrural (1,63%) + FUNDEMS (R$ 1,65 / saca)</div>
                                 </li>
                                 <li><strong>Cascavel (PR)</strong>:<br>
-                                    <div class="equation">Imposto = 0.00 (Isento de taxas de Barter)</div>
+                                    <div class="equation">Imposto = Funrural (1,63%)</div>
                                 </li>
                             </ul>
 
                             <h3>4. Custo de Transporte (Frete)</h3>
-                            <p>O custo logístico de buscar a commodity na propriedade e entregar na nossa base ou na do
-                                concorrente é deduzido do preço final do produto (Porteira Aberta):</p>
+                            <p>O custo logístico de buscar a commodity na propriedade e entregar na respectiva base logística cadastrada é somado à operação (ou zerado caso o frete seja FOB/KM zero):</p>
                             <ol>
                                 <li><strong>Custo de Frete Total:</strong><br>
-                                    <div class="equation">Custo_Frete_Total = Distância_Base_(KM) * Valor_KM</div>
-                                </li>
-                                <li><strong>Custo de Frete Unitário:</strong><br>
-                                    <div class="equation">Frete_Unitario = Custo_Frete_Total / Volume_Comercializado
-                                    </div>
+                                    <div class="equation">Custo_Frete_Total = (Km_Chão * Tarifa_Chão) + (Km_Asfalto * Tarifa_Asfalto)</div>
                                 </li>
                             </ol>
 
-                            <h3>5. Fórmulas de Simulação por Crédito</h3>
+                            <h3>5. Fórmulas de Simulação e Devolução Financeira por Crédito</h3>
                             <p>Calcula a equivalência de troca física para amortizar um financiamento/crédito fixado a
                                 prazo (ex. <code>USD 1.000.000,00</code> ou <code>R$ 1.000.000,00</code>):</p>
                             <ul>
@@ -698,27 +695,20 @@
                                     <p><em>Exemplo para USD 1.000.000,00 e 216 dias:</em> 1.000.000 / (1 + 8,64%) =
                                         <strong>USD 920.471,28</strong></p>
                                 </li>
-                                <li><strong>Retorno Total do Produtor:</strong><br>
-                                    <p>Soma da valorização da campanha (4,5% sobre crédito) e do incentivo Barter
+                                <li><strong>Retorno Total Devolvido ao Produtor (Cashback + Incentivo):</strong><br>
+                                    <p>Soma da devolução financeira de cashback da campanha (4,5% sobre crédito) e do incentivo Barter
                                         (proporcional ao prazo sobre Preço TP).</p>
-                                    <div class="equation">Cashback = Credito * 4,5% = USD 45.000,00</div>
-                                    <div class="equation">Incentivo_Barter = Preço_TP * (Dias / 30 * 0,5%) = USD
-                                        33.136,97</div>
-                                    <div class="equation">Total_Retorno = Cashback + Incentivo_Barter = USD 78.136,97
+                                    <div class="equation">Cashback_Devolvido = Credito * 4,5% = USD 45.000,00</div>
+                                    <div class="equation">Incentivo_Barter = Preço_TP * (Dias / 30 * 0,5%) = USD 33.136,97</div>
+                                    <div class="equation">Total_Devolvido = Cashback_Devolvido + Incentivo_Barter = USD 78.136,97
                                     </div>
                                 </li>
-                                <li><strong>Preço Equivalente Final com Descontos e Frete:</strong><br>
-                                    <div class="equation">Preço_Livre = Preço_Bruto - Imposto_Região</div>
-                                    <div class="equation">Preço_Equiv_Final = Preço_Livre + Cashback_Unitario +
-                                        Incentivo_Unitario - Frete_Unitario</div>
-                                    <p><em>Exemplo Campo Novo (MT) na Nossa Estrutura:</em> 19,36 + 0,8712 + 0,6415 -
-                                        0,0019 = <strong>USD 20,8708 / sc</strong></p>
+                                <li><strong>Volume Físico Contratual da CPR:</strong><br>
+                                    <div class="equation">Volume_CPR_a_Entregar = Credito / Preço_Livre</div>
+                                    <p><em>Exemplo:</em> USD 1.000.000,00 / USD 19,36 = <strong>51.652,89 sacas a entregar</strong></p>
+                                    <p><em>Devolução Financeira:</em> O produtor recebe o retorno de <strong>USD 78.136,97</strong> diretamente em sua conta/abatimento financeiro, o que equivale comercialmente a <strong>4.035,99 sacas</strong> de benefício econômico.</p>
                                 </li>
-                                <li><strong>Volume de Troca Equivalente Final:</strong><br>
-                                    <div class="equation">Volume_Troca_Final = Volume_Inicial - (Equivalência_Cashback +
-                                        Equivalência_Incentivo)</div>
-                                    <p><em>Exemplo:</em> 51.652,89 - (2.324,38 + 1.711,62) = <strong>47.616,89
-                                            sacas</strong></p>
+                            </ul>                       sacas</strong></p>
                                     <p><em>Diferença para Outras Tradings (Volume Economizado):</em> <strong>1.278,91
                                             sacas</strong>.</p>
                                 </li>

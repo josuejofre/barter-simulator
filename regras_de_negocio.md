@@ -25,8 +25,6 @@ graph TD
 
 ---
 
-## ⚡ Fórmula Simplificada do Barter (Passo a Passo)
-
 ## ⚡ Fórmula Simplificada do Barter e Devolução Financeira (Passo a Passo)
 
 A mecânica de cálculo da operação de Barter com Devolução de Cashback financeiro é compreendida nos seguintes passos:

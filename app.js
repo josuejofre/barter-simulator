@@ -887,12 +887,12 @@ function calculateSimulation() {
             prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
             prazoExplicacao: `Prazo calculado de ${prazo} dias decorrido entre o desembolso e o vencimento da safra.`,
             vpanDisplay: '0,00%',
-            vpanExplicacao: 'Desconto à vista (VPAN) não é aplicável na modalidade Barter, pois o benefício comercial ocorre via Cashback de campanha e Incentivo de prazo.',
-            incentivoLabel: 'Incentivo Barter',
+            vpanExplicacao: 'Desconto à vista (VPAN) não é aplicável na modalidade Barter, pois o benefício comercial ocorre via Cashback de campanha e Incentivo de prazo.<br><strong>Fonte:</strong> Cadastro de campanha.',
+            incentivoLabel: '*Incentivo Barter',
             incentivoDisplay: res ? `+${(res.incentivoBarterPct * 100).toFixed(2)}%` : '0,00%',
-            incentivoExplicacao: res ? `Incentivo de prazo de +${(res.incentivoBarterPct * 100).toFixed(2)}% (${formatSelectedCurrency(res.incentivoBarterUsd)}) calculado sobre o Preço TP.` : 'Sem incentivo.',
+            incentivoExplicacao: res ? `Incentivo de prazo de +${(res.incentivoBarterPct * 100).toFixed(2)}% (${formatSelectedCurrency(res.incentivoBarterUsd)}) calculado sobre o Preço TP.<br><strong>Fonte:</strong> Cadastro de campanha.` : 'Sem incentivo.<br><strong>Fonte:</strong> Cadastro de campanha.',
             cashbackDisplay: `+${valPctProposta.toFixed(2)}%`,
-            cashbackExplicacao: `Cashback de campanha comercial Nutrade de +${valPctProposta.toFixed(2)}% (${formatSelectedCurrency(res ? res.cashbackUsdProposta : 0)}) devolvido financeiramente ao produtor.`,
+            cashbackExplicacao: `Cashback de campanha comercial Nutrade de +${valPctProposta.toFixed(2)}% (${formatSelectedCurrency(res ? res.cashbackUsdProposta : 0)}) devolvido financeiramente ao produtor.<br><strong>Fonte:</strong> Cadastro de campanha.`,
             garantia: 'CPR Física e Seguro Agrícola',
             garantiaExplicacao: 'Garantia vinculada à CPR Física da produção e seguro agrícola com a Nutrade.',
             volInicial: res ? res.volTrocaProposta : 0,
@@ -917,12 +917,12 @@ function calculateSimulation() {
             prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
             prazoExplicacao: `Prazo financeiro calculado de ${prazo} dias corridos (base /30).`,
             vpanDisplay: 'Não aplicado',
-            vpanExplicacao: 'A modalidade FISO não concede desconto à vista VPAN.',
-            incentivoLabel: 'Incentivo',
+            vpanExplicacao: 'A modalidade FISO não concede desconto à vista VPAN.<br><strong>Fonte:</strong> Cadastro de campanha.',
+            incentivoLabel: '*Incentivo',
             incentivoDisplay: calcFiso.incentivo > 0 ? `${calcFiso.incentivo.toFixed(2).replace('.', ',')} %` : 'Não aplicado',
-            incentivoExplicacao: calcFiso.incentivo > 0 ? `Rebate de incentivo comercial de campanha de -${calcFiso.incentivo.toFixed(2)}% aplicado à taxa/operação FISO.` : 'Sem rebate de incentivo aplicável.',
+            incentivoExplicacao: calcFiso.incentivo > 0 ? `Rebate de incentivo comercial de campanha de -${calcFiso.incentivo.toFixed(2)}% aplicado à taxa/operação FISO.<br><strong>Fonte:</strong> Cadastro de campanha.` : 'Sem rebate de incentivo aplicável.<br><strong>Fonte:</strong> Cadastro de campanha.',
             cashbackDisplay: '0,00%',
-            cashbackExplicacao: 'Sem programa de cashback em grãos.',
+            cashbackExplicacao: 'Sem programa de cashback em grãos.<br><strong>Fonte:</strong> Cadastro de campanha.',
             garantia: 'Sem garantia (venda a prazo cedida a um parceiro)',
             garantiaExplicacao: 'FISO não possui garantia patrimonial exigida. É uma cessão de crédito em que a venda a prazo é cedida a um parceiro.',
             sacasEquivalentes: refPrecoSaca > 0 ? (calcFiso.valorTotal / refPrecoSaca) : 0,
@@ -941,12 +941,12 @@ function calculateSimulation() {
             prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
             prazoExplicacao: `Prazo financeiro calculado de ${prazo} dias corridos (On-Balance).`,
             vpanDisplay: 'Não aplicado',
-            vpanExplicacao: 'Faturamento a prazo direto On-Balance Syngenta sem concessão de desconto à vista (VPAN).',
-            incentivoLabel: 'Incentivo',
+            vpanExplicacao: 'Faturamento a prazo direto On-Balance Syngenta sem concessão de desconto à vista (VPAN).<br><strong>Fonte:</strong> Cadastro de campanha.',
+            incentivoLabel: '*Incentivo',
             incentivoDisplay: 'Não aplicado',
-            incentivoExplicacao: 'Sem incentivo de campanha aplicável.',
+            incentivoExplicacao: 'Sem incentivo de campanha aplicável.<br><strong>Fonte:</strong> Cadastro de campanha.',
             cashbackDisplay: '0,00%',
-            cashbackExplicacao: 'Sem programa de cashback em grãos.',
+            cashbackExplicacao: 'Sem programa de cashback em grãos.<br><strong>Fonte:</strong> Cadastro de campanha.',
             garantia: 'Garantia alinhada diretamente com o time de crédito Syngenta',
             garantiaExplicacao: 'Estrutura de garantias alinhada diretamente com a mesa de crédito corporativa Syngenta.',
             sacasEquivalentes: refPrecoSaca > 0 ? (calcSyngenta.valorTotal / refPrecoSaca) : 0,
@@ -965,12 +965,12 @@ function calculateSimulation() {
             prazoDisplay: `${prazo} dias (${diasUteisSyde} úteis)`,
             prazoExplicacao: `Prazo financeiro de ${prazo} dias corridos, correspondendo a ${diasUteisSyde} dias úteis no cálculo de juros FIDC.`,
             vpanDisplay: calcSyde.descontoVPAN > 0 ? `${calcSyde.descontoVPAN.toFixed(2).replace('.', ',')} %` : 'Não aplicado',
-            vpanExplicacao: calcSyde.descontoVPAN > 0 ? `Desconto VPAN (Valor Presente À Vista) de -${calcSyde.descontoVPAN.toFixed(2)}% aplicado à vista sobre o valor base da operação antes dos juros.` : 'Sem desconto VPAN à vista.',
-            incentivoLabel: 'Incentivo',
+            vpanExplicacao: calcSyde.descontoVPAN > 0 ? `Desconto VPAN (Valor Presente À Vista) de -${calcSyde.descontoVPAN.toFixed(2)}% aplicado à vista sobre o valor base da operação antes dos juros.<br><strong>Fonte:</strong> Cadastro de campanha.` : 'Sem desconto VPAN à vista.<br><strong>Fonte:</strong> Cadastro de campanha.',
+            incentivoLabel: '*Incentivo',
             incentivoDisplay: 'Não aplicado',
-            incentivoExplicacao: 'Sem incentivo adicional aplicável.',
+            incentivoExplicacao: 'Sem incentivo adicional aplicável.<br><strong>Fonte:</strong> Cadastro de campanha.',
             cashbackDisplay: '0,00%',
-            cashbackExplicacao: 'Sem programa de cashback em grãos.',
+            cashbackExplicacao: 'Sem programa de cashback em grãos.<br><strong>Fonte:</strong> Cadastro de campanha.',
             garantia: 'Nota promissória ou CPR financeira sem penhor',
             garantiaExplicacao: 'Formalizado via Nota Promissória (NP) ou CPR Financeira (CPR-F) sem exigência de penhor agrícola.',
             sacasEquivalentes: refPrecoSaca > 0 ? (calcSyde.valorTotal / refPrecoSaca) : 0,
@@ -989,12 +989,12 @@ function calculateSimulation() {
             prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
             prazoExplicacao: `Prazo financeiro calculado de ${prazo} dias corridos (via Mercado de Capitais / CRA Parceiro).`,
             vpanDisplay: 'Não aplicado',
-            vpanExplicacao: 'Sem desconto VPAN à vista na modalidade CRA.',
-            incentivoLabel: 'Incentivo',
+            vpanExplicacao: 'Sem desconto VPAN à vista na modalidade CRA.<br><strong>Fonte:</strong> Cadastro de campanha.',
+            incentivoLabel: '*Incentivo',
             incentivoDisplay: calcCra.incentivo > 0 ? `${calcCra.incentivo.toFixed(2).replace('.', ',')} %` : 'Não aplicado',
-            incentivoExplicacao: calcCra.incentivo > 0 ? `Rebate de incentivo comercial de campanha de -${calcCra.incentivo.toFixed(2)}% concedido pelo banco parceiro.` : 'Sem rebate aplicável.',
+            incentivoExplicacao: calcCra.incentivo > 0 ? `Rebate de incentivo comercial de campanha de -${calcCra.incentivo.toFixed(2)}% concedido pelo banco parceiro.<br><strong>Fonte:</strong> Cadastro de campanha.` : 'Sem rebate aplicável.<br><strong>Fonte:</strong> Cadastro de campanha.',
             cashbackDisplay: '0,00%',
-            cashbackExplicacao: 'Sem programa de cashback em grãos.',
+            cashbackExplicacao: 'Sem programa de cashback em grãos.<br><strong>Fonte:</strong> Cadastro de campanha.',
             garantia: 'Cessão de recebíveis ou CPR Financeira',
             garantiaExplicacao: 'Estrutura formalizada via CPR Financeira ou Cessão de Direitos Creditórios.',
             sacasEquivalentes: refPrecoSaca > 0 ? (calcCra.valorTotal / refPrecoSaca) : 0,
@@ -1068,7 +1068,7 @@ function calculateSimulation() {
                                     *Taxa mensal
                                     <span class="tooltip-container">
                                         <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Taxa mensal:</strong> Taxa de juros efetiva mensal da operação (${m.jurosMensal.toFixed(2).replace('.', ',')}% a.m.).</span>
+                                        <span class="tooltip-text"><strong>Taxa mensal:</strong> Taxa de juros efetiva mensal da operação (${m.jurosMensal.toFixed(2).replace('.', ',')}% a.m.).<br><strong>Fonte:</strong> Cadastro de campanha.</span>
                                     </span>
                                 </span>
                                 <strong class="modality-bullet-val">${m.jurosMensal.toFixed(2).replace('.', ',')} %</strong>
@@ -1183,10 +1183,10 @@ function calculateSimulation() {
                         <ul class="modality-bullet-list">
                             <li class="modality-bullet-item">
                                 <span class="modality-bullet-label">
-                                    Taxa mensal
+                                    *Taxa mensal
                                     <span class="tooltip-container">
                                         <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Taxa mensal:</strong> Taxa de juros efetiva mensal da operação (${m.jurosMensal.toFixed(2).replace('.', ',')}% a.m.).</span>
+                                        <span class="tooltip-text"><strong>Taxa mensal:</strong> Taxa de juros efetiva mensal da operação (${m.jurosMensal.toFixed(2).replace('.', ',')}% a.m.).<br><strong>Fonte:</strong> Cadastro de campanha.</span>
                                     </span>
                                 </span>
                                 <strong class="modality-bullet-val">${m.jurosMensal.toFixed(2).replace('.', ',')} %</strong>
@@ -1196,14 +1196,14 @@ function calculateSimulation() {
                                     ${m.incentivoLabel}
                                     <span class="tooltip-container">
                                         <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>${m.incentivoLabel}:</strong> ${m.incentivoExplicacao}</span>
+                                        <span class="tooltip-text"><strong>${m.incentivoLabel.replace('*', '')}:</strong> ${m.incentivoExplicacao}</span>
                                     </span>
                                 </span>
                                 <strong class="modality-bullet-val ${m.incentivoDisplay.includes('+') || m.incentivoDisplay.includes('-') ? 'text-teal' : ''}">${m.incentivoDisplay}</strong>
                             </li>
                             <li class="modality-bullet-item">
                                 <span class="modality-bullet-label">
-                                    Cashback (Devolução R$/$)
+                                    *Cashback (Devolução R$/$)
                                     <span class="tooltip-container">
                                         <i class="fa-regular fa-circle-question"></i>
                                         <span class="tooltip-text"><strong>Cashback da Campanha:</strong> ${m.cashbackExplicacao}</span>
@@ -3742,25 +3742,25 @@ const defaultTooltips = [
         id: "tbl-barter-valcamp",
         label: "Taxa de Valorização (Cashback)",
         location: "Tabela Detalhada Barter",
-        text: "<strong>Simulador:</strong> Taxa associada à campanha selecionada (Nutrade vs Outras).<br><strong>Versão Final:</strong> Campanha comercial aprovada pela originação cadastrada no Salesforce/SAP."
+        text: "<strong>Simulador:</strong> Taxa associada à campanha selecionada (Nutrade vs Outras).<br><strong>Versão Final:</strong> Campanha comercial aprovada pela originação cadastrada no Salesforce/SAP.<br><strong>Fonte:</strong> Cadastro de campanha."
     },
     {
         id: "tbl-barter-cashback-usd",
         label: "Cash Back da Campanha",
         location: "Tabela Detalhada Barter",
-        text: "<strong>Simulador:</strong> Multiplicação do crédito pela taxa de cashback.<br><strong>Versão Final:</strong> Abatimento comercial bonificado no pedido de insumos (SAP).<br><strong>Fórmula:</strong> Valor do Crédito * Taxa de Valorização da Campanha."
+        text: "<strong>Simulador:</strong> Multiplicação do crédito pela taxa de cashback.<br><strong>Versão Final:</strong> Abatimento comercial bonificado no pedido de insumos (SAP).<br><strong>Fórmula:</strong> Valor do Crédito * Taxa de Valorização da Campanha.<br><strong>Fonte:</strong> Cadastro de campanha."
     },
     {
         id: "tbl-barter-incbarter-pct",
         label: "Incentivo Barter (%)",
         location: "Tabela Detalhada Barter",
-        text: "<strong>Simulador:</strong> Juros regressivos da campanha calculados conforme o prazo.<br><strong>Versão Final:</strong> Política de desconto financeiro por faturamento físico parametrizada no SAP.<br><strong>Fórmula:</strong> Retornado da tabela de juros comerciais associada à campanha."
+        text: "<strong>Simulador:</strong> Juros regressivos da campanha calculados conforme o prazo.<br><strong>Versão Final:</strong> Política de desconto financeiro por faturamento físico parametrizada no SAP.<br><strong>Fórmula:</strong> Retornado da tabela de juros comerciais associada à campanha.<br><strong>Fonte:</strong> Cadastro de campanha."
     },
     {
         id: "tbl-barter-incbarter-usd",
         label: "Incentivo Barter ganho",
         location: "Tabela Detalhada Barter",
-        text: "<strong>Simulador:</strong> Multiplicação do crédito pela taxa de juros regressivos.<br><strong>Versão Final:</strong> Abatimento de juros lançado no faturamento de barter (SAP).<br><strong>Fórmula:</strong> Valor do Crédito * Incentivo Barter (%)."
+        text: "<strong>Simulador:</strong> Multiplicação do crédito pela taxa de juros regressivos.<br><strong>Versão Final:</strong> Abatimento de juros lançado no faturamento de barter (SAP).<br><strong>Fórmula:</strong> Valor do Crédito * Incentivo Barter (%).<br><strong>Fonte:</strong> Cadastro de campanha."
     },
     {
         id: "tbl-barter-totalret",
@@ -3794,15 +3794,15 @@ const defaultTooltips = [
     },
     {
         id: "mod-card-juros-am",
-        label: "Taxa Efetiva a.m.",
+        label: "Taxa Efetiva a.m. (Taxa mensal)",
         location: "Card de Modalidades",
-        text: "<strong>Fórmula:</strong> Taxa de juros efetiva mensal da operação em % a.m."
+        text: "<strong>Taxa mensal:</strong> Taxa de juros efetiva mensal da operação em % a.m.<br><strong>Fonte:</strong> Cadastro de campanha."
     },
     {
         id: "mod-card-vpan-inc",
         label: "Desconto VPAN / Incentivo",
         location: "Card de Modalidades",
-        text: "<strong>Fórmula & Conceito VPAN:</strong> O Desconto VPAN é o desconto à vista (Valor Presente À Vista) concedido na liquidação, reduzindo o valor principal da operação antes dos juros."
+        text: "<strong>Fórmula & Conceito VPAN:</strong> O Desconto VPAN é o desconto à vista (Valor Presente À Vista) concedido na liquidação, reduzindo o valor principal da operação antes dos juros.<br><strong>Fonte:</strong> Cadastro de campanha."
     },
     {
         id: "mod-card-garantias",
