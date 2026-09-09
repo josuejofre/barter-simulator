@@ -56,3 +56,14 @@ Este documento centraliza as funcionalidades, melhorias comerciais e integraçõ
 - **Descrição**:
   - Incorporar a dedução fiscal de PIS/COFINS (fator `0.9907`).
   - Permitir simular o PTAX Dolarizado de Campanha (ex: R$ 5,40 a R$ 5,70) no modal de "Ajustar Taxas / Campanhas".
+
+---
+
+### 7. 🌱 Destaque Visual da Commodity e Validação de Barter por Cultura da Campanha
+- **Origem / Solicitação**: Alinhamento de usabilidade e regras de negócio.
+- **Pendências a Validar**:
+  1. **Evidência Visual da Commodity no Formulário**: Apresentar a cultura/commodity selecionada (Soja, Algodão, Milho) de forma muito mais visível e intuitiva no fluxo principal de simulação (ex: seletor com chips/ícones no topo dos parâmetros de operação).
+  2. **Regra de Elegibilidade de Barter por Campanha**: Validar se a modalidade **Barter** deve ser calculada e exibida **apenas quando a campanha selecionada tiver a cultura elegível associada**.
+     - *Cenário A*: Se a campanha for vinculada a uma cultura específica (ou não aceitar grãos como liquidação), a simulação deve omitir o card de Barter ou marcá-lo como "Não aplicável para esta campanha", comparando unicamente os produtos financeiros (Syde, Fiso, CRA Agro e Syngenta).
+     - *Cenário B*: Exibir alerta/badge contextual informando por que a cultura está habilitada ou bloqueada de acordo com o escopo da campanha.
+
