@@ -561,6 +561,7 @@ function runSimulationMath(inputs) {
 
     // Incentivo equivalência em sacas/libras
     const incentivoScProposta = commLivreProposta > 0 ? (incentivoBarter / commLivreProposta) : 0;
+    const valUnitIncentivoProposta = volTrocaProposta > 0 ? (incentivoBarter / volTrocaProposta) : 0;
     const totalSacasEquivEconomia = cashbackScProposta + incentivoScProposta;
 
     // Incentivo de Prazo reduz o valor base a ser quitado em grãos (diminui as sacas da CPR)
