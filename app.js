@@ -6,7 +6,8 @@ let tvWidget = null;
 let hasSimulated = false; // Tracks if user clicked "Simular" button
 let currentQuotes = {
     soybeans: { BRL: 103.00, USD: 20.00 }, // Preço Futuro WSys por saca (sc)
-    cotton: { BRL: 4.38, USD: 0.85 }       // Preço Futuro WSys por libra-peso (lp)
+    cotton: { BRL: 4.38, USD: 0.85 },      // Preço Futuro WSys por libra-peso (lp)
+    corn: { BRL: 58.00, USD: 11.20 }       // Preço Futuro WSys por saca (sc)
 };
 
 // WSys Praças Data Store (Matriz Tributária e Logística - Planilha Impostos 1)
@@ -336,17 +337,19 @@ function setCurrency(currency) {
         if (v2BtnBrl) v2BtnBrl.classList.remove('active');
     }
 
-    const commEl = document.getElementById('sim-commodity');
-    const isSoy = commEl ? (commEl.value === 'Soja' || !commEl.value) : true;
-    const unitSymbol = isSoy ? 'sc' : 'lp';
+    const commEl = document.getElementById('v2-sim-commodity') || document.getElementById('sim-commodity');
+    const commVal = commEl ? commEl.value : 'Soja';
+    const isSoy = commVal === 'Soja';
+    const isCorn = commVal === 'Milho';
+    const unitSymbol = (isSoy || isCorn) ? 'sc' : 'lp';
 
     // Native WSys commodity future prices for active currency
     if (currency === 'BRL') {
-        if (priceInput) priceInput.value = isSoy ? "103.00" : "4.38";
+        if (priceInput) priceInput.value = isCorn ? "58.00" : (isSoy ? "103.00" : "4.38");
         if (freteChaoInput) freteChaoInput.value = "15.00";
         if (freteAsfaltoInput) freteAsfaltoInput.value = "8.00";
     } else {
-        if (priceInput) priceInput.value = isSoy ? "20.00" : "0.85";
+        if (priceInput) priceInput.value = isCorn ? "11.20" : (isSoy ? "20.00" : "0.85");
         if (freteChaoInput) freteChaoInput.value = "3.00";
         if (freteAsfaltoInput) freteAsfaltoInput.value = "1.60";
     }
@@ -372,14 +375,16 @@ function setCurrency(currency) {
 function initDefaultQuotes() {
     const statusEl = document.getElementById('sim-quote-status');
     const priceInput = document.getElementById('sim-preco-bruto');
-    const commodity = document.getElementById('sim-commodity') ? document.getElementById('sim-commodity').value : 'Soja';
-    const isSoy = commodity === 'Soja' || !commodity;
+    const commEl = document.getElementById('v2-sim-commodity') || document.getElementById('sim-commodity');
+    const commodity = commEl ? commEl.value : 'Soja';
+    const isSoy = commodity === 'Soja';
+    const isCorn = commodity === 'Milho';
 
     if (priceInput) {
         if (selectedCurrency === 'BRL') {
-            priceInput.value = isSoy ? "103.00" : "4.38";
+            priceInput.value = isCorn ? "58.00" : (isSoy ? "103.00" : "4.38");
         } else {
-            priceInput.value = isSoy ? "20.00" : "0.85";
+            priceInput.value = isCorn ? "11.20" : (isSoy ? "20.00" : "0.85");
         }
     }
     if (statusEl) {
@@ -390,6 +395,12 @@ function initDefaultQuotes() {
 
 // When commodity changes in unified mode
 function onCulturaChange(value) {
+    // Sync visible and hidden selects
+    const v2Comm = document.getElementById('v2-sim-commodity');
+    if (v2Comm && v2Comm.value !== value) v2Comm.value = value;
+    const simComm = document.getElementById('sim-commodity');
+    if (simComm && simComm.value !== value) simComm.value = value;
+
     // Toggle chart card visibility based on commodity selection
     ['chart-card-cfd', 'v2-chart-card-cfd'].forEach(id => {
         const card = document.getElementById(id);
@@ -405,8 +416,9 @@ function onCulturaChange(value) {
     }
 
     const isSoy = value === 'Soja';
+    const isCorn = value === 'Milho';
     const currencySign = selectedCurrency === 'BRL' ? 'R$' : 'USD';
-    const unitSymbol = isSoy ? 'sc' : 'lp';
+    const unitSymbol = (isSoy || isCorn) ? 'sc' : 'lp';
 
     // Update labels and suffixes
     const labelEl = document.getElementById('sim-preco-bruto-label');
@@ -414,9 +426,11 @@ function onCulturaChange(value) {
     const suffixEl = document.getElementById('sim-preco-bruto-suffix');
     if (suffixEl) suffixEl.textContent = `${currencySign}/${unitSymbol}`;
     const descLabelEl = document.getElementById('sim-descontos-label');
-    if (descLabelEl) descLabelEl.textContent = isSoy ? 'Ativo (Senar + Fethab)' : 'Ativo (Senar + Fial)';
+    if (descLabelEl) descLabelEl.textContent = (isSoy || isCorn) ? 'Ativo (Senar + Fethab)' : 'Ativo (Senar + Fial)';
 
-    const quoteObj = isSoy ? currentQuotes.soybeans : currentQuotes.cotton;
+    let quoteObj = currentQuotes.soybeans;
+    if (value === 'Algodão') quoteObj = currentQuotes.cotton;
+    else if (value === 'Milho') quoteObj = currentQuotes.corn;
     const basePrice = typeof quoteObj === 'object' ? quoteObj[selectedCurrency] : quoteObj;
 
     // Fill commodity price input
@@ -428,13 +442,13 @@ function onCulturaChange(value) {
     // Set typical default days
     const prazoEl = document.getElementById('sim-prazo');
     if (prazoEl && (!prazoEl.value || prazoEl.value === '0')) {
-        prazoEl.value = isSoy ? 216 : 249;
+        prazoEl.value = isCorn ? 188 : (isSoy ? 216 : 249);
     }
 
     // Set typical campaign rates:
     const campValEl = document.getElementById('sim-campanha-val');
     if (campValEl && (!campValEl.value || campValEl.value === '0')) {
-        campValEl.value = isSoy ? 4.50 : 4.50;
+        campValEl.value = 4.50;
     }
 
     // Update TradingView widget symbol
@@ -480,7 +494,8 @@ function runSimulationMath(inputs) {
     const freteAsfaltoRaw = inputs.freteAsfaltoRaw;
     const currency = inputs.currency;
     const isSoy = commodity === 'Soja';
-    const unitSymbol = isSoy ? 'sc' : 'lp';
+    const isCorn = commodity === 'Milho';
+    const unitSymbol = (isSoy || isCorn) ? 'sc' : 'lp';
 
     // Nominal currency amounts
     const credLimit = creditRaw;
@@ -662,9 +677,9 @@ function calculateSimulation() {
         if (v2ResultsWrapper) v2ResultsWrapper.style.display = 'none';
     }
 
-    const commoditySelect = document.getElementById('sim-commodity');
+    const commoditySelect = document.getElementById('v2-sim-commodity') || document.getElementById('sim-commodity');
     if (!commoditySelect) return;
-    const commodity = commoditySelect.value; // may be empty string
+    const commodity = commoditySelect.value || 'Soja';
 
     const regiaoEl = document.getElementById('sim-regiao');
     const regiao = regiaoEl ? regiaoEl.value : '';
@@ -874,8 +889,12 @@ function calculateSimulation() {
     let vencimentoStr = campObj && campObj.vencimento ? formatDateBR(campObj.vencimento) : '05/05/2027';
 
     // Reference commodity price for Sacas Equivalentes
-    const refPrecoSaca = commBrutoRaw > 0 ? commBrutoRaw : (currentQuotes.soybeans[selectedCurrency] || 103.00);
-    const unitSymbol = res ? res.unitSymbol : (commodity === 'Soja' ? 'sc' : 'lp');
+    const refPrecoSaca = commBrutoRaw > 0 ? commBrutoRaw : (
+        commodity === 'Algodão' ? (currentQuotes.cotton[selectedCurrency] || 4.38) :
+        commodity === 'Milho' ? (currentQuotes.corn[selectedCurrency] || 58.00) :
+        (currentQuotes.soybeans[selectedCurrency] || 103.00)
+    );
+    const unitSymbol = res ? res.unitSymbol : ((commodity === 'Soja' || commodity === 'Milho') ? 'sc' : 'lp');
 
     // List active modalities to show and sort (Barter Nutrade, FISO, Syngenta, Syde, CRA Agro)
     const modalities = [
@@ -1215,7 +1234,7 @@ function calculateSimulation() {
                             </li>
                             <li class="modality-bullet-item">
                                  <span class="modality-bullet-label">
-                                     Sacas Contratuais a Entregar
+                                     ${unitSymbol === 'lp' ? 'Libras Contratuais a Entregar' : 'Sacas Contratuais a Entregar'}
                                      <span class="tooltip-container">
                                          <i class="fa-regular fa-circle-question"></i>
                                          <span class="tooltip-text">Volume de troca físico na CPR já com o desconto do Incentivo de Prazo aplicado sobre o saldo.</span>
@@ -2479,8 +2498,16 @@ function openSimulationInForm(index) {
 
 // Initialize and redraw TradingView chart widget (CFDs for free widgets)
 function initTradingViewWidget(commodity) {
-    const symbol = commodity === 'Soja' ? 'OANDA:SOYBNUSD' : 'PEPPERSTONE:COTTON';
-    const subtitleText = `Gráfico CFD em tempo real de Chicago para ${commodity === 'Soja' ? 'Soja (OANDA:SOYBNUSD)' : 'Algodão (PEPPERSTONE:COTTON)'}`;
+    let symbol = 'OANDA:SOYBNUSD';
+    let subtitleText = 'Gráfico CFD em tempo real de Chicago para Soja (OANDA:SOYBNUSD)';
+
+    if (commodity === 'Algodão') {
+        symbol = 'PEPPERSTONE:COTTON';
+        subtitleText = 'Gráfico CFD em tempo real de Nova York para Algodão (PEPPERSTONE:COTTON)';
+    } else if (commodity === 'Milho') {
+        symbol = 'CBOT:ZC1!';
+        subtitleText = 'Gráfico Futuro de Chicago para Milho (CBOT:ZC1!)';
+    }
 
     ['chart-subtitle', 'v2-chart-subtitle'].forEach(id => {
         const el = document.getElementById(id);
@@ -4093,6 +4120,7 @@ function selectCreativeCommodity(comm) {
 // automatically available to inline HTML onclick="" attributes.
 window.showPage = showPage;
 window.handleFormSimulate = handleFormSimulate;
+window.onCulturaChange = onCulturaChange;
 window.hasSimulated = hasSimulated;
 window.setCurrency = setCurrency;
 window.downloadSimulationPDF = downloadSimulationPDF;

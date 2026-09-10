@@ -227,8 +227,8 @@
                             <input type="text" id="sim-credito" value="R$ 1.000.000,00">
                             <select id="sim-campanha-select"><option value="custom">Campanha Customizada (Manual)</option></select>
                             <select id="sim-commodity">
-                                <option value="">— Sem commodity —</option>
-                                <option value="Soja">Soja</option>
+                                <option value="Soja" selected>Soja</option>
+                                <option value="Milho">Milho</option>
                                 <option value="Algodão">Algodão</option>
                             </select>
                             <select id="sim-estado">
@@ -315,13 +315,24 @@
                                 </div>
                             </div>
 
-                            <!-- Section 3: Localização & Parâmetros da Praça (WSys) -->
+                            <!-- Section 3: Dados para Simulação Barter -->
                             <div
                                 style="background:var(--bg-hover); padding:16px 20px; border-radius:10px; border:1px solid var(--border-color);">
                                 <span
-                                    style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:14px;">Localização &amp; Logística da Praça (WSys)</span>
+                                    style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:14px;">Dados para Simulação Barter</span>
                                 <div
                                     style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; align-items:end;">
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v2-sim-commodity">Commodity / Cultura</label>
+                                        <div class="select-wrapper">
+                                            <select id="v2-sim-commodity"
+                                                onchange="document.getElementById('sim-commodity').value=this.value; onCulturaChange(this.value);">
+                                                <option value="Soja" selected>Soja (sc)</option>
+                                                <option value="Milho">Milho (sc)</option>
+                                                <option value="Algodão">Algodão (lp)</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                     <div class="input-group" style="margin-bottom:0;">
                                         <label for="v2-sim-estado">Estado</label>
                                         <div class="select-wrapper">
@@ -1221,7 +1232,7 @@
 
     <!-- TradingView Embed Code -->
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-    <script src="app.js?v=20260909_v1"></script>
+    <script src="app.js?v=20260910_v1"></script>
 </body>
 
 </html>

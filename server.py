@@ -26,6 +26,7 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 # Fetch raw prices from Yahoo Finance in cents (USX)
                 soy_price = self.fetch_yahoo_price("ZS=F")
                 cotton_price = self.fetch_yahoo_price("CT=F")
+                corn_price = self.fetch_yahoo_price("ZC=F")
                 
                 # Conversion formulas:
                 # Soja (ZS=F): price in USX (cents/bushel). 
@@ -36,6 +37,11 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 # Algodão (CT=F): price in USX (cents/lb).
                 # Price in USD per lb = USX / 100.
                 cotton_usd_per_lb = round(cotton_price / 100.0, 4) if cotton_price else 0.85
+
+                # Milho (ZC=F): price in USX (cents/bushel).
+                # 1 saca (60kg) = 2.362 bushels (corn 56 lb/bushel).
+                # Price in USD per saca = (USX / 100) * 2.362.
+                corn_usd_per_saca = round((corn_price / 100.0) * 2.362, 4) if corn_price else 11.20
                 
                 response_data = {
                     "success": True,
@@ -48,6 +54,11 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                         "symbol": "CT=F",
                         "raw_price_usx": cotton_price,
                         "usd_per_lb": cotton_usd_per_lb
+                    },
+                    "corn": {
+                        "symbol": "ZC=F",
+                        "raw_price_usx": corn_price,
+                        "usd_per_saca": corn_usd_per_saca
                     }
                 }
             except Exception as e:
@@ -60,6 +71,9 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                         },
                         "cotton": {
                             "usd_per_lb": 0.85
+                        },
+                        "corn": {
+                            "usd_per_saca": 11.20
                         }
                     }
                 }
