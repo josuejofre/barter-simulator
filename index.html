@@ -575,16 +575,11 @@
                                 Para a versão final de produção integrada aos sistemas internos, as seguintes origens de
                                 dados devem ser configuradas:</p>
                             <ul>
-                                <li><strong>Cotação de Commodities (Soja e Algodão) em Produção:</strong>
+                                <li><strong>Cotação de Commodities (Soja, Milho e Algodão) em Produção:</strong>
                                     <ul>
-                                        <li>Deverá ser integrada a um feed profissional contratado, como a
-                                            <strong>CMA</strong>, <strong>Bloomberg</strong>, <strong>Reuters</strong>,
-                                            ou diretamente de fontes locais de liquidez como o
-                                            <strong>CEPEA/Esalq</strong> e <strong>Safras & Mercado</strong>.</li>
-                                        <li>*No Protótipo:* Buscamos o preço em tempo real de Chicago (CBOT:ZS=F para
-                                            Soja e NYCE:CT=F para Algodão) via nosso servidor local de proxy no Yahoo
-                                            Finance, com fallback estático para USD 20,00 e USD 0,85 respectivamente
-                                            quando hospedado de forma estática (como no GitHub Pages).</li>
+                                        <li>A cotação oficial é obtida diretamente do sistema <strong>WSys (Monitor de Mercado / Originação Syngenta/Nutrade)</strong>, cruzando a Praça/Corredor logístico selecionado com a Data de Vencimento/Pagamento da Campanha.</li>
+                                        <li>Não há contratação de feeds externos como CMA, Bloomberg ou Reuters para essa precificação, pois as cotações de originação, basis e balcão praticadas no Barter Nutrade são originadas internamente pelo WSys.</li>
+                                        <li>*No Protótipo:* Buscamos o preço indicativo de Chicago/NY (CBOT:ZS=F para Soja, CBOT:ZC=F para Milho e NYCE:CT=F para Algodão) via servidor proxy local no Yahoo Finance apenas como demonstração em tempo real, com os devidos valores nativos de balcão WSys (R$ 103,00/sc para Soja, R$ 58,00/sc para Milho e R$ 4,38/lp para Algodão) aplicados na simulação comercial.</li>
                                     </ul>
                                 </li>
                                 <li><strong>Cotação do Dólar (Câmbio BRL/USD) em Produção:</strong>
@@ -615,22 +610,27 @@
                                     Fundems em MS).</li>
                                 <li><strong>Cashback e Incentivo Barter</strong>: Retornos comerciais de campanha
                                     percentuais sobre o crédito contratado.</li>
-                                <li><strong>Logística (Custo                             <!-- NOVO: FORMULA SIMPLIFICADA PASSO A PASSO (ATA 21/08) -->
+                                <li><strong>Logística (Custo de Transporte)</strong>: O frete da propriedade do produtor até a respectiva base logística de recebimento da trading.</li>
+                            </ul>
+
+                            <!-- NOVO: FORMULA SIMPLIFICADA PASSO A PASSO (ALINHADA COM A PLANILHA DE REFERENCIA) -->
                             <div style="background: var(--bg-hover); border: 1px solid var(--border-color); border-left: 4px solid var(--primary); border-radius: 8px; padding: 18px 20px; margin: 20px 0;">
                                 <h4 style="margin-top: 0; color: var(--primary); font-size: 16px; display: flex; align-items: center; gap: 8px;">
                                     <i class="fa-solid fa-calculator"></i> Fórmula da Simulação de Barter e Devolução Financeira
                                 </h4>
                                 <ol style="margin-bottom: 0; padding-left: 20px; line-height: 1.8;">
-                                    <li><strong>Preço Líquido da Saca:</strong> <code>Preço Bruto da Soja - Impostos da Região (Funrural + Taxas Estaduais)</code> <em>(Ex: R$ 120,00 - R$ 5,05 = R$ 114,95/sc)</em></li>
-                                    <li><strong>Custo do Frete Logístico:</strong> <code>(Km Asfalto × Custo/Km) + (Km Chão × Custo/Km)</code> <em>(Ex: 80×R$8 + 20×R$15 = R$ 940,00)</em></li>
-                                    <li><strong>Volume Contratual a Entregar (CPR Física):</strong> <code>Valor do Crédito ÷ Preço Líquido da Saca</code> <em>(Ex: R$ 1.000.000 ÷ R$ 114,95 = <strong>8.699 sacas</strong>)</em><br>
-                                        <small style="color:var(--text-secondary);"><em>⚠️ Regra Operacional: O volume físico contratado na CPR não sofre abatimento de sacas; o produtor entrega as 8.699 sacas para quitação dos insumos.</em></small>
+                                    <li><strong>Preço Líquido da Saca (ou Libra-peso):</strong> <code>Preço Bruto da Commodity (WSys) - Impostos da Região (Funrural + Taxas Estaduais)</code> <em>(Ex: R$ 120,00 - R$ 5,05 = R$ 114,95/sc)</em></li>
+                                    <li><strong>Preço Pedido TP (Valor Presente) e Juros do Período:</strong> <code>Preço Pedido PRAZO ÷ (1 + Juros do Período)</code><br>
+                                        <small style="color:var(--text-secondary);">onde <code>Juros do Período = (Dias de Prazo ÷ 360) × Taxa Anual</code>. <em>(Ex: R$ 1.000.000 ÷ (1 + 8,64%) = <strong>R$ 920.471,28</strong>)</em></small>
                                     </li>
-                                    <li><strong>Devolução de Cashback da Campanha (R$ ou USD):</strong> <code>Valor do Crédito × % de Cashback da Campanha</code> <em>(Ex: R$ 1.000.000 × 4,5% = <strong>R$ 45.000,00 devolvidos em conta</strong>)</em></li>
-                                    <li><strong>Ganho de Incentivo de Prazo Barter:</strong> <code>Valor Presente TP × (Prazo ÷ 30 × 0,5%)</code> <em>(Ex: R$ 920.471,28 × 3,6% = <strong>R$ 33.136,97</strong>)</em></li>
+                                    <li><strong>Incentivo de Prazo Barter:</strong> <code>Preço Pedido TP (Valor Presente) × (Prazo ÷ 30 × 0,5%)</code> <em>(Ex: R$ 920.471,28 × 3,60% = <strong>R$ 33.136,97</strong> como desconto comercial no saldo da CPR)</em></li>
+                                    <li><strong>Volume Contratual a Entregar na CPR:</strong> <code>(Valor da Operação - Incentivo Barter) ÷ Preço Líquido da Saca</code> <em>(Ex: (R$ 1.000.000 - R$ 33.136,97) ÷ R$ 114,95 = <strong>8.425 sacas</strong>)</em></li>
+                                    <li><strong>Devolução de Cashback da Campanha (R$ ou USD):</strong> <code>Valor da Operação × % de Cashback da Campanha</code> <em>(Ex: R$ 1.000.000 × 4,5% = <strong>R$ 45.000,00 devolvidos em dinheiro em conta</strong>)</em></li>
+                                    <li><strong>Custo do Frete Logístico:</strong> <code>(Km Asfalto × Tarifa Asfalto/Km) + (Km Chão × Tarifa Chão/Km)</code> <em>(Ex: 80×R$8 + 20×R$15 = R$ 940,00)</em><br>
+                                        <small style="color:var(--text-secondary);"><em>💡 Utilização do Frete: (a) No Valor Total da Operação Barter: <code>(Sacas a Entregar × Preço Bruto) + Frete Total</code>; (b) No Preço Líquido Efetivo/sc: deduz o <code>Frete Total ÷ Volume CPR</code>.</em></small>
+                                    </li>
                                     <li><strong>Benefício Total Devolvido ao Produtor:</strong> <code>Devolução Cashback + Incentivo Barter</code> <em>(Ex: R$ 45.000,00 + R$ 33.136,97 = <strong>R$ 78.136,97 devolvidos</strong>)</em></li>
-                                    <li><strong>Sacas Equivalentes Economizadas (Indicador):</strong> <code>Benefício Total Devolvido ÷ Preço Líquido</code> <em>(Ex: R$ 78.136,97 ÷ R$ 114,95 = <strong>680 sacas equivalentes de economia</strong>)</em></li>
-                                    <li><strong>Valor Total da Operação:</strong> <code>(Volume Contratual a Entregar × Preço FOB Bruto) + Frete Total</code></li>
+                                    <li><strong>Sacas Equivalentes Economizadas (Indicador):</strong> <code>Benefício Total Devolvido ÷ Preço Líquido da Saca</code> <em>(Ex: R$ 78.136,97 ÷ R$ 114,95 = <strong>680 sacas equivalentes</strong>)</em></li>
                                 </ol>
                             </div>
 
@@ -1232,7 +1232,7 @@
 
     <!-- TradingView Embed Code -->
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
-    <script src="app.js?v=20260910_v1"></script>
+    <script src="app.js?v=20260910_v2"></script>
 </body>
 
 </html>
