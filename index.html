@@ -582,19 +582,11 @@
                                         <li>*No Protótipo:* Buscamos o preço indicativo de Chicago/NY (CBOT:ZS=F para Soja, CBOT:ZC=F para Milho e NYCE:CT=F para Algodão) via servidor proxy local no Yahoo Finance apenas como demonstração em tempo real, com os devidos valores nativos de balcão WSys (R$ 103,00/sc para Soja, R$ 58,00/sc para Milho e R$ 4,38/lp para Algodão) aplicados na simulação comercial.</li>
                                     </ul>
                                 </li>
-                                <li><strong>Cotação do Dólar (Câmbio BRL/USD) em Produção:</strong>
+                                <li><strong>Cotação do Dólar (Câmbio BRL/USD): Não é Necessária</strong>
                                     <ul>
-                                        <li>Deverá integrar-se à API oficial do <strong>Banco Central do Brasil
-                                                (BACEN)</strong> para obter a taxa <strong>PTAX de
-                                                fechamento/venda</strong>, ou feeds de câmbio futuro da
-                                            <strong>B3</strong> (contrato de dólar futuro) se a liquidação for a termo.
-                                        </li>
-                                        <li>*No Protótipo:* Buscamos a taxa em tempo real através da
-                                            <strong>AwesomeAPI</strong> (economia.awesomeapi.com.br/last/USD-BRL)
-                                            diretamente pelo navegador do usuário (com CORS liberado, sem necessidade de
-                                            backend ou chaves expostas). O timestamp da última captura do dólar é
-                                            atualizado dinamicamente logo abaixo do campo de câmbio. Se a API estiver
-                                            inacessível, o sistema usa o valor de fallback cambial de R$ 5,1500.</li>
+                                        <li><strong>Regra de Negócio:</strong> A captura de cotação ou feed cambial do Dólar (seja via PTAX/BACEN, B3 ou APIs comerciais) <strong>não é necessária</strong> para o simulador em produção.</li>
+                                        <li><strong>Justificativa Comercial e Técnica:</strong> O sistema <strong>WSys já disponibiliza os preços das commodities de forma nativa tanto em Real (R$) quanto em Dólar (USD)</strong>. Da mesma forma, as tabelas de frete logístico já contam com valores nativos fixados por quilômetro em Real e em Dólar (ex: R$ 15,00/KM vs $ 3,00/KM em chão; R$ 8,00/KM vs $ 1,60/KM em asfalto).</li>
+                                        <li><strong>Comportamento do Sistema:</strong> A troca de moeda (toggle R$ / USD) não realiza conversões matemáticas por taxa cambial de mercado; ela simplesmente altera a visualização e aplica os parâmetros comerciais nativos do WSys cadastrados para a respectiva moeda, eliminando qualquer risco de distorção cambial.</li>
                                     </ul>
                                 </li>
                             </ul>
@@ -634,35 +626,14 @@
                                 </ol>
                             </div>
 
-                            <h3>2. Seleção de Moeda (Real R$ vs. Dólar USD)</h3>
-                            <p>O simulador permite definir a moeda padrão da operação. O sistema converte
-                                automaticamente as entradas usando a <strong>Taxa Cambial Futura (BRL/USD)</strong>
-                                configurada:</p>
+                            <h3>2. Seleção de Moeda (Real R$ vs. Dólar USD) e Desnecessidade de Feed Cambial</h3>
+                            <p>O simulador opera com seleção direta de moeda sem dependência de conversão cambial dinâmica:</p>
                             <ul>
-                                <li><strong>Ao selecionar Real (R$):</strong>
-                                    <ul>
-                                        <li>O crédito contratado é definido em BRL (ex: <code>R$ 1.000.000,00</code>).
-                                        </li>
-                                        <li>O preço da commodity e o valor de frete por KM são digitados em BRL.</li>
-                                        <li>Para o cálculo matemático (que usa a base estruturada em USD da planilha),
-                                            convertemos:<br>
-                                            <div class="equation">Credito_(USD) = Credito_(BRL) / Câmbio</div>
-                                            <div class="equation">Preço_Commodity_(USD) = Preço_Commodity_(BRL) / Câmbio
-                                            </div>
-                                        </li>
-                                        <li>Após os cálculos, os resultados monetários da tabela de comparação e dos
-                                            cartões de destaque são multiplicados pelo câmbio e exibidos em Real (R$).
-                                        </li>
-                                    </ul>
-                                </li>
-                                <li><strong>Ao selecionar Dólar (USD):</strong>
-                                    <ul>
-                                        <li>Todas as entradas e saídas permanecem em USD ($).</li>
-                                    </ul>
-                                </li>
+                                <li><strong>Ao selecionar Real (R$):</strong> Todas as entradas e saídas monetárias operam em BRL (R$). O simulador carrega os preços de balcão futuros e tarifas logísticas nativas em Real do WSys (ex: Soja R$ 103,00/sc, Milho R$ 58,00/sc, Frete Chão R$ 15,00/KM, Frete Asfalto R$ 8,00/KM).</li>
+                                <li><strong>Ao selecionar Dólar (USD):</strong> Todas as entradas e saídas monetárias operam em USD ($). O simulador carrega os preços de balcão futuros e tarifas logísticas nativas em Dólar do WSys (ex: Soja $ 20,00/sc, Milho $ 11,20/sc, Algodão $ 0,85/lp, Frete Chão $ 3,00/KM, Frete Asfalto $ 1,60/KM).</li>
+                                <li><strong>Ausência de Necessidade de Feed Cambial:</strong> Não é necessária a integração com feeds de câmbio (PTAX/BACEN, B3 ou APIs comerciais), pois o próprio WSys e as tabelas comerciais já fornecem os valores nativos em ambas as moedas de forma pré-fixada pela campanha.</li>
                             </ul>
-                            <p><em>Nota: Os volumes físicos de commodities (sacas ou libras) não se alteram pela moeda
-                                    selecionada, garantindo a integridade dos volumes da planilha.</em></p>
+                            <p><em>Nota: Os volumes físicos de commodities (sacas ou libras) não se alteram pela moeda selecionada, garantindo a integridade dos volumes da planilha.</em></p>
 
                             <h3>3. Detalhamento das Regras de Impostos Regionais (Praças)</h3>
                             <p>Para simular o desconto tributário, o sistema calcula a dedução com base na região/praça

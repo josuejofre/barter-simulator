@@ -78,11 +78,12 @@ A mecânica de cálculo da operação de Barter com Devolução de Cashback fina
 
 ---
 
-## 2. Seleção de Moeda (Real R$ vs. Dólar USD)
+## 2. Seleção de Moeda (Real R$ vs. Dólar USD) e Desnecessidade de Feed Cambial
 
-O simulador permite definir a moeda padrão da operação:
-* **Ao selecionar Real (R$):** Todas as entradas e saídas monetárias operam em BRL (R$).
-* **Ao selecionar Dólar (USD):** Todas as entradas e saídas monetárias operam em USD ($).
+O simulador opera com seleção direta de moeda sem dependência de conversão cambial dinâmica:
+* **Ao selecionar Real (R$):** Todas as entradas e saídas monetárias operam em BRL (R$). O simulador carrega os preços de balcão futuros e tarifas logísticas nativas em Real do WSys (ex: Soja R$ 103,00/sc, Milho R$ 58,00/sc, Frete Chão R$ 15,00/KM, Frete Asfalto R$ 8,00/KM).
+* **Ao selecionar Dólar (USD):** Todas as entradas e saídas monetárias operam em USD ($). O simulador carrega os preços de balcão futuros e tarifas logísticas nativas em Dólar do WSys (ex: Soja $ 20,00/sc, Milho $ 11,20/sc, Algodão $ 0,85/lp, Frete Chão $ 3,00/KM, Frete Asfalto $ 1,60/KM).
+* **Ausência de Necessidade de Feed Cambial:** Não é necessária a integração com feeds de câmbio (PTAX/BACEN, B3 ou APIs comerciais), pois o próprio WSys e as tabelas comerciais já fornecem os valores nativos em ambas as moedas de forma pré-fixada pela campanha.
 
 ---
 
@@ -178,9 +179,10 @@ Para a validação conceitual (protótipo), são utilizadas fontes públicas e s
    - Não há contratação de feeds externos como CMA, Bloomberg ou Reuters para essa precificação, pois as cotações de originação, basis e balcão praticadas no Barter Nutrade são originadas internamente pelo WSys.
    - *No Protótipo:* Buscamos o preço indicativo de Chicago/NY (CBOT:ZS=F para Soja, CBOT:ZC=F para Milho e NYCE:CT=F para Algodão) via servidor proxy local no Yahoo Finance apenas como demonstração em tempo real, com os devidos valores nativos de balcão WSys (R$ 103,00/sc para Soja, R$ 58,00/sc para Milho e R$ 4,38/lp para Algodão) aplicados na simulação comercial.
 
-2. **Cotação do Dólar (Câmbio BRL/USD) em Produção:**
-   - Deverá integrar-se à API oficial do **Banco Central do Brasil (BACEN)** para obter a taxa **PTAX de fechamento/venda**, ou feeds de câmbio futuro da **B3** (contrato de dólar futuro) se a liquidação for a termo.
-   - *No Protótipo:* Buscamos a taxa em tempo real através da AwesomeAPI (economia.awesomeapi.com.br/last/USD-BRL) diretamente pelo navegador do usuário (com CORS liberado, sem necessidade de backend ou chaves expostas). O timestamp da última captura do dólar é atualizado dinamicamente logo abaixo do campo de câmbio. Se a API estiver inacessível, o sistema usa o valor de fallback cambial de R$ 5,1500.
+2. **Cotação do Dólar (Câmbio BRL/USD): Não é Necessária**
+   - **Regra de Negócio:** A captura de cotação ou feed cambial do Dólar (seja via PTAX/BACEN, B3 ou APIs comerciais) **não é necessária** para o simulador em produção.
+   - **Justificativa Comercial e Técnica:** O sistema **WSys já disponibiliza os preços das commodities de forma nativa tanto em Real (R$) quanto em Dólar (USD)**. Da mesma forma, as tabelas de frete logístico já contam com valores nativos fixados por quilômetro em Real e em Dólar (ex: R$ 15,00/KM vs $ 3,00/KM em chão; R$ 8,00/KM vs $ 1,60/KM em asfalto).
+   - **Comportamento do Sistema:** A troca de moeda (toggle R$ / USD) não realiza conversões matemáticas por taxa spot de mercado; ela simplesmente altera a visualização e aplica os parâmetros contratuais nativos do WSys cadastrados para a respectiva moeda, eliminando qualquer risco de distorção cambial.
 
 ---
 
