@@ -22,12 +22,15 @@ Este documento apresenta a fórmula matemática da simulação de Barter do **Si
 
 ---
 
-### 3. Incentivo de Prazo Barter (Desconto Comercial que Reduz Sacas)
-> **Preço Pedido TP × (Dias de Prazo ÷ 30 × 0,5%) = Incentivo Barter (R$)**
-* **O que faz:** Concede um **desconto comercial** na compra de insumos proporcional ao prazo até o vencimento da safra ($0{,}5\%$ ao mês sobre o Preço TP).
+### 3. Preço Pedido TP (Valor Presente) e Incentivo de Prazo Barter
+> **Preço Pedido TP (Valor Presente) = Valor da Operação ÷ (1 + Juros do Período)**  
+> **Incentivo Barter (R$) = Preço Pedido TP (Valor Presente) × (Dias de Prazo ÷ 30 × 0,5%)**
+* **O que faz:** Desconta os juros do prazo do valor a prazo da operação para encontrar o **Preço Pedido TP (Valor Presente)** à vista, e em seguida aplica o **desconto comercial** de incentivo de $0{,}5\%$ ao mês sobre esse valor presente.
+* **Exemplo de Cálculo:**
+  - Operação a prazo: $\text{R\$\ } 1.000.000{,}00$, $216\text{ dias}$ a $14{,}40\%\text{ a.a.}$ ($\text{Juros Período} = 8{,}64\%$):
+  - $\text{Preço Pedido TP (Valor Presente)} = \frac{\text{R\$\ } 1.000.000{,}00}{1 + 0{,}0864} = \mathbf{\text{R\$\ } 920.471{,}28}$
+  - $\text{Incentivo Barter} = \text{R\$\ } 920.471{,}28 \times (216 / 30 \times 0{,}5\%) = \text{R\$\ } 920.471{,}28 \times 3{,}60\% = \mathbf{\text{R\$\ } 33.136{,}97\text{ de desconto comercial}}$
 * **Impacto:** Esse desconto reduz o saldo financeiro a ser quitado em grãos e **diminui a quantidade de sacas a entregar na CPR**.
-* **Exemplo:** Em 210 dias (7 meses a $0{,}5\% = 3{,}5\%$ sobre TP de R$ 900.000,00): 
-  $$\text{R\$\ } 900.000{,}00 \times 3{,}5\% = \mathbf{\text{R\$\ } 31.500{,}00\text{ de desconto no saldo}}$$
 
 ---
 

@@ -27,36 +27,54 @@ graph TD
 
 ## ⚡ Fórmula Simplificada do Barter e Devolução Financeira (Passo a Passo)
 
-A mecânica de cálculo da operação de Barter com Devolução de Cashback financeiro é compreendida nos seguintes passos:
+A mecânica de cálculo da operação de Barter com Devolução de Cashback financeiro e Incentivo de Prazo segue os seguintes passos:
 
-1. **Preço Líquido da Saca:**
-   $$\text{Preço Bruto da Soja} - \text{Impostos da Região (Funrural + Taxas Estaduais)} = \text{Preço Líquido da Saca}$$
+1. **Preço Líquido da Saca (ou Libra-peso):**
+   $$\text{Preço Bruto da Commodity (WSys)} - \text{Impostos da Região (Funrural + Taxas Estaduais)} = \text{Preço Líquido da Saca}$$
    *(Ex: $\text{R\$\ } 120{,}00 - (\text{R\$\ } 120{,}00 \times 1{,}63\% + \text{R\$\ } 3{,}09) = \text{R\$\ } 114{,}95/\text{sc}$)*
 
-2. **Custo do Frete Logístico:**
-   $$(\text{Km Asfalto} \times \text{Custo/Km}) + (\text{Km Chão} \times \text{Custo/Km}) = \text{Frete Total}$$
-   *(Ex: $(80 \times \text{R\$\ } 8{,}00) + (20 \times \text{R\$\ } 15{,}00) = \text{R\$\ } 940{,}00$)*
+2. **Preço Pedido TP (Valor Presente) e Juros do Período:**
+   O **Preço Pedido TP (Valor Presente)** é o valor base à vista do pedido antes do acréscimo de juros a prazo da operação, calculado descontando-se a taxa de juros anual proporcional ao prazo:
+   $$\text{Preço Pedido TP (Valor Presente)} = \frac{\text{Preço Pedido PRAZO (Valor da Operação)}}{1 + \text{Juros do Período}}$$
+   $$\text{Juros do Período} = \left(\frac{\text{Dias de Prazo}}{360}\right) \times \text{Taxa de Juros Anual (\% a.a.)}$$
+   *(Ex: Para uma operação de $\text{R\$\ } 1.000.000{,}00$, prazo de $216\text{ dias}$ e taxa de $14{,}40\%\text{ a.a.}$:)*
+   $$\text{Juros do Período} = \left(\frac{216}{360}\right) \times 14{,}40\% = 0{,}60 \times 14{,}40\% = 8{,}64\%$$
+   $$\text{Preço Pedido TP (Valor Presente)} = \frac{\text{R\$\ } 1.000.000{,}00}{1 + 0{,}0864} = \mathbf{\text{R\$\ } 920.471{,}28}$$
 
-3. **Quantidade de Sacas Contratuais a Entregar:**
-   $$\text{Valor do Crédito dos Insumos} \div \text{Preço Líquido da Saca} = \text{Sacas a Entregar}$$
-   *(Ex: $\text{R\$\ } 1.000.000{,}00 \div \text{R\$\ } 114{,}95 = 8.699\text{ sacas}$)*
-   *Nota Operacional (Ata 21/08): O volume físico de grãos a entregar não é reduzido na CPR, pois o produtor liquida a totalidade dos insumos com grãos.*
+3. **Incentivo de Prazo Barter (Desconto Comercial que Reduz Sacas da CPR):**
+   O incentivo de prazo concede um desconto comercial de $0{,}5\%\text{ ao mês}$ ($6{,}0\%\text{ a.a.}$) calculado sobre o **Preço Pedido TP (Valor Presente)**:
+   $$\text{Incentivo Barter (\%)} = \left(\frac{\text{Dias de Prazo}}{30}\right) \times 0{,}5\%\text{ a.m.}$$
+   $$\text{Incentivo Barter (R\$)} = \text{Preço Pedido TP (Valor Presente)} \times \text{Incentivo Barter (\%)}$$
+   *(Ex: $\text{R\$\ } 920.471{,}28 \times (216 / 30 \times 0{,}5\%) = \text{R\$\ } 920.471{,}28 \times 3{,}60\% = \mathbf{\text{R\$\ } 33.136{,}97}$)*
 
-4. **Devolução Financeira de Cashback da Campanha (R$ ou USD):**
-   $$\text{Valor do Crédito} \times \%\text{ de Cashback} = \text{Devolução Financeira (R\$)}$$
-   *(Ex: $\text{R\$\ } 1.000.000{,}00 \times 4{,}5\% = \mathbf{R\$\ 45.000{,}00\text{ devolvidos ao produtor}}$)*
+4. **Quantidade de Sacas Contratuais a Entregar na CPR:**
+   O Incentivo de Prazo funciona como um desconto comercial direto que abate o valor a ser quitado em grãos, reduzindo o volume físico de entrega na CPR:
+   $$\text{Sacas a Entregar na CPR} = \frac{\text{Valor da Operação} - \text{Incentivo Barter (R\$)}}{\text{Preço Líquido da Saca}}$$
+   *(Ex: $(\text{R\$\ } 1.000.000{,}00 - \text{R\$\ } 33.136{,}97) \div \text{R\$\ } 114{,}95 = \frac{\text{R\$\ } 968.500{,}00}{\text{R\$\ } 114{,}95} = \mathbf{8.425\text{ sacas}}$)*
 
-5. **Incentivo de Prazo Barter (R$ ou USD):**
-   $$\text{Valor Presente TP} \times (\text{Dias de Prazo} \div 30 \times 0{,}5\%) = \text{Incentivo de Prazo (R\$)}$$
-   *(Ex: $\text{R\$\ } 920.471{,}28 \times 3{,}6\% = \mathbf{R\$\ 33.136{,}97}$)*
+5. **Devolução Financeira de Cashback da Campanha (R$ ou USD):**
+   Diferente do incentivo de prazo, o Cashback da Campanha não diminui sacas da CPR; ele é uma **devolução financeira monetária em dinheiro** creditada na conta do produtor:
+   $$\text{Valor do Crédito} \times \%\text{ de Cashback da Campanha} = \text{Devolução Financeira (R\$)}$$
+   *(Ex: $\text{R\$\ } 1.000.000{,}00 \times 4{,}5\% = \mathbf{\text{R\$\ } 45.000{,}00\text{ devolvidos em dinheiro ao produtor}}$)*
 
-6. **Benefício Total Devolvido ao Produtor:**
-   $$\text{Devolução Cashback} + \text{Incentivo Barter} = \text{Retorno Financeiro Total}$$
-   *(Ex: $\text{R\$\ } 45.000{,}00 + \text{R\$\ } 33.136{,}97 = \mathbf{R\$\ 78.136{,}97}$)*
+6. **Custo do Frete Logístico (Onde e Como é Utilizado):**
+   O custo logístico da fazenda até a base/porto é apurado por:
+   $$\text{Frete Total} = (\text{Km Asfalto} \times \text{Tarifa Asfalto/Km}) + (\text{Km Chão} \times \text{Tarifa Chão/Km})$$
+   *(Ex: $(80 \times \text{R\$\ } 8{,}00) + (20 \times \text{R\$\ } 15{,}00) = \mathbf{\text{R\$\ } 940{,}00}$)*
+   
+   **O Frete é utilizado em dois momentos fundamentais:**
+   - **a) No Valor Total da Operação Barter (Custo Total da Modalidade):**
+     O frete representa o desembolso logístico de transporte suportado pelo produtor rural para colocar o grão na trading:
+     $$\text{Valor Total Barter} = (\text{Sacas a Entregar na CPR} \times \text{Preço Bruto}) + \text{Frete Total}$$
+     *(Se o frete for zero ou modalidade CIF, $\text{Frete Total} = \text{R\$\ } 0{,}00$)*.
+   - **b) No Preço Líquido Efetivo Unitário por Saca:**
+     $$\text{Frete Unitário (R\$/sc)} = \frac{\text{Frete Total}}{\text{Volume de Troca Físico}}$$
+     $$\text{Preço Líquido Efetivo} = \text{Preço Líquido} + \text{Ganho Cashback/sc} + \text{Ganho Incentivo/sc} - \text{Frete Unitário/sc}$$
 
-7. **Sacas Equivalentes à Devolução:**
-   $$\text{Retorno Financeiro Total} \div \text{Preço Líquido da Saca} = \text{Sacas Equivalentes Economizadas}$$
-   *(Ex: $\text{R\$\ } 78.136{,}97 \div \text{R\$\ } 114{,}95 = 680\text{ sacas equivalentes}$)*
+7. **Retorno Financeiro Total e Sacas Equivalentes Economizadas:**
+   $$\text{Retorno Financeiro Total} = \text{Devolução Cashback} + \text{Incentivo Barter}$$
+   *(Ex: $\text{R\$\ } 45.000{,}00 + \text{R\$\ } 33.136{,}97 = \mathbf{\text{R\$\ } 78.136{,}97}$)*
+   $$\text{Sacas Equivalentes Economizadas} = \frac{\text{Retorno Financeiro Total}}{\text{Preço Líquido da Saca}} = \frac{\text{R\$\ } 78.136{,}97}{\text{R\$\ } 114{,}95} = \mathbf{680\text{ sacas equivalentes}}$)*
 
 ---
 
@@ -85,8 +103,19 @@ Para cada estado e praça logística, o simulador calcula a dedução tributári
 
 ## 4. Custo de Transporte (Frete)
 
-O frete da fazenda até a base logística cadastrada no WSys é deduzido:
+O frete da fazenda até a base logística cadastrada no WSys é apurado pela composição logística:
 $$\text{Custo de Frete Total} = (\text{Km Chão} \times \text{Tarifa Chão}) + (\text{Km Asfalto} \times \text{Tarifa Asfalto})$$
+
+### Utilização do Frete no Simulador:
+1. **No Valor Total da Modalidade Barter (Custo Efetivo Total):**
+   O frete representa o desembolso logístico de transporte suportado pelo produtor para colocar a produção física na trading/porto. Portanto, ele é somado ao valor bruto da produção para apuração do Valor Total a Pagar e cálculo do Custo Real Total (%) e Custo Mensal (% a.m.) no comparativo de benefícios:
+   $$\text{Valor Total Barter (R\$)} = (\text{Volume Contratual CPR} \times \text{Preço Bruto}) + \text{Frete Total}$$
+   *(Caso a operação seja com frete CIF suportado pela trading ou a distância cadastrada seja 0 KM, $\text{Frete Total} = \text{R\$\ } 0{,}00$)*.
+
+2. **No Preço Equivalente Líquido da Commodity (R$/sc ou USD/sc):**
+   Para apurar o preço líquido efetivo no bolso do produtor (FOB Fazenda), o frete total é diluído pelo volume de sacas/libras contratadas e deduzido do preço equivalente final:
+   $$\text{Frete Unitário} = \frac{\text{Frete Total}}{\text{Volume de Troca Físico da CPR}}$$
+   $$\text{Preço Equivalente Líquido} = \text{Preço Livre} + \text{Ganho Cashback/sc} + \text{Ganho Incentivo/sc} - \text{Frete Unitário}$$
 
 ---
 
@@ -144,9 +173,10 @@ As campanhas reproduzem fielmente o ecossistema corporativo (como a campanha **S
 
 Para a validação conceitual (protótipo), são utilizadas fontes públicas e simuladas. Para a versão final de produção integrada aos sistemas internos, as seguintes origens de dados devem ser configuradas:
 
-1. **Cotação de Commodities (Soja e Algodão) em Produção:**
-   - Deverá ser integrada a um feed profissional contratado, como a **CMA**, **Bloomberg**, **Reuters**, ou diretamente de fontes locais de liquidez como o **CEPEA/Esalq e Safras & Mercado**.
-   - *No Protótipo:* Buscamos o preço em tempo real de Chicago (CBOT:ZS=F para Soja e NYCE:CT=F para Algodão) via nosso servidor local de proxy no Yahoo Finance, com fallback estático para USD 20,00 e USD 0,85 respectivamente quando hospedado de forma estática (como no GitHub Pages).
+1. **Cotação de Commodities (Soja, Milho e Algodão) em Produção:**
+   - A cotação oficial é obtida diretamente do sistema **WSys (Monitor de Mercado / Originação Syngenta/Nutrade)**, cruzando a Praça/Corredor logístico selecionado com a Data de Vencimento/Pagamento da Campanha (conforme detalhado na Seção 8).
+   - Não há contratação de feeds externos como CMA, Bloomberg ou Reuters para essa precificação, pois as cotações de originação, basis e balcão praticadas no Barter Nutrade são originadas internamente pelo WSys.
+   - *No Protótipo:* Buscamos o preço indicativo de Chicago/NY (CBOT:ZS=F para Soja, CBOT:ZC=F para Milho e NYCE:CT=F para Algodão) via servidor proxy local no Yahoo Finance apenas como demonstração em tempo real, com os devidos valores nativos de balcão WSys (R$ 103,00/sc para Soja, R$ 58,00/sc para Milho e R$ 4,38/lp para Algodão) aplicados na simulação comercial.
 
 2. **Cotação do Dólar (Câmbio BRL/USD) em Produção:**
    - Deverá integrar-se à API oficial do **Banco Central do Brasil (BACEN)** para obter a taxa **PTAX de fechamento/venda**, ou feeds de câmbio futuro da **B3** (contrato de dólar futuro) se a liquidação for a termo.
