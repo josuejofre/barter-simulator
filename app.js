@@ -942,6 +942,7 @@ function calculateSimulation() {
             incentivoDisplay: res ? `+${(res.incentivoBarterPct * 100).toFixed(2)}%` : '0,00%',
             incentivoExplicacao: res ? `Incentivo de prazo de +${(res.incentivoBarterPct * 100).toFixed(2)}% (${formatSelectedCurrency(res.incentivoBarter)}) calculado sobre o Preço Pedido TP (Valor Presente).<br><strong>Fonte:</strong> Cadastro de campanha.` : 'Sem incentivo.<br><strong>Fonte:</strong> Cadastro de campanha.',
             cashbackDisplay: `+${valPctProposta.toFixed(2)}%`,
+            valCampanhaPct: valPctProposta,
             cashbackExplicacao: `Cashback de campanha comercial Nutrade de +${valPctProposta.toFixed(2)}% (${formatSelectedCurrency(res ? res.cashback : 0)}) creditado como devolução financeira em dinheiro ao produtor.<br><strong>Fonte:</strong> Cadastro de campanha.`,
             garantia: 'CPR Física',
             garantiaExplicacao: 'Garantia vinculada unicamente à CPR Física da produção com a Nutrade.',
@@ -1337,10 +1338,10 @@ function calculateSimulation() {
                                         <span class="tooltip-text" style="width:290px;">
                                             <strong>Racional da Planilha 2026:</strong><br>
                                             • Preço Pedido PRAZO: ${formatSelectedCurrency(creditRaw)}<br>
-                                            • Incentivo Barter (${(m.incentivoBarterPct * 100).toFixed(2)}%): +${formatSelectedCurrency(m.incentivoFinanceiro)}<br>
-                                            • Cash Back (${m.valCampanhaPct.toFixed(2)}%): +${formatSelectedCurrency(m.cashbackFinanceiro)}<br>
-                                            • Total Retorno Devolvido: +${formatSelectedCurrency(m.totalRetorno)}<br>
-                                            • Volume TROCA equivalência: <strong>${formatNumber(m.volTrocaEquiv, 0)} ${m.unitAbbr}</strong>
+                                            • Incentivo Barter (${(((m.incentivoBarterPct || 0) * 100)).toFixed(2)}%): +${formatSelectedCurrency(m.incentivoFinanceiro || 0)}<br>
+                                            • Cash Back (${(((m.valCampanhaPct !== undefined ? m.valCampanhaPct : valPctProposta) || 0)).toFixed(2)}%): +${formatSelectedCurrency(m.cashbackFinanceiro || 0)}<br>
+                                            • Total Retorno Devolvido: +${formatSelectedCurrency(m.totalRetorno || 0)}<br>
+                                            • Volume TROCA equivalência: <strong>${formatNumber(m.volTrocaEquiv || 0, 0)} ${m.unitAbbr || 'sc'}</strong>
                                         </span>
                                     </span>
                                 </div>
