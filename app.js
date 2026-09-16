@@ -1296,16 +1296,6 @@ function calculateSimulation() {
                                  </span>
                                  <strong class="modality-bullet-val text-teal" style="font-size:15px; font-weight:800;">${formatNumber(m.volTrocaEquiv || 0, 0)} ${m.unitAbbr || 'sc'}</strong>
                             </li>
-                            <li class="modality-bullet-item">
-                                 <span class="modality-bullet-label">
-                                     &lt;&gt; Commodity inicial vs valorizações
-                                     <span class="tooltip-container">
-                                         <i class="fa-regular fa-circle-question"></i>
-                                         <span class="tooltip-text"><strong>Linha 33 da planilha:</strong> Percentual de ganho econômico sobre a saca inicial decorrente do Cash Back e do Incentivo de Prazo.</span>
-                                     </span>
-                                 </span>
-                                 <strong class="modality-bullet-val text-teal">+${((m.difCommodityVsValorizacoesPct || 0) * 100).toFixed(2).replace('.', ',')}%</strong>
-                            </li>
                             <li class="modality-bullet-item modality-guarantee-item">
                                  <span class="modality-bullet-label">
                                      Garantias Exigidas
@@ -1331,7 +1321,7 @@ function calculateSimulation() {
                                     <i class="fa-solid fa-wheat-awn" style="font-size:16px; color:var(--primary-medium);"></i>
                                     <span style="display:flex; flex-direction:column; line-height:1.2;">
                                         <strong style="font-size:15px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volTrocaEquiv, 0)} ${m.unitAbbr} (Volume TROCA equivalência)</strong>
-                                        <span style="font-size:11.5px; color:#0d9488; font-weight:700;">Total retorno: +${formatSelectedCurrency(m.totalRetorno)} | Ganho: +${(m.difCommodityVsValorizacoesPct * 100).toFixed(2).replace('.', ',')}%</span>
+                                        <span style="font-size:11.5px; color:#0d9488; font-weight:700;">Total retorno: +${formatSelectedCurrency(m.totalRetorno)} | Ganho: +${((m.difCommodityVsValorizacoesPct || 0) * 100).toFixed(2).replace('.', ',')}%</span>
                                     </span>
                                     <span class="tooltip-container" style="margin-left:auto;">
                                         <i class="fa-regular fa-circle-question" style="font-size:13px; color:var(--text-secondary); cursor:help;"></i>
@@ -1349,36 +1339,22 @@ function calculateSimulation() {
                         </div>
                     </div>
                     <div class="modality-card-footer">
-                        <div class="modality-cost-row modality-cost-total">
-                            <span>
-                                Custo Real Total
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text">
-                                        <strong>Fórmula do Custo Real Total:</strong><br>
-                                        • Valor Total: ${formatSelectedCurrency(m.valorTotal)}<br>
-                                        • Valor da Operação: ${formatSelectedCurrency(creditRaw)}<br>
-                                        • Custo Acumulado: ((${formatSelectedCurrency(m.valorTotal)} / ${formatSelectedCurrency(creditRaw)}) - 1) × 100 = <strong>${m.custoTotalPct.toFixed(2)}%</strong>
-                                    </span>
-                                </span>
-                            </span>
-                            <span>${m.custoTotalPct.toFixed(2)}%</span>
-                        </div>
-                        <div class="modality-cost-row modality-cost-operation">
-                            <span>
-                                Custo Real Operação (a.m)
+                        <div class="modality-cost-row modality-cost-operation" style="background: linear-gradient(135deg, #0d9488, #059669); padding: 12px 16px; border-radius: 0 0 10px 10px; display: flex; justify-content: space-between; align-items: center;">
+                            <span style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #ffffff;">
+                                <i class="fa-solid fa-arrow-trend-up" style="color: #6ee7b7; font-size: 14px;"></i>
+                                &lt;&gt; Commodity inicial vs valorizações
                                 <span class="tooltip-container" style="color: #ffffff;">
-                                    <i class="fa-regular fa-circle-question" style="color: #ffffff;"></i>
+                                    <i class="fa-regular fa-circle-question" style="color: #a7f3d0;"></i>
                                     <span class="tooltip-text">
-                                        <strong>Fórmula do Custo Real da Operação:</strong><br>
-                                        • Custo Real Total (%): <strong>${m.custoTotalPct.toFixed(2)}%</strong><br>
-                                        • Prazo em Meses: ${prazo} dias / 30 = <strong>${nMesesCorridos.toFixed(2)} meses</strong><br>
-                                        • Taxa Efetiva Mensal: ${m.custoTotalPct.toFixed(2)}% / ${nMesesCorridos.toFixed(2)} = <strong>${m.custoAmPct.toFixed(2)}% a.m.</strong><br><br>
-                                        <em>Representa a taxa de juros efetiva média por mês da operação.</em>
+                                        <strong>Linha 33 da planilha (Simulador 2026):</strong><br>
+                                        • Fórmula: (Valorização Commodity equiv. Total / Preço do Commodity Livre) − 1<br>
+                                        • Mede o percentual de ganho econômico real obtido sobre a saca com a soma de Cash Back e Incentivo Barter.
                                     </span>
                                 </span>
                             </span>
-                            <span>${m.custoAmPct.toFixed(2)}% a.m.</span>
+                            <strong style="font-size: 16px; font-weight: 800; color: #6ee7b7; font-family: var(--font-heading);">
+                                +${((m.difCommodityVsValorizacoesPct || 0) * 100).toFixed(2).replace('.', ',')}%
+                            </strong>
                         </div>
                     </div>
                 `;

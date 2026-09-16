@@ -62,6 +62,7 @@ Este arquivo lista todos os textos explicativos associados aos ícones de interr
 | `mod-card-garantias` | **Garantias Exigidas** | Estrutura de colaterais e garantias exigidas pela mesa de crédito para a modalidade correspondente. |
 | `mod-card-valor-total` | **Valor Total Equivalente** | **Fórmula:** Para modalidades financeiras: `Crédito * (1 - Desc. VPAN) * (1 + Taxa * Meses) * (1 - Incentivo)`. Para Barter: `(Volume Final * Preço Grão FOB) + Frete`. |
 | `mod-card-custo-total` | **Custo Real Total (%)** | **Fórmula:** `((Valor Total Equivalente / Valor da Operação) - 1) * 100`. |
-| `mod-card-custo-op` | **Custo Real Operação (a.m.)** | **Fórmula Detalhada:** `Custo Real Total (%) / (Prazo em dias / 30)`. Mede a taxa mensal efetiva ponderada real da operação. |
+| `mod-card-custo-op` | **Custo Real Operação (a.m.)** | **Fórmula Detalhada:** `Custo Real Total (%) / (Prazo em dias / 30)`. Mede a taxa mensal efetiva ponderada real da operação (exibido nas modalidades financeiras). |
+| `mod-card-dif-commodity` | **<> Commodity inicial vs valorizações** | **Linha 33 da planilha (Simulador 2026):** Exibido em destaque na faixa inferior do card Barter. Fórmula: `(Valorização Commodity equiv. Total / Preço do Commodity Livre) − 1`. Mede o ganho econômico real obtido sobre a saca com Cash Back e Incentivo Barter. |
 | `pracas-wsys` | **Cadastro de Praças (WSys)** | Esta tela simula o cadastro de praças e custos logísticos do sistema WSys. |
 
