@@ -137,7 +137,7 @@ $$\text{Sacas Equivalentes} = \frac{\text{Valor Total da Modalidade (R\$)}}{\tex
 ### Detalhamento das 5 Modalidades Ativas:
 
 1. **Barter (Nutrade):**
-   - **Garantias:** CPR Física e Seguro Agrícola.
+   - **Garantias:** CPR Física (sem exigência de Seguro Agrícola).
    - **Mecânica:** Entrega física de grãos com devolução financeira de Cashback ($4,5\%$) e Incentivo de prazo.
    - **Campo Desconto na Campanha:** O campo *Desconto* configurado na tabela de taxas da campanha é utilizado diretamente para alimentar o percentual de *Cashback Barter*.
    - **Simulação com KM Zero:** A modalidade Barter pode ser simulada mesmo com quilometragem zero de frete (frete R$ 0,00), calculando as sacas e retornos sem impedimento logístico.

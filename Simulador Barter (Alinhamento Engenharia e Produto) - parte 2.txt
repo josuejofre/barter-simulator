@@ -1,0 +1,1826 @@
+WEBVTT
+
+00:06:31.000 --> 00:06:35.000
+Guilherme Serra: Então aqui, eu vejo que na.
+
+00:06:35.000 --> 00:06:37.000
+Guilherme Serra: Pelo.
+
+00:06:37.000 --> 00:06:42.000
+Guilherme Serra: Pelo editar campanha. Aqui a gente tem café, milho e soja. Apenas.
+
+00:06:42.000 --> 00:06:47.000
+Guilherme Serra: Não sei se apenas esses que vão ser utilizados.
+
+00:06:47.000 --> 00:06:52.000
+Guilherme Serra: Si podemos dar una cosa, porque así.
+
+00:06:47.000 --> 00:06:52.000
+Guilherme Serra: Se pode mudar alguma coisa. Porque assim.
+
+00:06:52.000 --> 00:06:54.000
+Guilherme Serra: Como.
+
+00:06:52.000 --> 00:06:54.000
+Guilherme Serra: Cómo.
+
+00:06:54.000 --> 00:06:59.000
+Guilherme Serra: A gente vai ter que buscar o preço da commodity lá no Wcis.
+
+00:06:59.000 --> 00:07:08.000
+Guilherme Serra: Podemos ayudar.
+
+00:06:59.000 --> 00:07:08.000
+Guilherme Serra: Então a gente vai precisar ter cadastrado aqui. Todas as commodities que tem lá. Ou pelo menos as commodities que a gente vai poder usar de lá.
+
+00:07:08.000 --> 00:07:18.000
+Guilherme Serra: E hoje, a estrutura que a gente tem aí para o cadastro de cultura, ela é muito fácil de se perder. Uma referência.
+
+00:07:18.000 --> 00:07:30.000
+Guilherme Serra: Então tem que ver se esse campo de cultura é exatamente o mesmo que a gente vai usar lá no Barter, porque a gente vai precisar fazer um depara do que é cultura nossa aqui. Para o que é cultura deles. Lá.
+
+00:07:30.000 --> 00:07:36.000
+Guilherme Serra: Então, tipo, a gente precisa saber que o café nosso aqui é o Id. Três mil deles lá, entendeu?
+
+00:07:36.000 --> 00:07:45.000
+Guilherme Serra: Então, só pra gente poder saber se realmente esse cultura vai sempre ser o mesmo lá do Barter. Tá.
+
+00:07:45.000 --> 00:07:51.000
+Josue Jofre: Boa. Eu vou ligar a transcrição antes de responder.
+
+00:07:52.000 --> 00:07:54.000
+Josue Jofre: Ah, já tá bom.
+
+00:07:54.000 --> 00:07:56.000
+Josue Jofre: É.
+
+00:07:56.000 --> 00:08:04.000
+Josue Jofre: Vou até mostrar. Essa é a planilha que eles usam atualmente. Não é muito boa.
+
+00:08:04.000 --> 00:08:07.000
+Josue Jofre: Ela é limitada.
+
+00:08:07.000 --> 00:08:11.000
+Josue Jofre: Nessa planilha só tem algodão, milho e soja.
+
+00:08:11.000 --> 00:08:13.000
+Josue Jofre: Nosso escopo.
+
+00:08:13.000 --> 00:08:22.000
+Josue Jofre: Vai se delimitar a esses três commodities na nossa primeira entrega. E aí encerra se lá na frente. Entrar café.
+
+00:08:22.000 --> 00:08:35.000
+Josue Jofre: É uma evolução da aplicação. É igual. Você falou. Eu tenho que fazer o depara do que está lá para o que está na nossa aplicação. Então acho que ter um escopo delimitado das três culturas aqui no começo, é muito importante.
+
+00:08:35.000 --> 00:08:39.000
+Josue Jofre: Isso. Eu acho que já responde a sua dúvida. Certo.
+
+00:08:36.000 --> 00:08:37.000
+Guilherme Serra: Boa.
+
+00:08:40.000 --> 00:08:42.000
+Guilherme Serra: Acho que sim.
+
+00:08:42.000 --> 00:08:50.000
+Josue Jofre: Sem nem dúvida, é uma observação de que a gente tem que realmente organizar esse escopo conforme a cultura boa.
+
+00:08:43.000 --> 00:08:44.000
+Guilherme Serra: Talvez.
+
+00:08:50.000 --> 00:08:52.000
+Josue Jofre: É.
+
+00:08:54.000 --> 00:09:02.000
+Josue Jofre: E esse aqui é o cadastro hoje das subcategorias, né? E aí, como o Serra falou, você pode colocar aqui banana.
+
+00:09:02.000 --> 00:09:13.000
+Josue Jofre: Tá, mas como é que isso vai funcionar? No simulador Barker? E depois não vai. Porque tem que ter essa correlação com o que está em outro sistema. Então a gente pode limitar.
+
+00:09:13.000 --> 00:09:18.000
+Josue Jofre: O escopo, né? E por isso que eu acho interessante ser outro campo. Tá.
+
+00:09:18.000 --> 00:09:25.000
+Josue Jofre: A minha opinião seria melhor outro campo do que a gente considerar o que estava sob categoria.
+
+00:09:25.000 --> 00:09:35.000
+Josue Jofre: Isso aqui é o como eu vou pagar isso. Aqui é a campanha que eu estou usando para pedir esse dinheiro são coisas diferentes. Na minha opinião.
+
+00:09:35.000 --> 00:09:39.000
+Aleksander Santos Sousa: Isso pelo que você falou, realmente são coisas diferentes.
+
+00:09:39.000 --> 00:09:46.000
+Aleksander Santos Sousa: Se são diferentes. Não faz sentido a gente usar o mesmo campo de cultura que a gente tem hoje.
+
+00:09:45.000 --> 00:09:48.000
+Guilherme Serra: Seria um campo de commodity. Mesmo.
+
+00:09:46.000 --> 00:09:53.000
+Aleksander Santos Sousa: A gente precisa de um outro cadastro. Exato. A gente precisa de um outro cadastro para acomod. E nesse cadastro, a gente faz o depara.
+
+00:09:53.000 --> 00:09:55.000
+Aleksander Santos Sousa: Si fue necesario, no.
+
+00:09:53.000 --> 00:09:55.000
+Aleksander Santos Sousa: Se for necessário.
+
+00:09:55.000 --> 00:10:03.000
+Aleksander Santos Sousa: Fazer esse deparo aí se não for necessário, a gente pode só exibir o que vem de lá do Wcis.
+
+00:09:55.000 --> 00:10:03.000
+Aleksander Santos Sousa: Si no fuera necesario.
+
+00:10:03.000 --> 00:10:08.000
+Aleksander Santos Sousa: Pra ir, entendeu? A jovem com a Id de lá e a gente já usa como identificador.
+
+00:10:09.000 --> 00:10:20.000
+Josue Jofre: Eu acho que não precisa do cadastro, porque é o que você falou. A gente está puxando três commodities no datas do Wcs. E é isso que você vai apresentar.
+
+00:10:10.000 --> 00:10:11.000
+Guilherme Serra: Uhum.
+
+00:10:20.000 --> 00:10:21.000
+Aleksander Santos Sousa: Uhum.
+
+00:10:20.000 --> 00:10:27.000
+Josue Jofre: Havia mais um motivo que corrobora para não servir este campo. É que a gente pode selecionar mais de um.
+
+00:10:27.000 --> 00:10:32.000
+Josue Jofre: Aí se vem soja e milho lá. Qual que eu vou considerar.
+
+00:10:32.000 --> 00:10:35.000
+Josue Jofre: Então não dá muito certo. Esse campo.
+
+00:10:36.000 --> 00:10:38.000
+Aleksander Santos Sousa: Entendi.
+
+00:10:41.000 --> 00:10:43.000
+Josue Jofre: Beleza.
+
+00:10:43.000 --> 00:10:44.000
+Josue Jofre: É.
+
+00:10:44.000 --> 00:10:49.000
+Josue Jofre: Bom aí. Aqui selecionei real. Vou colocar a distância.
+
+00:10:49.000 --> 00:10:54.000
+Guilherme Serra: José. Eu tenho uma dúvida nessa tela.
+
+00:10:51.000 --> 00:10:52.000
+Josue Jofre: Uhum.
+
+00:10:54.000 --> 00:11:02.000
+Guilherme Serra: Essa baía de simulação do Barter só aparece quando tem Barter cadastrado na campanha.
+
+00:11:07.000 --> 00:11:21.000
+Josue Jofre: Não tinha pensado nisso. Mas você tem toda a razão. Porque isso aqui tudo é só para Barter. Então eu posso habilitar isso daqui. Só se essa campanha.
+
+00:11:21.000 --> 00:11:35.000
+Josue Jofre: Tiver um cadastro de barter. E aí até explicando mais para o Alex, né? Aqui embaixo, quando a gente vai adicionar taxa. A gente tem os produtos financeiros. Aqui a gente vai ter que adicionar Barker aqui.
+
+00:11:34.000 --> 00:11:36.000
+Aleksander Santos Sousa: Uhum.
+
+00:11:35.000 --> 00:11:36.000
+Guilherme Serra: Sim.
+
+00:11:35.000 --> 00:11:38.000
+Josue Jofre: Então, se esta campanha.
+
+00:11:39.000 --> 00:11:50.000
+Josue Jofre: Campanha teste não tem um produto financeiro, Barter, a gente não mostra essa parte. Faz muito sentido, Serra. Vou já atualizar esse ponto.
+
+00:11:48.000 --> 00:11:49.000
+Aleksander Santos Sousa: Perfeito.
+
+00:11:50.000 --> 00:11:52.000
+Aleksander Santos Sousa: Perfeito.
+
+00:11:51.000 --> 00:12:05.000
+Josue Jofre: Eu tinha colocado como opcional os campos, mas acho que é mais do que opcional por usabilidade. E aí, Jéssica corrigiu a gente. Se a gente fala besteira aqui, pensando no usuário, para que mostrar algo que não é possível para aquela campanha.
+
+00:11:51.000 --> 00:11:52.000
+Andre Assef: Grande. No.
+
+00:12:06.000 --> 00:12:14.000
+Jessica Moraes: No, I don't think so. I don't think so, because I don't think so. I don't think so. I don't think so, because I don't think so.
+
+00:12:15.000 --> 00:12:17.000
+Josue Jofre: Maravilha!
+
+00:12:16.000 --> 00:12:20.000
+Guilherme Serra: Uma outra dúvida. José, Na.
+
+00:12:20.000 --> 00:12:26.000
+Guilherme Serra: Na campanha está cadastrado. Barter Syngenta e fisio, por exemplo.
+
+00:12:26.000 --> 00:12:33.000
+Guilherme Serra: O usuário vai sempre.
+
+00:12:34.000 --> 00:12:45.000
+Guilherme Serra: Fazer a simulação de todos. A gente, sempre. Quando for simular, vai simular todos. Ou é interessante para ele em algum momento, exibir apenas.
+
+00:12:47.000 --> 00:12:51.000
+Guilherme Serra: O produto financeiro que ele tem interesse.
+
+00:12:51.000 --> 00:13:03.000
+Guilherme Serra: Isso daí. É uma regra de negócio mesmo. Eu não sei. É uma dúvida que me surgiu porque às vezes, para o cara? Sei lá. Não faz sentido para ele. Ofício.
+
+00:13:03.000 --> 00:13:17.000
+Guilherme Serra: Para ele. Ele não quer pegar dinheiro com o fisio. Então faz sentido a gente pegar e mostrar aí, ou então ele não teria crédito aprovado pela Syngenta internamente.
+
+00:13:17.000 --> 00:13:21.000
+Guilherme Serra: Então faria sentido. Será que.
+
+00:13:22.000 --> 00:13:27.000
+Guilherme Serra: É certo a gente mostrar todos isso daí. Eu não sei, tá.
+
+00:13:27.000 --> 00:13:35.000
+Guilherme Serra: Talvez tenha que questionar lá o pessoal da área de negócio, mesmo para ver se para eles é importante. Isso.
+
+00:13:35.000 --> 00:13:53.000
+Josue Jofre: E isso eu já questionei. Essa é uma ótima pergunta. Que a gente passou muito tempo discutindo. A resposta chegou, que mostra tudo, principalmente para incentivar o Barter. Mas permite, na hora de exportar que o cara tire o que não faz sentido para ele.
+
+00:13:37.000 --> 00:13:38.000
+Guilherme Serra: Boa.
+
+00:13:53.000 --> 00:14:04.000
+Josue Jofre: Então isso aqui é uma evolução que a gente teria que fazer na hora de compartilhar. Aí ele tira aqui o que não faz sentido. Indo na linha que você falou, né?
+
+00:14:04.000 --> 00:14:11.000
+Josue Jofre: As respostas que eu obtive. Ah, de repente o cara não consegue fazer uma.
+
+00:14:11.000 --> 00:14:28.000
+Josue Jofre: Uma sessão de recebíveis ou Cpr financeira, ou ele não quer trabalhar com Barter, então a gente mostra, tenta influenciar, mas permite ali que não exporte, o que não faz sentido para ele. Para a gente conseguir ter um atendimento melhor.
+
+00:14:28.000 --> 00:14:32.000
+Josue Jofre: Então isso foi já bem discutido.
+
+00:14:28.000 --> 00:14:30.000
+Guilherme Serra: Feito.
+
+00:14:32.000 --> 00:14:34.000
+Guilherme Serra: Muito obrigado.
+
+00:14:34.000 --> 00:14:35.000
+Josue Jofre: Imagina.
+
+00:14:35.000 --> 00:14:37.000
+Josue Jofre: E a.
+
+00:14:35.000 --> 00:14:37.000
+Aleksander Santos Sousa: Fiz uma dúvida.
+
+00:14:37.000 --> 00:14:53.000
+Josue Jofre: Só antes deixa eu acrescentar sobre esse ponto do Serra. E aqui entra uma outra coisa que a gente não tem no simulador atual, que são as garantias exigidas. Tá, isso aqui é só a textual. Mas é muito importante para o Rtv.
+
+00:14:37.000 --> 00:14:39.000
+Aleksander Santos Sousa: Rapidinho.
+
+00:14:39.000 --> 00:14:41.000
+Aleksander Santos Sousa: Beleza.
+
+00:14:53.000 --> 00:15:04.000
+Josue Jofre: Poder explicar rapidamente ali, para o cliente, para o produtor. Olha para ser o site. Aqui a gente vai trabalhar com uma nota promissória ou com uma ctr financeira.
+
+00:15:04.000 --> 00:15:20.000
+Josue Jofre: Para a parte de banco, parceiro. É isso. Para a parte de físo. É sem garantia para a parte singjeta. Acho que é uma negociação direta. Um alinhamento direto.
+
+00:15:20.000 --> 00:15:31.000
+Josue Jofre: Então eu tenho mais este campinho aqui que não tem no simulador atual, que é uma evolução, uma melhoria aqui da usabilidade e explicabilidade de cada modelo de negócio. Desculpa, Alex. Vai lá.
+
+00:15:31.000 --> 00:15:37.000
+Aleksander Santos Sousa: Tá tranquilo. Esse campo já vai entrar no escopo dessa entrega.
+
+00:15:37.000 --> 00:15:49.000
+Josue Jofre: Sim, é a intenção. É a intenção já é entrar no escopo dessa entrega. Eu posso detalhar isso também. Lá para a gente ter mapeado. E de repente, separar uma história para cada um desses itens.
+
+00:15:49.000 --> 00:15:52.000
+Josue Jofre: Vai na serra. Fica à vontade.
+
+00:15:49.000 --> 00:15:52.000
+Aleksander Santos Sousa: Uhum, por favor.
+
+00:15:52.000 --> 00:15:58.000
+Guilherme Serra: Essa questão das garantias exigidas. Ela vai estar dentro do cadastro da.
+
+00:15:58.000 --> 00:16:15.000
+Guilherme Serra: Campanha ali. Como que você pensa nisso? Porque a gente não tem como fazer um mapeamento. Tá? Uma vez que o produto financeiro pode ser cadastrado meio que a revelia ali, né?
+
+00:16:15.000 --> 00:16:22.000
+Guilherme Serra: Se não for mais assim, também vocês me corrijam, tá? Porque até a última vez que eu mexi no simulador, tava assim.
+
+00:16:22.000 --> 00:16:24.000
+Guilherme Serra: Então.
+
+00:16:24.000 --> 00:16:26.000
+Guilherme Serra: A gente.
+
+00:16:26.000 --> 00:16:30.000
+Guilherme Serra: Olhando por isso. Daí talvez seja interessante a gente ter um.
+
+00:16:30.000 --> 00:16:37.000
+Guilherme Serra: Um cadastro de produto financeiro onde lá dentro vai ter. Quais são as garantias de cada produto financeiro? Tá.
+
+00:16:38.000 --> 00:16:40.000
+Aleksander Santos Sousa: Eu ia sugerir isso.
+
+00:16:39.000 --> 00:16:42.000
+Guilherme Serra: É só para a gente. Não.
+
+00:16:40.000 --> 00:16:42.000
+Josue Jofre: Eu gosto da ideia.
+
+00:16:42.000 --> 00:16:44.000
+Guilherme Serra: É porque senão.
+
+00:16:42.000 --> 00:16:48.000
+Josue Jofre: Então a gente trava no front end. E depois a manutenção fica ruim.
+
+00:16:44.000 --> 00:16:47.000
+Andre Assef: E, o Pe Open Duss.
+
+00:16:47.000 --> 00:16:50.000
+Andre Assef: En el pueblo.
+
+00:16:50.000 --> 00:16:53.000
+Josue Jofre: Claro. Ó, aqui.
+
+00:16:51.000 --> 00:17:07.000
+Guilherme Serra: Ali tem a questão das garantias. Então a gente aí tem. Por exemplo, até esse Cra. Agro banco parceiro que a gente nem usa hoje, mas que realmente pode ser algo que venha no futuro.
+
+00:16:55.000 --> 00:16:57.000
+Andre Assef: Mhm.
+
+00:17:04.000 --> 00:17:05.000
+Andre Assef: Mhm.
+
+00:17:07.000 --> 00:17:20.000
+Guilherme Serra: Então talvez seja interessante a gente pensar já num cadastro de produto financeiro, como uma entidade que tem outras propriedades além do nome, produto financeiro, saca.
+
+00:17:20.000 --> 00:17:26.000
+Andre Assef: Sí. En ese momento yo estoy y eso, esa cámara, todo a nivel no comunica con un jefe o como N, y.
+
+00:17:26.000 --> 00:17:29.000
+Guilherme Serra: Não, isso daí é tudo na placeite.
+
+00:17:29.000 --> 00:17:31.000
+Andre Assef: Pua. Perfecto.
+
+00:17:29.000 --> 00:17:39.000
+Guilherme Serra: E até porque só lembrando que há a possibilidade desse a via. Pelo menos não sei também.
+
+00:17:39.000 --> 00:17:56.000
+Guilherme Serra: A possibilidade desse simulador ser utilizado em outras plataformas e a gente exportar isso. Então, se a gente for realmente exportar isso. A gente já tem que mandar todas as informações prontas. Por isso que eu falo que é importante a gente ter essa garantia exigida. Salva no nosso backend a informação.
+
+00:17:56.000 --> 00:18:01.000
+Guilherme Serra: E não apenas uma regra do Front End que vai colocar o Cardzinho ali. Tá.
+
+00:18:01.000 --> 00:18:03.000
+Josue Jofre: 4…
+
+00:18:03.000 --> 00:18:04.000
+Aleksander Santos Sousa: Perfeito.
+
+00:18:04.000 --> 00:18:07.000
+Josue Jofre: Thank you so much for your help.
+
+00:18:08.000 --> 00:18:16.000
+Josue Jofre: Ide repente a telecha. A mediare coutesto fica aqui na mundo usu adulta. Ide repente a ciu cadasto.
+
+00:18:16.000 --> 00:18:21.000
+Josue Jofre: Without any further ado, let's move on to the next topic.
+
+00:18:21.000 --> 00:18:24.000
+Josue Jofre: We'll take every mademoiselle phrase. Take care.
+
+00:18:23.000 --> 00:18:24.000
+Guilherme Serra: Sim.
+
+00:18:23.000 --> 00:18:25.000
+Andre Assef: Mhm.
+
+00:18:25.000 --> 00:18:26.000
+Josue Jofre: And…
+
+00:18:27.000 --> 00:18:28.000
+Josue Jofre: in mind.
+
+00:18:29.000 --> 00:18:35.000
+Josue Jofre: I'm not sure if this is true, but I'm not sure if it's true.
+
+00:18:35.000 --> 00:18:52.000
+Guilherme Serra: Não, mas foi importante, porque isso daí dá pra gente visibilidade de que puta! Se amanhã muda, a gente vai ter que mexer tudo no back end para poder ajustar, sendo que é mais fácil a gente fazer uma mexida. Agora, onde já vai contemplar isso daí no futuro. Sabe.
+
+00:18:39.000 --> 00:18:40.000
+Josue Jofre: E aí?
+
+00:18:52.000 --> 00:18:54.000
+Josue Jofre: Boa.
+
+00:18:54.000 --> 00:18:55.000
+Josue Jofre: Boa maravilha.
+
+00:18:56.000 --> 00:19:02.000
+Josue Jofre: É lembrando que daqui a pouco vai ter o bar, ter outras trades já é mais uma.
+
+00:19:01.000 --> 00:19:03.000
+Guilherme Serra: Exatamente.
+
+00:19:02.000 --> 00:19:12.000
+Josue Jofre: Daqui a pouco. Eu digo talvez janeiro, tá? Nosso objetivo é entregar um New Trade esse ano ainda. Mas janeiro já talvez entre outro.
+
+00:19:03.000 --> 00:19:04.000
+Aleksander Santos Sousa: E aí?
+
+00:19:12.000 --> 00:19:13.000
+Josue Jofre: Legal.
+
+00:19:13.000 --> 00:19:15.000
+Josue Jofre: É.
+
+00:19:15.000 --> 00:19:20.000
+Josue Jofre: Bom, gente. O que mais que eu acho que vale a pena repassar aqui.
+
+00:19:20.000 --> 00:19:30.000
+Josue Jofre: Um dos pontos que eu estou tentando tomar mais cuidado do que o próprio Prb neste momento. Mas eu vou olhar todos os comentários que o Brandon colocou aqui.
+
+00:19:30.000 --> 00:19:46.000
+Josue Jofre: Eu fiz essa parte de regra de negócio aqui, e eu estou tentando deixar ela muito bem atualizada. Por exemplo, o que eu falei hoje ali do Wcis. Ele trazer o valor tal. Já coloquei aqui.
+
+00:19:46.000 --> 00:19:53.000
+Josue Jofre: Hoje. Eu estava repassando cada regra dessa. E aí eu tenho aqui embaixo.
+
+00:19:53.000 --> 00:20:08.000
+Josue Jofre: Como funciona cada regra e a nomenclatura de cada uma delas, para não confundir. Então eu estou tentando primeiro fechar aqui esse Mark Down que eu tenho por trás para depois colocar as fórmulas financeiras ali no nosso.
+
+00:20:08.000 --> 00:20:19.000
+Josue Jofre: Prd. E também falando de cadastro, já me falaram que a gente precisa ter um cadastro de imposto por praça.
+
+00:20:20.000 --> 00:20:33.000
+Josue Jofre: O quilômetro que eu vou confirmar se o W6 entrega que nem eu comentei. Mas este imposto aqui, esse fu rural imposto base Nf, imposto base.
+
+00:20:33.000 --> 00:20:46.000
+Josue Jofre: Precisa ter um cadastro. Isso aqui. Eles já me garantiram que o Wcis não tem. E ele impacta diretamente quando a gente habilita aqui o nosso cálculo.
+
+00:20:46.000 --> 00:20:48.000
+Josue Jofre: Das regras.
+
+00:20:48.000 --> 00:20:50.000
+Aleksander Santos Sousa: É.
+
+00:20:50.000 --> 00:21:04.000
+Aleksander Santos Sousa: Só uma dúvida rapidinho, porque a gente entrou em outro assunto para a gente não precisar voltar de novo só para confirmar o simulador hoje já calcula todos os produtos que estão na campanha de vez, né? E traz ordenação da esquerda para a direita.
+
+00:20:52.000 --> 00:20:53.000
+Josue Jofre: Claro.
+
+00:21:05.000 --> 00:21:07.000
+Josue Jofre: Sim.
+
+00:21:05.000 --> 00:21:09.000
+Guilherme Serra: Enfim, ele traz a ordenação do mais barato para o mais caro.
+
+00:21:09.000 --> 00:21:10.000
+Aleksander Santos Sousa: Beleza.
+
+00:21:09.000 --> 00:21:26.000
+Josue Jofre: Isso. Eu só peço que você não use este simulador que eu gerei, que está no meu git como referência de cálculo do que já existe. Side, fiz e Syngenta. Ele já existe hoje.
+
+00:21:10.000 --> 00:21:12.000
+Aleksander Santos Sousa: Era só para confirmar. Mesmo.
+
+00:21:23.000 --> 00:21:24.000
+Aleksander Santos Sousa: Uhum.
+
+00:21:26.000 --> 00:21:31.000
+Josue Jofre: Por quê? Porque eu não me preocupei com as fórmulas matemáticas dele.
+
+00:21:31.000 --> 00:21:33.000
+Josue Jofre: Deixa eu tentar trazer.
+
+00:21:31.000 --> 00:21:32.000
+Aleksander Santos Sousa: Não. Tranquilo.
+
+00:21:33.000 --> 00:21:38.000
+Josue Jofre: Por outro lado, eu estou tentando ser bem cuidadoso.
+
+00:21:39.000 --> 00:21:55.000
+Josue Jofre: Por exemplo, já trouxe syngenta aqui. Eu estou tentando ser bem cuidadoso com este daqui o Barter, e estou tentando mapear todas as regras de negócio para quando vocês desenvolverem. De repente, vocês vêm aqui simular e falar. Poxa.
+
+00:21:55.000 --> 00:22:05.000
+Josue Jofre: Pedindo um milhão aqui no simulador do Josué. Deu tanto. Deu aqui nove.seiscentos e trinta e seis. Sacas.
+
+00:22:01.000 --> 00:22:02.000
+Guilherme Serra: Uhum.
+
+00:22:05.000 --> 00:22:15.000
+Josue Jofre: No meu. Deu mais porque onde está o erro? Então a gente faz esse teste de mesa, depois, tá? Deixa eu só beber uma água.
+
+00:22:10.000 --> 00:22:11.000
+Aleksander Santos Sousa: Uhum.
+
+00:22:14.000 --> 00:22:22.000
+Guilherme Serra: Josué antes de finalizar aqui essa parte do simulador, também uma dúvida. A gente falou ali do Barthur, que.
+
+00:22:22.000 --> 00:22:29.000
+Guilherme Serra: Quando não tiver, não mostra. E essa equivalência em Barter vai ser mostrada sempre ou não.
+
+00:22:31.000 --> 00:22:33.000
+Aleksander Santos Sousa: Acho que ele saiu.
+
+00:22:33.000 --> 00:22:36.000
+Josue Jofre: Eu só fui beber água.
+
+00:22:34.000 --> 00:22:36.000
+Aleksander Santos Sousa: E aí?
+
+00:22:35.000 --> 00:22:37.000
+Guilherme Serra: Mas escutou, né.
+
+00:22:37.000 --> 00:22:44.000
+Josue Jofre: Escutei. Não, não faz sentido mostrar, sendo que o Barker não é uma opção para aquela campanha.
+
+00:22:38.000 --> 00:22:39.000
+Guilherme Serra: Ah, beleza.
+
+00:22:45.000 --> 00:22:46.000
+Guilherme Serra: Boa.
+
+00:22:47.000 --> 00:22:49.000
+Josue Jofre: Senão vai poluir aquilo.
+
+00:22:56.000 --> 00:22:59.000
+Aleksander Santos Sousa: Beleza. Acho que a gente pode seguir lá para os.
+
+00:22:59.000 --> 00:23:02.000
+Aleksander Santos Sousa: Para as outras taxas que você estava falando.
+
+00:23:04.000 --> 00:23:14.000
+Guilherme Serra: Sobre o cadastro de praças ali. Josué de novo. Vamos voltar no início. O que é uma praça.
+
+00:23:05.000 --> 00:23:06.000
+Josue Jofre: Para onde? Desculpa.
+
+00:23:14.000 --> 00:23:17.000
+Guilherme Serra: E por que isso daí é importante para a gente.
+
+00:23:17.000 --> 00:23:22.000
+Josue Jofre: Legal. Deixa eu ver se eu acho uma planilha que eu tenho aqui.
+
+00:23:29.000 --> 00:23:31.000
+Guilherme Serra: Rapaz está ficando noite. Já.
+
+00:23:33.000 --> 00:23:35.000
+Aleksander Santos Sousa: A noite.
+
+00:23:34.000 --> 00:23:36.000
+Andre Assef: Boa noite.
+
+00:23:35.000 --> 00:23:38.000
+Guilherme Serra: Aqui tá a noite já.
+
+00:23:37.000 --> 00:23:42.000
+Andre Assef: A chuva, né? Aqui também. Tá, mas é de queimada da Amazônia. Mesmo.
+
+00:23:40.000 --> 00:23:42.000
+Aleksander Santos Sousa: Ah, tá.
+
+00:23:42.000 --> 00:23:54.000
+Guilherme Serra: Cara pra você ter uma ideia aqui. Tá chovendo? Tem uns sete dias que está chovendo sem parar. Minha casa. Ela está toda molhada de umidade.
+
+00:23:42.000 --> 00:23:45.000
+Aleksander Santos Sousa: Caraca.
+
+00:23:54.000 --> 00:23:55.000
+Aleksander Santos Sousa: Nossa!
+
+00:23:54.000 --> 00:23:59.000
+Guilherme Serra: Tipo assim, papo do chão. Assim você passar a mão e tá escorrendo água.
+
+00:23:59.000 --> 00:24:01.000
+Andre Assef: Ou quem vai. Agência.
+
+00:23:59.000 --> 00:24:05.000
+Jessica Moraes: I don't think so. Akita, if you don't mind, I'm going to ask you a question.
+
+00:24:01.000 --> 00:24:03.000
+Aleksander Santos Sousa: Caramba!
+
+00:24:05.000 --> 00:24:12.000
+Guilherme Serra: Nossa. Ontem, a gente deixou tudo aberto aqui. Eu fui colocar uma meia que estava no meu guarda roupa. A meia estava encharcada.
+
+00:24:10.000 --> 00:24:15.000
+Andre Assef: Nossa senhora. Eu queria essa chuva aqui, velho. Porque aqui é só calor e fumaça.
+
+00:24:10.000 --> 00:24:15.000
+Andre Assef: No sé si ahora, pero tú querías hacer fútbol que aquí es el caldo y fumarse.
+
+00:24:11.000 --> 00:24:13.000
+Aleksander Santos Sousa: E aí?
+
+00:24:14.000 --> 00:24:17.000
+Aleksander Santos Sousa: Misericórdia.
+
+00:24:15.000 --> 00:24:26.000
+Andre Assef: Não sei se vocês vendo a notícia aí, mas cara, aqui tá tomado por fumaça. Mano, tu sai. É uma neblina tá ligado a neblina que dá em São Paulo. Mas não é.
+
+00:24:15.000 --> 00:24:26.000
+Andre Assef: En palomar es, no es.
+
+00:24:17.000 --> 00:24:19.000
+Guilherme Serra: Nossa! Vai.
+
+00:24:19.000 --> 00:24:20.000
+Guilherme Serra: Mofar tudo.
+
+00:24:26.000 --> 00:24:30.000
+Andre Assef: Não é neblina. Boa. É de fumaça. Mesmo.
+
+00:24:26.000 --> 00:24:30.000
+Andre Assef: En el.
+
+00:24:31.000 --> 00:24:33.000
+Andre Assef: Es complicado.
+
+00:24:31.000 --> 00:24:33.000
+Andre Assef: É complicado.
+
+00:24:31.000 --> 00:24:33.000
+Josue Jofre: Parou.
+
+00:24:35.000 --> 00:24:37.000
+Guilherme Serra: Desculpa desvirtuar, José. Vamos voltar.
+
+00:24:35.000 --> 00:24:39.000
+Andre Assef: Vai.
+
+00:24:35.000 --> 00:24:38.000
+Aleksander Santos Sousa: Difícil, hein.
+
+00:24:36.000 --> 00:24:50.000
+Josue Jofre: Imagina. Imagina tem paz. Imagina aqui onde eu moro. A questão de umidade é sempre uma situação muito grave para você ter ideia. Eu tenho dois desumidificadores aqui que ficam ligados o dia inteiro.
+
+00:24:37.000 --> 00:24:39.000
+Guilherme Serra: Haha Zanotto.
+
+00:24:38.000 --> 00:24:40.000
+Aleksander Santos Sousa: E aí?
+
+00:24:48.000 --> 00:24:49.000
+Andre Assef: Nossa!
+
+00:24:51.000 --> 00:24:53.000
+Guilherme Serra: Pensando em comprar.
+
+00:24:51.000 --> 00:24:53.000
+Josue Jofre: É.
+
+00:24:52.000 --> 00:24:53.000
+Aleksander Santos Sousa: Ohs.
+
+00:24:53.000 --> 00:24:58.000
+Josue Jofre: Esse não mostra tudo aqui. Mostra literalmente.
+
+00:24:58.000 --> 00:25:01.000
+Aleksander Santos Sousa: É da gente que acha que eu tô na melhor região.
+
+00:24:58.000 --> 00:25:00.000
+Josue Jofre: É.
+
+00:25:01.000 --> 00:25:02.000
+Guilherme Serra: E aí?
+
+00:25:01.000 --> 00:25:03.000
+Josue Jofre: É.
+
+00:25:04.000 --> 00:25:15.000
+Josue Jofre: Bom, gente. Essa planilha aqui é uma planilha que a Alessandra me passou, que ela usa hoje como referência. Eu ainda estou entendendo os impostos.
+
+00:25:15.000 --> 00:25:31.000
+Josue Jofre: Mas mais ou menos a fórmula matemática ali. Eu acho que já está praticamente certa. Existe um imposto para o que eles chamam ali de praça. Aqui. Ela colocou como estado. Mas deixa eu voltar lá. Acho que além de estado.
+
+00:25:35.000 --> 00:25:37.000
+Josue Jofre: Ah, cadê.
+
+00:25:37.000 --> 00:25:52.000
+Josue Jofre: Por exemplo, tem o estado Mt: Mas tem a praça, sorriso tem a praça meio que a cidade também. Mas aí. Eles cadastram isso hoje. Eles poderiam cadastrar. E por que isso é relevante?
+
+00:25:54.000 --> 00:26:06.000
+Josue Jofre: Porque existem impostos diferentes por região. E aí, o que é esse imposto em cima do que você produz, do que está sendo entregue.
+
+00:26:06.000 --> 00:26:19.000
+Josue Jofre: Você tem que pagar um imposto. E aí eles chamam desse funrural funrural folha outros impostos para generalizar. E ainda por cima, existe um imposto por tonelada.
+
+00:26:19.000 --> 00:26:34.000
+Josue Jofre: Então tem toda essa complexidade ainda de imposto, que eu vou refinar mais ainda mais ou por tonelada, porque a gente está falando de saca aí. Talvez eu vou ter que chegar enquanto as sacas representam uma tonelada. Enfim.
+
+00:26:34.000 --> 00:26:37.000
+Josue Jofre: Eu vou até marcar para discutir isso com eles.
+
+00:26:37.000 --> 00:26:53.000
+Josue Jofre: Então é isso, tá, quando eu falo de praça, é porque, por exemplo, São Paulo pode cobrar uma série de impostos em cima daquele produto e ele já precisa ser abatido.
+
+00:26:53.000 --> 00:27:00.000
+Josue Jofre: Do Cálculo antes. Então é por isso que a gente tem que levar isso em consideração.
+
+00:27:00.000 --> 00:27:11.000
+Guilherme Serra: E qual que está mais próximo da realidade. Esse daí que você mostrou com dez, quinze ou esse daí do simulador com.
+
+00:27:00.000 --> 00:27:04.000
+Josue Jofre: Aqui, inclusive na panela. Já tinha.
+
+00:27:11.000 --> 00:27:13.000
+Guilherme Serra: Diversos.
+
+00:27:13.000 --> 00:27:18.000
+Guilherme Serra: Diversas praças. Você sabe qual. Que é mais fidedigno.
+
+00:27:19.000 --> 00:27:28.000
+Guilherme Serra: Assim eu digo em quantidade, tá? Porque a depender. E outra coisa. Qual que é a frequência que isso vai ser mudado.
+
+00:27:19.000 --> 00:27:21.000
+Josue Jofre: Tá bom.
+
+00:27:22.000 --> 00:27:23.000
+Josue Jofre: Uhum.
+
+00:27:27.000 --> 00:27:28.000
+Josue Jofre: Boa tarde.
+
+00:27:28.000 --> 00:27:44.000
+Guilherme Serra: Porque a gente vai fazer um cadastro manual onde ele vai ter que sair colocando um por um ali, ou ele vai subir uma planilha que essa planilha vai ser processada e vai atualizar, tá? Porque se for cem, duzentos, não tem como fazer manual.
+
+00:27:44.000 --> 00:27:51.000
+Guilherme Serra: Ficar atualizando sempre também. Talvez não valha a pena. Então é o tipo de coisa só pra gente poder ir.
+
+00:27:51.000 --> 00:27:54.000
+Guilherme Serra: Pensar em como tem que ser feito. Tá?
+
+00:27:55.000 --> 00:28:14.000
+Josue Jofre: Otimo ponto, seria essa nao tente escutido coelhes. Eu recibia esa planida que tem poucos casos, neitao eu diria per intuzar alam, mais como referencia, mais eu vou realmente validar ese ponto frequencia de atralizacao, e se dia peinte a medora entre.
+
+00:28:14.000 --> 00:28:15.000
+Guilherme Serra: Boa.
+
+00:28:15.000 --> 00:28:17.000
+Josue Jofre: Watch me, watch me.
+
+00:28:15.000 --> 00:28:18.000
+Aleksander Santos Sousa: Eu tenho uma outra dúvida.
+
+00:28:18.000 --> 00:28:21.000
+Aleksander Santos Sousa: Um pouquinho mais do início sobre isso.
+
+00:28:21.000 --> 00:28:26.000
+Aleksander Santos Sousa: O Wcis disponibiliza essas praças hoje, de alguma forma.
+
+00:28:26.000 --> 00:28:28.000
+Josue Jofre: With a lot of kennel.
+
+00:28:27.000 --> 00:28:29.000
+Aleksander Santos Sousa: Não, né.
+
+00:28:28.000 --> 00:28:30.000
+Josue Jofre: No.
+
+00:28:29.000 --> 00:28:31.000
+Aleksander Santos Sousa: Entendi.
+
+00:28:30.000 --> 00:28:32.000
+Josue Jofre: Okay, uh…
+
+00:28:32.000 --> 00:28:36.000
+Josue Jofre: Aki au imposto. Ali ais.
+
+00:28:36.000 --> 00:28:46.000
+Josue Jofre: Eu vou ter que rever a minha resposta, porque eles me falaram que eles entregam o valor do commodity por praça.
+
+00:28:46.000 --> 00:28:58.000
+Josue Jofre: Isso já é quase. Então, informação das praças, certo? Não o valor do imposto por praça, mas o valor do commodity. Então meio que eu tenho. Quais são as praças.
+
+00:28:50.000 --> 00:28:53.000
+Aleksander Santos Sousa: Isso. Essa é a minha dúvida.
+
+00:28:57.000 --> 00:29:03.000
+Aleksander Santos Sousa: É porque o Wc precisa da praça para poder fazer o cálculo do imposto.
+
+00:29:04.000 --> 00:29:06.000
+Josue Jofre: Exato.
+
+00:29:04.000 --> 00:29:07.000
+Aleksander Santos Sousa: Você tem que mandar essa informação da Praça.
+
+00:29:07.000 --> 00:29:09.000
+Aleksander Santos Sousa: Então.
+
+00:29:09.000 --> 00:29:19.000
+Aleksander Santos Sousa: Como é que ele vai saber que aquela praça custa um,3 no fundo rural de comercialização, que está cadastrado no nosso sistema.
+
+00:29:20.000 --> 00:29:23.000
+Aleksander Santos Sousa: E não está no sistema deles.
+
+00:29:21.000 --> 00:29:22.000
+Josue Jofre: Boa sorte.
+
+00:29:23.000 --> 00:29:29.000
+Josue Jofre: Só mostrando para vocês na hora da apresentação. Eu tirei um print do Wcis.
+
+00:29:29.000 --> 00:29:32.000
+Josue Jofre: Esse é ele. Tá.
+
+00:29:32.000 --> 00:29:33.000
+Aleksander Santos Sousa: Uhum.
+
+00:29:32.000 --> 00:29:36.000
+Guilherme Serra: Esse Wcs é um software da Syngenta interno.
+
+00:29:36.000 --> 00:29:37.000
+Guilherme Serra: Ou não.
+
+00:29:36.000 --> 00:29:47.000
+Josue Jofre: Eu acho que ele é de mercado com uma versão para Syngenta. Inclusive a gente pode até tentar acessar aqui para ver o que dá. Olha, eu acabei pegando a Url também.
+
+00:29:41.000 --> 00:29:43.000
+Guilherme Serra: Ah, tá.
+
+00:29:49.000 --> 00:29:59.000
+Guilherme Serra: Porque se for aí, eu já na sexta feira, eu vou para o escritório. Eu tento descobrir quem que é responsável por isso. E aí a gente.
+
+00:29:49.000 --> 00:29:50.000
+Josue Jofre: Aí.
+
+00:29:59.000 --> 00:30:02.000
+Guilherme Serra: Talvez não facilite.
+
+00:30:02.000 --> 00:30:05.000
+Josue Jofre: Boa, boa. Agradece muito.
+
+00:30:08.000 --> 00:30:12.000
+Josue Jofre: E aqui inclusive. Talvez a gente tenha.
+
+00:30:13.000 --> 00:30:26.000
+Josue Jofre: Enfim, a gente vai ter que ver o contrato de Api, mas notem que ele é um tanto quanto complexo aqui. E aí a gente talvez tenha que fazer uma correlação com o nosso cadastro de campanha.
+
+00:30:13.000 --> 00:30:15.000
+Guilherme Serra: Ano é Sso.
+
+00:30:26.000 --> 00:30:32.000
+Josue Jofre: Olha como é esquisito, né? Rio verde para Santo soja.
+
+00:30:32.000 --> 00:30:40.000
+Josue Jofre: Então descobrir esse ponto e pegar o contrato de Api já vai trazer um monte de questionamentos para a gente.
+
+00:30:40.000 --> 00:30:49.000
+Guilherme Serra: E você tem aquela praça. Tem um monte de praça para poder vincular nisso. Daí vai ser bem complicado.
+
+00:30:49.000 --> 00:30:51.000
+Aleksander Santos Sousa: É. Então.
+
+00:30:51.000 --> 00:30:57.000
+Aleksander Santos Sousa: Porque eu ainda estou sem tendê. Como é que uma informação que está no nosso banco? Eles vão usar para poder calcular lá.
+
+00:30:57.000 --> 00:31:02.000
+Aleksander Santos Sousa: Eu acredito que eles tenham feito alguma referência sobre praça. De alguma forma.
+
+00:31:02.000 --> 00:31:09.000
+Aleksander Santos Sousa: Eles vão saber que o valor do imposto que eu coloquei é um valor de verdade. Se eu colocar aqui cem de imposto. É um valor, certo? Sabe.
+
+00:31:02.000 --> 00:31:04.000
+Josue Jofre: Não.
+
+00:31:09.000 --> 00:31:14.000
+Josue Jofre: Não, mas é o usuário que vai ter que cadastrar igual a gente. Tem aqui.
+
+00:31:14.000 --> 00:31:16.000
+Josue Jofre: É.
+
+00:31:16.000 --> 00:31:19.000
+Josue Jofre: Igual a gente. Tem o ensaio. Cadastro de campanha.
+
+00:31:16.000 --> 00:31:22.000
+Guilherme Serra: Mas aí a gente vai mandar esses valores para eles. Ou a gente que vai fazer esse cálculo.
+
+00:31:22.000 --> 00:31:32.000
+Aleksander Santos Sousa: Então é isso que eu quero entender. Porque, por exemplo, o usuário hoje, ele pode simplesmente chegar a criar um imposto aqui de cem da forma que a gente está conversando aqui. Mandar para lá.
+
+00:31:32.000 --> 00:31:38.000
+Aleksander Santos Sousa: E aí ele vai usar esse imposto. Ele vai fazer alguma validação em algum lugar. Como é que é.
+
+00:31:35.000 --> 00:31:37.000
+Josue Jofre: Não.
+
+00:31:37.000 --> 00:31:52.000
+Josue Jofre: Não, mas são usuários diferentes. Quem cadastra aqui é uma área interna que tem acesso ao Bicops como um administrador, digamos, a equipe da Mari. Então, se ela cometer um erro no cadastro.
+
+00:31:52.000 --> 00:31:58.000
+Josue Jofre: De imposto. Vamos supor que ela vai e coca cem igual. Você está falando.
+
+00:31:58.000 --> 00:32:05.000
+Josue Jofre: Vai afetar. Sim, todo mundo que simular igual hoje. Se ela cometeu um erro no cadastro de campanha.
+
+00:32:06.000 --> 00:32:23.000
+Guilherme Serra: Mas o José. Quem que vai fazer esse cálculo ainda está meio obscuro para a gente. O que o Wcis vai informar. E o que a gente vai precisar. Calcular, tipo, a gente só vai pegar, reunir as informações, mandar para eles. Eles calculam e devolvem para a gente.
+
+00:32:14.000 --> 00:32:16.000
+Aleksander Santos Sousa: Isso.
+
+00:32:23.000 --> 00:32:32.000
+Guilherme Serra: Ou a gente vai ter parte das informações. Eles vão ter outra parte. E aí a gente pega tudo e faz o cálculo.
+
+00:32:24.000 --> 00:32:25.000
+Josue Jofre: Não.
+
+00:32:25.000 --> 00:32:28.000
+Josue Jofre: O cálculo.
+
+00:32:32.000 --> 00:32:41.000
+Josue Jofre: O cálculo vocês vão fazer dentro do simulador Bar que é igual. Vocês já fazem hoje para as demais modalidades.
+
+00:32:41.000 --> 00:32:54.000
+Josue Jofre: Aí vocês vão ter que coletar informação do valor do commodity real dólar na praça. O valor Am de chão.
+
+00:32:54.000 --> 00:32:57.000
+Josue Jofre: Chão e asfalto.
+
+00:32:57.000 --> 00:33:13.000
+Josue Jofre: No Wcs. Aí vocês vão ter que coletar as taxas da campanha Barter. Igual coleta das outras modalidades no cadastro de campanha. Juntando tudo isso, tem que formar toda a nossa String ali da fórmula matemática.
+
+00:33:13.000 --> 00:33:24.000
+Josue Jofre: Com todas as variáveis para sair o Cálculo, correto. Mas quem calcula de fato a fórmula matemática terá que estar dentro do simulador aqui.
+
+00:33:25.000 --> 00:33:27.000
+Aleksander Santos Sousa: Entendi.
+
+00:33:31.000 --> 00:33:42.000
+Aleksander Santos Sousa: Aí resta a minha dúvida. Então, o que acho que você vai confirmar? Qual a relação da praça que a gente vai cadastrar do nosso lado com o Wcis.
+
+00:33:45.000 --> 00:33:46.000
+Josue Jofre: E aí?
+
+00:33:46.000 --> 00:33:49.000
+Josue Jofre: Vou confirmar, mas a.
+
+00:33:49.000 --> 00:33:57.000
+Josue Jofre: Vou dar uma resposta prévia. A relação da praça é porque a gente tem que cadastrar os impostos.
+
+00:33:51.000 --> 00:33:52.000
+Aleksander Santos Sousa: Uhum.
+
+00:33:57.000 --> 00:33:58.000
+Aleksander Santos Sousa: Uhum.
+
+00:33:57.000 --> 00:34:06.000
+Josue Jofre: Da praça que ela. Segundo o que eles me falaram, elas não constam nesse sistema. Os impostos da praça.
+
+00:34:03.000 --> 00:34:05.000
+Aleksander Santos Sousa: Uhum.
+
+00:34:06.000 --> 00:34:20.000
+Josue Jofre: Por outro lado, eu preciso saber o valor do commodity na praça. Sorriso Gmt, e essa informação está lá no Wcis.
+
+00:34:21.000 --> 00:34:30.000
+Guilherme Serra: Eu acho que a dúvida do Alex foi conforme. Como que a gente vai fazer esse relacionamento. Como que a gente sabe que sorriso aqui.
+
+00:34:30.000 --> 00:34:34.000
+Guilherme Serra: O que lá no Wcis, entendeu.
+
+00:34:34.000 --> 00:34:36.000
+Aleksander Santos Sousa: Isso é.
+
+00:34:34.000 --> 00:34:40.000
+Josue Jofre: Ah, entendi. Uma chave primária para correlacionar as duas coisas ali, né? Boa.
+
+00:34:38.000 --> 00:34:40.000
+Guilherme Serra: E isso.
+
+00:34:39.000 --> 00:34:42.000
+Aleksander Santos Sousa: É isso aí.
+
+00:34:40.000 --> 00:34:49.000
+Guilherme Serra: Porque como a gente está falando que isso daí vai ser um cadastro que o usuário vai. Fazer. Ele já vai precisar informar a gente. Então entendeu.
+
+00:34:49.000 --> 00:34:51.000
+Josue Jofre: Sim, sim.
+
+00:34:49.000 --> 00:34:59.000
+Guilherme Serra: Então, tipo, sei lá, se ele for subir numa planilha, ele já vai ter que deixar na planilha. Esse daqui é referente ao Id, tal lá no Wcis.
+
+00:34:58.000 --> 00:35:00.000
+Aleksander Santos Sousa: Isso aí.
+
+00:34:59.000 --> 00:35:05.000
+Guilherme Serra: Aí a gente salva essa informação e aí consegue fazer o relacionamento. Senão a gente não tem como fazer isso.
+
+00:35:00.000 --> 00:35:01.000
+Josue Jofre: E aí?
+
+00:35:06.000 --> 00:35:11.000
+Josue Jofre: Por nome tem grande possibilidade de erro.
+
+00:35:11.000 --> 00:35:18.000
+Guilherme Serra: E a gente nem sabe se a Pi deles vai fornecer um Get by name. Saca.
+
+00:35:12.000 --> 00:35:13.000
+Aleksander Santos Sousa: Uhum.
+
+00:35:12.000 --> 00:35:14.000
+Andre Assef: Uhum.
+
+00:35:18.000 --> 00:35:21.000
+Guilherme Serra: Então não teria como.
+
+00:35:20.000 --> 00:35:29.000
+Josue Jofre: Perfeito. Perfeito. Está claro o ponto também. A gente valida aí, conforme for seguindo o Discovery sobre o W6.
+
+00:35:33.000 --> 00:35:35.000
+Josue Jofre: E aí?
+
+00:35:34.000 --> 00:35:35.000
+Guilherme Serra: Boa.
+
+00:35:35.000 --> 00:35:38.000
+Josue Jofre: O que mais? O que mais?
+
+00:35:43.000 --> 00:35:58.000
+Josue Jofre: Bom aqui. Eu coloquei um pouquinho da explicabilidade, mas eu diria, primeiro a gente focar mais, se vocês quiserem repassar para ir tirando as dúvidas. Mais esse trecho aqui, tá? Então vou repassar o.
+
+00:35:58.000 --> 00:36:07.000
+Josue Jofre: Vamos do começo, né? Por exemplo, o preço líquido da saca é o preço do Commodity Bruto que a gente pega do Wcis.
+
+00:36:02.000 --> 00:36:04.000
+Aleksander Santos Sousa: E aí?
+
+00:36:07.000 --> 00:36:11.000
+Josue Jofre: Menos o imposto da região.
+
+00:36:11.000 --> 00:36:17.000
+Josue Jofre: Então, todos aqueles impostos que eu falei que seriam cadastrados no cadastro da praça.
+
+00:36:17.000 --> 00:36:21.000
+Josue Jofre: Aí o valor do pedido Tp.
+
+00:36:21.000 --> 00:36:25.000
+Josue Jofre: Então é o pedido a prazo?
+
+00:36:25.000 --> 00:36:31.000
+Josue Jofre: Dividido pelos juros no período, e aí também os juros. No período. Eu já vi que o.
+
+00:36:31.000 --> 00:36:42.000
+Josue Jofre: O Brandon colocou alguma questão que hoje o cadastro dos juros é mensal e não anual. Então eu vou revisar isso para ver se.
+
+00:36:42.000 --> 00:36:48.000
+Josue Jofre: A gente precisa transformar isso de alguma forma. Ou se a gente pode manter o padrão do cadastro.
+
+00:36:51.000 --> 00:36:52.000
+Josue Jofre: E aí?
+
+00:36:53.000 --> 00:36:59.000
+Josue Jofre: Não vou nem ir no detalhe. Incentivo o Barter. O brandão colocou lá também.
+
+00:36:59.000 --> 00:37:06.000
+Josue Jofre: O que a gente pode reusar o campo que já existe. Até mostrando para o Alec.
+
+00:37:06.000 --> 00:37:09.000
+Josue Jofre: Acho que o Serra já conhece.
+
+00:37:09.000 --> 00:37:11.000
+Josue Jofre: Braço de campanha.
+
+00:37:20.000 --> 00:37:24.000
+Josue Jofre: Aqui é a Lec. Quando a gente cadastra, é melhor que em taxa.
+
+00:37:24.000 --> 00:37:31.000
+Josue Jofre: A gente tem alguns campos. Olha, tem os juros. E aí foi o que ele me falou. Que eram os juros.
+
+00:37:31.000 --> 00:37:37.000
+Josue Jofre: Mensal e não anual. Aí eu valido. Se a gente pode dividir isso por doze.
+
+00:37:37.000 --> 00:37:52.000
+Josue Jofre: Aí a gente tem o incentivo e tem o desconto. E aí um ponto é: eu posso usar esse incentivo para o que está sendo chamado de incentivo. Barker? Eu acho que sim. Mas a gente valida.
+
+00:37:37.000 --> 00:37:39.000
+Aleksander Santos Sousa: Uhum.
+
+00:37:52.000 --> 00:38:03.000
+Josue Jofre: E aí tem um outro campo chamado Cashback. Esse campo. Eu não acho que a gente pode usar um que já existe. Então a gente teria que criar um outro campo chamado Cashback.
+
+00:37:53.000 --> 00:37:54.000
+Aleksander Santos Sousa: E aí?
+
+00:38:03.000 --> 00:38:19.000
+Josue Jofre: Validando os conceitos. O conceito de incentivo é bem parecido com o que tem hoje com as outras modalidades. O de Cashback é um pouco diferente. Você não usa ele no cálculo financeiro.
+
+00:38:19.000 --> 00:38:27.000
+Josue Jofre: Mas você devolve esse dinheiro para a pessoa depois. Então, do ponto de vista das sacas, que a gente entrega.
+
+00:38:27.000 --> 00:38:29.000
+Josue Jofre: É.
+
+00:38:29.000 --> 00:38:35.000
+Josue Jofre: A gente entrega um valor de sacas que não.
+
+00:38:35.000 --> 00:38:42.000
+Josue Jofre: Que não contempla esse Cashback. Mas a gente devolve o dinheiro para o produtor. Vai lá. Serve.
+
+00:38:44.000 --> 00:38:53.000
+Guilherme Serra: Não, beleza. Eu ia fazer um comentário ali no cadastro de campanha que você estava, que me surgiu, me passou uma coisa pela cabeça.
+
+00:38:53.000 --> 00:38:55.000
+Guilherme Serra: É.
+
+00:38:55.000 --> 00:39:11.000
+Guilherme Serra: Essa tela também vai precisar de uma refaturação para adicionar os novos campos. E aí talvez seja interessante, na hora que abrir, aparecer só o produto financeiro e, de acordo com o produto financeiro, mostrar os campos corretos.
+
+00:39:11.000 --> 00:39:25.000
+Guilherme Serra: Porque, por exemplo, piso syngenta e saí. Usam os mesmos campos. Mas Barter vai usar campos diferentes, como o cashback e incentiva o Barter lá que a gente chama.
+
+00:39:25.000 --> 00:39:30.000
+Guilherme Serra: Talvez essa tela aí também passe por uma refaturação. Tá.
+
+00:39:29.000 --> 00:39:32.000
+Josue Jofre: Perfeito. Perfeito. Ótimo ponto.
+
+00:39:32.000 --> 00:39:37.000
+Josue Jofre: Na linha do que a gente falou, de mostrar. Só o que realmente precisa para o usuário. Para evitar ela.
+
+00:39:37.000 --> 00:39:39.000
+Josue Jofre: Boa.
+
+00:39:38.000 --> 00:39:39.000
+Guilherme Serra: Isso.
+
+00:39:40.000 --> 00:39:46.000
+Aleksander Santos Sousa: Eu tenho uma outra dúvida. Um ponto que o Brando levantou ontem foi.
+
+00:39:46.000 --> 00:39:50.000
+Aleksander Santos Sousa: Se o conceito do incentivo que a gente tem hoje.
+
+00:39:50.000 --> 00:39:54.000
+Aleksander Santos Sousa: Na campanha é o mesmo conceito de incentivo. Barter.
+
+00:39:55.000 --> 00:40:05.000
+Josue Jofre: A gente pode olhar a fórmula matemática hoje. Se ele abate do valor que a pessoa já vai ter que pagar.
+
+00:40:05.000 --> 00:40:07.000
+Josue Jofre: Se for.
+
+00:40:07.000 --> 00:40:14.000
+Josue Jofre: Hoje. Perfeito. A gente pode usar a gente valida o mesmo para desconto também. O desconto.
+
+00:40:14.000 --> 00:40:16.000
+Josue Jofre: Se eu não me engano.
+
+00:40:16.000 --> 00:40:19.000
+Josue Jofre: Entra nesse desconto. Vpn, aqui.
+
+00:40:19.000 --> 00:40:21.000
+Josue Jofre: Um…
+
+00:40:22.000 --> 00:40:24.000
+Josue Jofre: This quantity from…
+
+00:40:24.000 --> 00:40:31.000
+Josue Jofre: Valor presente a vista de aplicada vista somente e seu valor vase da operacao por ans do julos.
+
+00:40:31.000 --> 00:40:39.000
+Josue Jofre: Rinche bali das si esse desconto vipa, e aquel deshotel deshita escrito desconto vipa.
+
+00:40:39.000 --> 00:40:41.000
+Josue Jofre: No similar door.
+
+00:40:45.000 --> 00:40:46.000
+Josue Jofre: Okay.
+
+00:40:52.000 --> 00:40:56.000
+Josue Jofre: Yeah, it's great to scroll to the top. Really insane.
+
+00:40:56.000 --> 00:41:00.000
+Josue Jofre: Okay, I'll pass the question.
+
+00:41:00.000 --> 00:41:09.000
+Josue Jofre: Eu va a dia, tu nao mais, eu queri te padura nezar si esse nome. Si esse aqui e aquele desconto que te escret.
+
+00:41:09.000 --> 00:41:12.000
+Josue Jofre: This quote of it brought a lot to me.
+
+00:41:13.000 --> 00:41:18.000
+Guilherme Serra: Hoje o incentivo.
+
+00:41:18.000 --> 00:41:22.000
+Guilherme Serra: A fórmula que a gente está usando.
+
+00:41:23.000 --> 00:41:27.000
+Guilherme Serra: São essas duas fórmulas aqui? Tá.
+
+00:41:27.000 --> 00:41:29.000
+Guilherme Serra: Aí! Você.
+
+00:41:30.000 --> 00:41:37.000
+Guilherme Serra: Eu acho que tem no Prd do simulador. Mas se também você quiser dar uma olhada.
+
+00:41:37.000 --> 00:41:44.000
+Guilherme Serra: Então eu vou até mandar com o If completo aqui para você saber porque são dois tipos diferentes.
+
+00:41:44.000 --> 00:41:50.000
+Guilherme Serra: Então, se for juros simples, é esse primeiro.
+
+00:41:51.000 --> 00:42:03.000
+Guilherme Serra: Um menos o desconto ali, taxa mensal. E no final, incentivo. E se for taxa composta? Tá.
+
+00:42:03.000 --> 00:42:08.000
+Guilherme Serra: Só pra você. Ah, tá. Eu vou mandar lá no grupo que eu mandei aqui no chat do Zoom.
+
+00:42:08.000 --> 00:42:11.000
+Josue Jofre: So to that one, I want to count.
+
+00:42:13.000 --> 00:42:16.000
+Josue Jofre: I'll do this one.
+
+00:42:27.000 --> 00:42:28.000
+Guilherme Serra: Uma boa.
+
+00:42:35.000 --> 00:42:41.000
+Josue Jofre: A dos dois de dois, since we do this controller, elle elle elle elle elle elle ell.
+
+00:42:39.000 --> 00:42:42.000
+Guilherme Serra: Isso é o cálculo da operação. Mesmo.
+
+00:42:42.000 --> 00:42:43.000
+Josue Jofre: Cool.
+
+00:42:42.000 --> 00:42:47.000
+Guilherme Serra: Cálculo final da operação. O Amounte é o quanto que ele está pedindo.
+
+00:42:47.000 --> 00:42:51.000
+Guilherme Serra: E o Montphly Hate é o que está cadastrado na campanha.
+
+00:43:02.000 --> 00:43:08.000
+Aleksander Santos Sousa: Beleza. Aí. Se for um uso diferente, né? Vai precisar ser um campo novo.
+
+00:43:11.000 --> 00:43:25.000
+Josue Jofre: Eu não diria que porque a gente pode fazer uma fórmula diferente conforme a modalidade financeira. Mas a gente pode discutir isso mais do ponto de vista de não causar confusão.
+
+00:43:19.000 --> 00:43:20.000
+Aleksander Santos Sousa: Pode.
+
+00:43:25.000 --> 00:43:26.000
+Guilherme Serra: Uhum.
+
+00:43:25.000 --> 00:43:26.000
+Josue Jofre: E aí?
+
+00:43:26.000 --> 00:43:27.000
+Aleksander Santos Sousa: Uhum.
+
+00:43:27.000 --> 00:43:34.000
+Guilherme Serra: Eu acho que isso vai acabar dependendo também da estratégia que a gente vai usar ali para o cadastro de produto financeiro.
+
+00:43:34.000 --> 00:43:36.000
+Guilherme Serra: O Alexander.
+
+00:43:36.000 --> 00:43:37.000
+Josue Jofre: E aí?
+
+00:43:36.000 --> 00:43:38.000
+Aleksander Santos Sousa: Faz sentido.
+
+00:43:36.000 --> 00:43:43.000
+Guilherme Serra: E a gente vê depois essa parte é algo mais técnico.
+
+00:43:41.000 --> 00:43:42.000
+Aleksander Santos Sousa: Uhum.
+
+00:43:43.000 --> 00:43:45.000
+Aleksander Santos Sousa: Tranquilo.
+
+00:43:44.000 --> 00:43:45.000
+Guilherme Serra: Definir.
+
+00:43:45.000 --> 00:43:52.000
+Josue Jofre: E até gente. Não existe. O desconto de Pan para Barter.
+
+00:43:52.000 --> 00:43:58.000
+Josue Jofre: Ele é algo que não faz sentido para Barter. Então tem esse ponto também, tá.
+
+00:43:58.000 --> 00:44:04.000
+Josue Jofre: Então, se a gente reusar de alguma forma o campo, a gente tem que reusar com outro nome.
+
+00:43:58.000 --> 00:44:04.000
+Josue Jofre: Entonces, gente reusado e uma quarma composente tinque eu saco otro nombre.
+
+00:44:08.000 --> 00:44:10.000
+Guilherme Serra: Boa.
+
+00:44:09.000 --> 00:44:10.000
+Aleksander Santos Sousa: Beleza.
+
+00:44:14.000 --> 00:44:24.000
+Josue Jofre: A gente. É muita informação. Eu tenho bastante lição de casos aqui. Acho que vocês também. Acho que, principalmente com o Discover aí. Sobre o W6.
+
+00:44:24.000 --> 00:44:27.000
+Josue Jofre: Eu diria para a gente: amanhã já é.
+
+00:44:27.000 --> 00:44:28.000
+Josue Jofre: Então vocês estão.
+
+00:44:28.000 --> 00:44:35.000
+Josue Jofre: Eu diria para a gente marcar outra para segunda feira, para a gente continuar esse nosso disco over aqui.
+
+00:44:29.000 --> 00:44:30.000
+Andre Assef: Triste.
+
+00:44:35.000 --> 00:44:41.000
+Josue Jofre: Já foram levantados muitos pontos legais para eu atualizar a documentação e algumas dúvidas importantes.
+
+00:44:42.000 --> 00:44:49.000
+Guilherme Serra: José. Uma última dúvida ali. As two chips que você colocou nesse simulador. Aí.
+
+00:44:49.000 --> 00:44:55.000
+Guilherme Serra: Serão fixas ou serão criadas pela.
+
+00:44:56.000 --> 00:44:58.000
+Guilherme Serra: Pelo Back Office.
+
+00:45:01.000 --> 00:45:09.000
+Guilherme Serra: É um texto livre, que é um texto livre que vai ser cadastrado via back office, ou já vai estar embutido no código.
+
+00:45:10.000 --> 00:45:13.000
+Josue Jofre: Acho que eu. Fazem. Pergunta complicada. Encerra.
+
+00:45:12.000 --> 00:45:15.000
+Guilherme Serra: E aí?
+
+00:45:12.000 --> 00:45:14.000
+Andre Assef: E aí?
+
+00:45:13.000 --> 00:45:14.000
+Josue Jofre: E aí?
+
+00:45:13.000 --> 00:45:17.000
+Aleksander Santos Sousa: E aí?
+
+00:45:14.000 --> 00:45:17.000
+Andre Assef: O cara tá fiado hoje.
+
+00:45:15.000 --> 00:45:22.000
+Josue Jofre: Brincadeira. Brincadeira. São ótimas perguntas. Na verdade.
+
+00:45:17.000 --> 00:45:19.000
+Guilherme Serra: Ver.
+
+00:45:22.000 --> 00:45:32.000
+Josue Jofre: Olha, primeiro que hoje a gente não tem, né? Até tem uma tarefa pendente no quadro. É um tempo da gente começar a criar isso. Eu particularmente gosto muito. Tá?
+
+00:45:32.000 --> 00:45:36.000
+Josue Jofre: Eu até tinha feito aqui.
+
+00:45:36.000 --> 00:45:45.000
+Josue Jofre: Esse cadastro, porque eu estava tentando facilitar a minha vida para entender isso aqui. E depois conseguir repassar para vocês.
+
+00:45:45.000 --> 00:45:50.000
+Josue Jofre: Deixa eu validar com. Porque assim não adianta. A gente.
+
+00:45:51.000 --> 00:45:57.000
+Josue Jofre: Criar e a área de negócio não atualizar, ficar pedindo para a gente. Sabe.
+
+00:45:57.000 --> 00:46:12.000
+Josue Jofre: Mas, claro, até para a gente, seria muito útil. Imagina que isso aqui fica aberto só para a gente. A gente vai e atualiza melhor do que subir uma nova versão em produção. É mais prático.
+
+00:46:13.000 --> 00:46:19.000
+Josue Jofre: Mas deixa eu validar a sua pergunta é boa. Eu não quero. Também.
+
+00:46:19.000 --> 00:46:33.000
+Josue Jofre: Inchar muito o escopo dessa entrega. Eu gosto muito quando a gente pensa em entregas mais rápidas. Então poxa se. Eu entrego esse simulador aqui da forma mais simples possível. Já com a modalidade. Barter.
+
+00:46:33.000 --> 00:46:49.000
+Josue Jofre: Com a fórmula matemática correta. Se depois eu entrego um cadastro aqui na mão do usuário de praça perfeito. Se depois eu entrego os Tips aqui. Maravilha, então eu prefiro pensar em entregas incrementais.
+
+00:46:49.000 --> 00:46:51.000
+Josue Jofre: É.
+
+00:46:50.000 --> 00:46:52.000
+Guilherme Serra: Faz sentido.
+
+00:46:51.000 --> 00:47:07.000
+Josue Jofre: Então eu acho que com certeza vai dar bastante trabalho criar um cadastro de tutir, associar cada campo. Eu já diria para a gente não colocar na primeira entrega. Mas, claro, tem que mapear corretamente, que aí vocês já começam a desenvolver.
+
+00:47:00.000 --> 00:47:02.000
+Guilherme Serra: Uhum.
+
+00:47:07.000 --> 00:47:11.000
+Josue Jofre: Pensando que lá na frente vai ter essa evolução.
+
+00:47:11.000 --> 00:47:28.000
+Guilherme Serra: Exatamente por isso. Mesmo que eu pergunto, porque muita coisa aí já aconteceu. Da gente fazer de uma forma que não foi questionado. E no futuro, poder adicionar novas coisas, mudar. Então eu prefiro já questionar agora a gente estender um pouco mais no refinamento.
+
+00:47:28.000 --> 00:47:32.000
+Guilherme Serra: Poder ter uma previsão de futuro. Sabe.
+
+00:47:32.000 --> 00:47:34.000
+Guilherme Serra: Tem delegado aí.
+
+00:47:34.000 --> 00:47:36.000
+Guilherme Serra: Mas eu.
+
+00:47:36.000 --> 00:47:39.000
+Aleksander Santos Sousa: Perfeito. É só do mesmo time.
+
+00:47:36.000 --> 00:47:38.000
+Guilherme Serra: Desculpa.
+
+00:47:38.000 --> 00:47:40.000
+Josue Jofre: Boa, boa.
+
+00:47:38.000 --> 00:47:48.000
+Guilherme Serra: E tem muita. Se for tudo isso que a gente falou, é muita coisa, tá, então talvez aí a gente precise paralisar ali.
+
+00:47:49.000 --> 00:47:56.000
+Guilherme Serra: Três caras no back end para poder, cada um pegar uma frente e a gente conseguir entregar tudo junto.
+
+00:47:56.000 --> 00:48:00.000
+Guilherme Serra: Então é muita coisa mesmo. Tá, José.
+
+00:48:00.000 --> 00:48:16.000
+Josue Jofre: Eu entendo o seu ponto. Quando a gente fala, não é só ser uma nova simulação. É uma nova simulação, com novas integrações, com impacto no cadastro de campanha, com criação de novos cadastros. Então eu sei que é bastante até.
+
+00:48:14.000 --> 00:48:15.000
+Guilherme Serra: E aí?
+
+00:48:16.000 --> 00:48:29.000
+Josue Jofre: Quando o Alex estava pedindo tarefa, eu fiquei ali numa situação que eu sei que precisa de bastante gente, mas eu também. Não queria que ele puxasse uma outra tarefa. Mas.
+
+00:48:29.000 --> 00:48:39.000
+Josue Jofre: Sem prioridade no momento. Senão eu vou ter que gastar mais tempo também nas outras tarefas. E a gente não vai entregar. O que mais é o desejo?
+
+00:48:39.000 --> 00:48:43.000
+Josue Jofre: Do Fábio, por exemplo, que é chefe dos nossos chefes.
+
+00:48:43.000 --> 00:48:45.000
+Guilherme Serra: Uhum.
+
+00:48:45.000 --> 00:48:58.000
+Josue Jofre: Gente. Eu posso trazer alguns números para vocês também. Mas para a Syngenta bártera é assim. O carro, chefe. É um dos que mais dá dinheiro, tá? Então é por isso que eles estão pedindo para a gente focar nisso.
+
+00:48:46.000 --> 00:48:47.000
+Aleksander Santos Sousa: Perfeito.
+
+00:49:00.000 --> 00:49:01.000
+Andre Assef: Uhum.
+
+00:49:01.000 --> 00:49:05.000
+Aleksander Santos Sousa: Perfeito. Eu tenho duas dúvidas.
+
+00:49:01.000 --> 00:49:02.000
+Guilherme Serra: Boa.
+
+00:49:05.000 --> 00:49:10.000
+Aleksander Santos Sousa: Só, mas é rapidinho. Já tem a documentação do Wcis.
+
+00:49:10.000 --> 00:49:22.000
+Josue Jofre: Não é o que o Serra falou. Amanhã ele vai estar presencial e ele vai tentar dar uma sondada ali em áreas que são mais responsáveis por esse sistema.
+
+00:49:11.000 --> 00:49:13.000
+Aleksander Santos Sousa: Que a gente pode se estudar.
+
+00:49:22.000 --> 00:49:30.000
+Guilherme Serra: Aquelas pessoas com que você mostrou do print da reunião alguma é de Haiti. Você sabe.
+
+00:49:23.000 --> 00:49:24.000
+Aleksander Santos Sousa: Ah, perfeito.
+
+00:49:29.000 --> 00:49:30.000
+Josue Jofre: Não.
+
+00:49:30.000 --> 00:49:35.000
+Josue Jofre: Não. E eles têm pouquíssima familiaridade com.
+
+00:49:31.000 --> 00:49:32.000
+Guilherme Serra: Nenhuma.
+
+00:49:35.000 --> 00:49:51.000
+Josue Jofre: Haiti. Assim, pouquíssimo contato, certo? Eles são os caras que realmente definem taxa. Calcula no Excel, e é isso. Eles não têm sistema além do Wcis que eles consultam, não.
+
+00:49:39.000 --> 00:49:41.000
+Guilherme Serra: Tá.
+
+00:49:51.000 --> 00:49:53.000
+Josue Jofre: É.
+
+00:49:52.000 --> 00:50:03.000
+Guilherme Serra: Se você souber, eu posso perguntar lá amanhã, é claro. Mas se você conseguir questionar alguma daquelas pessoas sobre se eles sabem, alguém.
+
+00:50:03.000 --> 00:50:05.000
+Guilherme Serra: Mas.
+
+00:50:05.000 --> 00:50:15.000
+Guilherme Serra: De Haiti que possa dar um direcionamento para a gente. Aí eu já vou direto na pessoa. Tá? Mas paralelo a isso. Eu vou perguntar aqui para o.
+
+00:50:15.000 --> 00:50:20.000
+Guilherme Serra: Para o Andrieta que cuida dos softwares da Syngenta. Se ele sabe.
+
+00:50:20.000 --> 00:50:21.000
+Guilherme Serra: Em que pode.
+
+00:50:21.000 --> 00:50:23.000
+Guilherme Serra: Pode ser.
+
+00:50:23.000 --> 00:50:32.000
+Josue Jofre: Beleza. Eu vou perguntar para esse cara. O que foi? Quem ali na reunião demonstrou mais conhecimento sobre esse sistema. E aí eu te aviso.
+
+00:50:31.000 --> 00:50:32.000
+Guilherme Serra: Perfeito.
+
+00:50:33.000 --> 00:50:34.000
+Andre Assef: Boa demais.
+
+00:50:35.000 --> 00:50:36.000
+Josue Jofre: Isso aí, gente!
+
+00:50:35.000 --> 00:50:36.000
+Aleksander Santos Sousa: Boa.
+
+00:50:36.000 --> 00:50:41.000
+Aleksander Santos Sousa: A outra dúvida que eu tenho é mais dúvida de novato.
+
+00:50:41.000 --> 00:50:49.000
+Aleksander Santos Sousa: Beleza. Eu tô com essa tesca aí. Só que quando a gente tá resolvendo e discutindo, eu meio que tô ficando parado.
+
+00:50:49.000 --> 00:50:55.000
+Aleksander Santos Sousa: Eu pego outra coisa pra fazer. Não pego. Não sei se é com vocês, né, que eu vejo. Isso é com o Pablo.
+
+00:50:56.000 --> 00:50:57.000
+Josue Jofre: Uh, uh, uh.
+
+00:50:56.000 --> 00:50:58.000
+Andre Assef: Ah, eu diria.
+
+00:50:58.000 --> 00:51:00.000
+Andre Assef: Opa, pode falar. Ajuda.
+
+00:50:58.000 --> 00:51:05.000
+Josue Jofre: Não me ajuda. Me ajuda na resposta. Eu tenho o meu ponto de vista. Mas é legal escutar aí. Vocês.
+
+00:51:01.000 --> 00:51:03.000
+Andre Assef: É. É.
+
+00:51:05.000 --> 00:51:16.000
+Andre Assef: Eu ia falar para ver alguma atividade com escopo menor que a de entrega. Seja mais rápido que dê tempo de estou sempre estar olhando aqui para esse refinamento que está sendo feito. Discovery.
+
+00:51:16.000 --> 00:51:17.000
+Aleksander Santos Sousa: Uhum.
+
+00:51:16.000 --> 00:51:23.000
+Andre Assef: Aí para quando chegar ali, na etapa da gente, já começar a falar de take Validez. Já fiz. Tutei todo o tempo para isso.
+
+00:51:23.000 --> 00:51:25.000
+Aleksander Santos Sousa: Entendi.
+
+00:51:23.000 --> 00:51:25.000
+Andre Assef: Obrigado.
+
+00:51:25.000 --> 00:51:32.000
+Andre Assef: Mas é isso. Chega ali, na nossa mão, mesmo quando está aqui vale. Deixa aí a gente volta o foco todo para a atividade ali. Dali em diante.
+
+00:51:32.000 --> 00:51:33.000
+Aleksander Santos Sousa: Uhum.
+
+00:51:33.000 --> 00:51:39.000
+Aleksander Santos Sousa: Alguém pode me ajudar com isso ou. Não sei se vocês aqui conversar com o Pablo diretamente.
+
+00:51:39.000 --> 00:51:49.000
+Josue Jofre: O meu ponto, gente aí, sendo bem sincero, eu acho que as tarefas que estão ali mais para trás. A gente pode até olhar o quadro com mais calma. Deixa eu abrir aqui também.
+
+00:51:49.000 --> 00:52:06.000
+Josue Jofre: Talvez elas não estão com refinamento para o Alec pegar. E aí se eu parar agora para refinar uma tarefa mais simples para ele. Aí eu não avanço com esse item, que é o mais urgente, sabe.
+
+00:51:56.000 --> 00:51:57.000
+Andre Assef: Uhum.
+
+00:52:06.000 --> 00:52:12.000
+Josue Jofre: Então eu fico ali entre a cruz e a espada nessa situação. E aí, meu.
+
+00:52:07.000 --> 00:52:08.000
+Andre Assef: Uhum.
+
+00:52:11.000 --> 00:52:12.000
+Guilherme Serra: Boa.
+
+00:52:11.000 --> 00:52:12.000
+Andre Assef: Tenho.
+
+00:52:12.000 --> 00:52:16.000
+Josue Jofre: Minha sugestão ia acabar sendo um pouco diferente.
+
+00:52:17.000 --> 00:52:34.000
+Josue Jofre: O acesso sumiu. Estava na outra tela. É porque eu estava na outra tela. Minha opinião era um pouco, mas assim na linha dele, talvez até ir me ajudando ali, no refinamento do Prd, acaba sendo uma responsabilidade também do time de deve.
+
+00:52:20.000 --> 00:52:22.000
+Andre Assef: Não, não estou aqui. Estou aqui.
+
+00:52:21.000 --> 00:52:23.000
+Aleksander Santos Sousa: E aí?
+
+00:52:34.000 --> 00:52:52.000
+Josue Jofre: Então pode até jogar no sentido de dúvida. Mesmo pegar a transcrição aqui dessa conversa. O Serra levantou tantos questionamentos que têm que ser documentados ali. Já coloca no Prd. Então a gente vai evoluindo junto e lá na frente, daqui quinze, vinte dias.
+
+00:52:35.000 --> 00:52:36.000
+Aleksander Santos Sousa: Uhum.
+
+00:52:35.000 --> 00:52:37.000
+Andre Assef: Uhum.
+
+00:52:48.000 --> 00:52:49.000
+Aleksander Santos Sousa: Uhum.
+
+00:52:52.000 --> 00:53:10.000
+Josue Jofre: Por mais que ele ficou entre aspas, um pouco mais parado. Mas, por outro lado, ele também se tornou um especialista aí no assunto, Barter. Então eu vou levar ele nas reuniões junto comigo. Eu posso colocar ele no chat aqui, junto com o Bruno. Então minha sugestão é, talvez gere uma certa ociosidade.
+
+00:53:10.000 --> 00:53:18.000
+Josue Jofre: Mas ao mesmo tempo, ele vai se especializando nesse assunto para dar maior cadência. Depois vai lá serra, por favor.
+
+00:53:17.000 --> 00:53:18.000
+Andre Assef: Henry.
+
+00:53:24.000 --> 00:53:26.000
+Josue Jofre: Você falou. Não, Ferra.
+
+00:53:25.000 --> 00:53:27.000
+Aleksander Santos Sousa: Serra. Tá aí?
+
+00:53:26.000 --> 00:53:28.000
+Andre Assef: Pode falar. A serra tá muda.
+
+00:53:28.000 --> 00:53:31.000
+Josue Jofre: Meu. Pior que ele. Nunca mudo. Não.
+
+00:53:29.000 --> 00:53:31.000
+Andre Assef: Não, não.
+
+00:53:31.000 --> 00:53:47.000
+Andre Assef: Deve ter acontecido alguma coisa. Mas faz sentido, Josué. Mesmo a gente teve ali algumas outras atividades. Integração Sync e a nossa Api do Side. A gente trabalhou desde a confecção do Prd Ali. Beleza que o Prd era um pouquinho mais técnico, mas de qualquer forma.
+
+00:53:47.000 --> 00:53:57.000
+Andre Assef: Não conta com ociosidade. Já conta ali. Como parte do processo. Em teoria, não haveria ociosidade a isso. Haveria trabalho normal.
+
+00:53:56.000 --> 00:54:04.000
+Josue Jofre: Eu até acho que pode ocorrer a ociosidade, porque, sei lá. Daqui três horas ele vai falar. Poxa, já fiz tudo o que podia.
+
+00:53:57.000 --> 00:53:58.000
+Andre Assef: É isso?
+
+00:54:05.000 --> 00:54:20.000
+Josue Jofre: Sabe. Mas por outro lado, ele vai se especializar mais nesse tempo. Vai ser um investimento maior neste assunto e aí a gente consegue focar mais do que começar outra coisa. Tem ali.
+
+00:54:13.000 --> 00:54:15.000
+Aleksander Santos Sousa: Uhum.
+
+00:54:13.000 --> 00:54:15.000
+Andre Assef: Uhum.
+
+00:54:20.000 --> 00:54:30.000
+Josue Jofre: O tempo também dele. Mudar de um assunto para outro é minha sugestão. Tá, Alex, se você puder me ajudar neste Prd. Eu acho que a gente consegue sair do outro.
+
+00:54:25.000 --> 00:54:27.000
+Andre Assef: Sim, sim.
+
+00:54:30.000 --> 00:54:46.000
+Josue Jofre: Porque assim, gente é a frase do Fábio Neufmann, que é o chefe dos nossos chefes para a Mari. Se você me entregar o simulador Barter, o fluxo de campanha que agora está pendente, principalmente com a Cet. Deixa eu já colocar uma pressão aqui.
+
+00:54:46.000 --> 00:54:56.000
+Josue Jofre: Brincadeiras é, e o enriquecimento de dados, que está principalmente com o Braga. Agora, com o Everton. Enfim, eu fico feliz.
+
+00:54:46.000 --> 00:54:48.000
+Aleksander Santos Sousa: E aí?
+
+00:54:47.000 --> 00:54:50.000
+Andre Assef: Uhum.
+
+00:54:56.000 --> 00:55:08.000
+Josue Jofre: Agora, se você entregar outras coisas e não me entregar a isso que eu estou te pedindo. Aí a gente tem um problema, porque você está priorizando outras coisas que não são o que eu realmente estou te pedindo.
+
+00:55:08.000 --> 00:55:14.000
+Josue Jofre: Então, só para a gente também trazer esse discurso, esse direcionamento para o dia a dia.
+
+00:55:14.000 --> 00:55:16.000
+Andre Assef: Uhum, perfeito.
+
+00:55:14.000 --> 00:55:20.000
+Aleksander Santos Sousa: Entendido. Perfeito. Muito obrigado. Aí. Então vou ficar focado contigo.
+
+00:55:17.000 --> 00:55:20.000
+Josue Jofre: Então imagina. Eu que agradeço.
+
+00:55:20.000 --> 00:55:29.000
+Aleksander Santos Sousa: Ficar focado contigo. E se surgir alguma coisa? Talvez alguma urgência ou alguma coisa que o pessoal precisa de ajuda, alguma subtesca. E eu fico indisponível, né.
+
+00:55:29.000 --> 00:55:32.000
+Aleksander Santos Sousa: Para acionarem e eu estar ali, ajudando.
+
+00:55:32.000 --> 00:55:37.000
+Aleksander Santos Sousa: Eu pego já um contexto de alguém para não precisar pegar algo sozinho do zero de novo.
+
+00:55:38.000 --> 00:55:40.000
+Aleksander Santos Sousa: Algo mais pontual. Assim.
+
+00:55:38.000 --> 00:55:39.000
+Josue Jofre: Sim.
+
+00:55:40.000 --> 00:55:51.000
+Josue Jofre: E tem todo um estudo dos assuntos também. Por exemplo, estudar o simulador atual, a documentação atual, o código que o Serra abriu e compartilhou só uma parte que desculpa a gente. Vocês levantaram a mão.
+
+00:55:40.000 --> 00:55:42.000
+Guilherme Serra: O a la equis.
+
+00:55:43.000 --> 00:55:44.000
+Aleksander Santos Sousa: Uhum.
+
+00:55:46.000 --> 00:55:47.000
+Aleksander Santos Sousa: Sim, sim.
+
+00:55:53.000 --> 00:56:14.000
+Guilherme Serra: Não. Eu só ia comentar que se você realmente se encontrar tipo, Ah, sei lá. Já fiz tudo o que eu tinha que fazer do Prd. Aqui não tem mais. Vou ficar parado o resto do dia. Nós temos bastante coisa ali parada no board de engenharia. Tá, então, débitos técnicos. Estamos com um monte de Pr aberto lá do dependabote. Um monte de coisa para fazer.
+
+00:56:08.000 --> 00:56:09.000
+Aleksander Santos Sousa: Uhum.
+
+00:56:14.000 --> 00:56:29.000
+Guilherme Serra: Apesar da gente não ter ainda feito aquela Sync do que é prioridade, essas coisas que são rotineiras, assim, tipo dependa, bote, um débito técnico de alguma coisa que não envolve muita regra de negócio que uma refaturação, algum erro.
+
+00:56:29.000 --> 00:56:37.000
+Guilherme Serra: Coisa pequena que dá para investigar e resolver rapidão. Talvez seja uma boa alternativa. Também nesses casos.
+
+00:56:33.000 --> 00:56:34.000
+Aleksander Santos Sousa: Uhum.
+
+00:56:37.000 --> 00:56:43.000
+Aleksander Santos Sousa: Perfeito, perfeito, muito obrigado. Agora que eu consegui acesso ao Copilot, aqui só tinha ele.
+
+00:56:43.000 --> 00:56:48.000
+Aleksander Santos Sousa: Eu consigo me virar bem melhor com essas coisas. Para descobrir como é que funciona.
+
+00:56:48.000 --> 00:56:49.000
+Andre Assef: Boa mão.
+
+00:56:48.000 --> 00:56:50.000
+Aleksander Santos Sousa: Isso é um pouco mais rápido também.
+
+00:56:50.000 --> 00:57:03.000
+Andre Assef: Só uma dúvida. Ali. Josué, você mencionou a questão da história de pré usuário ali, uma das pendências para a gente liberar o feedback. Eu não lembro. Eu não sei se teve alguma mudança no planejamento.
+
+00:56:50.000 --> 00:56:52.000
+Guilherme Serra: Boa.
+
+00:57:03.000 --> 00:57:14.000
+Andre Assef: Mas o pré usuário ficaria de início ali, como um Nice to Heavy, aí, tipo, para liberar a jornada de feedback para.
+
+00:57:14.000 --> 00:57:32.000
+Andre Assef: O pessoal utilizar a gente poderia, a priori, começar com o que a gente já tinha de conta aqui. Tipo, liberou para a produção, o pessoal já começar usando o pré usuário, entraria como um complemento para melhorar ainda mais. Então eu queria só entender como é que está esse planejamento se mudou. Essa visão. Se agora o pré usuário passa a ser também um.
+
+00:57:19.000 --> 00:57:20.000
+Josue Jofre: Uhum.
+
+00:57:32.000 --> 00:57:40.000
+Andre Assef: Parte dessa entrega que a gente vai fazer como gatilho para realmente entrar em produção, ou como que ficou isso.
+
+00:57:41.000 --> 00:57:57.000
+Josue Jofre: Acho que você falou isso na melhor hora possível, certo? Porque a gente vai ter a reunião à tarde para apresentar para a Mari. E aí eu vou tentar já empurrar esse discurso para não ter mais essa trava no sentido. A gente está te entregando tudo aqui.
+
+00:57:57.000 --> 00:58:01.000
+Josue Jofre: E o próximo que a gente entrega, que não é um.
+
+00:58:01.000 --> 00:58:09.000
+Josue Jofre: Algo obrigatório. Não é algo impeditivo. É o pré cadastro do usuário. Aí eu dou a oportunidade dela se manifestar ao contrário.
+
+00:58:05.000 --> 00:58:07.000
+Andre Assef: Uhum.
+
+00:58:08.000 --> 00:58:10.000
+Andre Assef: Perfeito.
+
+00:58:09.000 --> 00:58:11.000
+Josue Jofre: Você comentou na melhor hora possível.
+
+00:58:10.000 --> 00:58:22.000
+Andre Assef: Isso? Porque o que a gente já tem, a gente já conseguiria liberar se tiver tudo ok, ali no fluxo, a gente já conseguiria liberar para a produção. Então o pessoal já começaria a utilizar sem e ficar dependente do pré usuário para poder usar tudo.
+
+00:58:23.000 --> 00:58:29.000
+Josue Jofre: Maravilha. Maravilha. Você comentou numa ótima hora. Gente, eu vou precisar sair, que eu tenho outro em dois minutos e quero.
+
+00:58:29.000 --> 00:58:31.000
+Josue Jofre: Não pulindo o banheiro antes.
+
+00:58:30.000 --> 00:58:32.000
+Andre Assef: Boa, perfeita.
+
+00:58:31.000 --> 00:58:36.000
+Josue Jofre: Até mais gente. Ótimo dia. Um almoço aí para você.
+
+00:58:33.000 --> 00:58:37.000
+Aleksander Santos Sousa: Valeu. Valeu, gente brigadão, viu? Até mais. Tchau, Tchau.
+
+00:58:33.000 --> 00:58:35.000
+Andre Assef: Valeu!
+
+00:58:35.000 --> 00:58:36.000
+Jessica Moraes: Catch up as well.
+

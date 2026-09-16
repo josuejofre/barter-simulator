@@ -478,16 +478,16 @@ function getRegionalTaxRate(regionName, brutoPrice) {
 }
 
 // Core Barter Calculations (Credit-line based)
-// Standalone pure math calculator for barter simulation
+// Standalone pure math calculator for barter simulation matching Simulador_CashBack_Barter_2026.xlsx
 function runSimulationMath(inputs) {
     const commodity = inputs.commodity;
     const regiao = inputs.regiao;
-    const creditRaw = inputs.creditRaw;
-    const commBrutoRaw = inputs.commBrutoRaw;
+    const creditRaw = inputs.creditRaw; // Preço Pedido PRAZO
+    const commBrutoRaw = inputs.commBrutoRaw; // Preço do Commodity Bruto retornado pelo WSys
     const descontoAtivo = inputs.descontoAtivo;
-    const prazo = inputs.prazo;
-    const jurosAnual = inputs.jurosAnual;
-    const valPctProposta = inputs.valPctProposta;
+    const prazo = inputs.prazo; // Dias corridos (Vencimento - Carência)
+    const jurosAnual = inputs.jurosAnual; // Juros % a.a.
+    const valPctProposta = inputs.valPctProposta; // Valorização Campanha % (Cash Back %)
     const distChao = isNaN(inputs.distChao) ? 0 : inputs.distChao;
     const distAsfalto = isNaN(inputs.distAsfalto) ? 0 : inputs.distAsfalto;
     const freteChaoRaw = inputs.freteChaoRaw;
@@ -498,131 +498,159 @@ function runSimulationMath(inputs) {
     const unitSymbol = (isSoy || isCorn) ? 'sc' : 'lp';
 
     // Nominal currency amounts
-    const credLimit = creditRaw;
+    const precoPrazo = creditRaw;
     const commBruto = commBrutoRaw;
     const freteChao = freteChaoRaw;
     const freteAsfalto = freteAsfaltoRaw;
 
     // Competitor campaign cashback rate
     const valPctMarket = inputs.valPctOutras !== undefined ? inputs.valPctOutras : activeCampanhaValorizacaoOutras;
-
-    // Competitor commodity price is typically lower by 1.0% in market
     const commBrutoMarket = commBruto * 0.99;
 
-    // Annual interest rate converted to period rate: Juros Período = (Prazo / 360) * Juros Anual
-    const jurosPeriodo = (prazo / 360.0) * (jurosAnual / 100.0);
+    // 1. Juros a.m. e Juros no período
+    // Juros a.m. = Juros Anual / 12
+    const jurosMensal = jurosAnual / 12.0;
+    // Juros período = (Dias corridos / 30) * Juros a.m. = (prazo / 360) * Juros Anual
+    const jurosPeriodo = (prazo / 30.0) * (jurosMensal / 100.0);
 
-    // Preço Pedido TP (Valor Presente)
-    const precoTpProposta = credLimit / (1.0 + jurosPeriodo);
-    const precoTpMarket = precoTpProposta;
+    // 2. Preço Pedido TP (Valor Presente) = Preço Pedido PRAZO / (1 + Juros Período)
+    const precoTp = precoPrazo / (1.0 + jurosPeriodo);
+    const precoVista = precoTp * (1.0 - 0.04); // Desconto comercial de 4% sobre a TP
 
-    // Preço Pedido Vista (Desconto 4% over TP)
-    const precoVistaProposta = precoTpProposta * (1.0 - 0.04);
-    const precoVistaMarket = precoVistaProposta;
+    // 3. Incentivo Barter % = (Dias corridos / 30) * Incentivo a.m. (padrão oficial 0,5% a.m.)
+    const incentivoMensal = (inputs.incentivoMensal !== undefined && inputs.incentivoMensal !== null) ? inputs.incentivoMensal : 0.50;
+    const incentivoBarterPct = (prazo / 30.0) * (incentivoMensal / 100.0);
 
-    // Custo Financeiro da Operação ($) = Credit Limit - Preço Pedido TP
-    const custoFinProposta = credLimit - precoTpProposta;
-    const custoFinMarket = custoFinProposta;
+    // 4. Incentivo Barter $ = Preço Pedido TP * Incentivo Barter %
+    const incentivoBarter = precoTp * incentivoBarterPct;
 
-    // Incentivo Barter % = (Prazo / 30) * 0.5% a.m.
-    const incentivoBarterPct = (prazo / 30.0) * 0.005;
+    // 5. Cash Back $ = Preço Pedido PRAZO * Valorização Campanha %
+    const cashback = precoPrazo * (valPctProposta / 100.0);
+    const cashbackMarket = precoPrazo * (valPctMarket / 100.0);
 
-    // Incentivo Barter $ = Preço TP * Incentivo Barter %
-    const incentivoBarter = precoTpProposta * incentivoBarterPct;
-
-    // Cashback $ = Credit Limit * Cashback %
-    const cashbackProposta = credLimit * (valPctProposta / 100.0);
-    const cashbackMarket = credLimit * (valPctMarket / 100.0);
-
-    // Total Retorno $ = Cashback $ + Incentivo $
-    const totalRetornoProposta = cashbackProposta + incentivoBarter;
+    // 6. Total retorno $ = Incentivo Barter $ + Cash Back $
+    const totalRetorno = incentivoBarter + cashback;
     const totalRetornoMarket = cashbackMarket; // Mercado não concede incentivo de prazo
 
-    // Preço Pedido Barter Cashback equivalente
-    const precoBarterEquivProposta = credLimit - totalRetornoProposta;
-    const precoBarterEquivMarket = credLimit - totalRetornoMarket;
+    // 7. Preço Pedido BARTER Cash Back equivalente = Preço Pedido PRAZO - Total retorno
+    const precoBarterCashBackEquiv = precoPrazo - totalRetorno;
+    const precoBarterCashBackEquivMarket = precoPrazo - totalRetornoMarket;
 
-    // Regional tax split (Planilha Impostos 1)
+    // 8. Deduções Fiscais da Praça (Planilha Impostos 1)
     const plaza = wsysPlazas.find(p => p.nome === regiao || `${p.nome} (${p.estado})` === regiao) || wsysPlazas[0];
-    let fixedTaxProposta = 0;
-    let pctTaxProposta = 0;
+    let fixedTax = 0;
+    let pctTax = 0;
 
     if (descontoAtivo) {
         const impFixo = plaza && plaza.impFixo !== undefined ? plaza.impFixo : 3.09;
         const funruralPct = plaza && plaza.funruralPct !== undefined ? plaza.funruralPct : 1.63;
         const impNfPct = plaza && plaza.impNfPct !== undefined ? plaza.impNfPct : 0.0;
         const totalPctTax = funruralPct + impNfPct;
-
         const fixFactor = currency === 'BRL' ? 1.0 : (1.0 / 5.15);
 
-        fixedTaxProposta = impFixo * fixFactor;
-        pctTaxProposta = commBruto * (totalPctTax / 100.0);
+        fixedTax = impFixo * fixFactor;
+        pctTax = commBruto * (totalPctTax / 100.0);
     }
-    const taxDeductionProposta = fixedTaxProposta + pctTaxProposta;
-    const commLivreProposta = Math.max(0.01, commBruto - taxDeductionProposta);
+    const taxDeduction = fixedTax + pctTax;
 
-    // Volume de Troca Físico Contratual Inicial (Sacas necessárias para cobrir o crédito demandado)
-    const volTrocaProposta = commLivreProposta > 0 ? Math.ceil(credLimit / commLivreProposta) : 0;
+    // 9. Despesa deslocamento (Frete):
+    // Despesa total = (Distancia chão * Preço KM chão) + (Distancia asfalto * Preço KM asfalto)
+    const despesaDeslocamento = (distChao * freteChao) + (distAsfalto * freteAsfalto);
 
-    // Custo de Transporte (Frete)
-    const freteTotalProposta = (distChao * freteChao) + (distAsfalto * freteAsfalto);
-    const freteUnitProposta = volTrocaProposta > 0 ? (freteTotalProposta / volTrocaProposta) : 0;
+    // 10. Preço do Commodity Livre (Unitário por saca/libra):
+    // Deduz impostos fiscais e a despesa de deslocamento unitária (rateada pelo volume preliminar de sacas)
+    const commLivreSemFrete = Math.max(0.01, commBruto - taxDeduction);
+    const volPreliminar = commLivreSemFrete > 0 ? (precoPrazo / commLivreSemFrete) : 1;
+    const despesaDeslocamentoUnit = (despesaDeslocamento > 0 && volPreliminar > 0) ? (despesaDeslocamento / volPreliminar) : 0;
+    const commLivre = Math.max(0.01, commBruto - taxDeduction - despesaDeslocamentoUnit);
 
-    // Cashback equivalência em sacas/libras (Benefício comercial devolvido financeiramente)
-    const cashbackScProposta = commLivreProposta > 0 ? (cashbackProposta / commLivreProposta) : 0;
+    // 11. Volume TROCA sacas = Preço Pedido PRAZO / Preço do Commodity Livre (Linha 13 da planilha)
+    const volTrocaSacas = commLivre > 0 ? (precoPrazo / commLivre) : 0;
 
-    // Ganho de Valorização Unitária (Cashback)
-    const valUnitCashbackProposta = volTrocaProposta > 0 ? (cashbackProposta / volTrocaProposta) : 0;
+    // 12. Cash Back equivalência (sacas) = Cash Back / Preço do Commodity Livre (Linha 18 da planilha)
+    const cashbackEquivSc = commLivre > 0 ? (cashback / commLivre) : 0;
 
-    // Incentivo equivalência em sacas/libras
-    const incentivoScProposta = commLivreProposta > 0 ? (incentivoBarter / commLivreProposta) : 0;
-    const valUnitIncentivoProposta = volTrocaProposta > 0 ? (incentivoBarter / volTrocaProposta) : 0;
-    const totalSacasEquivEconomia = cashbackScProposta + incentivoScProposta;
+    // 13. Incentivo Barter equivalência (sacas) = Incentivo Barter / Preço do Commodity Livre (Linha 27 da planilha)
+    const incentivoEquivSc = commLivre > 0 ? (incentivoBarter / commLivre) : 0;
 
-    // Incentivo de Prazo reduz o valor base a ser quitado em grãos (diminui as sacas da CPR)
-    const saldoComIncentivo = Math.max(0, credLimit - incentivoBarter);
-    const volFinalProposta = commLivreProposta > 0 ? Math.ceil(saldoComIncentivo / commLivreProposta) : 0;
-    const volEconomizadoIncentivo = Math.max(0, volTrocaProposta - volFinalProposta);
+    // 14. Volume TROCA equivalência = Volume TROCA sacas - (Cash Back equivalência + Incentivo Barter equivalência) (Linha 32 da planilha)
+    const volTrocaEquivalencia = volTrocaSacas - (cashbackEquivSc + incentivoEquivSc);
 
-    // Preço Equivalente Final (Valorizado com incentivos comerciais e frete)
-    const precoFinalProposta = commLivreProposta + valUnitCashbackProposta + valUnitIncentivoProposta - freteUnitProposta;
+    // 15. Valorizações por saca:
+    // Valorização Commodity equivalência Cash Back = Cash Back / Volume TROCA sacas (Linha 19 da planilha)
+    const valCommEquivCashback = volTrocaSacas > 0 ? (cashback / volTrocaSacas) : 0;
 
-    // Valorização Real sobre Commodity Livre (%)
-    const valRealProposta = commLivreProposta > 0 ? (precoFinalProposta / commLivreProposta - 1.0) : 0;
+    // Valorização Commodity equivalência Incentivo = Incentivo Barter / Volume TROCA sacas (Linha 28 da planilha)
+    const valCommEquivIncentivo = volTrocaSacas > 0 ? (incentivoBarter / volTrocaSacas) : 0;
+
+    // Valorização Commodity equivalência total = Preço do Commodity Livre + Val. Cash Back + Val. Incentivo (Linha 31 da planilha)
+    const valCommEquivTotal = commLivre + valCommEquivCashback + valCommEquivIncentivo;
+
+    // 16. <> Commodity inicial vs valorizações (%) = (Valorização Commodity equivalência total / Preço do Commodity Livre) - 1 (Linha 33 da planilha)
+    const difCommodityVsValorizacoesPct = commLivre > 0 ? ((valCommEquivTotal / commLivre) - 1.0) : 0;
+
+    // Custo financeiro da operação ($) = Preço Pedido PRAZO - Preço Pedido TP
+    const custoFin = precoPrazo - precoTp;
 
     return {
-        credLimitUSD: credLimit,
+        // Novas variáveis oficiais alinhadas com a planilha
+        precoPrazo,
+        precoTp,
+        precoVista,
+        jurosMensal,
+        jurosPeriodo,
+        incentivoMensal,
+        incentivoBarterPct,
+        incentivoBarter,
+        valCampanhaPct: valPctProposta,
+        cashback,
+        totalRetorno,
+        precoBarterCashBackEquiv,
+        commBruto,
+        taxDeduction,
+        fixedTax,
+        pctTax,
+        despesaDeslocamento,
+        despesaDeslocamentoUnit,
+        commLivre,
+        volTrocaSacas,
+        cashbackEquivSc,
+        incentivoEquivSc,
+        volTrocaEquivalencia,
+        valCommEquivCashback,
+        valCommEquivIncentivo,
+        valCommEquivTotal,
+        difCommodityVsValorizacoesPct,
+
+        // Aliases de compatibilidade para código legado e PDF
+        credLimitUSD: precoPrazo,
         commBrutoUSD: commBruto,
         freteChaoUSD: freteChao,
         freteAsfaltoUSD: freteAsfalto,
         valPctMarket,
-        jurosPeriodo,
-        precoTpUSDProposta: precoTpProposta,
-        precoVistaUSDProposta: precoVistaProposta,
-        custoFinUSDProposta: custoFinProposta,
-        incentivoBarterPct,
+        precoTpUSDProposta: precoTp,
+        precoVistaUSDProposta: precoVista,
+        custoFinUSDProposta: custoFin,
         incentivoBarterUsd: incentivoBarter,
-        cashbackUsdProposta: cashbackProposta,
-        totalRetornoUSDProposta: totalRetornoProposta,
-        precoBarterEquivUSDProposta: precoBarterEquivProposta,
-        taxDeductionUSDProposta: taxDeductionProposta,
-        fixedTaxUSDProposta: fixedTaxProposta,
-        pctTaxUSDProposta: pctTaxProposta,
-        commLivreUSDProposta: commLivreProposta,
-        volTrocaProposta,
-        volFinalProposta,
-        volEconomizadoIncentivo,
-        totalSacasEquivEconomia,
-        freteTotalUSDProposta: freteTotalProposta,
-        freteUnitUSDProposta: freteUnitProposta,
-        cashbackScProposta,
-        valUnitCashbackUSDProposta: valUnitCashbackProposta,
-        incentivoScProposta,
-        valUnitIncentivoUSDProposta: valUnitIncentivoProposta,
-        precoFinalUSDProposta: precoFinalProposta,
-        volFinalProposta,
-        totalSacasEquivEconomia,
-        valRealProposta,
+        cashbackUsdProposta: cashback,
+        totalRetornoUSDProposta: totalRetorno,
+        precoBarterEquivUSDProposta: precoBarterCashBackEquiv,
+        taxDeductionUSDProposta: taxDeduction,
+        fixedTaxUSDProposta: fixedTax,
+        pctTaxUSDProposta: pctTax,
+        commLivreUSDProposta: commLivre,
+        volTrocaProposta: Math.ceil(volTrocaSacas),
+        volFinalProposta: Math.ceil(volTrocaEquivalencia),
+        volEconomizadoIncentivo: Math.max(0, Math.ceil(volTrocaSacas) - Math.ceil(volTrocaEquivalencia)),
+        totalSacasEquivEconomia: cashbackEquivSc + incentivoEquivSc,
+        freteTotalUSDProposta: despesaDeslocamento,
+        freteUnitUSDProposta: despesaDeslocamentoUnit,
+        cashbackScProposta: cashbackEquivSc,
+        valUnitCashbackUSDProposta: valCommEquivCashback,
+        incentivoScProposta: incentivoEquivSc,
+        valUnitIncentivoUSDProposta: valCommEquivIncentivo,
+        precoFinalUSDProposta: valCommEquivTotal,
+        valRealProposta: difCommodityVsValorizacoesPct,
         unitSymbol
     };
 }
@@ -906,22 +934,27 @@ function calculateSimulation() {
             jurosPeriodo: jurosPeriodoBarter,
             jurosMensal: jurosAnual / 12,
             prazoDisplay: `${prazo} dias (${nMesesStr} meses)`,
-            prazoExplicacao: `Prazo calculado de ${prazo} dias decorrido entre o desembolso e o vencimento da safra.`,
+            prazoExplicacao: `Prazo calculado de ${prazo} dias decorrido entre a carência (${carenciaStr}) e o vencimento (${vencimentoStr}).`,
             vpanDisplay: '0,00%',
             vpanExplicacao: 'Desconto à vista (VPAN) não é aplicável na modalidade Barter, pois o benefício comercial ocorre via Cashback de campanha e Incentivo de prazo.<br><strong>Fonte:</strong> Cadastro de campanha.',
             incentivoLabel: '*Incentivo Barter',
+            incentivoBarterPct: res ? res.incentivoBarterPct : 0,
             incentivoDisplay: res ? `+${(res.incentivoBarterPct * 100).toFixed(2)}%` : '0,00%',
-            incentivoExplicacao: res ? `Incentivo de prazo de +${(res.incentivoBarterPct * 100).toFixed(2)}% (${formatSelectedCurrency(res.incentivoBarterUsd)}) concedido como desconto comercial que reduz as sacas a entregar na CPR.<br><strong>Fonte:</strong> Cadastro de campanha.` : 'Sem incentivo.<br><strong>Fonte:</strong> Cadastro de campanha.',
+            incentivoExplicacao: res ? `Incentivo de prazo de +${(res.incentivoBarterPct * 100).toFixed(2)}% (${formatSelectedCurrency(res.incentivoBarter)}) calculado sobre o Preço Pedido TP (Valor Presente).<br><strong>Fonte:</strong> Cadastro de campanha.` : 'Sem incentivo.<br><strong>Fonte:</strong> Cadastro de campanha.',
             cashbackDisplay: `+${valPctProposta.toFixed(2)}%`,
-            cashbackExplicacao: `Cashback de campanha comercial Nutrade de +${valPctProposta.toFixed(2)}% (${formatSelectedCurrency(res ? res.cashbackUsdProposta : 0)}) creditado como devolução financeira em dinheiro ao produtor.<br><strong>Fonte:</strong> Cadastro de campanha.`,
-            garantia: 'CPR Física e Seguro Agrícola',
-            garantiaExplicacao: 'Garantia vinculada à CPR Física da produção e seguro agrícola com a Nutrade.',
-            volInicial: res ? res.volTrocaProposta : 0,
-            volFinal: res ? res.volFinalProposta : 0,
-            volEconomia: res ? res.volEconomizadoIncentivo : 0,
-            cashbackFinanceiro: res ? res.cashbackUsdProposta : 0,
-            incentivoFinanceiro: res ? res.incentivoBarterUsd : 0,
-            totalRetorno: res ? res.cashbackUsdProposta : 0,
+            cashbackExplicacao: `Cashback de campanha comercial Nutrade de +${valPctProposta.toFixed(2)}% (${formatSelectedCurrency(res ? res.cashback : 0)}) creditado como devolução financeira em dinheiro ao produtor.<br><strong>Fonte:</strong> Cadastro de campanha.`,
+            garantia: 'CPR Física',
+            garantiaExplicacao: 'Garantia vinculada unicamente à CPR Física da produção com a Nutrade.',
+            volTrocaSacas: res ? res.volTrocaSacas : 0,
+            volTrocaEquiv: res ? res.volTrocaEquivalencia : 0,
+            volInicial: res ? res.volTrocaSacas : 0,
+            volFinal: res ? res.volTrocaEquivalencia : 0,
+            volEconomia: res ? (res.cashbackEquivSc + res.incentivoEquivSc) : 0,
+            cashbackFinanceiro: res ? res.cashback : 0,
+            incentivoFinanceiro: res ? res.incentivoBarter : 0,
+            totalRetorno: res ? res.totalRetorno : 0,
+            precoBarterCashBackEquiv: res ? res.precoBarterCashBackEquiv : 0,
+            difCommodityVsValorizacoesPct: res ? res.difCommodityVsValorizacoesPct : 0,
             unitAbbr: unitSymbol,
             custoTotal: custoTotalBarter,
             custoTotalPct: custoTotalPctBarter,
@@ -1207,50 +1240,70 @@ function calculateSimulation() {
                                     *Taxa mensal
                                     <span class="tooltip-container">
                                         <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Taxa mensal:</strong> Taxa de juros efetiva mensal da operação (${m.jurosMensal.toFixed(2).replace('.', ',')}% a.m.).<br><strong>Fonte:</strong> Cadastro de campanha.</span>
+                                        <span class="tooltip-text"><strong>Taxa mensal:</strong> Taxa de juros mensal da operação (${m.jurosMensal.toFixed(2).replace('.', ',')}% a.m.). Juros período: ${(m.jurosPeriodo * 100).toFixed(2).replace('.', ',')}%.<br><strong>Fonte:</strong> Cadastro de campanha.</span>
                                     </span>
                                 </span>
-                                <strong class="modality-bullet-val">${m.jurosMensal.toFixed(2).replace('.', ',')} %</strong>
+                                <strong class="modality-bullet-val">${m.jurosMensal.toFixed(2).replace('.', ',')} % a.m.</strong>
                             </li>
                             <li class="modality-bullet-item">
                                 <span class="modality-bullet-label">
-                                    ${m.incentivoLabel}
+                                    *Incentivo Barter %
                                     <span class="tooltip-container">
                                         <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>${m.incentivoLabel.replace('*', '')}:</strong> ${m.incentivoExplicacao}</span>
+                                        <span class="tooltip-text"><strong>Incentivo Barter:</strong> ${m.incentivoExplicacao}</span>
                                     </span>
                                 </span>
-                                <strong class="modality-bullet-val ${m.incentivoDisplay.includes('+') || m.incentivoDisplay.includes('-') ? 'text-teal' : ''}">${m.incentivoDisplay}</strong>
+                                <strong class="modality-bullet-val text-teal">+${((m.incentivoBarterPct || 0) * 100).toFixed(2).replace('.', ',')}% (${formatSelectedCurrency(m.incentivoFinanceiro || 0)})</strong>
                             </li>
                             <li class="modality-bullet-item">
                                  <span class="modality-bullet-label">
-                                     *Cashback da Campanha
+                                     *Cash Back (Valorização Campanha)
                                      <span class="tooltip-container">
                                          <i class="fa-regular fa-circle-question"></i>
-                                         <span class="tooltip-text"><strong>Cashback da Campanha:</strong> ${m.cashbackExplicacao}</span>
+                                         <span class="tooltip-text"><strong>Cash Back:</strong> ${m.cashbackExplicacao}</span>
                                      </span>
                                  </span>
-                                 <strong class="modality-bullet-val text-teal">${m.cashbackDisplay} (Devolução de ${formatSelectedCurrency(m.cashbackFinanceiro)})</strong>
+                                 <strong class="modality-bullet-val text-teal">+${(m.valCampanhaPct || 0).toFixed(2).replace('.', ',')}% (${formatSelectedCurrency(m.cashbackFinanceiro || 0)})</strong>
                             </li>
                             <li class="modality-bullet-item">
                                  <span class="modality-bullet-label">
-                                     ${unitSymbol === 'lp' ? 'Libras Contratuais a Entregar' : 'Sacas Contratuais a Entregar'}
+                                     Total Retorno
                                      <span class="tooltip-container">
                                          <i class="fa-regular fa-circle-question"></i>
-                                         <span class="tooltip-text">Volume de troca físico na CPR já com o desconto do Incentivo de Prazo aplicado sobre o saldo.</span>
+                                         <span class="tooltip-text"><strong>Total Retorno:</strong> Soma do Incentivo Barter (${formatSelectedCurrency(m.incentivoFinanceiro || 0)}) + Cash Back (${formatSelectedCurrency(m.cashbackFinanceiro || 0)}).</span>
                                      </span>
                                  </span>
-                                 <strong class="modality-bullet-val text-teal">${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>
+                                 <strong class="modality-bullet-val text-teal">+${formatSelectedCurrency(m.totalRetorno || 0)}</strong>
                             </li>
                             <li class="modality-bullet-item">
                                  <span class="modality-bullet-label">
-                                     Devolução de Cashback (Dinheiro)
+                                     Volume de Troca de Sacas
                                      <span class="tooltip-container">
                                          <i class="fa-regular fa-circle-question"></i>
-                                         <span class="tooltip-text"><strong>Devolução em Dinheiro:</strong> Valor do Cashback creditado financeiramente na conta do produtor.</span>
+                                         <span class="tooltip-text">Preço Pedido PRAZO dividido pelo Preço do Commodity Livre. Volume contratual de balcão.</span>
                                      </span>
                                  </span>
-                                 <strong class="modality-bullet-val text-teal">+${formatSelectedCurrency(m.cashbackFinanceiro)}</strong>
+                                 <strong class="modality-bullet-val">${formatNumber(m.volTrocaSacas || 0, 0)} ${m.unitAbbr || 'sc'}</strong>
+                            </li>
+                            <li class="modality-bullet-item">
+                                 <span class="modality-bullet-label">
+                                     Volume TROCA equivalência
+                                     <span class="tooltip-container">
+                                         <i class="fa-regular fa-circle-question"></i>
+                                         <span class="tooltip-text"><strong>Volume TROCA equivalência (Linha 32):</strong> Volume de Troca de Sacas deduzido do Cash Back equivalência e Incentivo Barter equivalência.</span>
+                                     </span>
+                                 </span>
+                                 <strong class="modality-bullet-val text-teal" style="font-size:15px; font-weight:800;">${formatNumber(m.volTrocaEquiv || 0, 0)} ${m.unitAbbr || 'sc'}</strong>
+                            </li>
+                            <li class="modality-bullet-item">
+                                 <span class="modality-bullet-label">
+                                     &lt;&gt; Commodity inicial vs valorizações
+                                     <span class="tooltip-container">
+                                         <i class="fa-regular fa-circle-question"></i>
+                                         <span class="tooltip-text"><strong>Linha 33 da planilha:</strong> Percentual de ganho econômico sobre a saca inicial decorrente do Cash Back e do Incentivo de Prazo.</span>
+                                     </span>
+                                 </span>
+                                 <strong class="modality-bullet-val text-teal">+${((m.difCommodityVsValorizacoesPct || 0) * 100).toFixed(2).replace('.', ',')}%</strong>
                             </li>
                             <li class="modality-bullet-item modality-guarantee-item">
                                  <span class="modality-bullet-label">
@@ -1265,27 +1318,29 @@ function calculateSimulation() {
                         </ul>
                         <div class="modality-card-total-box">
                             <div class="modality-card-total-header">
-                                <span class="modality-card-total-label">Valor Total da Operação</span>
+                                <span class="modality-card-total-label">Preço Pedido BARTER Cash Back equivalente</span>
                                 <span class="tooltip-container">
                                     <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text"><strong>Fórmula:</strong> (Volume Contratual a Entregar × Preço FOB Bruto) + Frete Total. Total de ${formatSelectedCurrency(m.valorTotal)}</span>
+                                    <span class="tooltip-text"><strong>Fórmula (Linha 5 da planilha):</strong> Preço Pedido PRAZO (${formatSelectedCurrency(creditRaw)}) − Total Retorno (${formatSelectedCurrency(m.totalRetorno)}).</span>
                                 </span>
                             </div>
                             <span class="modality-card-total-value">
-                                ${formatSelectedCurrency(m.valorTotal)}
+                                ${formatSelectedCurrency(m.precoBarterCashBackEquiv)}
                                 <div style="display:flex; align-items:center; gap:8px; margin-top:8px; padding:8px 12px; background:rgba(14,165,118,0.12); border:1px solid rgba(14,165,118,0.3); border-radius:8px;">
                                     <i class="fa-solid fa-wheat-awn" style="font-size:16px; color:var(--primary-medium);"></i>
                                     <span style="display:flex; flex-direction:column; line-height:1.2;">
-                                        <strong style="font-size:15px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volFinal, 0)} ${m.unitAbbr} a entregar na CPR</strong>
-                                        <span style="font-size:11.5px; color:#0d9488; font-weight:700;">Devolução em dinheiro (Cashback): +${formatSelectedCurrency(m.cashbackFinanceiro)}</span>
+                                        <strong style="font-size:15px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volTrocaEquiv, 0)} ${m.unitAbbr} (Volume TROCA equivalência)</strong>
+                                        <span style="font-size:11.5px; color:#0d9488; font-weight:700;">Total retorno: +${formatSelectedCurrency(m.totalRetorno)} | Ganho: +${(m.difCommodityVsValorizacoesPct * 100).toFixed(2).replace('.', ',')}%</span>
                                     </span>
                                     <span class="tooltip-container" style="margin-left:auto;">
                                         <i class="fa-regular fa-circle-question" style="font-size:13px; color:var(--text-secondary); cursor:help;"></i>
-                                        <span class="tooltip-text" style="width:280px;">
-                                            <strong>Mecânica do Barter Hub:</strong><br>
-                                            1️⃣ <strong>Incentivo de Prazo:</strong> Desconto de ${formatSelectedCurrency(m.incentivoFinanceiro)} aplicado no saldo da compra.<br>
-                                            2️⃣ <strong>Volume Contratual CPR:</strong> (Crédito - Incentivo) ÷ Preço Líquido = <strong>${formatNumber(m.volFinal, 0)} ${m.unitAbbr}</strong>.<br>
-                                            3️⃣ <strong>Devolução Cashback:</strong> +${valPctProposta.toFixed(2)}% = <strong>${formatSelectedCurrency(m.cashbackFinanceiro)}</strong> (creditado em dinheiro na conta do produtor).
+                                        <span class="tooltip-text" style="width:290px;">
+                                            <strong>Racional da Planilha 2026:</strong><br>
+                                            • Preço Pedido PRAZO: ${formatSelectedCurrency(creditRaw)}<br>
+                                            • Incentivo Barter (${(m.incentivoBarterPct * 100).toFixed(2)}%): +${formatSelectedCurrency(m.incentivoFinanceiro)}<br>
+                                            • Cash Back (${m.valCampanhaPct.toFixed(2)}%): +${formatSelectedCurrency(m.cashbackFinanceiro)}<br>
+                                            • Total Retorno Devolvido: +${formatSelectedCurrency(m.totalRetorno)}<br>
+                                            • Volume TROCA equivalência: <strong>${formatNumber(m.volTrocaEquiv, 0)} ${m.unitAbbr}</strong>
                                         </span>
                                     </span>
                                 </div>
@@ -1399,74 +1454,119 @@ function renderValidationTable(res, campObj, inputs) {
 
     const rows = [
         {
-            name: '1. Crédito Demandado (Valor da Operação)',
-            formula: 'Crédito base contratado pelo produtor',
-            nutrade: fmtCurr(res.credLimitUSD)
+            name: '1. Preço Pedido PRAZO',
+            formula: 'Preço base financiado da operação contratada (Linha 3)',
+            nutrade: `<strong>${fmtCurr(res.precoPrazo)}</strong>`
         },
         {
-            name: '2. Taxa de Juros Anual & Período',
-            formula: 'Juros Período = (Prazo / 360) × Juros Anual',
-            nutrade: `${inputs.jurosAnual.toFixed(2)}% a.a. (${(res.jurosPeriodo * 100).toFixed(2)}% no período)`
+            name: '2. Carência, Vencimento & Dias Corridos',
+            formula: 'Data Carência a Data Vencimento (Linhas 2, 3 e 4)',
+            nutrade: `${carenciaStr} a ${vencimentoStr} (${inputs.prazo} dias corridos)`
         },
         {
-            name: '3. Preço Pedido TP (Valor Presente)',
-            formula: 'Crédito / (1 + Juros Período)',
-            nutrade: fmtCurr(res.precoTpUSDProposta)
+            name: '3. Taxa de Juros a.m. & Juros Período',
+            formula: 'Juros Período = (Dias corridos / 30) × Juros a.m. (Linhas 5 e 6)',
+            nutrade: `${res.jurosMensal.toFixed(2)}% a.m. (${(res.jurosPeriodo * 100).toFixed(2)}% no período)`
         },
         {
-            name: '4. Preço Commodity Bruto FOB (WSys)',
-            formula: 'Cotação WSys de Originação Nutrade',
-            nutrade: fmtExt(res.commBrutoUSD)
+            name: '4. Preço Pedido TP (Valor Presente)',
+            formula: 'Preço Pedido PRAZO / (1 + Juros Período) (Linha 2)',
+            nutrade: fmtCurr(res.precoTp)
         },
         {
-            name: '5. Dedução Impostos Fiscais da Praça',
+            name: '5. Preço Pedido A VISTA',
+            formula: 'Preço Pedido TP − (Preço Pedido TP × 4%) (Linha 4)',
+            nutrade: fmtCurr(res.precoVista)
+        },
+        {
+            name: '6. Incentivo Barter % (Período)',
+            formula: '(Dias corridos / 30) × 0,5% a.m. (Linhas 7 e 25)',
+            nutrade: `+${(res.incentivoBarterPct * 100).toFixed(2)}%`
+        },
+        {
+            name: '7. Incentivo Barter ($)',
+            formula: 'Preço Pedido TP × Incentivo Barter % (Linha 26)',
+            nutrade: `+${fmtCurr(res.incentivoBarter)}`
+        },
+        {
+            name: '8. Valorização Campanha %',
+            formula: 'Percentual de Cashback da Campanha Selecionada (Linha 16)',
+            nutrade: `+${inputs.valPctProposta.toFixed(2)}%`
+        },
+        {
+            name: '9. Cash Back ($)',
+            formula: 'Preço Pedido PRAZO × Valorização Campanha % (Linha 17)',
+            nutrade: `+${fmtCurr(res.cashback)}`
+        },
+        {
+            name: '10. Total Retorno ($)',
+            formula: 'Incentivo Barter ($) + Cash Back ($) (Linha 30)',
+            nutrade: `<strong>+${fmtCurr(res.totalRetorno)}</strong>`
+        },
+        {
+            name: '11. Preço Pedido BARTER Cash Back equivalente',
+            formula: 'Preço Pedido PRAZO − Total Retorno ($) (Linha 5)',
+            nutrade: `<strong>${fmtCurr(res.precoBarterCashBackEquiv)}</strong>`
+        },
+        {
+            name: '12. Preço do Commodity Bruto (WSys)',
+            formula: 'Cotação Futura de Originação no WSys (Linha 11)',
+            nutrade: `${fmtExt(res.commBruto)} / ${unitSymbol}`
+        },
+        {
+            name: '13. Deduções Fiscais da Praça (Impostos)',
             formula: 'Funrural (1,63%) + Impostos Estaduais (FETHAB/FUNDEMS/FUNDEINFRA)',
-            nutrade: `- ${fmtExt(res.taxDeductionUSDProposta)}`
+            nutrade: `- ${fmtExt(res.taxDeduction)} / ${unitSymbol}`
         },
         {
-            name: '6. Preço Commodity Livre Líquido',
-            formula: 'Preço Bruto - Deduções Impostos Praça',
-            nutrade: fmtExt(res.commLivreUSDProposta)
-        },
-        {
-            name: '7. Devolução Financeira Cashback da Campanha',
-            formula: 'Crédito × Taxa Cashback da Campanha (4,5%)',
-            nutrade: `+${inputs.valPctProposta.toFixed(2)}% (${fmtCurr(res.cashbackUsdProposta)})`
-        },
-        {
-            name: '8. Incentivo Barter Financeiro (% e $)',
-            formula: `Preço TP × (Prazo / 30 × 0,5% a.m.) = ${(res.incentivoBarterPct * 100).toFixed(2)}%`,
-            nutrade: `+${(res.incentivoBarterPct * 100).toFixed(2)}% (${fmtCurr(res.incentivoBarterUsd)})`
-        },
-        {
-            name: '9. Total Retorno Financeiro Devolvido',
-            formula: 'Devolução Cashback ($) + Incentivo Barter ($)',
-            nutrade: `<strong>${fmtCurr(res.totalRetornoUSDProposta)}</strong>`
-        },
-        {
-            name: '10. Volume Contratual de Sacas a Entregar',
-            formula: 'Crédito / Preço Commodity Livre (arredondado pra cima)',
-            nutrade: `<strong>${formatNumber(res.volTrocaProposta)} ${unitSymbol}</strong>`
-        },
-        {
-            name: '11. Sacas Equivalentes à Devolução Financeira',
-            formula: 'Total Retorno Devolvido ($) / Preço Commodity Livre',
-            nutrade: `<strong class="text-green">+${formatNumber(res.totalSacasEquivEconomia, 0)} ${unitSymbol} equivalentes</strong>`
-        },
-        {
-            name: '12. Custo Total de Frete Logístico',
+            name: '14. Despesa Deslocamento (Frete)',
             formula: '(Dist. Chão × Tarifa Chão) + (Dist. Asfalto × Tarifa Asfalto)',
-            nutrade: fmtCurr(res.freteTotalUSDProposta)
+            nutrade: `${fmtCurr(res.despesaDeslocamento)} (Unitário: ${fmtExt(res.despesaDeslocamentoUnit)} / ${unitSymbol})`
         },
         {
-            name: '13. Preço Barter Equivalente Final Valorizado',
-            formula: 'Preço Livre + Val Cashback + Val Incentivo - Frete Unit.',
-            nutrade: `<strong>${fmtExt(res.precoFinalUSDProposta)} / ${unitSymbol}</strong>`
+            name: '15. Preço do Commodity Livre',
+            formula: 'Preço Bruto − Deduções Impostos − Despesa Deslocamento Unit. (Linha 12)',
+            nutrade: `<strong>${fmtExt(res.commLivre)} / ${unitSymbol}</strong>`
         },
         {
-            name: '14. Valor Total da Operação',
-            formula: '(Volume Contratual a Entregar × Preço FOB Bruto) + Frete Total',
-            nutrade: `<strong>${fmtCurr((res.volFinalProposta * res.commBrutoUSD) + res.freteTotalUSDProposta)}</strong>`
+            name: '16. Volume TROCA sacas',
+            formula: 'Preço Pedido PRAZO / Preço do Commodity Livre (Linha 13)',
+            nutrade: `<strong>${formatNumber(res.volTrocaSacas, 0)} ${unitSymbol}</strong>`
+        },
+        {
+            name: '17. Cash Back equivalência',
+            formula: 'Cash Back ($) / Preço do Commodity Livre (Linha 18)',
+            nutrade: `+${formatNumber(res.cashbackEquivSc, 0)} ${unitSymbol}`
+        },
+        {
+            name: '18. Incentivo Barter equivalência',
+            formula: 'Incentivo Barter ($) / Preço do Commodity Livre (Linha 27)',
+            nutrade: `+${formatNumber(res.incentivoEquivSc, 0)} ${unitSymbol}`
+        },
+        {
+            name: '19. Volume TROCA equivalência',
+            formula: 'Volume TROCA sacas − (Cash Back equiv. + Incentivo Barter equiv.) (Linha 32)',
+            nutrade: `<strong class="text-green">${formatNumber(res.volTrocaEquivalencia, 0)} ${unitSymbol}</strong>`
+        },
+        {
+            name: '20. Valorização Commodity equivalência Cash Back',
+            formula: 'Cash Back ($) / Volume TROCA sacas (Linha 19)',
+            nutrade: `+${fmtExt(res.valCommEquivCashback)} / ${unitSymbol}`
+        },
+        {
+            name: '21. Valorização Commodity equivalência Incentivo',
+            formula: 'Incentivo Barter ($) / Volume TROCA sacas (Linha 28)',
+            nutrade: `+${fmtExt(res.valCommEquivIncentivo)} / ${unitSymbol}`
+        },
+        {
+            name: '22. Valorização Commodity equivalência Total',
+            formula: 'Preço Commodity Livre + Val. Cash Back + Val. Incentivo (Linha 31)',
+            nutrade: `<strong>${fmtExt(res.valCommEquivTotal)} / ${unitSymbol}</strong>`
+        },
+        {
+            name: '23. <> Commodity inicial vs valorizações',
+            formula: '(Valorização Commodity equiv. Total / Preço Commodity Livre) − 1 (Linha 33)',
+            nutrade: `<strong class="text-green">+${(res.difCommodityVsValorizacoesPct * 100).toFixed(2)}%</strong>`
         }
     ];
 
@@ -1870,10 +1970,10 @@ function handleSuggestion(text) {
             addMessageToChat(
                 "### Comparativo das 5 Modalidades de Crédito\n\n" +
                 "1. **Barter (Nutrade)**:\n" +
-                "   - **Garantia:** CPR Física e Seguro Agrícola.\n" +
+                "   - **Garantia:** CPR Física.\n" +
                 "   - **Benefício:** Cashback de campanha + Incentivo Barter regressivo de prazo.\n\n" +
                 "2. **Barter (Outras Tradings)**:\n" +
-                "   - **Garantia:** CPR Física e Seguro Agrícola.\n" +
+                "   - **Garantia:** CPR Física.\n" +
                 "   - **Benefício:** Valorização comercial padrão praticada no mercado concorrente.\n\n" +
                 "3. **FISO**:\n" +
                 "   - **Garantia:** Não há garantia (venda a prazo cedida a um parceiro).\n" +
@@ -1889,8 +1989,8 @@ function handleSuggestion(text) {
         } else if (query.includes('garantia') || query.includes('garantias')) {
             addMessageToChat(
                 "### Garantias Exigidas por Modalidade:\n\n" +
-                "- **Barter (Nutrade)**: CPR Física e Seguro Agrícola.\n" +
-                "- **Barter (Outras Tradings)**: CPR Física e Seguro Agrícola.\n" +
+                "- **Barter (Nutrade)**: CPR Física.\n" +
+                "- **Barter (Outras Tradings)**: CPR Física.\n" +
                 "- **FISO**: Não há garantia (venda a prazo cedida a um parceiro).\n" +
                 "- **Syngenta**: Garantia alinhada diretamente com o time de crédito.\n" +
                 "- **Syde**: Nota promissória ou CPR financeira sem penhor.",
