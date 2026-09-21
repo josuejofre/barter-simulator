@@ -1286,16 +1286,6 @@ function calculateSimulation() {
                                  </span>
                                  <strong class="modality-bullet-val">${formatNumber(m.volTrocaSacas || 0, 0)} ${m.unitAbbr || 'sc'}</strong>
                             </li>
-                            <li class="modality-bullet-item">
-                                 <span class="modality-bullet-label">
-                                     Volume TROCA equivalência
-                                     <span class="tooltip-container">
-                                         <i class="fa-regular fa-circle-question"></i>
-                                         <span class="tooltip-text"><strong>Volume TROCA equivalência (Linha 32):</strong> Volume de Troca de Sacas deduzido do Cash Back equivalência e Incentivo Barter equivalência.</span>
-                                     </span>
-                                 </span>
-                                 <strong class="modality-bullet-val text-teal" style="font-size:15px; font-weight:800;">${formatNumber(m.volTrocaEquiv || 0, 0)} ${m.unitAbbr || 'sc'}</strong>
-                            </li>
                             <li class="modality-bullet-item modality-guarantee-item">
                                  <span class="modality-bullet-label">
                                      Garantias Exigidas
@@ -1319,10 +1309,7 @@ function calculateSimulation() {
                                 ${formatSelectedCurrency(m.precoBarterCashBackEquiv)}
                                 <div style="display:flex; align-items:center; gap:8px; margin-top:8px; padding:8px 12px; background:rgba(14,165,118,0.12); border:1px solid rgba(14,165,118,0.3); border-radius:8px;">
                                     <i class="fa-solid fa-wheat-awn" style="font-size:16px; color:var(--primary-medium);"></i>
-                                    <span style="display:flex; flex-direction:column; line-height:1.2;">
-                                        <strong style="font-size:15px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volTrocaEquiv, 0)} ${m.unitAbbr} (Volume TROCA equivalência)</strong>
-                                        <span style="font-size:11.5px; color:#0d9488; font-weight:700;">Total retorno: +${formatSelectedCurrency(m.totalRetorno)} | Ganho: +${((m.difCommodityVsValorizacoesPct || 0) * 100).toFixed(2).replace('.', ',')}%</span>
-                                    </span>
+                                    <strong style="font-size:15px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volTrocaEquiv, 0)} ${m.unitAbbr} (Volume TROCA equivalência)</strong>
                                     <span class="tooltip-container" style="margin-left:auto;">
                                         <i class="fa-regular fa-circle-question" style="font-size:13px; color:var(--text-secondary); cursor:help;"></i>
                                         <span class="tooltip-text" style="width:290px;">
