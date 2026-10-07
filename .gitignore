@@ -1,0 +1,14 @@
+# Python & Scratch Scripts
+__pycache__/
+*.pyc
+take_screenshots_*.py
+update_app.py
+
+# Binaries & Archives
+*.zip
+*.mp4
+Reuniões/*.mp4
+
+# System
+Thumbs.db
+.DS_Store

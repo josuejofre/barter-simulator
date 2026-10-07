@@ -700,6 +700,8 @@ function calculateSimulation() {
         if (v2ResultsWrapper) v2ResultsWrapper.style.display = 'flex';
         // Keep layout 1 results hidden while on layout 2
         if (resultsWrapper) resultsWrapper.style.display = 'none';
+        const chartCard = document.getElementById('v2-chart-card-cfd');
+        if (chartCard) chartCard.style.display = 'block';
     } else {
         if (resultsWrapper) resultsWrapper.style.display = 'block';
         if (v2ResultsWrapper) v2ResultsWrapper.style.display = 'none';
@@ -797,6 +799,25 @@ function calculateSimulation() {
         const el = document.getElementById(id);
         if (el) el.textContent = validityDate.toLocaleDateString('pt-BR');
     });
+
+    // Phase 1: Update Observações da Operação (RTV Notes)
+    const obsInput = document.getElementById('v2-sim-obs');
+    const obsContainer = document.getElementById('v2-summary-obs-container');
+    const obsDisplay = document.getElementById('v2-summary-obs-display');
+    if (obsInput && obsContainer && obsDisplay) {
+        if (obsInput.value && obsInput.value.trim() !== '') {
+            obsDisplay.textContent = obsInput.value.trim();
+            obsContainer.style.display = 'block';
+        } else {
+            obsContainer.style.display = 'none';
+        }
+    }
+
+    // Phase 1: Update Chicago Market status indicator
+    if (typeof updateMarketStatusIndicator === 'function') {
+        updateMarketStatusIndicator();
+    }
+
 
     // 2. Update Summary metrics (safely handling missing ref card)
     if (document.getElementById('ref-preco')) document.getElementById('ref-preco').textContent = formatSelectedCurrency(commBrutoRaw);
@@ -1104,245 +1125,144 @@ function calculateSimulation() {
 
             if (isFinancial) {
                 card.innerHTML = `
-                    <div class="modality-card-header">
-                        <div class="modality-card-title-row" style="padding-right: 80px;">
-                            <span class="modality-card-title">${m.name}</span>
+                    <div class="modality-card-header" style="padding:16px 16px 12px 16px; border-bottom:1px solid #f1f5f9;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <span class="modality-card-title" style="font-size:15px; font-weight:700; color:#0f172a;">${m.name}</span>
+                            <div class="modality-card-checkbox-wrapper" onclick="event.stopPropagation();">
+                                <label class="modality-card-checkbox-label" title="Marcar para incluir no PDF compartilhado">
+                                    <input type="checkbox" class="modality-pdf-checkbox" data-modality-id="${m.id}" ${isPdfChecked ? 'checked' : ''} onchange="toggleModalityPdfSelection('${m.id}', this.checked)">
+                                    <span style="font-size:11px;"><i class="fa-solid fa-file-pdf"></i> PDF</span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="modality-card-checkbox-wrapper" onclick="event.stopPropagation();">
-                            <label class="modality-card-checkbox-label" title="Marcar para incluir no PDF compartilhado">
-                                <input type="checkbox" class="modality-pdf-checkbox" data-modality-id="${m.id}" ${isPdfChecked ? 'checked' : ''} onchange="toggleModalityPdfSelection('${m.id}', this.checked)">
-                                <span><i class="fa-solid fa-file-pdf"></i> PDF</span>
-                            </label>
+                        <div style="display:flex; justify-content:space-between; font-size:12px;">
+                            <div>
+                                <span style="font-size:10px; color:#64748b; text-transform:uppercase; font-weight:600; display:block;">Carência</span>
+                                <strong style="color:#0f172a; font-size:12px;">${carenciaStr}</strong>
+                            </div>
+                            <div style="text-align:right;">
+                                <span style="font-size:10px; color:#64748b; text-transform:uppercase; font-weight:600; display:block;">Vencimento</span>
+                                <strong style="color:#0f172a; font-size:12px;">${vencimentoStr}</strong>
+                            </div>
                         </div>
-                        <div class="modality-card-dates">Data de carência <strong>${carenciaStr}</strong> &nbsp;|&nbsp; Vencimento <strong>${vencimentoStr}</strong></div>
                     </div>
-                    <div class="modality-card-body">
-                        <ul class="modality-bullet-list">
+                    <div class="modality-card-body" style="padding:16px;">
+                        <div style="font-size:10px; font-weight:700; color:#008080; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">CONDIÇÕES</div>
+                        <ul class="modality-bullet-list" style="margin-bottom:12px;">
                             <li class="modality-bullet-item">
-                                <span class="modality-bullet-label">
-                                    *Taxa mensal
-                                    <span class="tooltip-container">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Taxa mensal:</strong> Taxa de juros efetiva mensal da operação (${m.jurosMensal.toFixed(2).replace('.', ',')}% a.m.).<br><strong>Fonte:</strong> Cadastro de campanha.</span>
-                                    </span>
-                                </span>
+                                <span class="modality-bullet-label">Taxa mensal</span>
                                 <strong class="modality-bullet-val">${m.jurosMensal.toFixed(2).replace('.', ',')} %</strong>
                             </li>
                             <li class="modality-bullet-item">
-                                <span class="modality-bullet-label">
-                                    *Incentivo
-                                    <span class="tooltip-container">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Incentivo:</strong> ${m.incentivoExplicacao}</span>
-                                    </span>
-                                </span>
+                                <span class="modality-bullet-label">Incentivo</span>
                                 <strong class="modality-bullet-val ${m.incentivoDisplay && m.incentivoDisplay !== 'Não aplicado' ? 'text-teal' : ''}">${m.incentivoDisplay}</strong>
                             </li>
                             <li class="modality-bullet-item">
-                                <span class="modality-bullet-label">
-                                    *Desconto VPAN
-                                    <span class="tooltip-container">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Desconto VPAN:</strong> ${m.vpanExplicacao}</span>
-                                    </span>
-                                </span>
+                                <span class="modality-bullet-label">Desconto VPAN</span>
                                 <strong class="modality-bullet-val ${m.vpanDisplay && m.vpanDisplay !== 'Não aplicado' ? 'text-teal' : ''}">${m.vpanDisplay}</strong>
                             </li>
-                            <li class="modality-bullet-item modality-guarantee-item">
-                                <span class="modality-bullet-label">
-                                    Garantias exigidas
-                                    <span class="tooltip-container">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Garantias Exigidas:</strong> ${m.garantiaExplicacao}</span>
-                                    </span>
-                                </span>
-                                <strong class="modality-guarantee-text">${m.garantia}</strong>
-                            </li>
                         </ul>
-                        <div class="modality-card-total-box">
-                            <div class="modality-card-total-header">
-                                <span class="modality-card-total-label">Valor Total a Pagar</span>
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text"><strong>Fórmula:</strong> Crédito × (1 - Desc. VPAN) × (1 + Taxa × Meses) × (1 - Incentivo). Total de ${formatSelectedCurrency(m.valorTotal)}</span>
-                                </span>
-                            </div>
-                            <span class="modality-card-total-value">${formatSelectedCurrency(m.valorTotal)}</span>
 
-                            <div style="display:flex; align-items:center; gap:8px; margin-top:10px; padding:8px 12px; background:rgba(13,148,136,0.08); border:1px solid rgba(13,148,136,0.25); border-radius:8px;">
-                                <i class="fa-solid fa-wheat-awn" style="font-size:15px; color:var(--primary-medium);"></i>
-                                <span style="display:flex; flex-direction:column; line-height:1.2;">
-                                    <span style="font-size:11px; color:var(--text-secondary); font-weight:600; text-transform:uppercase;">Equivalente em Barter</span>
-                                    <strong style="font-size:15px; font-weight:800; color:var(--primary-deep);">${formatNumber(m.sacasEquivalentes, 0)} ${unitSymbol}</strong>
-                                </span>
-                                <span class="tooltip-container" style="margin-left:auto;">
-                                    <i class="fa-regular fa-circle-question" style="font-size:13px; color:var(--text-secondary); cursor:help;"></i>
-                                    <span class="tooltip-text" style="width:260px;">
-                                        <strong>Equivalente em Sacas (Barter):</strong><br>
-                                        Se esta modalidade for liquidada com a venda de grãos à cotação de ${formatSelectedCurrency(refPrecoSaca)}/sc:<br>
-                                        ${formatSelectedCurrency(m.valorTotal)} ÷ ${formatSelectedCurrency(refPrecoSaca)} = <strong>${formatNumber(m.sacasEquivalentes, 0)} ${unitSymbol}</strong>.
-                                    </span>
-                                </span>
-                            </div>
+                        <div style="font-size:10px; font-weight:700; color:#008080; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">GARANTIA</div>
+                        <div style="font-size:12px; color:#334155; line-height:1.4; margin-bottom:16px;">
+                            ${m.garantia}
+                        </div>
+
+                        <div style="font-size:10px; font-weight:700; color:#008080; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">VALOR TOTAL A PAGAR</div>
+                        <div style="font-size:20px; font-weight:800; color:#0f172a; font-family:var(--font-heading);">
+                            ${formatSelectedCurrency(m.valorTotal)}
+                        </div>
+
+                        <div class="jess-equiv-pill">
+                            <i class="fa-solid fa-wheat-awn"></i>
+                            <strong>${formatNumber(m.sacasEquivalentes, 0)} ${unitSymbol}</strong>
+                            <span>equivalente em barter</span>
                         </div>
                     </div>
-                    <div class="modality-card-footer">
-                        <div class="modality-cost-row modality-cost-total">
-                            <span>
-                                Custo Real Total
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text">
-                                        <strong>Fórmula do Custo Real Total:</strong><br>
-                                        • Valor Total: ${formatSelectedCurrency(m.valorTotal)}<br>
-                                        • Valor da Operação: ${formatSelectedCurrency(creditRaw)}<br>
-                                        • Custo Acumulado: ((${formatSelectedCurrency(m.valorTotal)} / ${formatSelectedCurrency(creditRaw)}) - 1) × 100 = <strong>${m.custoTotalPct.toFixed(2).replace('.', ',')}%</strong>
-                                    </span>
-                                </span>
-                            </span>
-                            <span>${m.custoTotalPct.toFixed(2).replace('.', ',')} %</span>
+                    <div class="figma-jess-footer">
+                        <div class="modality-footer-col">
+                            <span class="modality-footer-label">Custo real total</span>
+                            <strong class="modality-footer-value">${m.custoTotalPct.toFixed(2).replace('.', ',')} %</strong>
                         </div>
-                        <div class="modality-cost-row modality-cost-operation">
-                            <span>
-                                Custo Real Operação (a.m)
-                                <span class="tooltip-container" style="color: #ffffff;">
-                                    <i class="fa-regular fa-circle-question" style="color: #ffffff;"></i>
-                                    <span class="tooltip-text">
-                                        <strong>Fórmula do Custo Real da Operação:</strong><br>
-                                        • Custo Real Total (%): <strong>${m.custoTotalPct.toFixed(2).replace('.', ',')}%</strong><br>
-                                        • Prazo em Meses: ${prazo} dias / 30 = <strong>${nMesesCorridos.toFixed(2)} meses</strong><br>
-                                        • Taxa Efetiva Mensal: ${m.custoTotalPct.toFixed(2).replace('.', ',')}% / ${nMesesCorridos.toFixed(2)} = <strong>${m.custoAmPct.toFixed(2).replace('.', ',')}% a.m.</strong><br><br>
-                                        <em>Representa a taxa de juros efetiva média por mês da operação.</em>
-                                    </span>
-                                </span>
-                            </span>
-                            <span>${m.custoAmPct.toFixed(2).replace('.', ',')} % a.m.</span>
+                        <div class="modality-footer-col">
+                            <span class="modality-footer-label">Custo op. (a.m)</span>
+                            <strong class="modality-footer-value">${m.custoAmPct.toFixed(2).replace('.', ',')} %</strong>
                         </div>
                     </div>
                 `;
             } else {
                 card.innerHTML = `
-                    <div class="modality-card-header">
-                        <div class="modality-card-title-row" style="padding-right: 80px;">
-                            <span class="modality-card-title">${m.name}</span>
+                    <div class="modality-card-header" style="padding:16px 16px 12px 16px; border-bottom:1px solid #f1f5f9;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                            <span class="modality-card-title" style="font-size:15px; font-weight:700; color:#0f172a;">${m.name}</span>
+                            <div class="modality-card-checkbox-wrapper" onclick="event.stopPropagation();">
+                                <label class="modality-card-checkbox-label" title="Marcar para incluir no PDF compartilhado">
+                                    <input type="checkbox" class="modality-pdf-checkbox" data-modality-id="${m.id}" ${isPdfChecked ? 'checked' : ''} onchange="toggleModalityPdfSelection('${m.id}', this.checked)">
+                                    <span style="font-size:11px;"><i class="fa-solid fa-file-pdf"></i> PDF</span>
+                                </label>
+                            </div>
                         </div>
-                        <div class="modality-card-checkbox-wrapper" onclick="event.stopPropagation();">
-                            <label class="modality-card-checkbox-label" title="Marcar para incluir no PDF compartilhado">
-                                <input type="checkbox" class="modality-pdf-checkbox" data-modality-id="${m.id}" ${isPdfChecked ? 'checked' : ''} onchange="toggleModalityPdfSelection('${m.id}', this.checked)">
-                                <span><i class="fa-solid fa-file-pdf"></i> PDF</span>
-                            </label>
+                        <div style="display:flex; justify-content:space-between; font-size:12px;">
+                            <div>
+                                <span style="font-size:10px; color:#64748b; text-transform:uppercase; font-weight:600; display:block;">Carência</span>
+                                <strong style="color:#0f172a; font-size:12px;">${carenciaStr}</strong>
+                            </div>
+                            <div style="text-align:right;">
+                                <span style="font-size:10px; color:#64748b; text-transform:uppercase; font-weight:600; display:block;">Vencimento</span>
+                                <strong style="color:#0f172a; font-size:12px;">${vencimentoStr}</strong>
+                            </div>
                         </div>
-                        <div class="modality-card-dates">Data de carência <strong>${carenciaStr}</strong> &nbsp;|&nbsp; Vencimento <strong>${vencimentoStr}</strong></div>
                     </div>
-                    <div class="modality-card-body">
-                        <ul class="modality-bullet-list">
+                    <div class="modality-card-body" style="padding:16px;">
+                        <div style="font-size:10px; font-weight:700; color:#008080; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;">CONDIÇÕES</div>
+                        <ul class="modality-bullet-list" style="margin-bottom:12px;">
                             <li class="modality-bullet-item">
-                                <span class="modality-bullet-label">
-                                    *Taxa mensal
-                                    <span class="tooltip-container">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Taxa mensal:</strong> Taxa de juros mensal da operação (${m.jurosMensal.toFixed(2).replace('.', ',')}% a.m.). Juros período: ${(m.jurosPeriodo * 100).toFixed(2).replace('.', ',')}%.<br><strong>Fonte:</strong> Cadastro de campanha.</span>
-                                    </span>
-                                </span>
-                                <strong class="modality-bullet-val">${m.jurosMensal.toFixed(2).replace('.', ',')} % a.m.</strong>
+                                <span class="modality-bullet-label">Taxa mensal</span>
+                                <strong class="modality-bullet-val">${m.jurosMensal.toFixed(2).replace('.', ',')}% a.m.</strong>
                             </li>
                             <li class="modality-bullet-item">
-                                <span class="modality-bullet-label">
-                                    *Incentivo Barter %
-                                    <span class="tooltip-container">
-                                        <i class="fa-regular fa-circle-question"></i>
-                                        <span class="tooltip-text"><strong>Incentivo Barter:</strong> ${m.incentivoExplicacao}</span>
-                                    </span>
-                                </span>
-                                <strong class="modality-bullet-val text-teal">+${((m.incentivoBarterPct || 0) * 100).toFixed(2).replace('.', ',')}% (${formatSelectedCurrency(m.incentivoFinanceiro || 0)})</strong>
+                                <span class="modality-bullet-label">Incentivo Barter %</span>
+                                <div style="text-align:right;">
+                                    <strong class="modality-bullet-val text-teal">+${((m.incentivoBarterPct || 0) * 100).toFixed(2).replace('.', ',')}%</strong>
+                                    <span style="font-size:11px; color:#64748b; display:block;">${formatSelectedCurrency(m.incentivoFinanceiro || 0)}</span>
+                                </div>
                             </li>
                             <li class="modality-bullet-item">
-                                 <span class="modality-bullet-label">
-                                     *Cash Back (Valorização Campanha)
-                                     <span class="tooltip-container">
-                                         <i class="fa-regular fa-circle-question"></i>
-                                         <span class="tooltip-text"><strong>Cash Back:</strong> ${m.cashbackExplicacao}</span>
-                                     </span>
-                                 </span>
-                                 <strong class="modality-bullet-val text-teal">+${(m.valCampanhaPct || 0).toFixed(2).replace('.', ',')}% (${formatSelectedCurrency(m.cashbackFinanceiro || 0)})</strong>
+                                <span class="modality-bullet-label">Cash Back</span>
+                                <div style="text-align:right;">
+                                    <strong class="modality-bullet-val text-teal">+${(m.valCampanhaPct || 0).toFixed(2).replace('.', ',')}%</strong>
+                                    <span style="font-size:11px; color:#64748b; display:block;">${formatSelectedCurrency(m.cashbackFinanceiro || 0)}</span>
+                                </div>
                             </li>
                             <li class="modality-bullet-item">
-                                 <span class="modality-bullet-label">
-                                     Total Retorno
-                                     <span class="tooltip-container">
-                                         <i class="fa-regular fa-circle-question"></i>
-                                         <span class="tooltip-text"><strong>Total Retorno:</strong> Soma do Incentivo Barter (${formatSelectedCurrency(m.incentivoFinanceiro || 0)}) + Cash Back (${formatSelectedCurrency(m.cashbackFinanceiro || 0)}).</span>
-                                     </span>
-                                 </span>
-                                 <strong class="modality-bullet-val text-teal">+${formatSelectedCurrency(m.totalRetorno || 0)}</strong>
+                                <span class="modality-bullet-label">Total retorno</span>
+                                <strong class="modality-bullet-val text-teal">+${formatSelectedCurrency(m.totalRetorno || 0)}</strong>
                             </li>
                             <li class="modality-bullet-item">
-                                 <span class="modality-bullet-label">
-                                     Volume de Troca de Sacas
-                                     <span class="tooltip-container">
-                                         <i class="fa-regular fa-circle-question"></i>
-                                         <span class="tooltip-text">Preço Pedido PRAZO dividido pelo Preço do Commodity Livre. Volume contratual de balcão.</span>
-                                     </span>
-                                 </span>
-                                 <strong class="modality-bullet-val">${formatNumber(m.volTrocaSacas || 0, 0)} ${m.unitAbbr || 'sc'}</strong>
-                            </li>
-                            <li class="modality-bullet-item modality-guarantee-item">
-                                 <span class="modality-bullet-label">
-                                     Garantias Exigidas
-                                     <span class="tooltip-container">
-                                         <i class="fa-regular fa-circle-question"></i>
-                                         <span class="tooltip-text"><strong>Garantias Exigidas:</strong> ${m.garantiaExplicacao}</span>
-                                     </span>
-                                 </span>
-                                 <strong class="modality-guarantee-text">${m.garantia}</strong>
+                                <span class="modality-bullet-label">Volume de troca</span>
+                                <strong class="modality-bullet-val">${formatNumber(m.volTrocaSacas || 0, 0)} ${m.unitAbbr || 'sc'}</strong>
                             </li>
                         </ul>
-                        <div class="modality-card-total-box">
-                            <div class="modality-card-total-header">
-                                <span class="modality-card-total-label">Preço Pedido BARTER Cash Back equivalente</span>
-                                <span class="tooltip-container">
-                                    <i class="fa-regular fa-circle-question"></i>
-                                    <span class="tooltip-text"><strong>Fórmula (Linha 5 da planilha):</strong> Preço Pedido PRAZO (${formatSelectedCurrency(creditRaw)}) − Total Retorno (${formatSelectedCurrency(m.totalRetorno)}).</span>
-                                </span>
-                            </div>
-                            <span class="modality-card-total-value">
-                                ${formatSelectedCurrency(m.precoBarterCashBackEquiv)}
-                                <div style="display:flex; align-items:center; gap:8px; margin-top:8px; padding:8px 12px; background:rgba(14,165,118,0.12); border:1px solid rgba(14,165,118,0.3); border-radius:8px;">
-                                    <i class="fa-solid fa-wheat-awn" style="font-size:16px; color:var(--primary-medium);"></i>
-                                    <strong style="font-size:15px; font-weight:800; color:var(--primary-deep); letter-spacing:-0.3px;">${formatNumber(m.volTrocaEquiv, 0)} ${m.unitAbbr} (Volume TROCA equivalência)</strong>
-                                    <span class="tooltip-container" style="margin-left:auto;">
-                                        <i class="fa-regular fa-circle-question" style="font-size:13px; color:var(--text-secondary); cursor:help;"></i>
-                                        <span class="tooltip-text" style="width:290px;">
-                                            <strong>Racional da Planilha 2026:</strong><br>
-                                            • Preço Pedido PRAZO: ${formatSelectedCurrency(creditRaw)}<br>
-                                            • Incentivo Barter (${(((m.incentivoBarterPct || 0) * 100)).toFixed(2)}%): +${formatSelectedCurrency(m.incentivoFinanceiro || 0)}<br>
-                                            • Cash Back (${(((m.valCampanhaPct !== undefined ? m.valCampanhaPct : valPctProposta) || 0)).toFixed(2)}%): +${formatSelectedCurrency(m.cashbackFinanceiro || 0)}<br>
-                                            • Total Retorno Devolvido: +${formatSelectedCurrency(m.totalRetorno || 0)}<br>
-                                            • Volume TROCA equivalência: <strong>${formatNumber(m.volTrocaEquiv || 0, 0)} ${m.unitAbbr || 'sc'}</strong>
-                                        </span>
-                                    </span>
-                                </div>
-                            </span>
+
+                        <div style="font-size:10px; font-weight:700; color:#008080; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">GARANTIA</div>
+                        <div style="font-size:12px; color:#334155; line-height:1.4; margin-bottom:16px;">
+                            ${m.garantia}
+                        </div>
+
+                        <div style="font-size:10px; font-weight:700; color:#008080; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:4px;">PREÇO EQUIVALENTE</div>
+                        <div style="font-size:20px; font-weight:800; color:#0f172a; font-family:var(--font-heading);">
+                            ${formatSelectedCurrency(m.precoBarterCashBackEquiv)}
+                        </div>
+
+                        <div class="jess-equiv-pill">
+                            <i class="fa-solid fa-wheat-awn"></i>
+                            <strong>${formatNumber(m.volTrocaEquiv, 0)} ${m.unitAbbr || 'sc'}</strong>
+                            <span>volume de troca</span>
                         </div>
                     </div>
-                    <div class="modality-card-footer">
-                        <div class="modality-cost-row modality-cost-operation" style="background: linear-gradient(135deg, #0d9488, #059669); padding: 12px 16px; border-radius: 0 0 10px 10px; display: flex; justify-content: space-between; align-items: center;">
-                            <span style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: #ffffff;">
-                                <i class="fa-solid fa-arrow-trend-up" style="color: #6ee7b7; font-size: 14px;"></i>
-                                &lt;&gt; Commodity inicial vs valorizações
-                                <span class="tooltip-container" style="color: #ffffff;">
-                                    <i class="fa-regular fa-circle-question" style="color: #a7f3d0;"></i>
-                                    <span class="tooltip-text">
-                                        <strong>Linha 33 da planilha (Simulador 2026):</strong><br>
-                                        • Fórmula: (Valorização Commodity equiv. Total / Preço do Commodity Livre) − 1<br>
-                                        • Mede o percentual de ganho econômico real obtido sobre a saca com a soma de Cash Back e Incentivo Barter.
-                                    </span>
-                                </span>
-                            </span>
-                            <strong style="font-size: 16px; font-weight: 800; color: #6ee7b7; font-family: var(--font-heading);">
-                                +${((m.difCommodityVsValorizacoesPct || 0) * 100).toFixed(2).replace('.', ',')}%
-                            </strong>
-                        </div>
+                    <div class="figma-jess-barter-footer">
+                        <span class="modality-barter-footer-label">Commodity vs. valorizações</span>
+                        <strong class="modality-barter-footer-value">+${((m.difCommodityVsValorizacoesPct || 0) * 100).toFixed(2).replace('.', ',')}%</strong>
                     </div>
                 `;
             }
@@ -3343,6 +3263,23 @@ function onCampanhaSelectChange(val) {
         updateWsysMonthIndicator(null);
     }
 
+    // Phase 1: Sync Mês Logístico (Entrega) with Campaign Vencimento
+    const mesLogisticoSelect = document.getElementById('v2-sim-mes-logistico');
+    if (mesLogisticoSelect && camp && camp.vencimento) {
+        const parts = camp.vencimento.split('-');
+        if (parts.length === 3) {
+            const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+            const mIdx = parseInt(parts[1], 10) - 1;
+            const monthName = months[mIdx] || parts[1];
+            const valStr = `${parts[1]}/${parts[0]}`;
+            if (mesLogisticoSelect.options.length > 0) {
+                mesLogisticoSelect.options[0].textContent = `${monthName} / ${parts[0]} (Padrão Vencimento)`;
+                mesLogisticoSelect.options[0].value = valStr;
+            }
+        }
+    }
+
+
     // Find Barter tax parameters (Nutrade or generic Barter)
     const barterTax = camp.taxas ? camp.taxas.find(t => (t.produtoFinanceiro || '').includes('Barter')) : null;
 
@@ -3503,6 +3440,17 @@ function onPracaChange(pracaNome) {
     // Sync v2-sim-regiao if needed
     const v2Regiao = document.getElementById('v2-sim-regiao');
     if (v2Regiao && v2Regiao.value !== pracaNome) v2Regiao.value = pracaNome;
+
+    // Phase 1: WSys Route Warning Banner
+    const routeBanner = document.getElementById('v2-route-warning-banner');
+    if (routeBanner) {
+        if (!plaza || plaza.semRota || plaza.freteChao === 0 || plaza.freteAsfalto === 0) {
+            routeBanner.style.display = 'flex';
+        } else {
+            routeBanner.style.display = 'none';
+        }
+    }
+
     calculateSimulation();
 }
 
@@ -4223,9 +4171,17 @@ document.addEventListener('DOMContentLoaded', function () {
     if (typeof renderCampaignsTable === 'function') renderCampaignsTable();
     if (typeof renderPracasTable === 'function') renderPracasTable();
     
+    // Automatically show the Simulator page by default
+    if (typeof showPage === 'function') {
+        showPage('simulador-v2');
+    }
+
     // Automatically select the first campaign (Sul Repique)
     if (typeof campaigns !== 'undefined' && campaigns.length > 0) {
         onCampanhaSelectChange(campaigns[0].id);
+    }
+    if (typeof updateMarketStatusIndicator === 'function') {
+        updateMarketStatusIndicator();
     }
 });
 
@@ -4233,3 +4189,39 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
+
+
+// Phase 1: Market Status Indicator
+function updateMarketStatusIndicator() {
+    const badge = document.getElementById('market-status-badge');
+    const statusText = document.getElementById('market-status-text');
+    const statusDetail = document.getElementById('market-status-detail');
+    if (!badge || !statusText || !statusDetail) return;
+
+    const now = new Date();
+    const utcHour = now.getUTCHours();
+    const utcDay = now.getUTCDay();
+
+    // CBOT trades approx Sun 19:00 - Fri 13:20 CT
+    const isWeekend = (utcDay === 6) || (utcDay === 0 && utcHour < 24) || (utcDay === 5 && utcHour >= 19);
+    const isOpen = !isWeekend && ((utcHour >= 1 && utcHour < 14) || (utcHour >= 15 && utcHour < 20));
+
+    if (isOpen) {
+        statusText.textContent = "Mercado Futuro CBOT (Chicago): Aberto";
+        statusDetail.innerHTML = '<i class="fa-solid fa-clock"></i> Pregão em andamento. Cotações spot e futuro ativas em tempo real.';
+        badge.style.background = "#f0fdf4";
+        badge.style.borderColor = "#bbf7d0";
+        badge.style.color = "#166534";
+        const dot = badge.querySelector('.status-dot');
+        if (dot) dot.style.background = "#16a34a";
+    } else {
+        statusText.textContent = "Mercado Futuro CBOT (Chicago): Fechado";
+        statusDetail.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Fora do horário de pregão. Cotações indicativas baseadas no último fechamento (risco de volatilidade na reabertura).';
+        badge.style.background = "#fffbeb";
+        badge.style.borderColor = "#fde68a";
+        badge.style.color = "#92400e";
+        const dot = badge.querySelector('.status-dot');
+        if (dot) dot.style.background = "#f59e0b";
+    }
+}
+window.updateMarketStatusIndicator = updateMarketStatusIndicator;

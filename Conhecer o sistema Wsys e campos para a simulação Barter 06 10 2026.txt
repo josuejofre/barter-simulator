@@ -1,0 +1,1823 @@
+WEBVTT
+
+00:20:59.000 --> 00:21:03.000
+Alessandra Monteiro: Hay aquí el Express y pagamento.
+
+00:21:03.000 --> 00:21:16.000
+Alessandra Monteiro: A gente inclui a data de nascimento ali e aqui a gente. Apesar de ter a campanha que a gente está tratando da negociação em si.
+
+00:21:16.000 --> 00:21:24.000
+Alessandra Monteiro: Ela não faz nenhum cálculo. É só um informativo para a gente ter uma base do.
+
+00:21:28.000 --> 00:21:30.000
+Alessandra Monteiro: O que a gente está.
+
+00:21:32.000 --> 00:21:39.000
+Alessandra Monteiro: Negociando tá por aqui. A precificação em si, negociando esse grão.
+
+00:21:39.000 --> 00:22:00.000
+Alessandra Monteiro: Aí aqui. Qual que é a data de vencimento? A gente vai ter essa resposta quando a gente em tese receberia o financeiro que a gente normalmente atrela ao vencimento do próprio. Se a gente está negociando aqui com o produtor, a gente está olhando o vencimento dele de prova.
+
+00:22:02.000 --> 00:22:21.000
+Alessandra Monteiro: E aqui eu informo o preço. Ele não deixa eu seguir. Se eu não informar o preço aqui, porque às vezes o produtor tá me perguntando o que está valendo soja hoje no.
+
+00:22:21.000 --> 00:22:39.000
+Alessandra Monteiro: Em Primavera do Leste. Aí eu vou ter que formar o preço aqui para passar para ele. Mas eu vou falar? Um preço só de referência para deixar passar vinte e três dólares a sala. Isso seria às vezes, um preço proposto do produtor. Às vezes ele pode virar para a gente e falar assim também.
+
+00:22:39.000 --> 00:22:53.000
+Alessandra Monteiro: Eu quero os vinte e quatro dólares lá na Praça de Primaver. Coloco aqui e vejo como que ele vai se comprar corretamente ou não, vai ter acesso.
+
+00:22:53.000 --> 00:23:06.000
+Alessandra Monteiro: E a Marinha que está roubando nossa internet aqui é importante.
+
+00:23:06.000 --> 00:23:11.000
+Alessandra Monteiro: Mas assim talvez.
+
+00:23:10.000 --> 00:23:11.000
+Mariana Haddad: Yo.
+
+00:23:11.000 --> 00:23:23.000
+Alessandra Monteiro: Aí aqui. Ele me traz todas as opções de preço. Com base nas informações que eu solicitei aqui em cima.
+
+00:23:12.000 --> 00:23:14.000
+Mariana Haddad: Yo claro, toqué así aquí.
+
+00:23:23.000 --> 00:23:30.000
+Alessandra Monteiro: Desconsidera essas caixinhas desabilitadas. Tá? Mas aqui, por exemplo, essa linha.
+
+00:23:30.000 --> 00:23:32.000
+Alessandra Monteiro: Ele está me dizendo que.
+
+00:23:33.000 --> 00:23:42.000
+Alessandra Monteiro: Na região de Primavera, no Mato Grosso, para o produtor embarcar no mês de Março.
+
+00:23:42.000 --> 00:23:47.000
+Alessandra Monteiro: A soja hoje está valendo R vinte e um dólares e noventa e nove.
+
+00:23:48.000 --> 00:23:59.000
+Alessandra Monteiro: Então esse é o preço que a gente vai mostrar para todo mundo. Considerando o meio de embarque, a gente não vai precisar criar modelo específico de dinheiro.
+
+00:23:59.000 --> 00:24:11.000
+Alessandra Monteiro: Você lembra que aqui eu coloquei duas datas. Dois meses, mês, três e mês quatro. Então aqui eu consigo olhar todas as opções. Pensando no mês três.
+
+00:24:11.000 --> 00:24:17.000
+Alessandra Monteiro: E todas as opções. Pensando no mês quatro. Às vezes ele não traz um mês. Cinco aqui de um ferido.
+
+00:24:17.000 --> 00:24:27.000
+Alessandra Monteiro: Mas em tese, eu estou querendo olhar mês, três e mês, quatro e todas as rotas possíveis que fazem sentido.
+
+00:24:27.000 --> 00:24:36.000
+Alessandra Monteiro: Considerando essa praça para os destinos, quando eu falo destino, eu estou falando em Porto.
+
+00:24:37.000 --> 00:24:42.000
+Alessandra Monteiro: Por exemplo, aqui eu tenho uma precificação.
+
+00:24:42.000 --> 00:24:53.000
+Alessandra Monteiro: Base Santos. E aqui eu tenho uma classificação paranaguá dentro do mesmo mês. Então, hoje, se a gente for ver base no que está aqui.
+
+00:24:53.000 --> 00:25:04.000
+Alessandra Monteiro: Faz mais sentido mediante essa logística aqui levar para o porto de Paranaguá o frete. Às vezes é mais competitivo aqui com isso. A gente consegue pagar melhor.
+
+00:25:05.000 --> 00:25:08.000
+Alessandra Monteiro: Gelo.
+
+00:25:09.000 --> 00:25:15.000
+Alessandra Monteiro: E aí, aqui dentro estão os componentes que compõem esse preço.
+
+00:25:16.000 --> 00:25:19.000
+Alessandra Monteiro: Óbvio.
+
+00:25:20.000 --> 00:25:24.000
+Alessandra Monteiro: Prêmio.
+
+00:25:24.000 --> 00:25:30.000
+Alessandra Monteiro: Aqui são informações adicionais. Frete jovens.
+
+00:25:30.000 --> 00:25:42.000
+Alessandra Monteiro: Seja positivo, ou seja, negativo. Aqui estão todos os componentes que, no final, somados ou subtraídos, nos dá esse valor aqui. Ou esse ou esse qualquer um deles.
+
+00:25:43.000 --> 00:25:55.000
+Alessandra Monteiro: Ah, eu acho que eu vou ler uma etapa aqui em cima. Está vendo aqui? Quilômetros adicionais de asfalto e quilômetros adicionais de chão, que é o que a gente tem lá no aplicativo.
+
+00:25:55.000 --> 00:26:04.000
+Alessandra Monteiro: Quer ver? Observa que aqui está dando vinte e um,noventa e nove. Não tem nenhum adicional aqui.
+
+00:26:04.000 --> 00:26:15.000
+Alessandra Monteiro: Quando a gente coloca. Vamos dizer que aqui é base cidade. Eu estou precificando para retirar dentro da cidade de primavera.
+
+00:26:15.000 --> 00:26:30.000
+Alessandra Monteiro: Eu pago hoje vinte e um,noventa e nove. Aí o produtor vai falar para mim. Não, eu não quero o meu armazém não fica dentro da cidade. Ele fica a um0 quilômetros de primavera, sendo que é cinquenta quilômetros de asfalto.
+
+00:26:30.000 --> 00:26:33.000
+Alessandra Monteiro: E cinquenta quilômetros de chão.
+
+00:26:35.000 --> 00:26:38.000
+Alessandra Monteiro: Eu adiciono aqui essas informações.
+
+00:26:39.000 --> 00:26:47.000
+Alessandra Monteiro: Ele vai me dar um outro preço. Ele sai de R vinte e um,noventa e nove e vai para vinte e um,cinco.
+
+00:26:47.000 --> 00:26:58.000
+Alessandra Monteiro: Então hoje a retirar na fazenda do produtor. Que tem essa logística adicional aqui? Eu não vou pagar R vinte e um,noventa e nove. Eu vou pagar R vinte e um,cinquenta e cinco.
+
+00:26:58.000 --> 00:27:05.000
+Alessandra Monteiro: Porque eu vou gastar mais com frete. E aí ele traz essa informação aqui também.
+
+00:27:05.000 --> 00:27:12.000
+Alessandra Monteiro: Além do frete rodoviário que já tinha e ferroviário. Ele traz um adicional aqui.
+
+00:27:12.000 --> 00:27:13.000
+Alessandra Monteiro: Amém.
+
+00:27:14.000 --> 00:27:17.000
+Alessandra Monteiro: Adicional de asfalto e adicional de chão também.
+
+00:27:17.000 --> 00:27:18.000
+Alessandra Monteiro: Bom dia.
+
+00:27:21.000 --> 00:27:24.000
+Alessandra Monteiro: Que é aquilo que já tem lá no.
+
+00:27:24.000 --> 00:27:27.000
+Alessandra Monteiro: No aplicativo. Essa informação.
+
+00:27:32.000 --> 00:27:42.000
+Josue Jofre: Creo que es necesario y.
+
+00:27:33.000 --> 00:27:34.000
+Alessandra Monteiro: E aí?
+
+00:27:37.000 --> 00:27:40.000
+Alessandra Monteiro: Deixa eu ver. Aqui. Aqui.
+
+00:27:41.000 --> 00:27:43.000
+Alessandra Monteiro: Aqui é.
+
+00:27:42.000 --> 00:27:44.000
+Josue Jofre: No insimo, un poquillo.
+
+00:27:45.000 --> 00:27:46.000
+Josue Jofre: Y.
+
+00:27:46.000 --> 00:27:53.000
+Josue Jofre: Unitario y es exacto.
+
+00:27:48.000 --> 00:27:50.000
+Alessandra Monteiro: Ah, aqui.
+
+00:27:50.000 --> 00:28:01.000
+Alessandra Monteiro: Aqui é a moeda que está sendo precificada aqui. Esse componente está lançado no Wcis em reais.
+
+00:28:01.000 --> 00:28:03.000
+Alessandra Monteiro: Por tonelada.
+
+00:28:03.000 --> 00:28:06.000
+Alessandra Monteiro: Aqui é o reais. E aqui é central.
+
+00:28:04.000 --> 00:28:06.000
+Josue Jofre: Ahh, tu debate.
+
+00:28:06.000 --> 00:28:07.000
+Alessandra Monteiro: Como tá?
+
+00:28:07.000 --> 00:28:09.000
+Josue Jofre: Perfecto.
+
+00:28:09.000 --> 00:28:21.000
+Alessandra Monteiro: E ele está fazendo um cálculo aqui do câmbio futuro. Ele transforma tudo isso em dólar, porque no final do dia. A gente está precificando em dólar aqui.
+
+00:28:22.000 --> 00:28:37.000
+Alessandra Monteiro: Eu estou passando para o produtor com preço em dólar. E aqui eu tenho componentes que estão em reais. Aí ele pega esses componentes que estão em reais e transforma por esse câmbio aqui que o Wx traz para a gente.
+
+00:28:37.000 --> 00:28:40.000
+Alessandra Monteiro: Esse câmbio já é o câmbio. Futuro.
+
+00:28:44.000 --> 00:28:47.000
+Alessandra Monteiro: Mais cinco do cinco.
+
+00:28:48.000 --> 00:28:52.000
+Alessandra Monteiro: Não, não é cinco do cinco. É com base nessa data aqui.
+
+00:28:59.000 --> 00:29:03.000
+Alessandra Monteiro: Se você observar aqui, ele traz dois canos.
+
+00:29:03.000 --> 00:29:07.000
+Alessandra Monteiro: Porque tem três datas.
+
+00:29:07.000 --> 00:29:12.000
+Alessandra Monteiro: Um do três, Um6 do três e cinco do cinco.
+
+00:29:12.000 --> 00:29:15.000
+Alessandra Monteiro: Então ele traz o câmbio de cinco do cinco.
+
+00:29:15.000 --> 00:29:22.000
+Alessandra Monteiro: Ele traz o câmbio do três e o câmbio do dia dezasseis do três.
+
+00:29:22.000 --> 00:29:33.000
+Alessandra Monteiro: Mas isso não vai fazer tanta diferença. Não precisa ter três cambos lá para converter tudo isso. E também estou pensando que já vai levar a informação pronta. Se for o caso.
+
+00:29:34.000 --> 00:29:44.000
+Josue Jofre: Sí, no, no, no los de simulador.
+
+00:29:35.000 --> 00:29:37.000
+Alessandra Monteiro: Obrigado.
+
+00:29:44.000 --> 00:29:47.000
+Josue Jofre: Tom reelimine algunos campos.
+
+00:29:48.000 --> 00:29:54.000
+Alessandra Monteiro: E aí eu vou te mostrar uma outra tela que eu acho que é de onde vai ser mais factível.
+
+00:29:55.000 --> 00:30:11.000
+Alessandra Monteiro: Não sei. Estou só chutando aqui. Que é onde eu acho que faz mais sentido, porque para fazer esse cálculo nessa tela que eu estou te mostrando. Está vendo que a gente digitou todas as informações? Então ele só vai me trazer o preço se eu digitar.
+
+00:30:09.000 --> 00:30:10.000
+Josue Jofre: Sí.
+
+00:30:11.000 --> 00:30:19.000
+Alessandra Monteiro: Como você vai forçar o sistema ao aplicativo a forçar esse cálculo aqui? Se não tiver nada digitado.
+
+00:30:21.000 --> 00:30:25.000
+Alessandra Monteiro: Pensando em buscar aqui do Wcis.
+
+00:30:22.000 --> 00:30:24.000
+Josue Jofre: Perfecto.
+
+00:30:25.000 --> 00:30:40.000
+Alessandra Monteiro: Aí. Aqui é só informações de caso o produtor queira fechar a gente. Ah, esse preço de R vinte e um,cinquenta e cinco. Está ok para mim. Gente vem. Solicita o resto, tal tal e lança aqui as informações do produtor e termina de.
+
+00:30:40.000 --> 00:30:42.000
+Alessandra Monteiro: Salvar. Boleto.
+
+00:30:42.000 --> 00:30:51.000
+Alessandra Monteiro: Mas é um local onde a gente também. A gente usa para precificar.
+
+00:30:51.000 --> 00:30:54.000
+Alessandra Monteiro: E aí um outro local.
+
+00:30:53.000 --> 00:30:54.000
+Josue Jofre: Eso.
+
+00:30:54.000 --> 00:30:55.000
+Alessandra Monteiro: Esse aqui que vai.
+
+00:30:54.000 --> 00:31:05.000
+Josue Jofre: Ese que se fue se fue contra los favoritos más alta va.
+
+00:31:01.000 --> 00:31:03.000
+Alessandra Monteiro: Boa.
+
+00:31:03.000 --> 00:31:04.000
+Alessandra Monteiro: Todos!
+
+00:31:04.000 --> 00:31:10.000
+Alessandra Monteiro: Por exemplo, contratos. Não vai servir a carta, né?
+
+00:31:08.000 --> 00:31:15.000
+Josue Jofre: Contratos tampoco es que 1 tiene los favoritos ya esta tarde, entonces lo tiene que procurar los menús.
+
+00:31:10.000 --> 00:31:18.000
+Alessandra Monteiro: Semanais. Tá bom. Você achou aí.
+
+00:31:23.000 --> 00:31:27.000
+Alessandra Monteiro: É só colocar na estrelinha do lado aqui, que é ele favorito.
+
+00:31:28.000 --> 00:31:35.000
+Alessandra Monteiro: Normalmente o que você diz é o outro que a gente vai usar. É esse aqui. Monitor de mercado.
+
+00:31:30.000 --> 00:31:32.000
+Josue Jofre: Perfecto. Solo.
+
+00:31:35.000 --> 00:31:54.000
+Alessandra Monteiro: Isso aqui. Pode ser que eu apanhe um pouquinho, tá? Mas vai sair. Não, eu não estou falando do modelo. Estou dizendo do contrato. A base de contratos não é a carga de dados. A gente tem lá mais de cem contratos de venda, por exemplo, eles estão de R O L dezassete só com uma componente travada e a outra não.
+
+00:31:56.000 --> 00:31:57.000
+Josue Jofre: Y listo.
+
+00:31:56.000 --> 00:32:06.000
+Alessandra Monteiro: Como é que a gente vai lidar com isso? Isso vai ser feito na carga de dados pela Top, ou eles vão subir a casca do contrato. Ele já tem isso aqui.
+
+00:32:06.000 --> 00:32:10.000
+Alessandra Monteiro: Montado, que eu acho que fica de uma forma bem fácil de.
+
+00:32:11.000 --> 00:32:14.000
+Alessandra Monteiro: Deixa eu tentar lançar aqui.
+
+00:32:14.000 --> 00:32:23.000
+Alessandra Monteiro: Para eu mostrar a disposição de como fica, que eu acho que é isso que vai ser mais importante para vocês fixar a massa de dados inteiros.
+
+00:32:23.000 --> 00:32:28.000
+Alessandra Monteiro: A gente junto.
+
+00:32:28.000 --> 00:32:33.000
+Alessandra Monteiro: Mas a gente. Te amo.
+
+00:32:34.000 --> 00:32:36.000
+Alessandra Monteiro: Vem buscar.
+
+00:32:37.000 --> 00:32:46.000
+Alessandra Monteiro: É que ele não vai subir nem a parte do Unfpa? Ele não vai subir com o Besius fixado essa, caçando o meu pólfer.
+
+00:32:47.000 --> 00:32:50.000
+Alessandra Monteiro: Okay. Okay.
+
+00:32:50.000 --> 00:32:52.000
+Alessandra Monteiro: You've opened them.
+
+00:32:52.000 --> 00:32:55.000
+Alessandra Monteiro: I believe…
+
+00:32:55.000 --> 00:32:57.000
+Alessandra Monteiro: I can't I can't look.
+
+00:32:58.000 --> 00:33:08.000
+Alessandra Monteiro: It's also possible to do it in two different ways, and you can fix it in one component.
+
+00:33:10.000 --> 00:33:11.000
+Alessandra Monteiro: Of course.
+
+00:33:13.000 --> 00:33:15.000
+Alessandra Monteiro: Thank you so much.
+
+00:33:23.000 --> 00:33:25.000
+Alessandra Monteiro: What is the name?
+
+00:33:33.000 --> 00:33:35.000
+Alessandra Monteiro: Separate.
+
+00:33:42.000 --> 00:33:44.000
+Alessandra Monteiro: Let me see…
+
+00:33:46.000 --> 00:33:48.000
+Alessandra Monteiro: Okay.
+
+00:33:49.000 --> 00:33:50.000
+Alessandra Monteiro: Thank you.
+
+00:33:51.000 --> 00:33:52.000
+Alessandra Monteiro: No.
+
+00:33:52.000 --> 00:33:59.000
+Alessandra Monteiro: It's so, it's so based.
+
+00:33:59.000 --> 00:34:04.000
+Alessandra Monteiro: The employees represent system priorities.
+
+00:34:06.000 --> 00:34:08.000
+Alessandra Monteiro: No, I'm good without the name.
+
+00:34:16.000 --> 00:34:19.000
+Alessandra Monteiro: Okay, let me see…
+
+00:34:19.000 --> 00:34:22.000
+Alessandra Monteiro: Okay, thank you.
+
+00:34:27.000 --> 00:34:29.000
+Alessandra Monteiro: Maybe we…
+
+00:34:29.000 --> 00:34:30.000
+Alessandra Monteiro: I don't believe that people…
+
+00:34:53.000 --> 00:34:55.000
+Alessandra Monteiro: Thanks for connecting with me, bye.
+
+00:34:55.000 --> 00:34:59.000
+Alessandra Monteiro: It isn't scoring jingles, no strings.
+
+00:35:05.000 --> 00:35:09.000
+Alessandra Monteiro: Música.
+
+00:35:10.000 --> 00:35:20.000
+Alessandra Monteiro: Eu tenho um pouco preocupação. Só na carga. Bem transparente com você. Porque, como a gente viu ali o modelo do Gongball.
+
+00:35:20.000 --> 00:35:23.000
+Alessandra Monteiro: Ele é uma página. Em breve.
+
+00:35:23.000 --> 00:35:36.000
+Alessandra Monteiro: Legal. Eu tenho receio ali, da infraestruturar a massa de dados para subir. Isso não. Ótimo. Ele sai. Estar fazendo saco na rodada.
+
+00:35:37.000 --> 00:35:45.000
+Alessandra Monteiro: Deve fazer viagem.
+
+00:35:45.000 --> 00:35:49.000
+Alessandra Monteiro: Processo.
+
+00:35:49.000 --> 00:36:00.000
+Alessandra Monteiro: Devem receber da área. E a gente queria a outra evidência.
+
+00:36:00.000 --> 00:36:04.000
+Alessandra Monteiro: E aí?
+
+00:36:04.000 --> 00:36:10.000
+Alessandra Monteiro: Modelo, mas assim legal, essa ideia.
+
+00:36:12.000 --> 00:36:22.000
+Alessandra Monteiro: Principalmente com essa personalização. Aqui, ele está dando essa mensagem porque nem todas as caixinhas que ele trava aqui tem.
+
+00:36:22.000 --> 00:36:25.000
+Alessandra Monteiro: Tem nota. Frete cadastrada, sabe.
+
+00:36:25.000 --> 00:36:28.000
+Alessandra Monteiro: Por isso que ele dá esse erro.
+
+00:36:35.000 --> 00:36:40.000
+Josue Jofre: En Euseno Sanz.
+
+00:36:40.000 --> 00:36:42.000
+Alessandra Monteiro: Rota frente.
+
+00:36:42.000 --> 00:36:49.000
+Alessandra Monteiro: Não tem logística cadastrada. Por isso que ele está dando aquele.
+
+00:36:46.000 --> 00:36:48.000
+Josue Jofre: Ahh. ¿cuánto.
+
+00:36:49.000 --> 00:36:50.000
+Josue Jofre: Thais, Yo.
+
+00:36:50.000 --> 00:36:51.000
+Alessandra Monteiro: Eu tiro, né?
+
+00:36:50.000 --> 00:36:51.000
+Josue Jofre: Wys thais.
+
+00:36:56.000 --> 00:37:05.000
+Alessandra Monteiro: O Marcos postergou quinze minutos.
+
+00:37:05.000 --> 00:37:06.000
+Alessandra Monteiro: Ok, novo aqui.
+
+00:37:07.000 --> 00:37:11.000
+Alessandra Monteiro: Por isso que eu falei que ele já está pronto.
+
+00:37:11.000 --> 00:37:13.000
+Alessandra Monteiro: É isso?
+
+00:37:19.000 --> 00:37:21.000
+Alessandra Monteiro: Tinha grande aqui.
+
+00:37:23.000 --> 00:37:40.000
+Alessandra Monteiro: Aqui diferente de lá. Ele já traz as informações prontas e elas ficam gravadas aqui. Então por isso que eu acho que.
+
+00:37:40.000 --> 00:38:03.000
+Alessandra Monteiro: O lugar de buscar o preço, talvez seria aqui. Por exemplo, eu escolhi Primavera. Se ela tivesse que fazer manual, eu imagino, seria uma etapa do processo de escultograma. Ele aparece, tem alguma primavera do Leste que é assim que liberar produção, a gente precisa entrar e fazer algum. Ajude.
+
+00:37:52.000 --> 00:37:54.000
+Josue Jofre: Teléfono.
+
+00:38:03.000 --> 00:38:13.000
+Alessandra Monteiro: Primavera do leste. Ele traz o mês logístico, que é o mês três, o mês de embarque e ele traz aqui o preço.
+
+00:38:15.000 --> 00:38:24.000
+Alessandra Monteiro: Preço calculado em reais e preço calculado em dólar, que é o mesmo preço que a gente viu lá.
+
+00:38:20.000 --> 00:38:23.000
+Josue Jofre: Y.
+
+00:38:24.000 --> 00:38:25.000
+Josue Jofre: No.
+
+00:38:24.000 --> 00:38:27.000
+Alessandra Monteiro: Só que aqui ele traz as duas informações.
+
+00:38:27.000 --> 00:38:31.000
+Alessandra Monteiro: Tanto em reais quanto em dólar. Não precisa escolher a moeda no caso.
+
+00:38:31.000 --> 00:38:35.000
+Alessandra Monteiro: Aí. Aqui também tem um adicional de.
+
+00:38:33.000 --> 00:38:34.000
+Josue Jofre: En el.
+
+00:38:34.000 --> 00:38:35.000
+Josue Jofre: Mhm.
+
+00:38:35.000 --> 00:38:40.000
+Alessandra Monteiro: Esse adicional. A gente está habilitado lá para digitar.
+
+00:38:40.000 --> 00:38:49.000
+Alessandra Monteiro: Então, lá a gente digitaria. Por exemplo, a gente viu que vinte e dois dólares era a base cidade, certo?
+
+00:38:49.000 --> 00:38:59.000
+Alessandra Monteiro: Lá naquela outra telinha. Aí eu coloquei cinquenta-cinquenta. Ele caiu para vinte e um nos quebradinhos. Vamos testar.
+
+00:38:50.000 --> 00:38:51.000
+Josue Jofre: Cierto.
+
+00:39:03.000 --> 00:39:06.000
+Alessandra Monteiro: Já caiu aqui. Vinte e um,85.
+
+00:39:06.000 --> 00:39:12.000
+Alessandra Monteiro: Só que essa informação vai estar habilitada para a gente digitar lá no aplicativo.
+
+00:39:13.000 --> 00:39:16.000
+Alessandra Monteiro: Vinte e um,cinquenta e seis.
+
+00:39:16.000 --> 00:39:23.000
+Alessandra Monteiro: A partir do momento que eu digitei aqui, os quilômetros adicionais de asfalto e de chão. Ele já calculou.
+
+00:39:23.000 --> 00:39:29.000
+Alessandra Monteiro: Só que em vez de eu digitar aqui, eu digito lá no aplicativo que a gente está vendo.
+
+00:39:29.000 --> 00:39:33.000
+Alessandra Monteiro: Ele vai trazer os vinte e dois, que é a base da cidade.
+
+00:39:34.000 --> 00:39:42.000
+Alessandra Monteiro: Vai levar, na verdade, aos vinte e dois. E daí quando eu digitar esses cinquenta-cinquenta, ele vai sair de vinte e dois e ir para vinte e um,cinquenta e cinco.
+
+00:39:45.000 --> 00:39:54.000
+Josue Jofre: Para uso.
+
+00:39:46.000 --> 00:39:47.000
+Alessandra Monteiro: E aí?
+
+00:39:51.000 --> 00:39:58.000
+Alessandra Monteiro: Aqui. Ó sim, vamos apagar esses cinquenta aqui.
+
+00:39:58.000 --> 00:39:59.000
+Alessandra Monteiro: E aí?
+
+00:40:01.000 --> 00:40:02.000
+Alessandra Monteiro: Sim.
+
+00:40:06.000 --> 00:40:08.000
+Alessandra Monteiro: Então isso.
+
+00:40:34.000 --> 00:40:35.000
+Alessandra Monteiro: Tchau.
+
+00:40:36.000 --> 00:40:38.000
+Alessandra Monteiro: Já soube, né?
+
+00:40:39.000 --> 00:40:42.000
+Alessandra Monteiro: Tem a opção do Cif aqui.
+
+00:40:42.000 --> 00:40:44.000
+Josue Jofre: No.
+
+00:40:43.000 --> 00:40:50.000
+Alessandra Monteiro: Quem sabe? Faz ao vivo, hein? É para mudar aqui.
+
+00:40:50.000 --> 00:40:53.000
+Alessandra Monteiro: Pronto, agora sumiu por itunes.
+
+00:40:53.000 --> 00:40:55.000
+Alessandra Monteiro: Isso é meu rosto.
+
+00:40:56.000 --> 00:40:57.000
+Alessandra Monteiro: E aí?
+
+00:41:01.000 --> 00:41:05.000
+Alessandra Monteiro: É? Assumiu.
+
+00:41:06.000 --> 00:41:08.000
+Alessandra Monteiro: Mas em tese ele tem.
+
+00:41:18.000 --> 00:41:20.000
+Aleksander Santos Sousa: Cuánto viste.
+
+00:41:21.000 --> 00:41:23.000
+Alessandra Monteiro: Sim. Pode falar.
+
+00:41:22.000 --> 00:41:27.000
+Aleksander Santos Sousa: Sería nuestro modric simulazo.
+
+00:41:27.000 --> 00:41:29.000
+Aleksander Santos Sousa: De bota. Por favor.
+
+00:41:29.000 --> 00:41:31.000
+Alessandra Monteiro: Na otra tellinge.
+
+00:41:31.000 --> 00:41:34.000
+Aleksander Santos Sousa: Y no trataba.
+
+00:41:35.000 --> 00:41:38.000
+Alessandra Monteiro: It's been happening. Keep everything.
+
+00:41:40.000 --> 00:41:42.000
+Alessandra Monteiro: Thank you for the goodbye.
+
+00:41:49.000 --> 00:41:51.000
+Alessandra Monteiro: That's okay, man.
+
+00:41:54.000 --> 00:41:56.000
+Aleksander Santos Sousa: Y soy.
+
+00:41:57.000 --> 00:42:00.000
+Aleksander Santos Sousa: Se saca de gacho.
+
+00:42:05.000 --> 00:42:07.000
+Alessandra Monteiro: Let me check here, how did you…
+
+00:42:08.000 --> 00:42:09.000
+Aleksander Santos Sousa: Mhm.
+
+00:42:12.000 --> 00:42:15.000
+Alessandra Monteiro: Here, I can help you by taking a question.
+
+00:42:15.000 --> 00:42:17.000
+Aleksander Santos Sousa: Sí, Sí, Sí, Sí.
+
+00:42:31.000 --> 00:42:34.000
+Alessandra Monteiro: English, English, English…
+
+00:42:35.000 --> 00:42:36.000
+Alessandra Monteiro: Okay, um…
+
+00:42:36.000 --> 00:42:38.000
+Alessandra Monteiro: Give me one.
+
+00:42:38.000 --> 00:42:39.000
+Alessandra Monteiro: Mm-hmm.
+
+00:42:47.000 --> 00:42:51.000
+Alessandra Monteiro: No, I am Signora E. Ellen Vernoy. Signora E.
+
+00:42:50.000 --> 00:42:54.000
+Aleksander Santos Sousa: A dúvida é justamente ali, no tipo pagamento.
+
+00:42:53.000 --> 00:42:56.000
+Alessandra Monteiro: Okay.
+
+00:42:56.000 --> 00:42:59.000
+Aleksander Santos Sousa: Isso aí tem, Bárter. Tá vendo?
+
+00:42:56.000 --> 00:42:58.000
+Alessandra Monteiro: É isso aí.
+
+00:42:58.000 --> 00:43:06.000
+Alessandra Monteiro: Isso aqui para a gente. Não impacta. Isso é meramente informativo.
+
+00:43:06.000 --> 00:43:08.000
+Aleksander Santos Sousa: Entendi.
+
+00:43:09.000 --> 00:43:12.000
+Aleksander Santos Sousa: Então não faz diferença aí para o fluxo.
+
+00:43:11.000 --> 00:43:13.000
+Alessandra Monteiro: Não, não faz diferença.
+
+00:43:12.000 --> 00:43:14.000
+Aleksander Santos Sousa: Ah, perfeito.
+
+00:43:15.000 --> 00:43:19.000
+Aleksander Santos Sousa: Era só essa dúvida mesmo. Ah, é? Eu lembrei de outra.
+
+00:43:20.000 --> 00:43:30.000
+Aleksander Santos Sousa: Você falou que na parte de baixo vocês têm um formulário para poder dar seguimento, caso o produtor opte por alguma opção que foi.
+
+00:43:25.000 --> 00:43:26.000
+Alessandra Monteiro: Isso.
+
+00:43:30.000 --> 00:43:33.000
+Aleksander Santos Sousa: Retornado pelo sistema, né?
+
+00:43:32.000 --> 00:43:33.000
+Alessandra Monteiro: Isso.
+
+00:43:33.000 --> 00:43:35.000
+Alessandra Monteiro: Não gostaria.
+
+00:43:34.000 --> 00:43:35.000
+Aleksander Santos Sousa: E aí?
+
+00:43:40.000 --> 00:43:41.000
+Alessandra Monteiro: E aí?
+
+00:43:41.000 --> 00:43:43.000
+Aleksander Santos Sousa: Deixa ele carregar aí.
+
+00:43:42.000 --> 00:43:58.000
+Alessandra Monteiro: É isso aqui, pessoal. Obrigado. Aí ele traz todas as opções de preço. Com base no que a gente digitou aqui em cima, né? Aí vamos fazer de conta que esse preço de R vinte,noventa e nove faz sentido.
+
+00:43:58.000 --> 00:44:01.000
+Alessandra Monteiro: E eu quero fechar. Tá bom?
+
+00:43:59.000 --> 00:44:00.000
+Aleksander Santos Sousa: Uhum.
+
+00:44:01.000 --> 00:44:04.000
+Alessandra Monteiro: Aí. Eu vou vir aqui.
+
+00:44:04.000 --> 00:44:08.000
+Alessandra Monteiro: Vou alocar esse volume nesse mês. Logístico.
+
+00:44:09.000 --> 00:44:11.000
+Alessandra Monteiro: Salvar.
+
+00:44:09.000 --> 00:44:10.000
+Aleksander Santos Sousa: Uhum.
+
+00:44:12.000 --> 00:44:19.000
+Alessandra Monteiro: E dar sequência aqui nas informações do cliente, por exemplo, quem está comprando a grossinho.
+
+00:44:20.000 --> 00:44:22.000
+Alessandra Monteiro: Amém.
+
+00:44:23.000 --> 00:44:33.000
+Alessandra Monteiro: O local de negócio. A região de negócio é Mato Grosso. Eu estou comprando dele sem ri. Aqui é informação de quem.
+
+00:44:33.000 --> 00:44:36.000
+Alessandra Monteiro: Negociando do próprio cliente.
+
+00:44:36.000 --> 00:44:41.000
+Alessandra Monteiro: Aqui a gente coloca o local de retirada. Cspto.
+
+00:44:41.000 --> 00:44:51.000
+Alessandra Monteiro: E aqui é a modalidade de negócios. Se a gente está fazendo, via no trade via Red, ou se a gente já está comprando e vendendo ao mesmo tempo.
+
+00:44:41.000 --> 00:44:43.000
+Aleksander Santos Sousa: Uhum.
+
+00:44:51.000 --> 00:44:54.000
+Alessandra Monteiro: Selecionei a opção.
+
+00:44:53.000 --> 00:44:54.000
+Aleksander Santos Sousa: É.
+
+00:44:55.000 --> 00:44:57.000
+Alessandra Monteiro: E salve.
+
+00:44:57.000 --> 00:45:04.000
+Alessandra Monteiro: Aí com isso. Eu já coloquei as informações básicas aqui para o pessoal de Back Office da segmento.
+
+00:45:04.000 --> 00:45:08.000
+Aleksander Santos Sousa: Perfeito. A minha dúvida é.
+
+00:45:08.000 --> 00:45:21.000
+Aleksander Santos Sousa: Lá pelo nosso aplicativo, após a simulação ser concluída. E o produto gostou lá da simulação. Você precisa ter todos aqueles dados ali de cima que você.
+
+00:45:21.000 --> 00:45:26.000
+Aleksander Santos Sousa: Imputou manualmente para poder dar seguimento no processo no Wcis.
+
+00:45:25.000 --> 00:45:26.000
+Alessandra Monteiro: Uhum.
+
+00:45:27.000 --> 00:45:31.000
+Aleksander Santos Sousa: Entendi. Esse é um bom ponto. Josué.
+
+00:45:32.000 --> 00:45:36.000
+Aleksander Santos Sousa: Ela precisa de todas essas informações ali. Desses campos.
+
+00:45:37.000 --> 00:45:39.000
+Aleksander Santos Sousa: Poder dar seguimento ali na.
+
+00:45:39.000 --> 00:45:45.000
+Aleksander Santos Sousa: No contrato com o produtor quando ele viu que a simulação funcionou.
+
+00:45:42.000 --> 00:45:43.000
+Alessandra Monteiro: Mas.
+
+00:45:43.000 --> 00:45:47.000
+Alessandra Monteiro: Arrumar. Deixa eu ver se eu entendi.
+
+00:45:50.000 --> 00:45:59.000
+Alessandra Monteiro: Você diz que quando a gente levar o preço para lá, vamos falar que esse preço de vinte e um aqui para o produtor. Está ok.
+
+00:45:59.000 --> 00:46:08.000
+Alessandra Monteiro: Aí ter, sei lá, um botãozinho lá. Que direciona para o lançamento para finalizar o lançamento do contrato. É isso.
+
+00:46:08.000 --> 00:46:09.000
+Alessandra Monteiro: Ou não.
+
+00:46:09.000 --> 00:46:18.000
+Aleksander Santos Sousa: Não exatamente. Seria o seguinte. Ele entrou no nosso sistema. Ele fez a simulação e ele gostou do preço.
+
+00:46:14.000 --> 00:46:15.000
+Alessandra Monteiro: Uhum.
+
+00:46:16.000 --> 00:46:17.000
+Alessandra Monteiro: Uhum.
+
+00:46:17.000 --> 00:46:19.000
+Alessandra Monteiro: Uhum.
+
+00:46:18.000 --> 00:46:25.000
+Aleksander Santos Sousa: No nosso sistema. A gente tem lá um botão de exportar com Pdf essa simulação.
+
+00:46:25.000 --> 00:46:32.000
+Aleksander Santos Sousa: Então, nessa exportação, como Pdf precisam vir esses dados que você coloca no Wcis.
+
+00:46:28.000 --> 00:46:30.000
+Alessandra Monteiro: E aí?
+
+00:46:30.000 --> 00:46:33.000
+Alessandra Monteiro: Música.
+
+00:46:32.000 --> 00:46:39.000
+Aleksander Santos Sousa: Para daí você pegar esses dados, colocar no Wx manualmente, e então seguir com ele com a contratação.
+
+00:46:37.000 --> 00:46:52.000
+Alessandra Monteiro: É, mas não é imprescindível, porque às vezes, nem sempre o mesmo produtor que está negociando. O Cropped vai ser o mesmo que a gente vai usar aqui para negociar o grão.
+
+00:46:52.000 --> 00:47:06.000
+Alessandra Monteiro: Aí a gente pode capturar essas informações de uma outra forma. Às vezes, ter um campo, observação lá onde quem está negociando consiga incluir.
+
+00:46:54.000 --> 00:46:56.000
+Aleksander Santos Sousa: Ah, sítio.
+
+00:47:06.000 --> 00:47:11.000
+Alessandra Monteiro: Cpf número tal inscrição, tal.
+
+00:47:11.000 --> 00:47:21.000
+Alessandra Monteiro: Que quer dizer? Onde vai ser o local de retirada? E quem que é o cliente que de fato está negociando ali, porque acontece, por exemplo.
+
+00:47:21.000 --> 00:47:26.000
+Alessandra Monteiro: O pedido Cropped de insumos vai ser no nome da Grossin.
+
+00:47:27.000 --> 00:47:33.000
+Alessandra Monteiro: Mas o grão vai ser negociado no nome do Josué.
+
+00:47:33.000 --> 00:47:37.000
+Alessandra Monteiro: Que é para liquidar essa conta da grossinha.
+
+00:47:37.000 --> 00:47:50.000
+Alessandra Monteiro: Então não vai estar linkado. O nome do cara do próprio com o grão nem sempre não é regra. Então eu acredito que não precisaria termos essa informação lá.
+
+00:47:50.000 --> 00:47:54.000
+Alessandra Monteiro: De primeiro momento, para poder lançar aqui.
+
+00:47:54.000 --> 00:47:56.000
+Alessandra Monteiro: E aí?
+
+00:47:55.000 --> 00:47:56.000
+Aleksander Santos Sousa: Entendi.
+
+00:47:56.000 --> 00:48:10.000
+Alessandra Monteiro: Tendo o preço. E quem está negociando aí? A gente já consegue pegar as informações que estão na boleta, seja lá no campo. Observação, caso tenha. E a gente lança aqui não tem problema.
+
+00:48:10.000 --> 00:48:12.000
+Aleksander Santos Sousa: Entendi.
+
+00:48:11.000 --> 00:48:13.000
+Alessandra Monteiro: Você está assistindo na casa.
+
+00:48:12.000 --> 00:48:19.000
+Aleksander Santos Sousa: Certo? Eu fiz essa pergunta porque eu entendo que essa simulação é pública, né, Josué.
+
+00:48:13.000 --> 00:48:15.000
+Alessandra Monteiro: E aí?
+
+00:48:19.000 --> 00:48:22.000
+Alessandra Monteiro: Obrigado.
+
+00:48:19.000 --> 00:48:21.000
+Aleksander Santos Sousa: Então, quem quiser.
+
+00:48:21.000 --> 00:48:23.000
+Aleksander Santos Sousa: Acessar.
+
+00:48:22.000 --> 00:48:28.000
+Josue Jofre: Publicano, un sistema de eje String, tus ojos de interés con sistema.
+
+00:48:23.000 --> 00:48:25.000
+Alessandra Monteiro: Obrigado.
+
+00:48:28.000 --> 00:48:34.000
+Aleksander Santos Sousa: É publicado nesse sentido. Para todo mundo que tem acesso ali.
+
+00:48:34.000 --> 00:48:36.000
+Josue Jofre: Todos están vivos.
+
+00:48:34.000 --> 00:48:37.000
+Aleksander Santos Sousa: Então eu imaginei que a gente não teria.
+
+00:48:36.000 --> 00:48:39.000
+Alessandra Monteiro: Se você quiser comprar e mandar.
+
+00:48:37.000 --> 00:48:44.000
+Aleksander Santos Sousa: Esses dados, por exemplo, de Cpf ou Cnpj. Ali, no momento da simulação, entendeu.
+
+00:48:39.000 --> 00:48:41.000
+Alessandra Monteiro: Para buscar.
+
+00:48:42.000 --> 00:48:43.000
+Alessandra Monteiro: Obrigado.
+
+00:48:43.000 --> 00:48:45.000
+Alessandra Monteiro: Bom cara.
+
+00:48:44.000 --> 00:48:46.000
+Josue Jofre: No, no.
+
+00:48:45.000 --> 00:48:56.000
+Alessandra Monteiro: Eu não estou lembrada. Se quando o Urgv começa a simulação, ele não coloca informação no cliente.
+
+00:48:55.000 --> 00:48:59.000
+Josue Jofre: Pues no, Pues ya no Los simuladores dan información.
+
+00:48:56.000 --> 00:49:02.000
+Alessandra Monteiro: Não. Mesmo ali em Side. Não acontece assim.
+
+00:49:01.000 --> 00:49:05.000
+Josue Jofre: No no coloquen datos Clinch.
+
+00:49:04.000 --> 00:49:09.000
+Alessandra Monteiro: Só coloca o valor. Campanha.
+
+00:49:05.000 --> 00:49:07.000
+Josue Jofre: El máximo, la Sau.
+
+00:49:08.000 --> 00:49:10.000
+Josue Jofre: Y eso me has dado.
+
+00:49:09.000 --> 00:49:10.000
+Aleksander Santos Sousa: Isso.
+
+00:49:10.000 --> 00:49:19.000
+Alessandra Monteiro: Eu acho que seria importante. Só talvez a gente ter esse campinho de observação seria importante.
+
+00:49:19.000 --> 00:49:22.000
+Alessandra Monteiro: Até para a gente ter uma ação rápida aqui.
+
+00:49:22.000 --> 00:49:25.000
+Alessandra Monteiro: De quem contatar.
+
+00:49:25.000 --> 00:49:43.000
+Alessandra Monteiro: Para poder dar seguimento no negócio. Porque não é apenas ir lá. O preço está bom. A gente tem prazo de, por exemplo, o mercado está aberto para poder efetuar a negociação e conseguir fazer o head na bolsa. Enfim, tem toda uma etapa. Ele não pode.
+
+00:49:43.000 --> 00:50:03.000
+Alessandra Monteiro: Dez horas da noite, ir lá e fazer um negócio. Porque não vai ter o suporte do negócio de grãos por trás, porque a bolsa vai estar fechada. A gente não vai conseguir fazer o médico, até porque quando a bolsa fecha.
+
+00:49:59.000 --> 00:50:02.000
+Josue Jofre: Conseguir su campo.
+
+00:50:03.000 --> 00:50:21.000
+Alessandra Monteiro: Ela perde a referência de Chicago de um dos componentes. Por exemplo, se, na hora que o mercado está aberto, vamos falar que Chicago está, sei lá, treze na hora que o mercado fecha, ele sai de treze e vai para doze.
+
+00:50:21.000 --> 00:50:44.000
+Alessandra Monteiro: O que deixa o preço pior, entendeu? Mas que não é uma verdade. É só porque o mercado está fechado e ele perde a referência. Então, nesse momento, o Rtv for entrar lá e tentar fazer uma solução, vai ficar bem ruim. Ele vai perder a referência de Chicago, caso ele venha buscar essa precificação aqui, ou aqui, em seja.
+
+00:50:38.000 --> 00:50:40.000
+Josue Jofre: Perfeito.
+
+00:50:46.000 --> 00:50:49.000
+Alessandra Monteiro: Aí o que acontece.
+
+00:50:48.000 --> 00:51:06.000
+Josue Jofre: E quando você diz observação, é descrever exatamente isso embaixo. Por exemplo, se você fez uma simulação hoje, essa simulação é válida até tal horário, realizando simulações fora do horário de funcionamento da bolsa.
+
+00:50:49.000 --> 00:50:50.000
+Alessandra Monteiro: Tchau, Tchau, Tchau, Tchau, Tchau.
+
+00:50:50.000 --> 00:50:53.000
+Alessandra Monteiro: E aí?
+
+00:50:56.000 --> 00:51:02.000
+Alessandra Monteiro: Linguagem.
+
+00:51:02.000 --> 00:51:03.000
+Alessandra Monteiro: Deus!
+
+00:51:03.000 --> 00:51:06.000
+Alessandra Monteiro: É isso aqui.
+
+00:51:06.000 --> 00:51:13.000
+Josue Jofre: O valor tende a ser inferior. É esse tipo de observação, né?
+
+00:51:07.000 --> 00:51:22.000
+Alessandra Monteiro: É isso. E também, às vezes, um campo do próprio Rtv digitalar essa negociação trata se da.
+
+00:51:22.000 --> 00:51:33.000
+Alessandra Monteiro: A gente pegou testamento.
+
+00:51:25.000 --> 00:51:42.000
+Josue Jofre: Mas até hoje, a gente não vai ter nenhuma integração com vocês. O que eu quero dizer com isso não é porque alguém fez uma simulação que você vai receber um e mail sobre essa simulação hoje. O que pode ocorrer é, ele fez a simulação gerou um Pdf daquilo.
+
+00:51:33.000 --> 00:51:36.000
+Alessandra Monteiro: Êxito.
+
+00:51:36.000 --> 00:51:38.000
+Alessandra Monteiro: Olha.
+
+00:51:38.000 --> 00:51:41.000
+Alessandra Monteiro: Prejudique os dados de ouro.
+
+00:51:41.000 --> 00:51:43.000
+Alessandra Monteiro: Boa tarde.
+
+00:51:42.000 --> 00:51:57.000
+Josue Jofre: E depois, quando ele for seguir nas negociações, talvez esse Pdf chegue para vocês. Aí você vai ver. Poxa, então o cara fez uma simulação ontem às vinte horas. Então, está péssima. Essa simulação.
+
+00:51:48.000 --> 00:51:50.000
+Alessandra Monteiro: Tenho uma.
+
+00:51:51.000 --> 00:51:53.000
+Alessandra Monteiro: Amém.
+
+00:51:57.000 --> 00:52:02.000
+Alessandra Monteiro: Não, mas olha só. Ele pode estar fazendo a simulação.
+
+00:52:02.000 --> 00:52:08.000
+Alessandra Monteiro: E efetivar a negociação. Certo.
+
+00:52:07.000 --> 00:52:13.000
+Josue Jofre: Como que ele é efetiva hoje, efetiva na conversa com a pessoa. Ou você diz.
+
+00:52:08.000 --> 00:52:21.000
+Alessandra Monteiro: Pois é. E como que a gente, por exemplo, vai saber se aquela simulação que ele está fazendo. Ele gostou tanto do preço que ele já quer fechar na hora.
+
+00:52:21.000 --> 00:52:33.000
+Alessandra Monteiro: Aqueles vinte e dois dólares para ele. Faz sentido. E ele quer travar como que, por exemplo, a gente vai ser comunicado disso para que a gente trave o grão dele aqui na ponta.
+
+00:52:33.000 --> 00:52:51.000
+Alessandra Monteiro: Eu tinha entendido. Assim que quando chegar no momento de gerar a simulação, é que o negócio está sendo efetivado, ou eu estou equivocada. Eu achei que fosse isso.
+
+00:52:34.000 --> 00:52:36.000
+Josue Jofre: Então.
+
+00:52:36.000 --> 00:52:37.000
+Josue Jofre: Tchau.
+
+00:52:49.000 --> 00:53:06.000
+Josue Jofre: Eu tinha entendido diferente. E é legal essa conversa, até para a gente ver como que esse simulador de fato agrega valor. Eu tinha entendido que essa simulação é uma especulação entre Rtv e produtor. Da forma que ele quer.
+
+00:52:52.000 --> 00:52:56.000
+Alessandra Monteiro: Versão cinco.
+
+00:52:56.000 --> 00:52:59.000
+Alessandra Monteiro: You're welcome.
+
+00:53:01.000 --> 00:53:10.000
+Alessandra Monteiro: Para estressar.
+
+00:53:07.000 --> 00:53:24.000
+Josue Jofre: Ele quer estressar ali os meios diferentes, as modalidades diferentes de pagamento. Ele vai ver que o Barter é a mais interessante. Se ele de fato quiser seguir pelo Barter, então ele vai seguir os meios atuais hoje.
+
+00:53:10.000 --> 00:53:11.000
+Alessandra Monteiro: will not be successful.
+
+00:53:11.000 --> 00:53:13.000
+Alessandra Monteiro: Let me know.
+
+00:53:18.000 --> 00:53:23.000
+Alessandra Monteiro: Música.
+
+00:53:23.000 --> 00:53:27.000
+Alessandra Monteiro: Oh, yeah.
+
+00:53:24.000 --> 00:53:39.000
+Josue Jofre: Eu imagino que o Rtv já tem algum tipo de canal com vocês de comunicação para falar. Olha, o produtor aqui. Ele quer fechar neste valor do Barter sem nenhuma integração sistêmica. Eu imagino. Hoje.
+
+00:53:27.000 --> 00:53:29.000
+Alessandra Monteiro: Hello, go ahead, can you…
+
+00:53:29.000 --> 00:53:30.000
+Alessandra Monteiro: Mm-hmm.
+
+00:53:30.000 --> 00:53:34.000
+Alessandra Monteiro: Thank you.
+
+00:53:36.000 --> 00:53:38.000
+Alessandra Monteiro: Obrigado.
+
+00:53:39.000 --> 00:53:41.000
+Alessandra Monteiro: Depois a quarenta e cinco.
+
+00:53:39.000 --> 00:53:43.000
+Josue Jofre: Que é toda uma conversa com vocês ou não?
+
+00:53:41.000 --> 00:53:57.000
+Alessandra Monteiro: Hoje. É dessa forma. Hoje é tudo tipo, ele vai ligar, vai pedir o preço. A gente vai passar. Ele vai fazer as simulações lá que ele tem que fazer e vai retornar. Ó, o produtor achou interessante. Vai fechar ou não vai fechar.
+
+00:53:57.000 --> 00:54:03.000
+Alessandra Monteiro: Hoje. É feito dessa forma que você falou.
+
+00:53:58.000 --> 00:54:00.000
+Josue Jofre: O cruzeiro.
+
+00:54:00.000 --> 00:54:16.000
+Josue Jofre: Aí. Vamos dizer que o simulador o que ele vai encurtar? Ele não vai precisar ligar para você para saber o valor. Ele vai simular e ele vai entrar em contato com vocês um pouco mais preparado. Fizemos uma simulação.
+
+00:54:04.000 --> 00:54:07.000
+Alessandra Monteiro: Música.
+
+00:54:09.000 --> 00:54:12.000
+Alessandra Monteiro: Música.
+
+00:54:13.000 --> 00:54:15.000
+Alessandra Monteiro: Uh… problem.
+
+00:54:15.000 --> 00:54:19.000
+Alessandra Monteiro: I have to do more for you.
+
+00:54:16.000 --> 00:54:28.000
+Josue Jofre: Agora há pouco o valor está esse. Ele gostou e ele já quer seguir para o contrato. Então eu imagino que você vai ter mais insumos para ir direto para aquela telinha que é novo contrato.
+
+00:54:20.000 --> 00:54:22.000
+Alessandra Monteiro: It does have to move.
+
+00:54:24.000 --> 00:54:26.000
+Alessandra Monteiro: From the days of Muslims.
+
+00:54:27.000 --> 00:54:30.000
+Alessandra Monteiro: Double. No, perfecto.
+
+00:54:31.000 --> 00:54:39.000
+Alessandra Monteiro: Thank you. Thank you.
+
+00:54:32.000 --> 00:54:34.000
+Josue Jofre: Mas.
+
+00:54:34.000 --> 00:54:38.000
+Josue Jofre: Mas assim não lê. É ótimo que eu.
+
+00:54:38.000 --> 00:54:57.000
+Josue Jofre: É ótimo que você falou isso, porque, na verdade, esse eu acho que deve ser o futuro. O que eu quero dizer com isso? Depois da simulação, tem as caixinhas, né? Se o cara quiser contratar de repente ele clicar naquela caixinha, direcionar para o caminho certo, colocar os dados do produtor.
+
+00:54:41.000 --> 00:54:43.000
+Alessandra Monteiro: Música.
+
+00:54:43.000 --> 00:54:46.000
+Alessandra Monteiro: I'll see you at the next one. Thank you.
+
+00:54:46.000 --> 00:54:48.000
+Alessandra Monteiro: Thank you. I'm close.
+
+00:54:57.000 --> 00:55:15.000
+Josue Jofre: E já de repente, ter uma integração inversa com o Wcis já criando o contrato. E de repente, você só é avisada. Um novo contrato foi gerado no Wcis com estas informações é importante, Sim, a gente ter essa conversa e a mesma coisa. Até falando mais aqui do Alec Fire, Jazz.
+
+00:54:57.000 --> 00:54:59.000
+Alessandra Monteiro: Oh.
+
+00:54:59.000 --> 00:55:00.000
+Alessandra Monteiro: Nisso.
+
+00:55:08.000 --> 00:55:11.000
+Alessandra Monteiro: Sim. Então.
+
+00:55:13.000 --> 00:55:16.000
+Alessandra Monteiro: Música.
+
+00:55:15.000 --> 00:55:29.000
+Josue Jofre: Pensando nas outras modalidades financeiras, qual que é o caminho que a gente tem que percorrer? Vai de repente reduzir o trabalho do time da Mari nas contratações. Então a gente explora.
+
+00:55:18.000 --> 00:55:19.000
+Alessandra Monteiro: Óbvio.
+
+00:55:21.000 --> 00:55:23.000
+Alessandra Monteiro: Você tem mais.
+
+00:55:23.000 --> 00:55:24.000
+Alessandra Monteiro: E aí?
+
+00:55:26.000 --> 00:55:27.000
+Alessandra Monteiro: E aí?
+
+00:55:29.000 --> 00:55:31.000
+Alessandra Monteiro: E aí?
+
+00:55:29.000 --> 00:55:38.000
+Josue Jofre: Então, primeiro, a gente entrega nesse formato a lei, que é puramente uma simulação que vai evitar uma ligação para saber o valor.
+
+00:55:33.000 --> 00:55:34.000
+Alessandra Monteiro: Obrigado.
+
+00:55:36.000 --> 00:55:39.000
+Alessandra Monteiro: Curiosity move, tá.
+
+00:55:40.000 --> 00:55:49.000
+Alessandra Monteiro: E é isso. É as formas que a gente.
+
+00:55:49.000 --> 00:55:57.000
+Alessandra Monteiro: Hoje ver preço. Eu não sei por que que ele fez. Viu? Eu consegui estragar todo o meu negócio.
+
+00:56:01.000 --> 00:56:04.000
+Josue Jofre: Eu. Depois da sua apresentação.
+
+00:56:01.000 --> 00:56:03.000
+Alessandra Monteiro: É as duas.
+
+00:56:03.000 --> 00:56:08.000
+Alessandra Monteiro: É as duas formas que a gente tem de precificar. Por exemplo.
+
+00:56:05.000 --> 00:56:07.000
+Josue Jofre: Desculpa de falar.
+
+00:56:08.000 --> 00:56:19.000
+Alessandra Monteiro: As simulações que vão fazer de conta que a gente vai cadastrar. Sei lá, dez cidades do Goiás.
+
+00:56:19.000 --> 00:56:35.000
+Alessandra Monteiro: Para que ele venha buscar aqui. Ele já fica salvo aqui. Essas dez cidades do Goiás que eu estou monitorando. O preço. Deve estar com algum erro, tá? Não sei porque ele fez isso, mas em tese, é para aparecer aqui.
+
+00:56:35.000 --> 00:56:40.000
+Alessandra Monteiro: Por exemplo, aqui a gente tem.
+
+00:56:40.000 --> 00:56:57.000
+Alessandra Monteiro: É a mesma cidade. Campo verde, campo Verde. Porém ele está precificando meses logísticos diferentes. Ele está trazendo o preço com base na logística mês três. E ele está trazendo o preço. Base. Logística, mês dois. Observe que são preços diferentes.
+
+00:56:57.000 --> 00:57:09.000
+Alessandra Monteiro: Aí sempre essas informações vão ficar aqui. Eu não sei se de repente vocês virem buscar aqui. Você aqui.
+
+00:57:09.000 --> 00:57:14.000
+Alessandra Monteiro: Hoje para mim. Eu vejo que faz mais sentido aqui do que aqui.
+
+00:57:15.000 --> 00:57:18.000
+Alessandra Monteiro: Mas depois você consiga pegar outros.
+
+00:57:18.000 --> 00:57:23.000
+Alessandra Monteiro: Porque aqui? Para ele trazer a informação, eu preciso digitar.
+
+00:57:19.000 --> 00:57:21.000
+Josue Jofre: Pensando aqui.
+
+00:57:24.000 --> 00:57:30.000
+Alessandra Monteiro: E aqui. Não aqui. Ele já vai ficar solto.
+
+00:57:31.000 --> 00:57:48.000
+Aleksander Santos Sousa: Sobre essa parte de busca. Se der tudo certo, a gente vai ser via Api. Então a gente não vai entrar manualmente no sistema para buscar o dado. Vai ser feito de forma automática. O nosso simulador vai se comunicar diretamente com o Wx.
+
+00:57:34.000 --> 00:57:35.000
+Alessandra Monteiro: E aí?
+
+00:57:36.000 --> 00:57:39.000
+Alessandra Monteiro: Historicamente feminino.
+
+00:57:39.000 --> 00:57:41.000
+Alessandra Monteiro: Amém a Deus.
+
+00:57:41.000 --> 00:57:43.000
+Alessandra Monteiro: Aqui oitenta e cinco.
+
+00:57:43.000 --> 00:57:59.000
+Alessandra Monteiro: Mas, por exemplo, como que ele se comunicaria pensando que nessa tela aqui eu preciso digitar as informações para que ele saia.
+
+00:57:48.000 --> 00:57:50.000
+Aleksander Santos Sousa: Para poder buscar.
+
+00:57:59.000 --> 00:58:05.000
+Alessandra Monteiro: Eu não sei se eu estou conseguindo me expressar direito.
+
+00:58:04.000 --> 00:58:20.000
+Josue Jofre: Via Api. A gente também tem que passar essas informações a ler. É só um outro canal de comunicação. Sem essa interface gráfica. A gente tem que passar todos esses campos, e ele retornaria as mesmas informações que você está vendo.
+
+00:58:04.000 --> 00:58:06.000
+Aleksander Santos Sousa: É que.
+
+00:58:07.000 --> 00:58:13.000
+Alessandra Monteiro: Negativo.
+
+00:58:10.000 --> 00:58:11.000
+Aleksander Santos Sousa: Isso.
+
+00:58:13.000 --> 00:58:22.000
+Alessandra Monteiro: Ah, legal, legal, legal.
+
+00:58:20.000 --> 00:58:26.000
+Josue Jofre: Ali embaixo. É só uma forma que entre sistemas, é mais fácil se comunicar.
+
+00:58:20.000 --> 00:58:22.000
+Aleksander Santos Sousa: Exato.
+
+00:58:23.000 --> 00:58:24.000
+Alessandra Monteiro: Uma coisa.
+
+00:58:24.000 --> 00:58:29.000
+Alessandra Monteiro: Entendi.
+
+00:58:26.000 --> 00:58:28.000
+Aleksander Santos Sousa: Isso aí.
+
+00:58:28.000 --> 00:58:36.000
+Josue Jofre: Mais claro é que nem o Alex falou. A gente espera que consiga por esse caminho, que é o caminho mais adequado.
+
+00:58:29.000 --> 00:58:33.000
+Alessandra Monteiro: Então.
+
+00:58:34.000 --> 00:58:36.000
+Alessandra Monteiro: Precisa.
+
+00:58:36.000 --> 00:58:38.000
+Alessandra Monteiro: E aí?
+
+00:58:37.000 --> 00:58:46.000
+Josue Jofre: Aí. Depois dessa reunião, vai ficar muito mais fácil a gente validar se o W6 realmente está preparado para entregar essas informações.
+
+00:58:38.000 --> 00:58:41.000
+Alessandra Monteiro: Se enfrentou.
+
+00:58:45.000 --> 00:59:00.000
+Alessandra Monteiro: Porque aqui também, pensando numa busca aqui que ele, por exemplo, traga o melhor preço que ele está mostrando.
+
+00:59:00.000 --> 00:59:05.000
+Alessandra Monteiro: Aqui. Eu ordenei do maior valor.
+
+00:59:06.000 --> 00:59:15.000
+Alessandra Monteiro: Para o menor valor. Se você observar esse maior valor aqui, ele está numa logística que eu não pedi, certo?
+
+00:59:16.000 --> 00:59:24.000
+Alessandra Monteiro: No mês cinco. Eu tinha digitado aqui em cima do mês, três ao mês quatro. Então ele deveria considerar.
+
+00:59:16.000 --> 00:59:17.000
+Aleksander Santos Sousa: E aí?
+
+00:59:24.000 --> 00:59:27.000
+Alessandra Monteiro: O melhor valor.
+
+00:59:27.000 --> 00:59:31.000
+Alessandra Monteiro: Olhando para a logística que eu pedi para ele.
+
+00:59:31.000 --> 00:59:36.000
+Alessandra Monteiro: Então aqui, olhando para o mês quatro, que seriam esses vinte e três.
+
+00:59:36.000 --> 00:59:45.000
+Alessandra Monteiro: E olhando para o mês três, seria esses vinte e dois, não essas. Desabilitada. A gente não considera. Seria esses vinte e dois e dezanove. Aqui.
+
+00:59:46.000 --> 00:59:49.000
+Alessandra Monteiro: Não sei se é possível fazer isso.
+
+00:59:50.000 --> 00:59:52.000
+Alessandra Monteiro: E aí?
+
+00:59:51.000 --> 01:00:03.000
+Aleksander Santos Sousa: Quanto a isso, é se dar preciso entregar as informações desse jeito, a gente consegue filtrar pela data e só exibir na data que o produtor lhe pediu para simular.
+
+01:00:02.000 --> 01:00:07.000
+Alessandra Monteiro: Isso além da data, ele trazer a melhor condição.
+
+01:00:09.000 --> 01:00:11.000
+Aleksander Santos Sousa: Tá bem. Se ele.
+
+01:00:11.000 --> 01:00:15.000
+Aleksander Santos Sousa: Retornar todas essas informações. A gente consegue saber qual é a melhor condição.
+
+01:00:15.000 --> 01:00:19.000
+Aleksander Santos Sousa: Por esses mesmos dados aí.
+
+01:00:16.000 --> 01:00:17.000
+Alessandra Monteiro: Sim.
+
+01:00:25.000 --> 01:00:29.000
+Aleksander Santos Sousa: A única coisa que a gente não consegue aí do jeito que tá, é.
+
+01:00:29.000 --> 01:00:36.000
+Aleksander Santos Sousa: Esse range de datas ali de Março até Abril. A nossa data é fixa.
+
+01:00:33.000 --> 01:00:35.000
+Alessandra Monteiro: Mas não precisa.
+
+01:00:35.000 --> 01:00:39.000
+Alessandra Monteiro: A gente pode colocar um do três um todo. Três.
+
+01:00:43.000 --> 01:00:51.000
+Alessandra Monteiro: É que para não ter que ficar às vezes digitando mês a mês, a gente já digita um período aqui para ficar mais fácil. A visualização aqui embaixo.
+
+01:00:51.000 --> 01:00:53.000
+Alessandra Monteiro: Só por isso.
+
+01:00:51.000 --> 01:00:53.000
+Aleksander Santos Sousa: Uhum.
+
+01:00:54.000 --> 01:01:00.000
+Alessandra Monteiro: Mas ele é habiludo sabendo que estou digitando mês três. E ele está trazendo mês quatro. Também.
+
+01:00:57.000 --> 01:00:59.000
+Aleksander Santos Sousa: E aí?
+
+01:01:01.000 --> 01:01:02.000
+Aleksander Santos Sousa: E aí?
+
+01:01:01.000 --> 01:01:06.000
+Alessandra Monteiro: Mas aí ele deveria considerar somente esses que são mais estranhos aqui.
+
+01:01:06.000 --> 01:01:09.000
+Alessandra Monteiro: E, se possível, é a melhor ponto.
+
+01:01:09.000 --> 01:01:11.000
+Aleksander Santos Sousa: Perfeito.
+
+01:01:11.000 --> 01:01:13.000
+Aleksander Santos Sousa: Isso é possível?
+
+01:01:16.000 --> 01:01:29.000
+Josue Jofre: Ali, aí. Com que frequência você precisa cadastrar novas? Eu não sei se o termo correto é praça, mas você comentou que nessa cidade aqui eu cadastrei essas quatro praças.
+
+01:01:29.000 --> 01:01:30.000
+Josue Jofre: É.
+
+01:01:31.000 --> 01:01:34.000
+Alessandra Monteiro: Noi.
+
+01:01:32.000 --> 01:01:35.000
+Josue Jofre: Com que frequência esse cadastro é editado?
+
+01:01:34.000 --> 01:01:37.000
+Alessandra Monteiro: No estado.
+
+01:01:37.000 --> 01:01:42.000
+Alessandra Monteiro: Por exemplo, no estado, a gente pode cadastrar.
+
+01:01:43.000 --> 01:01:46.000
+Alessandra Monteiro: Mais de uma cidade.
+
+01:01:47.000 --> 01:01:58.000
+Alessandra Monteiro: A gente inclui ou não uma cidade. De acordo com a demanda que vem do campo, por exemplo, é que eu uso pouco essa tela aqui.
+
+01:01:58.000 --> 01:02:08.000
+Alessandra Monteiro: E ela tem uma forma mais rápida de visualização, porque aqui poderia ter cadastrado. Campo Verde. Não posso clicar que ele fica doido.
+
+01:02:08.000 --> 01:02:16.000
+Alessandra Monteiro: Campo verde. Primavera, Rondonópolis. São todas cidades do mato grosso, bitquiro, campo novo.
+
+01:02:16.000 --> 01:02:28.000
+Alessandra Monteiro: Poderia trazer toda essa listagem aqui para quando o produtor, o produtor de campo verde ligou e quer saber o preço dele lá hoje. Eu tenho aqui vinte e dois. Ah, o produtor de Primavera ligou.
+
+01:02:28.000 --> 01:02:39.000
+Alessandra Monteiro: Eu já consigo ver o preço dele aqui e assim sucessivamente. Então, à medida que vem uma demanda do campo por uma praça. A gente pode ir acrescentando aqui.
+
+01:02:42.000 --> 01:02:47.000
+Aleksander Santos Sousa: Pelo que você falou. Eu entendo. Que praça é uma cidade do estado.
+
+01:02:45.000 --> 01:02:49.000
+Alessandra Monteiro: Perfeito. É uma cidade do estado.
+
+01:02:48.000 --> 01:02:49.000
+Aleksander Santos Sousa: Certo.
+
+01:02:51.000 --> 01:02:56.000
+Aleksander Santos Sousa: Você tem uma lista de cidades que você tem disponível para escolher.
+
+01:02:56.000 --> 01:02:58.000
+Aleksander Santos Sousa: Eu tenho uma lista de praças.
+
+01:02:58.000 --> 01:03:02.000
+Aleksander Santos Sousa: Um gerenciamento de praças, digamos assim.
+
+01:03:03.000 --> 01:03:06.000
+Alessandra Monteiro: Eu não tenho.
+
+01:03:06.000 --> 01:03:20.000
+Alessandra Monteiro: Por exemplo. Pode ser que alguma base do próprio Wcis ele tenha, porque eu imagino que tenha todas as cidades possíveis cadastradas aqui. Todas estão atualizadas. Não.
+
+01:03:07.000 --> 01:03:09.000
+Aleksander Santos Sousa: Entendi.
+
+01:03:20.000 --> 01:03:24.000
+Alessandra Monteiro: Tem umas que inclusive não estão nem cadastrado. O frete.
+
+01:03:25.000 --> 01:03:26.000
+Aleksander Santos Sousa: Uhum.
+
+01:03:25.000 --> 01:03:30.000
+Alessandra Monteiro: Estou pensar numa cidade bem.
+
+01:03:30.000 --> 01:03:31.000
+Alessandra Monteiro: E aí?
+
+01:03:31.000 --> 01:03:33.000
+Alessandra Monteiro: Okay, sign in.
+
+01:03:34.000 --> 01:03:40.000
+Alessandra Monteiro: I should have known the mustache. Now I'm used to the spread of our thoughts.
+
+01:03:40.000 --> 01:03:41.000
+Aleksander Santos Sousa: E aí?
+
+01:03:45.000 --> 01:03:46.000
+Alessandra Monteiro: All over.
+
+01:03:46.000 --> 01:03:48.000
+Alessandra Monteiro: I must dive into this.
+
+01:03:49.000 --> 01:03:51.000
+Alessandra Monteiro: Have a nice day.
+
+01:03:57.000 --> 01:03:59.000
+Alessandra Monteiro: Okay.
+
+01:04:00.000 --> 01:04:01.000
+Alessandra Monteiro: E aí?
+
+01:04:01.000 --> 01:04:04.000
+Alessandra Monteiro: That's what you mean.
+
+01:04:04.000 --> 01:04:08.000
+Alessandra Monteiro: Let's talk about your most difficult competing shop.
+
+01:04:09.000 --> 01:04:12.000
+Alessandra Monteiro: Okay.
+
+01:04:14.000 --> 01:04:16.000
+Alessandra Monteiro: Have a seat. Have a seat.
+
+01:04:17.000 --> 01:04:19.000
+Alessandra Monteiro: Yeah, the port…
+
+01:04:20.000 --> 01:04:27.000
+Alessandra Monteiro: Não tem frete vinculado a ela. Tá vendo?
+
+01:04:27.000 --> 01:04:35.000
+Alessandra Monteiro: Não tem uma logística vinculada que, não tendo a logística, ele não calcula o preço aqui para a gente.
+
+01:04:35.000 --> 01:04:43.000
+Alessandra Monteiro: Então, se você for olhar por cidade, estou entendendo que vai ter noventa das cidades do Brasil aqui.
+
+01:04:44.000 --> 01:04:47.000
+Alessandra Monteiro: Só que todas vão estar cadastradas. Não.
+
+01:04:47.000 --> 01:04:51.000
+Alessandra Monteiro: Todas vão estar atualizadas. Não, também.
+
+01:04:52.000 --> 01:05:08.000
+Josue Jofre: E para ver se isso acontecer no nosso simulador, a gente pode dar uma mensagem ou menos assim. Não foi possível calcular, pois a cidade não está cadastrada para cadastrar. Entre em contato com o setor, tal.
+
+01:04:58.000 --> 01:04:59.000
+Alessandra Monteiro: Pode.
+
+01:05:01.000 --> 01:05:02.000
+Alessandra Monteiro: Tá acontecendo.
+
+01:05:06.000 --> 01:05:09.000
+Alessandra Monteiro: Isso. Perfeito.
+
+01:05:09.000 --> 01:05:10.000
+Josue Jofre: Tá bom.
+
+01:05:10.000 --> 01:05:24.000
+Alessandra Monteiro: Do não cadastro está perfeita. A mensagem agora, o não estar atualizado. Frete aí. Eu já entendo que é uma responsabilidade nossa, porque o sistema não tem um parâmetro para entender o que está atualizado e o que não está.
+
+01:05:11.000 --> 01:05:12.000
+Josue Jofre: Tá bom.
+
+01:05:24.000 --> 01:05:27.000
+Josue Jofre: Sim, sim.
+
+01:05:24.000 --> 01:05:29.000
+Alessandra Monteiro: Se tem um preço lá ele vai considerar se der baixo.
+
+01:05:29.000 --> 01:05:34.000
+Alessandra Monteiro: Vai ser aquilo? Porque não está atualizado.
+
+01:05:32.000 --> 01:05:34.000
+Josue Jofre: Perfeito.
+
+01:05:34.000 --> 01:05:41.000
+Alessandra Monteiro: Mas não tendo cadastro aí, a mensagem é totalmente. Ok, faz total sentido.
+
+01:05:35.000 --> 01:05:37.000
+Josue Jofre: Perfeito.
+
+01:05:43.000 --> 01:05:53.000
+Josue Jofre: E para que aquele campo e empresa é relevante, sendo que a gente já tem a cidade de origem que fala, que é em minas gerais.
+
+01:05:58.000 --> 01:06:00.000
+Alessandra Monteiro: E aí?
+
+01:06:03.000 --> 01:06:08.000
+Alessandra Monteiro: Aqui. Está relacionado à filial, né?
+
+01:06:08.000 --> 01:06:21.000
+Alessandra Monteiro: E aqui eu acredito que tenha. Icmg tem um estado que ó quando você digita ouro branco. Está vendo que ele tem três cidades com esse nome em três.
+
+01:06:21.000 --> 01:06:23.000
+Alessandra Monteiro: Estado Diferente.
+
+01:06:23.000 --> 01:06:30.000
+Alessandra Monteiro: Como que eu sei que essa é de milhas? Como que eu sei que essa é de Alagoas? Ou essa é de.
+
+01:06:24.000 --> 01:06:25.000
+Josue Jofre: Sim.
+
+01:06:30.000 --> 01:06:41.000
+Alessandra Monteiro: Em Rondônia. Não é isso. Não, rondônia. Então aqui é muito mais para saber de onde que é essa cidade.
+
+01:06:42.000 --> 01:06:45.000
+Alessandra Monteiro: E aqui é a filial da nutrente.
+
+01:06:45.000 --> 01:06:47.000
+Alessandra Monteiro: Ai.
+
+01:06:49.000 --> 01:06:52.000
+Alessandra Monteiro: Onde está situada a filial da nutrete? Na verdade.
+
+01:06:49.000 --> 01:06:50.000
+Josue Jofre: Tchau.
+
+01:06:55.000 --> 01:06:59.000
+Josue Jofre: Mas a filial da Nutrade não impacta no preço.
+
+01:06:58.000 --> 01:07:00.000
+Alessandra Monteiro: Impacta me.
+
+01:07:01.000 --> 01:07:04.000
+Alessandra Monteiro: E aí?
+
+01:07:04.000 --> 01:07:06.000
+Alessandra Monteiro: E aí?
+
+01:07:07.000 --> 01:07:11.000
+Josue Jofre: Então eu tenho que passar como parâmetro para.
+
+01:07:08.000 --> 01:07:16.000
+Alessandra Monteiro: Deixa eu pensar. Na verdade, eu acho que vai impactar mais aqui.
+
+01:07:16.000 --> 01:07:18.000
+Alessandra Monteiro: Do que aqui.
+
+01:07:19.000 --> 01:07:22.000
+Alessandra Monteiro: Vem fazer um teste aqui. Peraí.
+
+01:07:21.000 --> 01:07:25.000
+Josue Jofre: Naquela outra terra. Isso nem existe.
+
+01:07:26.000 --> 01:07:29.000
+Josue Jofre: Naquela tela mais simples.
+
+01:07:34.000 --> 01:07:38.000
+Alessandra Monteiro: Você já faz esse primeiro parâmetro.
+
+01:07:35.000 --> 01:07:37.000
+Josue Jofre: Ah, existe.
+
+01:07:38.000 --> 01:07:46.000
+Alessandra Monteiro: Quando você vai lançar? É que aqui já está salvo, né? Se a gente for fazer um novo, vamos pegar aqui, ó Goiás.
+
+01:07:38.000 --> 01:07:40.000
+Josue Jofre: Verdade.
+
+01:07:46.000 --> 01:07:51.000
+Alessandra Monteiro: Eles produzem soja.
+
+01:07:51.000 --> 01:07:56.000
+Alessandra Monteiro: Primo dos carros.
+
+01:07:54.000 --> 01:07:56.000
+Aleksander Santos Sousa: Beijo. Josué.
+
+01:07:57.000 --> 01:07:59.000
+Aleksander Santos Sousa: Nesse caso.
+
+01:07:57.000 --> 01:07:59.000
+Josue Jofre: Mealec.
+
+01:07:59.000 --> 01:08:06.000
+Aleksander Santos Sousa: Nesse caso, eu acho que seria quando a gente for tirar dúvidas sobre a documentação da Api.
+
+01:08:06.000 --> 01:08:10.000
+Aleksander Santos Sousa: Porque ela não pede a empresa para conseguir o preço.
+
+01:08:07.000 --> 01:08:12.000
+Alessandra Monteiro: Música.
+
+01:08:11.000 --> 01:08:16.000
+Aleksander Santos Sousa: Então acho que vale a pena tirar dúvida com o pessoal de infra lá, né?
+
+01:08:16.000 --> 01:08:31.000
+Josue Jofre: Sim, sim. E até depois combinar. Apesar que agora a gente tem acesso ao sistema. Mas quando a gente tiver acesso a Api em produção, chamar e comparar o preço aqui com a interface gráfica, para ver se não está dando diferença.
+
+01:08:17.000 --> 01:08:18.000
+Aleksander Santos Sousa: Poderia. Gente.
+
+01:08:31.000 --> 01:08:32.000
+Aleksander Santos Sousa: Isso.
+
+01:08:34.000 --> 01:08:42.000
+Alessandra Monteiro: Porque você me fez uma pergunta? Porque essa base aqui, por exemplo, já é a base.
+
+01:08:34.000 --> 01:08:36.000
+Josue Jofre: Boa.
+
+01:08:43.000 --> 01:08:47.000
+Alessandra Monteiro: Do contrato físico que a gente vai fazer.
+
+01:08:47.000 --> 01:09:00.000
+Alessandra Monteiro: Então, em tese, quando eu gerar essa boneta aqui e mandar para o Back Office, eles já vão ter visão que ele vai ter que fazer o contrato da Nude Trade do Goiás na cidade. Tal.
+
+01:09:00.000 --> 01:09:04.000
+Alessandra Monteiro: Mas aqui eu entendo que para fins de precificação.
+
+01:09:04.000 --> 01:09:11.000
+Alessandra Monteiro: A cidade já serviria a cidade versus um destino. Para onde está indo?
+
+01:09:11.000 --> 01:09:19.000
+Alessandra Monteiro: E aí é meio que redundante. Aqui mesmo. Por exemplo, ouro branco, minas gerais. Estou calculando ouro branco, minas gerais.
+
+01:09:19.000 --> 01:09:28.000
+Alessandra Monteiro: Com frente aos destinos que a gente tinha aqui embaixo, que era paranaguá santos.
+
+01:09:28.000 --> 01:09:33.000
+Alessandra Monteiro: Então vai precificar origem, base e destino.
+
+01:09:33.000 --> 01:09:42.000
+Alessandra Monteiro: Então você tem razão em falar que às vezes a empresa para fins de precificação não vai impactar, visto que aqui já tem um estado.
+
+01:09:42.000 --> 01:09:48.000
+Alessandra Monteiro: O que eu não posso é confundir, pegar um ouro branco errado aqui.
+
+01:09:48.000 --> 01:09:55.000
+Alessandra Monteiro: Tipo, eu pensar que estou precificando minas. E eu tô olhando o peixe. Alagoas.
+
+01:09:56.000 --> 01:09:57.000
+Josue Jofre: Perfect.
+
+01:10:02.000 --> 01:10:15.000
+Josue Jofre: Du ponto de vista fiscal, pra prosegui, ne, pensa mi contrato, e estudo sincido, ne, quelque e unidade ja di dano traige. Es du ponto de vista de calculo quien, na.
+
+01:10:03.000 --> 01:10:04.000
+Alessandra Monteiro: Isso é muito.
+
+01:10:07.000 --> 01:10:09.000
+Alessandra Monteiro: Aham! Então vai.
+
+01:10:09.000 --> 01:10:16.000
+Alessandra Monteiro: Isso. Cálculo não é redundante.
+
+01:10:18.000 --> 01:10:21.000
+Alessandra Monteiro: Rápido.
+
+01:10:21.000 --> 01:10:36.000
+Josue Jofre: Allez, a meme respondeu todas les mes dudes. J'ai lo parez otras que avoir rendez-pizzes avec un AWC, es a PIC, ne, ou allez que falou, mais trataclarissimo que parenche a funcion.
+
+01:10:27.000 --> 01:10:29.000
+Alessandra Monteiro: E aí?
+
+01:10:31.000 --> 01:10:32.000
+Alessandra Monteiro: Enquadramento.
+
+01:10:36.000 --> 01:10:39.000
+Josue Jofre: Mais ouvroutement trois a.
+
+01:10:39.000 --> 01:10:42.000
+Aleksander Santos Sousa: Não da minha parte também já ficou bem explicado.
+
+01:10:40.000 --> 01:10:42.000
+Alessandra Monteiro: Que não.
+
+01:10:42.000 --> 01:10:58.000
+Alessandra Monteiro: Ai, ai, esse Alex. É engraçado. Eu ouvi Alex, porque o meu irmão chama Alex Sandro. E aí meu pai é Alex Sandro. Aí meu pai vai chamar ele. Ele falou assim.
+
+01:10:43.000 --> 01:10:45.000
+Josue Jofre: My opinion.
+
+01:10:45.000 --> 01:10:47.000
+Josue Jofre: Are you?
+
+01:10:47.000 --> 01:10:48.000
+Aleksander Santos Sousa: E aí?
+
+01:10:53.000 --> 01:10:55.000
+Aleksander Santos Sousa: Alex! Sandra.
+
+01:10:58.000 --> 01:10:59.000
+Alessandra Monteiro: E aí?
+
+01:10:59.000 --> 01:11:03.000
+Alessandra Monteiro: Daí você falando. Aí, me remete a ele.
+
+01:11:00.000 --> 01:11:01.000
+Aleksander Santos Sousa: Para.
+
+01:11:03.000 --> 01:11:04.000
+Alessandra Monteiro: Para.
+
+01:11:03.000 --> 01:11:05.000
+Aleksander Santos Sousa: Para.
+
+01:11:04.000 --> 01:11:10.000
+Josue Jofre: I'm sorry, I'm sorry, I'm sorry.
+
+01:11:06.000 --> 01:11:07.000
+Aleksander Santos Sousa: Legal.
+
+01:11:08.000 --> 01:11:15.000
+Aleksander Santos Sousa: É isso mais fácil, né, Alexander? É difícil de pronunciar.
+
+01:11:11.000 --> 01:11:23.000
+Alessandra Monteiro: Bom. Mas aí, se vocês precisarem de algo, é só gritar, tá.
+
+01:11:13.000 --> 01:11:15.000
+Josue Jofre: fascinating tool.
+
+01:11:15.000 --> 01:11:17.000
+Aleksander Santos Sousa: E aí?
+
+01:11:23.000 --> 01:11:25.000
+Aleksander Santos Sousa: Sertião.
+
+01:11:24.000 --> 01:11:26.000
+Alessandra Monteiro: Tem duas dimensão.
+
+01:11:27.000 --> 01:11:29.000
+Alessandra Monteiro: E aí?
+
+01:11:29.000 --> 01:11:31.000
+Alessandra Monteiro: E aí?
+
+01:11:31.000 --> 01:11:32.000
+Alessandra Monteiro: Tá.
+
+01:11:33.000 --> 01:11:36.000
+Alessandra Monteiro: Tá bom. Combinados.
+
+01:11:36.000 --> 01:11:40.000
+Aleksander Santos Sousa: Certinho. Muito obrigado. Viu? Muito esclarecedor.
+
+01:11:36.000 --> 01:11:38.000
+Alessandra Monteiro: Não parece lá.
+
+01:11:39.000 --> 01:11:40.000
+Josue Jofre: Ótima tarde.
+
+01:11:42.000 --> 01:11:44.000
+Josue Jofre: Tchau, gente.
+

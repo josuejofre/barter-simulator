@@ -22,102 +22,99 @@
 
     <div class="app-layout">
 
-        <!-- ==================== LEFT SIDEBAR MENU ==================== -->
+        <!-- ==================== LEFT SIDEBAR MENU (FIGMA JESS) ==================== -->
         <aside class="sidebar-menu">
             <div class="sidebar-logo">
-                <span class="syde-logo-text">barter hub</span>
+                <span class="syde-logo-brand">syde</span>
             </div>
 
             <nav class="nav-links">
-                <div class="sidebar-section-header">Assistente IA</div>
-                <a class="nav-link active" id="nav-link-assistente" onclick="showPage('assistente')">
-                    <div class="nav-link-main"><i class="fa-regular fa-comment-dots"></i> Assistente virtual</div>
-                </a>
+                <div class="sidebar-section-header">DASHBOARD</div>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-chart-line"></i> KPI</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-file-lines"></i> KPI – CNAB</div></a>
 
-                <div class="sidebar-section-header">Contas</div>
-                <a class="nav-link" id="nav-link-contas-list"
-                    onclick="alert('Funcionalidade simulada do painel administrativo')">
-                    <div class="nav-link-main"><i class="fa-regular fa-user"></i> Contas</div>
-                </a>
-                <a class="nav-link" id="nav-link-admins"
-                    onclick="alert('Funcionalidade simulada do painel administrativo')">
-                    <div class="nav-link-main"><i class="fa-solid fa-users-gear"></i> Administradores</div>
-                </a>
-                <a class="nav-link" id="nav-link-permissoes"
-                    onclick="alert('Funcionalidade simulada do painel administrativo')">
-                    <div class="nav-link-main"><i class="fa-solid fa-shield-halved"></i> Grupo de permissões</div>
-                </a>
-                <a class="nav-link" id="nav-link-logs"
-                    onclick="alert('Funcionalidade simulada do painel administrativo')">
-                    <div class="nav-link-main"><i class="fa-solid fa-list-check"></i> Logs das contas</div>
-                </a>
+                <div class="sidebar-section-header">CONTAS</div>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-regular fa-user"></i> Contas</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-handshake"></i> Parceiros de crédito</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-users-gear"></i> Administradores</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-shield-halved"></i> Grupo de permissões</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-list-check"></i> Log dos usuários</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-arrow-right-arrow-left"></i> Transações</div></a>
 
-                <div class="sidebar-section-header">Crédito</div>
-                <a class="nav-link active" id="nav-link-simulador-v2" onclick="showPage('simulador-v2')">
-                    <div class="nav-link-main"><i class="fa-solid fa-calculator"></i> Simulador</div>
-                </a>
-                <a class="nav-link" id="nav-link-campanhas" onclick="showPage('campanhas')">
-                    <div class="nav-link-main"><i class="fa-solid fa-calendar-days"></i> Campanhas</div>
-                </a>
-                <a class="nav-link" id="nav-link-pracas" onclick="showPage('pracas')">
-                    <div class="nav-link-main"><i class="fa-solid fa-map-location-dot"></i> Cadastro de Praças (WSys)
-                    </div>
-                </a>
-                <a class="nav-link" id="nav-link-regras" onclick="showPage('regras')">
-                    <div class="nav-link-main"><i class="fa-solid fa-book-open"></i> Regras de negócio</div>
-                </a>
-                <a class="nav-link" id="nav-link-tooltips" onclick="showPage('tooltips')">
-                    <div class="nav-link-main"><i class="fa-solid fa-circle-question"></i> Textos de Ajuda (Tooltips)
-                    </div>
-                </a>
-                <a class="nav-link" id="nav-link-solicitacoes"
-                    onclick="alert('Redirecionando para o fluxo de crédito corporativo')">
-                    <div class="nav-link-main"><i class="fa-solid fa-file-invoice-dollar"></i> Solicitações de crédito
-                    </div>
-                </a>
-                <a class="nav-link" id="nav-link-parceiros"
-                    onclick="alert('Redirecionando para o fluxo de crédito corporativo')">
-                    <div class="nav-link-main"><i class="fa-solid fa-handshake"></i> Parceiros de crédito</div>
-                </a>
-                <a class="nav-link" id="nav-link-fidc"
-                    onclick="alert('Redirecionando para o fluxo de crédito corporativo')">
-                    <div class="nav-link-main"><i class="fa-solid fa-building-columns"></i> Operação FIDC</div>
-                </a>
-                <a class="nav-link" id="nav-link-debitos"
-                    onclick="alert('Redirecionando para o fluxo de crédito corporativo')">
-                    <div class="nav-link-main"><i class="fa-solid fa-receipt"></i> Listagem de débitos</div>
-                </a>
+                <div class="sidebar-section-header">CRÉDITO</div>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-file-invoice-dollar"></i> Solicitações de crédito</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-handshake-angle"></i> Parceiros de crédito</div></a>
+                <a class="nav-link active" id="nav-link-simulador-v2" onclick="showPage('simulador-v2')"><div class="nav-link-main" style="color:#008080; font-weight:700;"><i class="fa-solid fa-calculator" style="color:#008080;"></i> Operação FIDC</div></a>
+
+                <div class="sidebar-section-header">Usuários</div>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-users"></i> Usuários</div></a>
+
+                <div class="sidebar-section-header">Clientes</div>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-address-book"></i> Clientes</div></a>
+
+                <div class="sidebar-section-header">OUTROS SERVIÇOS</div>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-cubes"></i> Outros serviços</div></a>
+
+                <div class="sidebar-section-header">INTEGRAÇÕES</div>
+                <a class="nav-link" id="nav-link-pracas" onclick="showPage('pracas')"><div class="nav-link-main"><i class="fa-solid fa-network-wired"></i> Parceiros</div></a>
+
+                <div class="sidebar-section-header">MOTOR DE CRÉDITO</div>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-sliders"></i> Distribuição de Limites</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-brain"></i> Decisão de crédito</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-coins"></i> Créditos disponíveis</div></a>
+
+                <div class="sidebar-section-header">CONTAS A PAGAR</div>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-folder-open"></i> Arquivos</div></a>
+
+                <div class="sidebar-section-header">CONTAS A RECEBER</div>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-ban"></i> Endereços bloqueados</div></a>
+
+                <div class="sidebar-section-header">HOLERITES</div>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-file-invoice"></i> Holerites</div></a>
+
+                <div class="sidebar-section-header">PARCEIROS</div>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-building"></i> Parceiros</div></a>
+
+                <div class="sidebar-section-header">CONFIGURAÇÕES</div>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-map"></i> Estados</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-city"></i> Cidades</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-briefcase"></i> Ocupações</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-calendar-xmark"></i> Feriados</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-calendar-day"></i> Detalhe do feriado</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-image"></i> Banner</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-truck-field"></i> Gestão de Fornecedores</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-landmark"></i> Gestão de bancos</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-seedling"></i> Gestão de Culturas</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-file-shield"></i> Gestão de Documentos Crédito</div></a>
+                <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-file-contract"></i> Gestão de Documentos FIDC</div></a>
+                <a class="nav-link" id="nav-link-regras" onclick="showPage('regras')"><div class="nav-link-main"><i class="fa-solid fa-book-open"></i> Regras de negócio</div></a>
+                <a class="nav-link" id="nav-link-campanhas" onclick="showPage('campanhas')"><div class="nav-link-main"><i class="fa-solid fa-calendar-days"></i> Campanhas</div></a>
+                <a class="nav-link" id="nav-link-tooltips" onclick="showPage('tooltips')"><div class="nav-link-main"><i class="fa-solid fa-circle-question"></i> FAQ / Tooltips</div></a>
             </nav>
 
-            <!-- User Profile Avatar Card -->
-            <div class="sidebar-user">
-                <div class="user-avatar-initials">U</div>
-                <div class="user-details">
-                    <div class="user-name">Usuário</div>
-                    <div class="user-email">usuario@barterhub.com.br</div>
-                </div>
-                <i class="fa-solid fa-right-from-bracket logout-icon" title="Sair"></i>
+            <!-- User Profile & Version (Figma Jess) -->
+            <div class="sidebar-footer-syde">
+                <a class="nav-link-logout" href="javascript:void(0)" onclick="alert('Logout simulado')">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Sair
+                </a>
+                <span class="sidebar-version-tag">versão 1.2.1000.2</span>
             </div>
         </aside>
 
         <!-- ==================== MAIN VIEWPORT ==================== -->
         <div class="main-viewport">
 
-            <!-- Header Section -->
-            <header class="app-header">
-                <div class="header-container">
-                    <div class="logo-area">
-                        <span class="brand-name">barter hub</span>
-                        <span class="brand-divider">|</span>
-                        <h1 class="brand-title" id="main-title">Simulador de Cashback Barter 2026</h1>
+            <!-- Header Section (Figma Jess: Breadcrumb & User Profile) -->
+            <header class="app-header-syde">
+                <div class="header-container-syde">
+                    <div class="breadcrumb-area">
+                        <span class="breadcrumb-item">Simulador</span>
+                        <span class="breadcrumb-separator">&gt;</span>
+                        <span class="breadcrumb-item active">Simulador de taxas</span>
                     </div>
-                    <div class="header-actions">
-                        <span class="live-status"><i class="fa-solid fa-circle-nodes pulse-icon"></i> Cotações
-                            Online</span>
-                        <div class="header-user-info">
-                            <div class="header-avatar-circle">U</div>
-                            <span class="header-username">Usuário</span>
-                        </div>
+                    <div class="header-user-badge">
+                        <div class="user-avatar-circle-jess">J</div>
+                        <span class="user-fullname-jess">Jessica Moraes</span>
                     </div>
                 </div>
             </header>
@@ -127,7 +124,7 @@
             <main class="main-content container">
 
                 <!-- ==================== PAGE 0: ASSISTENTE VIRTUAL ==================== -->
-                <div class="chat-grid" id="page-assistente" class="animate-fade-in">
+                <div class="chat-grid" id="page-assistente" class="animate-fade-in" style="display:none;">
                     <!-- Left: Histórico -->
                     <div class="chat-sidebar">
                         <div class="chat-sidebar-header">
@@ -211,17 +208,13 @@
                 <div class="simulator-v2-container" id="page-simulador-v2"
                     style="display:flex; flex-direction:column; gap:20px;">
                     <!-- Page Title -->
-                    <div style="margin-bottom:4px;">
-                        <h2 style="font-family:var(--font-heading); color:var(--primary-deep); font-size:18px; font-weight:700; margin:0 0 4px 0;">Simulador de taxas</h2>
+                    <div style="margin-bottom:2px;">
+                        <h2 style="font-family:var(--font-heading); color:#0f172a; font-size:22px; font-weight:700; margin:0 0 4px 0;">Simulador de taxas</h2>
                         <p style="color:var(--text-secondary); font-size:13px; margin:0;">Conheça as melhores taxas disponíveis para você</p>
                     </div>
-                    <!-- Top Card: Full width operations parameters form -->
-                    <div class="card animate-fade-in" style="padding:24px;">
-                        <div style="margin-bottom:20px;">
-                            <h2 style="font-family:var(--font-heading); color:var(--primary-deep); font-size:20px; margin:0 0 16px 0; font-weight:700;">Simulação de crédito</h2>
-                            <span style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block;">Detalhes da operação</span>
-                        </div>
 
+                    <!-- Top Card: Full width operations parameters form (Figma Jess Style) -->
+                    <div class="card animate-fade-in" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:24px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
                         <!-- Hidden legacy inputs: JS engine reads from these sim-* IDs as source of truth -->
                         <div style="display:none;">
                             <input type="text" id="sim-credito" value="R$ 1.000.000,00">
@@ -250,19 +243,16 @@
                         </div>
 
                         <form novalidate onsubmit="event.preventDefault(); window.handleFormSimulate(event);"
-                            style="display:flex; flex-direction:column; gap:20px;">
+                            style="display:flex; flex-direction:column; gap:22px;">
                             <!-- Section 1: Campanha da Operação -->
-                            <div
-                                style="background:var(--bg-hover); padding:16px 20px; border-radius:10px; border:1px solid var(--border-color);">
-                                <span
-                                    style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:14px;">Campanha da Operação</span>
-                                <div
-                                    style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+                            <div>
+                                <span style="font-size:12px; font-weight:700; text-transform:uppercase; color:#008080; letter-spacing:0.5px; display:block; margin-bottom:12px;">Campanha da Operação</span>
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-campanha-select">Campanha</label>
+                                        <label for="v2-sim-campanha-select" style="font-size:12px; color:#475569; font-weight:500;">Campanha</label>
                                         <div class="select-wrapper">
                                             <select id="v2-sim-campanha-select"
-                                                onchange="onCampanhaSelectChange(this.value);">
+                                                onchange="onCampanhaSelectChange(this.value);" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;">
                                                 <option value="0" selected>Sul Repique (05/12/2026 - 05/05/2027)</option>
                                                 <option value="1">Cerrado Safra 2026/27 (01/10/2026 - 30/05/2027)</option>
                                                 <option value="2">Planilha 2026 (216 dias) (01/10/2025 - 05/05/2026)</option>
@@ -271,9 +261,9 @@
                                         </div>
                                     </div>
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-subcategoria">Subcategoria</label>
+                                        <label for="v2-sim-subcategoria" style="font-size:12px; color:#475569; font-weight:500;">Subcategoria</label>
                                         <div class="select-wrapper">
-                                            <select id="v2-sim-subcategoria" onchange="onSubcategoriaChange(this.value)">
+                                            <select id="v2-sim-subcategoria" onchange="onSubcategoriaChange(this.value)" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;">
                                                 <option value="pr_ms_silver_crop" selected>PR/MS | Silver +, Silver | Crop</option>
                                                 <option value="rs_sc_silver_crop_maio">RS/SC | Silver +, Silver | Crop | Venc. Maio</option>
                                                 <option value="rs_sc_black_crop_maio">RS/SC | Black | Crop | Venc. Maio</option>
@@ -289,26 +279,38 @@
                                             </select>
                                         </div>
                                     </div>
+                                    <!-- Phase 1: Mês Logístico (Entrega) -->
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v2-sim-mes-logistico" style="font-size:12px; color:#475569; font-weight:500;">
+                                            Mês Logístico / Entrega <span style="font-size:11px; color:#008080; font-weight:600;">(WSys)</span>
+                                        </label>
+                                        <div class="select-wrapper">
+                                            <select id="v2-sim-mes-logistico" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;">
+                                                <option value="05/2027" selected>Maio / 2027 (Padrão Vencimento)</option>
+                                                <option value="04/2027">Abril / 2027</option>
+                                                <option value="06/2027">Junho / 2027</option>
+                                                <option value="07/2027">Julho / 2027</option>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             <!-- Section 2: Informações financeiras -->
-                            <div
-                                style="background:var(--bg-hover); padding:16px 20px; border-radius:10px; border:1px solid var(--border-color);">
-                                <span
-                                    style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:14px;">Informações financeiras</span>
-                                <div style="display:flex; flex-direction:column; gap:16px;">
-                                    <div class="currency-selector-group" style="width:100%; max-width:100%; display:grid; grid-template-columns:1fr 1fr; background:rgba(0,0,0,0.04); padding:4px; border-radius:8px;">
+                            <div>
+                                <span style="font-size:12px; font-weight:700; text-transform:uppercase; color:#008080; letter-spacing:0.5px; display:block; margin-bottom:12px;">Informações Financeiras</span>
+                                <div style="display:flex; flex-direction:column; gap:14px;">
+                                    <div class="currency-selector-group" style="width:100%; max-width:100%; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
                                         <button type="button" class="currency-btn active" id="v2-btn-currency-brl"
-                                            onclick="setCurrency('BRL')" style="border-radius:6px; font-weight:600; font-size:13.5px; padding:10px;">Real (R$)</button>
+                                            onclick="setCurrency('BRL')" style="border:1.5px solid #008080; background:#ffffff; color:#008080; border-radius:6px; font-weight:600; font-size:14px; padding:12px; cursor:pointer;">Real (R$)</button>
                                         <button type="button" class="currency-btn" id="v2-btn-currency-usd"
-                                            onclick="setCurrency('USD')" style="border-radius:6px; font-weight:600; font-size:13.5px; padding:10px;">Dólar (USD)</button>
+                                            onclick="setCurrency('USD')" style="border:1px solid #cbd5e1; background:#ffffff; color:#64748b; border-radius:6px; font-weight:600; font-size:14px; padding:12px; cursor:pointer;">Dólar (USD)</button>
                                     </div>
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-credito">Preço Pedido PRAZO</label>
+                                        <label for="v2-sim-credito" style="font-size:12px; color:#475569; font-weight:500;">Valor da Operação ( TP + Impostos )</label>
                                         <div class="input-wrapper">
-                                            <input type="text" id="v2-sim-credito" value="R$ 1.000.000,00"
-                                                style="font-size:16px; font-weight:600; padding:12px 14px;"
+                                            <input type="text" id="v2-sim-credito" value="R$ 1.000.000,00" placeholder="R$ 100000"
+                                                style="font-size:15px; font-weight:600; padding:12px 14px; border:1px solid #cbd5e1; border-radius:6px;"
                                                 oninput="document.getElementById('sim-credito').value=this.value; document.getElementById('sim-credito').dispatchEvent(new Event('input'));">
                                         </div>
                                     </div>
@@ -316,16 +318,13 @@
                             </div>
 
                             <!-- Section 3: Dados para Simulação Barter -->
-                            <div
-                                style="background:var(--bg-hover); padding:16px 20px; border-radius:10px; border:1px solid var(--border-color);">
-                                <span
-                                    style="font-size:11px; font-weight:700; text-transform:uppercase; color:var(--primary-medium); letter-spacing:0.5px; display:block; margin-bottom:14px;">Dados para Simulação Barter</span>
-                                <div
-                                    style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:15px; align-items:end;">
+                            <div>
+                                <span style="font-size:12px; font-weight:700; text-transform:uppercase; color:#008080; letter-spacing:0.5px; display:block; margin-bottom:12px;">Dados para Simulação Barter</span>
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:end;">
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-commodity">Commodity / Cultura</label>
+                                        <label for="v2-sim-commodity" style="font-size:12px; color:#475569; font-weight:500;">Commodity / Cultura</label>
                                         <div class="select-wrapper">
-                                            <select id="v2-sim-commodity"
+                                            <select id="v2-sim-commodity" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
                                                 onchange="document.getElementById('sim-commodity').value=this.value; onCulturaChange(this.value);">
                                                 <option value="Soja" selected>Soja (sc)</option>
                                                 <option value="Milho">Milho (sc)</option>
@@ -334,9 +333,9 @@
                                         </div>
                                     </div>
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-estado">Estado</label>
+                                        <label for="v2-sim-estado" style="font-size:12px; color:#475569; font-weight:500;">Estado</label>
                                         <div class="select-wrapper">
-                                            <select id="v2-sim-estado"
+                                            <select id="v2-sim-estado" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
                                                 onchange="document.getElementById('sim-estado').value=this.value; onEstadoChange(this.value);">
                                                 <option value="MT">Mato Grosso (MT)</option>
                                                 <option value="GO">Goiás (GO)</option>
@@ -354,68 +353,76 @@
                                         </div>
                                     </div>
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-regiao">Praça (WSys)</label>
+                                        <label for="v2-sim-regiao" style="font-size:12px; color:#475569; font-weight:500;">Praça (WSys)</label>
                                         <div class="select-wrapper">
-                                            <select id="v2-sim-regiao"
+                                            <select id="v2-sim-regiao" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
                                                 onchange="document.getElementById('sim-regiao').value=this.value; onPracaChange(this.value);">
                                             </select>
                                         </div>
                                     </div>
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-dist-chao">Dist. Chão (KM) <span
-                                                style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
+                                        <label for="v2-sim-dist-chao" style="font-size:12px; color:#475569; font-weight:500;">Dist. Chão (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
                                         <div class="input-wrapper">
-                                            <input type="number" id="v2-sim-dist-chao" value="0" min="0"
-                                                placeholder="0"
+                                            <input type="number" id="v2-sim-dist-chao" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
                                                 oninput="document.getElementById('sim-dist-chao').value=this.value;">
                                             <span class="input-suffix">KM</span>
                                         </div>
                                     </div>
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-dist-asfalto">Dist. Asfalto (KM) <span
-                                                style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
+                                        <label for="v2-sim-dist-asfalto" style="font-size:12px; color:#475569; font-weight:500;">Dist. Asfalto (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
                                         <div class="input-wrapper">
-                                            <input type="number" id="v2-sim-dist-asfalto" value="0" min="0"
-                                                placeholder="0"
+                                            <input type="number" id="v2-sim-dist-asfalto" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
                                                 oninput="document.getElementById('sim-dist-asfalto').value=this.value;">
                                             <span class="input-suffix">KM</span>
                                         </div>
                                     </div>
+                                </div>
+
+                                <!-- Phase 1: Observações da Operação (RTV Notes) & Deduções Fiscais -->
+                                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:16px; margin-top:14px; align-items:center;">
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-descontos">Deduções Fiscais</label>
-                                        <div class="toggle-switch" style="margin-top:6px;">
+                                        <label for="v2-sim-obs" style="font-size:12px; color:#475569; font-weight:500;">
+                                            Observações da Operação <span style="font-size:11px; color:#64748b;">(Ex: Vendedor de grão diferente de insumos, fazenda, CNPJ/CPF)</span>
+                                        </label>
+                                        <div class="input-wrapper">
+                                            <input type="text" id="v2-sim-obs" placeholder="Ex: Grão entregue por CNPJ 12.345.678/0001-90 | Fazenda Boa Esperança"
+                                                style="border:1px solid #cbd5e1; border-radius:6px; font-size:13px; padding:10px 12px; width:100%;">
+                                        </div>
+                                    </div>
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v2-sim-descontos" style="font-size:12px; color:#475569; font-weight:500;">Deduções Fiscais</label>
+                                        <div class="toggle-switch" style="margin-top:4px;">
                                             <input type="checkbox" id="v2-sim-descontos" checked
                                                 onchange="document.getElementById('sim-descontos').checked=this.checked;">
                                             <label for="v2-sim-descontos" class="toggle-slider"></label>
-                                            <span class="toggle-label" style="font-size:11.5px;">Funrural + Taxas</span>
+                                            <span class="toggle-label" style="font-size:12.5px; font-weight:600; color:#334155;">Funrural + Taxas</span>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Footer Action Buttons -->
-                            <div
-                                style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:8px;">
+                            <!-- Footer Action Buttons (Figma Jess Style) -->
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:8px;">
                                 <div>
                                     <button type="button" class="btn-outline" id="v2-btn-voltar" onclick="resetFormToDefaults()"
-                                        style="padding:10px 22px; min-height:42px; border-radius:8px; border:1px solid #0d9488; color:#0d9488; background:#ffffff; font-weight:600; font-size:13.5px; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
-                                        <i class="fa-solid fa-arrow-left"></i> Voltar
+                                        style="padding:9px 24px; min-height:40px; border-radius:6px; border:1px solid #008080; color:#008080; background:#ffffff; font-weight:600; font-size:13.5px; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
+                                        Voltar
                                     </button>
                                 </div>
                                 <div style="display:flex; gap:10px; flex-wrap:wrap;">
                                     <button type="button" class="btn-submit" id="v2-btn-sim-calcular"
                                         onclick="window.handleFormSimulate(event)"
-                                        style="width:auto; padding:11px 28px; min-height:42px; background-color:#0284c7; border-radius:8px; font-weight:700; font-size:14px; box-shadow:0 4px 12px rgba(2,132,199,0.25);">
-                                        <i class="fa-solid fa-calculator"></i> Simular
+                                        style="width:auto; padding:10px 32px; min-height:40px; background-color:#008080; border-radius:6px; font-weight:700; font-size:14px; box-shadow:0 2px 6px rgba(0,128,128,0.2); cursor:pointer;">
+                                        Simular
                                     </button>
                                     <button type="button" class="btn-submit btn-pdf" id="v2-btn-sim-pdf"
                                         onclick="downloadSimulationPDF()"
-                                        style="width:auto; padding:11px 22px; background-color: #4b5563; background-image: none; box-shadow: 0 4px 12px rgba(75, 85, 99, 0.2); min-height: 42px; border-radius:8px;">
+                                        style="width:auto; padding:10px 20px; background-color:#4b5563; background-image:none; box-shadow:none; min-height:40px; border-radius:6px; font-weight:600; font-size:13.5px;">
                                         <i class="fa-solid fa-file-pdf"></i> PDF
                                     </button>
                                     <button type="button" class="btn-submit btn-share" id="v2-btn-sim-share"
                                         onclick="openSharePopup()"
-                                        style="width:auto; padding:11px 22px; min-height: 42px; border-radius:8px;">
+                                        style="width:auto; padding:10px 20px; min-height:40px; border-radius:6px; font-weight:600; font-size:13.5px;">
                                         <i class="fa-solid fa-share-nodes"></i> Compartilhar
                                     </button>
                                 </div>
@@ -425,64 +432,63 @@
 
                     <!-- Results Section for Layout 2 (Hidden initially until Simular is clicked) -->
                     <div id="v2-sim-results-wrapper" style="display:none; flex-direction:column; gap:20px;">
-                        <!-- Resumo da Operação matching screenshot -->
-                        <div id="v2-summary-card" class="card results-card animate-fade-in"
-                            style="background-color: var(--primary-deep); color: white; box-shadow: 0 4px 15px rgba(5, 59, 67, 0.15);">
-                            <div class="card-header"
-                                style="border-bottom: 1px solid rgba(255,255,255,0.12); padding: 16px 20px;">
-                                <h2 style="color: white; font-family: var(--font-heading); font-size: 18px; margin: 0;">
-                                    Resumo da operação</h2>
+                        <!-- Phase 1: Chicago Market Status Indicator Banner -->
+                        <div id="market-status-badge" class="market-status-banner">
+                            <div class="market-status-pill">
+                                <span class="status-dot"></span>
+                                <span id="market-status-text">Mercado Futuro CBOT (Chicago): Aberto</span>
                             </div>
-                            <div
-                                style="padding: 16px 20px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; text-align: center;">
-                                <div style="border-right: 1px solid rgba(255,255,255,0.12);">
-                                    <span
-                                        style="font-size: 10.5px; text-transform: uppercase; color: #22d3ee; font-weight: 700; display: block; margin-bottom: 4px;">Preço Pedido a Prazo</span>
-                                    <strong id="v2-summary-value"
-                                        style="font-size: 18px; font-family: var(--font-heading); color: #ffffff;">R$
-                                        1.000.000,00</strong>
-                                </div>
-                                <div style="border-right: 1px solid rgba(255,255,255,0.12);">
-                                    <span
-                                        style="font-size: 10.5px; text-transform: uppercase; color: #22d3ee; font-weight: 700; display: block; margin-bottom: 4px;">Data
-                                        da Simulação</span>
-                                    <strong id="v2-summary-date"
-                                        style="font-size: 18px; font-family: var(--font-heading); color: #ffffff;">-</strong>
-                                </div>
-                                <div>
-                                    <span
-                                        style="font-size: 10.5px; text-transform: uppercase; color: #22d3ee; font-weight: 700; display: block; margin-bottom: 4px;">Validade
-                                        da Simulação</span>
-                                    <strong id="v2-summary-validity"
-                                        style="font-size: 18px; font-family: var(--font-heading); color: #ffffff;">-</strong>
-                                </div>
+                            <div class="market-status-info" id="market-status-detail">
+                                <i class="fa-solid fa-clock"></i> Pregão em andamento. Cotações spot/futuro com atualização contínua.
                             </div>
                         </div>
 
-                        <!-- Cards List Grid full width -->
-                        <div class="card results-card animate-fade-in" style="padding: 20px;">
-                            <div
-                                style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 15px;">
-                                <h2
-                                    style="font-family: var(--font-heading); color: var(--primary-deep); font-size: 16px; margin: 0;">
-                                    Modalidades de Crédito (Ordenado por Benefício)</h2>
-                                <p style="color: var(--text-secondary); font-size: 12.5px; margin: 4px 0 0 0; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px;">
-                                    <span>Confira os indicadores, garantias exigidas e descontos VPAN em cada card.</span>
-                                    <span style="font-size: 11.5px; font-weight: 600; color: var(--primary-medium); background: rgba(13,148,136,0.08); padding: 3px 8px; border-radius: 6px; border: 1px solid rgba(13,148,136,0.2);">
-                                        <i class="fa-solid fa-circle-info"></i> * Fonte: Cadastro de campanha
+                        <!-- Phase 1: Route Warning Banner (WSys Missing Route/Freight) -->
+                        <div id="v2-route-warning-banner" class="route-warning-banner" style="display:none;">
+                            <i class="fa-solid fa-triangle-exclamation" style="font-size:18px;"></i>
+                            <div>
+                                <strong>Aviso de Rota WSys:</strong> Praça sem rota de frete direto cadastrada na base WSys. Foi aplicado o frete estimado de contingência.
+                            </div>
+                        </div>
+
+                        <!-- Resumo da Operação Card (Figma Jess - Ice Blue / Mint Green #dff5f8) -->
+                        <div id="v2-summary-card" class="jess-summary-card animate-fade-in">
+                            <div class="jess-summary-title">Resumo da operação</div>
+                            <div class="jess-summary-grid">
+                                <div class="jess-summary-col">
+                                    <span class="jess-summary-label">VALOR</span>
+                                    <strong id="v2-summary-value" class="jess-summary-val">R$ 1.000.000,00</strong>
+                                </div>
+                                <div class="jess-summary-col border-left">
+                                    <span class="jess-summary-label">
+                                        <i class="fa-regular fa-calendar" style="color:#008080;"></i> DATA DA SIMULAÇÃO
                                     </span>
-                                </p>
+                                    <strong id="v2-summary-date" class="jess-summary-val" style="font-size:22px;">-</strong>
+                                </div>
+                                <div class="jess-summary-col border-left">
+                                    <span class="jess-summary-label">
+                                        <i class="fa-regular fa-clock" style="color:#008080;"></i> VALIDADE DA SIMULAÇÃO
+                                    </span>
+                                    <strong id="v2-summary-validity" class="jess-summary-val" style="font-size:22px;">-</strong>
+                                </div>
                             </div>
-                            <div class="modality-cards-grid" id="v2-modality-cards-list">
+                            <div id="v2-summary-obs-container" style="display:none; margin-top:14px; padding-top:10px; border-top:1px solid rgba(0, 128, 128, 0.2); font-size:12.5px; color:#0f766e;">
+                                <strong>Observações da Operação:</strong> <span id="v2-summary-obs-display"></span>
                             </div>
+                        </div>
+
+                        <!-- Modality Cards List (4 Columns Grid matching Figma Jess) -->
+                        <div class="modality-cards-grid" id="v2-modality-cards-list">
                         </div>
 
                         <!-- TradingView Chart Widget Card for Layout 2 -->
-                        <div class="chart-card card animate-fade-in" id="v2-chart-card-cfd" style="display:none;">
-                            <div class="card-header">
-                                <h2><i class="fa-solid fa-chart-line text-green"></i> Cotação do Mercado Futuro (CFD)
-                                </h2>
-                                <p id="v2-chart-subtitle">Gráfico em tempo real de Chicago para Soja</p>
+                        <div class="card animate-fade-in" id="v2-chart-card-cfd" style="display:none; background:#ffffff; border:1px solid #e2e8f0; border-radius:8px; padding:20px;">
+                            <div style="border-bottom:1px solid #f1f5f9; padding-bottom:12px; margin-bottom:16px;">
+                                <div style="display:flex; align-items:center; gap:8px;">
+                                    <i class="fa-solid fa-chart-line" style="color:#008080; font-size:16px;"></i>
+                                    <h3 style="font-size:15px; font-weight:700; color:#0f172a; margin:0;">Cotação do Mercado Futuro (CFD)</h3>
+                                </div>
+                                <p id="v2-chart-subtitle" style="font-size:12px; color:#64748b; margin:4px 0 0 0;">Gráfico CFD em tempo real de Chicago para Soja (OANDA:SOYBNUSD)</p>
                             </div>
                             <div class="chart-container-wrapper">
                                 <div class="tradingview-widget-container" style="height:350px;width:100%">

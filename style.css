@@ -1,29 +1,29 @@
 /* style.css - Barter Fees Simulator Design System (Light Theme Dashboard) */
 
 :root {
-    /* Color Palette - Updated to Syde Teal Theme */
-    --primary-deep: #053b43;      /* Deep Teal */
-    --primary-medium: #088395;    /* Syde Teal */
-    --primary-light: #0ea5e9;     /* Light Cyan/Blue */
-    --accent-green: #088395;      /* Primary Accent (Teal) */
-    --accent-glow: #22d3ee;       /* Glow Cyan */
+    /* Color Palette - Syde Portal Theme (Figma Jess) */
+    --primary-deep: #008080;      /* Teal Syde */
+    --primary-medium: #008080;    /* Teal Syde */
+    --primary-light: #0d9488;     /* Teal Light */
+    --accent-green: #10b981;      /* Green Accent */
+    --accent-glow: #2dd4bf;       /* Mint Glow */
     --accent-gold: #d48c00;       /* Warm Gold */
     --accent-gold-light: #ffb703;  /* Bright Gold */
-    --accent-cyan: #0ea5e9;       /* Cyan Accent */
-    --bg-dark: #f3f4f6;           /* Light Gray Page Background */
+    --accent-cyan: #0284c7;       /* Cyan Accent */
+    --bg-dark: #f8fafc;           /* Light Page Background */
     --bg-card: #ffffff;           /* White Card Background */
-    --border-color: #e5e7eb;      /* Light Gray Border */
-    --border-hover: #d1d5db;
+    --border-color: #e2e8f0;      /* Clean Gray Border */
+    --border-hover: #cbd5e1;
     
     /* Text Colors */
-    --text-primary: #111827;      /* Dark grey / black */
-    --text-secondary: #4b5563;    /* Medium grey */
-    --text-danger: #dc2626;       /* Red */
-    --text-green: #0d9488;        /* Teal Green */
+    --text-primary: #0f172a;      /* Dark Slate */
+    --text-secondary: #64748b;    /* Slate Gray */
+    --text-danger: #ef4444;       /* Red */
+    --text-green: #008080;        /* Teal Green */
     
     /* Fonts */
-    --font-heading: 'Outfit', sans-serif;
-    --font-body: 'Inter', sans-serif;
+    --font-heading: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-body: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 /* Base Styles */
@@ -2191,4 +2191,448 @@ select {
 .tooltip-container .tooltip-text.tooltip-white::after {
     border-color: #ffffff transparent transparent transparent !important;
 }
+
+/* ==================== FIGMA JESS FOR BARTER - DESIGN SYSTEM ==================== */
+
+/* Top Header & Breadcrumb (Figma Jess) */
+.app-header-syde {
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 14px 32px;
+    position: sticky;
+    top: 0;
+    z-index: 80;
+}
+
+.header-container-syde {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1600px;
+    margin: 0 auto;
+}
+
+.breadcrumb-area {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #64748b;
+}
+
+.breadcrumb-item {
+    color: #64748b;
+}
+
+.breadcrumb-separator {
+    color: #94a3b8;
+    font-size: 11px;
+}
+
+.breadcrumb-item.active {
+    color: #0f172a;
+    font-weight: 600;
+}
+
+.header-user-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.user-avatar-circle-jess {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #008080;
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 15px;
+    box-shadow: 0 2px 6px rgba(0, 128, 128, 0.25);
+}
+
+.user-fullname-jess {
+    font-size: 14px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+/* Sidebar Brand Syde */
+.syde-logo-brand {
+    font-family: var(--font-heading);
+    font-size: 26px;
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    color: #0f172a;
+}
+
+.sidebar-footer-syde {
+    margin-top: auto;
+    padding: 20px 24px;
+    border-top: 1px solid #f1f5f9;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.nav-link-logout {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: #64748b;
+    text-decoration: none;
+    font-size: 13.5px;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.nav-link-logout:hover {
+    color: #0f172a;
+}
+
+.sidebar-version-tag {
+    font-size: 11px;
+    color: #94a3b8;
+}
+
+/* Page Title Block */
+.page-title-box {
+    margin-bottom: 20px;
+}
+
+.page-title-main {
+    font-family: var(--font-heading);
+    color: #0f172a;
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0 0 4px 0;
+}
+
+.page-subtitle-main {
+    color: #64748b;
+    font-size: 13.5px;
+    margin: 0;
+}
+
+/* Form Section Headers */
+.form-section-title-jess {
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    color: #008080;
+    letter-spacing: 0.8px;
+    display: block;
+    margin-bottom: 12px;
+}
+
+/* Pill Toggle Buttons (Figma Jess) */
+.currency-pill-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+}
+
+.currency-pill-btn {
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
+    color: #475569;
+    transition: all 0.2s ease;
+}
+
+.currency-pill-btn.active {
+    border: 1.5px solid #10b981;
+    background: #ffffff;
+    color: #008080;
+    font-weight: 700;
+    box-shadow: 0 0 0 1px #10b981;
+}
+
+/* Floating / Notch Form Input Group */
+.notch-input-group {
+    position: relative;
+    margin-bottom: 0;
+}
+
+.notch-label {
+    position: absolute;
+    top: -9px;
+    left: 12px;
+    background: #ffffff;
+    padding: 0 6px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #64748b;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.notch-input {
+    width: 100%;
+    border: 1px solid #cbd5e1 !important;
+    border-radius: 8px !important;
+    padding: 12px 14px !important;
+    font-size: 14px !important;
+    color: #0f172a !important;
+    background: #ffffff !important;
+}
+
+.notch-input:focus {
+    border-color: #008080 !important;
+    box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.1) !important;
+}
+
+/* Phase 1 Alerts & Badges */
+.market-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px 16px;
+    background: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: 8px;
+    margin-bottom: 16px;
+}
+
+.market-status-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #166534;
+    font-weight: 600;
+}
+
+.market-status-pill .status-dot {
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: #16a34a;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.2);
+}
+
+.market-status-info {
+    font-size: 12px;
+    color: #15803d;
+}
+
+.route-warning-banner {
+    background: #fffbeb;
+    border: 1px solid #fde68a;
+    border-left: 4px solid #f59e0b;
+    color: #92400e;
+    padding: 12px 16px;
+    border-radius: 8px;
+    margin-bottom: 16px;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Summary Card (Figma Jess) */
+.jess-summary-card {
+    background: #dff5f8 !important;
+    border-radius: 8px !important;
+    padding: 20px 28px !important;
+    box-shadow: none !important;
+    border: 1px solid #b2ebf2 !important;
+}
+
+.jess-summary-title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #0f172a;
+    margin-bottom: 12px;
+}
+
+.jess-summary-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 20px;
+}
+
+.jess-summary-col {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.jess-summary-col.border-left {
+    border-left: 1px solid #94a3b8;
+    padding-left: 20px;
+}
+
+.jess-summary-label {
+    font-size: 11px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.jess-summary-val {
+    font-size: 26px;
+    font-weight: 800;
+    color: #0f172a;
+    font-family: var(--font-heading);
+}
+
+/* Modality Cards Grid 4-Columns (Figma Jess) */
+.modality-cards-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 16px !important;
+}
+
+@media (max-width: 1400px) {
+    .modality-cards-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+}
+
+@media (max-width: 800px) {
+    .modality-cards-grid {
+        grid-template-columns: 1fr !important;
+    }
+}
+
+.modality-card {
+    border: 1px solid #e2e8f0;
+    border-radius: 8px !important;
+    background: #ffffff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+}
+
+.modality-card.selected,
+.modality-card.best-option {
+    border: 2px solid #008080 !important;
+    box-shadow: 0 4px 14px rgba(0, 128, 128, 0.12) !important;
+    outline: none !important;
+}
+
+.modality-card-header {
+    padding: 16px !important;
+    border-bottom: 1px solid #e2e8f0 !important;
+    background: #ffffff !important;
+}
+
+.modality-card-title {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #0f172a !important;
+}
+
+.card-section-divider {
+    height: 1px;
+    background: #f1f5f9;
+    margin: 10px 0;
+}
+
+.card-section-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+    display: block;
+}
+
+/* Barter Highlight Equivalent Pill (Figma Jess) */
+.jess-equiv-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    background: #e0f7fa;
+    border-radius: 6px;
+    margin-top: 10px;
+}
+
+.jess-equiv-pill i {
+    color: #008080;
+    font-size: 14px;
+}
+
+.jess-equiv-pill strong {
+    color: #008080;
+    font-size: 13.5px;
+    font-weight: 700;
+}
+
+.jess-equiv-pill span {
+    color: #475569;
+    font-size: 12px;
+}
+
+/* Card Footers (Figma Jess) */
+.figma-jess-barter-footer {
+    background: #008080 !important;
+    color: #ffffff !important;
+    padding: 12px 16px !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+    border-radius: 0 0 7px 7px !important;
+}
+
+.modality-barter-footer-label {
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.modality-barter-footer-value {
+    font-size: 15px;
+    font-weight: 800;
+    color: #ffffff;
+    font-family: var(--font-heading);
+}
+
+.figma-jess-footer {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    background: #008080 !important;
+    color: #ffffff !important;
+    border-radius: 0 0 7px 7px !important;
+    overflow: hidden;
+}
+
+.modality-footer-col {
+    padding: 10px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.modality-footer-col:first-child {
+    border-right: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.modality-footer-label {
+    font-size: 10.5px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.modality-footer-value {
+    font-size: 14px;
+    font-weight: 800;
+    color: #ffffff;
+    font-family: var(--font-heading);
+}
+
 
