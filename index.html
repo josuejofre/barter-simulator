@@ -55,8 +55,8 @@
                 <div class="sidebar-section-header">OUTROS SERVIÇOS</div>
                 <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-cubes"></i> Outros serviços</div></a>
 
-                <div class="sidebar-section-header">INTEGRAÇÕES</div>
-                <a class="nav-link" id="nav-link-pracas" onclick="showPage('pracas')"><div class="nav-link-main"><i class="fa-solid fa-network-wired"></i> Parceiros</div></a>
+                <div class="sidebar-section-header">INTEGRAÇÕES & MOTOR FISCAL</div>
+                <a class="nav-link" id="nav-link-pracas" onclick="showPage('pracas')"><div class="nav-link-main"><i class="fa-solid fa-scale-balanced"></i> Motor Fiscal Barter</div></a>
 
                 <div class="sidebar-section-header">MOTOR DE CRÉDITO</div>
                 <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-sliders"></i> Distribuição de Limites</div></a>
@@ -870,24 +870,47 @@
 
                 </div>
 
-                <!-- ==================== PAGE 4: CADASTRO DE PRAÇAS (WSYS) ==================== -->
+                <!-- ==================== PAGE 4: MOTOR FISCAL BARTER ==================== -->
                 <div id="page-pracas" style="display:none" class="animate-fade-in">
 
-                    <!-- View A: Praças List View -->
+                    <!-- Banner de Informação & Status PTAX -->
+                    <div class="card" style="margin-bottom: 20px; background: linear-gradient(135deg, rgba(0, 128, 128, 0.05) 0%, rgba(15, 23, 42, 0.02) 100%); border-left: 4px solid var(--primary-color);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+                            <div>
+                                <h3 style="margin: 0 0 5px 0; color: var(--primary-deep); font-size: 16px; font-weight: 700;">
+                                    <i class="fa-solid fa-scale-balanced" style="margin-right: 8px; color: var(--primary-color);"></i>
+                                    Motor Fiscal Syde: Orquestração Tributária Regional
+                                </h3>
+                                <p style="margin: 0; font-size: 12.5px; color: var(--text-secondary); line-height: 1.4;">
+                                    Como a API do WSys não provê dados fiscais no preço FOB, o Syde centraliza as alíquotas estaduais (FUNDEINFRA, FDI), Funrural e taxas indexadas em UPF/UFERMS para Soja, Milho e Algodão.
+                                </p>
+                            </div>
+                            <div style="display: flex; align-items: center; gap: 12px; background: white; padding: 10px 16px; border-radius: 8px; border: 1px solid var(--border-color); box-shadow: var(--shadow-sm);">
+                                <div>
+                                    <span style="display: block; font-size: 10.5px; color: var(--text-secondary); font-weight: 600; text-transform: uppercase;">PTAX BACEN Oficial (Venda)</span>
+                                    <span id="ptax-status-display" style="font-size: 15px; font-weight: 800; color: #0f172a; font-family: var(--font-heading);">
+                                        R$ 5,6378 <small style="font-size: 11px; color: #10b981; font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Ativa</small>
+                                    </span>
+                                </div>
+                                <button type="button" class="btn-action" onclick="fetchLivePtax()" title="Atualizar cotação PTAX direto do Banco Central" style="padding: 6px 10px; font-size: 12px; border-radius: 6px; background-color: var(--primary-light); color: var(--primary-deep);">
+                                    <i class="fa-solid fa-arrows-rotate"></i> Atualizar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- View A: Lista de Regras Fiscais Regionais -->
                     <div id="pracas-list-view" class="card">
                         <div class="card-header"
                             style="display: flex; justify-content: space-between; align-items: center; width: 100%; gap: 15px;">
                             <div>
-                                <h2>Cadastro de Praças (WSys) <span class="tooltip-container"><i
-                                            class="fa-regular fa-circle-question"></i><span class="tooltip-text">Esta
-                                            tela simula o cadastro de praças e custos logísticos do sistema WSys,
-                                            conforme solicitado para demonstração.</span></span></h2>
-                                <p>Gerencie as praças integradas ao sistema WSys e configure seus custos de frete e
-                                    regras tributárias.</p>
+                                <h2>Motor Fiscal Barter: Matriz Tributária Regional <span class="tooltip-container"><i
+                                            class="fa-regular fa-circle-question"></i><span class="tooltip-text">Gerencie a matriz de retenções e deduções fiscais do Barter por Estado/Município e Cultura, com conversão oficial via PTAX para operações em Dólar.</span></span></h2>
+                                <p>Tabela de regras ativas aplicadas na apuração do Preço Líquido de Originação (Porteira).</p>
                             </div>
                             <button type="button" class="btn-submit" onclick="showCreatePracaForm()"
                                 style="width: auto; margin-top: 0; padding: 10px 20px;">
-                                <i class="fa-solid fa-plus"></i> Cadastrar Praça
+                                <i class="fa-solid fa-plus"></i> Cadastrar Regra Fiscal
                             </button>
                         </div>
 
@@ -895,14 +918,14 @@
                             <table class="comparison-table detailed-table" id="pracas-table">
                                 <thead>
                                     <tr>
-                                        <th>Estado</th>
-                                        <th>Nome da Praça</th>
-                                        <th>Frete Chão (R$/KM)</th>
-                                        <th>Frete Asfalto (R$/KM)</th>
+                                        <th>UF / Polo</th>
+                                        <th>Cód. IBGE</th>
+                                        <th>Commodity</th>
                                         <th>Funrural (%)</th>
-                                        <th>Imposto Base NF (%)</th>
-                                        <th>Imposto Base UPF (R$/sc)</th>
-                                        <th>Enquadramento / Observação</th>
+                                        <th>Aliq. Estadual (%)</th>
+                                        <th>Taxa Fixa (R$/unid)</th>
+                                        <th>Equiv. USD (PTAX)</th>
+                                        <th>Regime / Enquadramento</th>
                                         <th style="text-align: center; width: 120px;">Ações</th>
                                     </tr>
                                 </thead>
@@ -913,21 +936,25 @@
                         </div>
                     </div>
 
-                    <!-- View B: Praça Create/Edit View -->
+                    <!-- View B: Formulário de Cadastro / Edição -->
                     <div id="pracas-create-view" class="card" style="display: none;">
                         <div class="card-header">
-                            <h2 id="praca-form-title">Cadastrar nova praça no WSys</h2>
-                            <p>Preencha os dados logísticos e tributários (conforme matriz fiscal de Barter).</p>
+                            <h2 id="praca-form-title">Cadastrar Regra Fiscal no Motor Syde</h2>
+                            <p>Parâmetros tributários regionais para apuração de dedução na CPR de Barter.</p>
                         </div>
 
                         <form id="create-praca-form" onsubmit="handleSavePraca(event)" style="padding-top: 15px;">
                             <input type="hidden" id="praca-edit-index">
 
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            <!-- Bloco 1: Localização & Amarrações -->
+                            <div style="font-size: 11px; font-weight: 700; color: var(--primary-deep); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
+                                1. Localização & Correspondência com Catálogo WSys
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 2fr 1fr; gap: 15px; margin-bottom: 20px;">
                                 <div class="input-group">
-                                    <label for="praca-estado">Estado*</label>
+                                    <label for="praca-estado">Estado (UF)*</label>
                                     <div class="select-wrapper">
-                                        <select id="praca-estado" required>
+                                        <select id="praca-estado" onchange="onEstadoChangeFiscalForm(this.value)" required>
                                             <option value="MT">Mato Grosso (MT)</option>
                                             <option value="GO">Goiás (GO)</option>
                                             <option value="MS">Mato Grosso do Sul (MS)</option>
@@ -944,46 +971,116 @@
                                     </div>
                                 </div>
                                 <div class="input-group">
-                                    <label for="praca-nome">Nome da Praça*</label>
+                                    <label for="praca-nome">Nome da Praça / Descrição Polo*</label>
                                     <input type="text" id="praca-nome" placeholder="Ex: Campo Novo do Parecis" required>
                                 </div>
-                            </div>
-
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
                                 <div class="input-group">
-                                    <label for="praca-frete-chao">Custo Frete Chão (R$/KM)*</label>
-                                    <input type="number" id="praca-frete-chao" min="0" step="any" value="15.00"
-                                        required>
-                                </div>
-                                <div class="input-group">
-                                    <label for="praca-frete-asfalto">Custo Frete Asfalto (R$/KM)*</label>
-                                    <input type="number" id="praca-frete-asfalto" min="0" step="any" value="8.00"
-                                        required>
+                                    <label for="praca-ibge">Cód. IBGE Cidade <span class="tooltip-container"><i class="fa-regular fa-circle-question"></i><span class="tooltip-text">Código IBGE de 7 dígitos retornado pelo WSys em CD_Cidade_Origem. Se em branco, a regra aplica-se a todo o Estado.</span></span></label>
+                                    <input type="text" id="praca-ibge" placeholder="Ex: 5102637" maxlength="7">
                                 </div>
                             </div>
 
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            <!-- Bloco 2: Cultura & Peso de Unidade -->
+                            <div style="font-size: 11px; font-weight: 700; color: var(--primary-deep); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
+                                2. Commodity & Unidade de Comercialização
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px;">
                                 <div class="input-group">
-                                    <label for="praca-funrural">Alíquota Funrural (%)*</label>
+                                    <label for="praca-commodity">Commodity*</label>
+                                    <div class="select-wrapper">
+                                        <select id="praca-commodity" onchange="onCommodityChangeFiscalForm(this.value)" required>
+                                            <option value="SOJA">Soja (Saca 60 kg)</option>
+                                            <option value="MILHO">Milho (Saca 60 kg)</option>
+                                            <option value="ALGODAO">Algodão (Arroba 15 kg / lp)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="input-group">
+                                    <label for="praca-peso-kg">Peso por Unidade (kg)*</label>
+                                    <input type="number" id="praca-peso-kg" value="60" min="1" step="any" oninput="recalcTaxaFixaPreview()" required>
+                                    <small style="color:var(--text-secondary); font-size:11px;">Ex: 60 kg para Soja/Milho | 15 kg para Algodão (@)</small>
+                                </div>
+                                <div class="input-group">
+                                    <label for="praca-regime">Regime Produtor Padrão*</label>
+                                    <div class="select-wrapper">
+                                        <select id="praca-regime">
+                                            <option value="PESSOA_FISICA_COMERCIALIZACAO">Pessoa Física (1,63% comercialização)</option>
+                                            <option value="PESSOA_JURIDICA">Pessoa Jurídica (Regime Geral / Isenção)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Bloco 3: Alíquotas Percentuais -->
+                            <div style="font-size: 11px; font-weight: 700; color: var(--primary-deep); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
+                                3. Alíquotas Percentuais (sobre o Preço Bruto FOB)
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr 2fr; gap: 15px; margin-bottom: 20px;">
+                                <div class="input-group">
+                                    <label for="praca-funrural">Funrural (%)*</label>
                                     <input type="number" id="praca-funrural" min="0" step="any" value="1.63" required>
-                                    <small style="color:var(--text-secondary); font-size:11px;">Padrão: 1,63% comercialização (ou 0,20% folha)</small>
+                                    <small style="color:var(--text-secondary); font-size:11px;">Padrão: 1,63% PF</small>
                                 </div>
                                 <div class="input-group">
-                                    <label for="praca-imposto-nf">Outros Impostos - Base NF (%)</label>
+                                    <label for="praca-imposto-nf">Alíquota Estadual (%)</label>
                                     <input type="number" id="praca-imposto-nf" min="0" step="any" value="0.00">
-                                    <small style="color:var(--text-secondary); font-size:11px;">Ex: FDI (PI) = 1,20% | FUNDEINFRA (GO) = 1,65%</small>
+                                    <small style="color:var(--text-secondary); font-size:11px;">Ex: FUNDEINFRA (GO) 1,65% | FDI (PI) 1,20%</small>
+                                </div>
+                                <div class="input-group">
+                                    <label for="praca-observacao">Identificação do Tributo Estadual</label>
+                                    <input type="text" id="praca-observacao" placeholder="Ex: FUNDEINFRA / FDI">
                                 </div>
                             </div>
 
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                            <!-- Bloco 4: Taxas Fixas Indexadas (UPF / UFERMS) -->
+                            <div style="font-size: 11px; font-weight: 700; color: var(--primary-deep); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px; display: flex; justify-content: space-between; align-items: center;">
+                                <span>4. Taxas Fixas Indexadas em Moeda Fiscal (UPF / UFERMS)</span>
+                                <label style="display: flex; align-items: center; gap: 6px; font-size: 12px; text-transform: none; cursor: pointer; margin: 0;">
+                                    <input type="checkbox" id="praca-aplica-indexador" onchange="toggleIndexadorSection(this.checked)" checked>
+                                    <strong>Aplica taxa fixa estadual (MT / MS)</strong>
+                                </label>
+                            </div>
+
+                            <div id="indexador-config-fields" style="display: grid; grid-template-columns: 1.5fr 1fr 1fr 1fr; gap: 15px; margin-bottom: 20px; background: #f8fafc; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color);">
                                 <div class="input-group">
-                                    <label for="praca-tax-fixo">Impostos Estaduais / Base UPF (R$/saca)</label>
-                                    <input type="number" id="praca-tax-fixo" min="0" step="any" value="3.09">
-                                    <small style="color:var(--text-secondary); font-size:11px;">Ex: MT (FETHAB/IAGRO) ~ R$ 3,09/sc | MS (FUNDEMS) ~ R$ 1,65/sc</small>
+                                    <label for="praca-nome-indexador">Indexador Fiscal</label>
+                                    <div class="select-wrapper">
+                                        <select id="praca-nome-indexador" onchange="onIndexadorTypeChange(this.value)">
+                                            <option value="UPF/MT">UPF/MT (FETHAB + FETHAB Adic. + IAGRO)</option>
+                                            <option value="UFERMS/MS">UFERMS/MS (FUNDEMS + FUNDERSUL)</option>
+                                            <option value="OUTRO">Outro Indexador / Valor Direto</option>
+                                        </select>
+                                    </div>
                                 </div>
                                 <div class="input-group">
-                                    <label for="praca-observacao">Observação / Nome do Tributo</label>
-                                    <input type="text" id="praca-observacao" placeholder="Ex: FETHAB + FETHAB Adicional + IAGRO">
+                                    <label for="praca-val-indexador">Valor Indexador Vigente (R$)</label>
+                                    <input type="number" id="praca-val-indexador" value="243.49" min="0" step="any" oninput="recalcTaxaFixaPreview()">
+                                    <small style="color:var(--text-secondary); font-size:11px;">UPF MT: R$ 243,49 | UFERMS: R$ 52,98</small>
+                                </div>
+                                <div class="input-group">
+                                    <label for="praca-perc-indexador">% da Soma Indexador</label>
+                                    <input type="number" id="praca-perc-indexador" value="21.15" min="0" step="any" oninput="recalcTaxaFixaPreview()">
+                                    <small style="color:var(--text-secondary); font-size:11px;">MT: 21,15% | MS: 52,00%</small>
+                                </div>
+                                <div class="input-group">
+                                    <label for="praca-tax-fixo">Taxa Fixa Calculada (R$/unid)</label>
+                                    <input type="number" id="praca-tax-fixo" min="0" step="any" value="3.09" style="font-weight: 700; background: #e2e8f0;" readonly>
+                                    <small id="preview-usd-ptax" style="color:var(--primary-deep); font-size:11px; font-weight: 600;">~ US$ 0.55 / unid (PTAX)</small>
+                                </div>
+                            </div>
+
+                            <!-- Bloco 5: Custos Logísticos da Rota (Fallback) -->
+                            <div style="font-size: 11px; font-weight: 700; color: var(--primary-deep); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 4px;">
+                                5. Tarifas de Deslocamento Local (KM Chão / Asfalto)
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                                <div class="input-group">
+                                    <label for="praca-frete-chao">Tarifa Frete Chão (R$/KM)*</label>
+                                    <input type="number" id="praca-frete-chao" min="0" step="any" value="15.00" required>
+                                </div>
+                                <div class="input-group">
+                                    <label for="praca-frete-asfalto">Tarifa Frete Asfalto (R$/KM)*</label>
+                                    <input type="number" id="praca-frete-asfalto" min="0" step="any" value="8.00" required>
                                 </div>
                             </div>
 
@@ -995,7 +1092,7 @@
                                 </button>
                                 <button type="submit" class="btn-submit"
                                     style="width: auto; margin-top: 0; padding: 10px 25px;">
-                                    Salvar Praça
+                                    Salvar Regra Fiscal
                                 </button>
                             </div>
                         </form>

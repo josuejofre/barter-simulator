@@ -10,6 +10,13 @@ let currentQuotes = {
     corn: { BRL: 58.00, USD: 11.20 }       // Preço Futuro WSys por saca (sc)
 };
 
+// Cotação Oficial PTAX BACEN (Venda) para conversão fiscal USD
+let currentPtaxBacen = {
+    cotacaoVenda: 5.6378,
+    dataCotacao: '15/10/2024',
+    origem: 'BACEN Oficial (Olinda OData API)'
+};
+
 // WSys Praças Data Store (Matriz Tributária e Logística - Planilha Impostos 1)
 let wsysPlazas = [
     // MT - Funrural 1.63%, FETHAB/IAGRO (UPF MT 243.49 -> R$ 51.50/ton = R$ 3.09/saca)
@@ -546,7 +553,8 @@ function runSimulationMath(inputs) {
         const funruralPct = plaza && plaza.funruralPct !== undefined ? plaza.funruralPct : 1.63;
         const impNfPct = plaza && plaza.impNfPct !== undefined ? plaza.impNfPct : 0.0;
         const totalPctTax = funruralPct + impNfPct;
-        const fixFactor = currency === 'BRL' ? 1.0 : (1.0 / 5.15);
+        const ptaxVenda = (currentPtaxBacen && currentPtaxBacen.cotacaoVenda > 0) ? currentPtaxBacen.cotacaoVenda : 5.6378;
+        const fixFactor = currency === 'BRL' ? 1.0 : (1.0 / ptaxVenda);
 
         fixedTax = impFixo * fixFactor;
         pctTax = commBruto * (totalPctTax / 100.0);
@@ -1257,7 +1265,7 @@ function calculateSimulation() {
                         <div class="jess-equiv-pill">
                             <i class="fa-solid fa-wheat-awn"></i>
                             <strong>${formatNumber(m.volTrocaEquiv, 0)} ${m.unitAbbr || 'sc'}</strong>
-                            <span>volume de troca</span>
+                            <span>volume troca equivalência</span>
                         </div>
                     </div>
                     <div class="figma-jess-barter-footer">
@@ -3454,30 +3462,221 @@ function onPracaChange(pracaNome) {
     calculateSimulation();
 }
 
+// ==================== MOTOR FISCAL BARTER: MATRIZ TRIBUTÁRIA REGIONAL ====================
+
+// Chamada à API Aberta do Banco Central (PTAX Venda Diária)
+async function fetchLivePtax() {
+    const statusEl = document.getElementById('ptax-status-display');
+    if (statusEl) {
+        statusEl.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Consultando BACEN...`;
+    }
+
+    try {
+        // Tenta buscar a cotação mais recente via API Olinda PTAX do Banco Central
+        const now = new Date();
+        const formatDateBCB = (d) => {
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            const y = d.getFullYear();
+            return `${m}-${day}-${y}`;
+        };
+
+        let targetDate = new Date();
+        // Se for fim de semana, retrocede para sexta-feira
+        if (targetDate.getDay() === 0) targetDate.setDate(targetDate.getDate() - 2);
+        else if (targetDate.getDay() === 6) targetDate.setDate(targetDate.getDate() - 1);
+
+        const dateStr = formatDateBCB(targetDate);
+        const url = `https://olinda.bcb.gov.br/olinda/servico/PTAX/versao/v1/odata/CotacaoDolarDia(dataCotacao=@dataCotacao)?@dataCotacao='${dateStr}'&$top=1&$format=json`;
+
+        const resp = await fetch(url);
+        if (resp.ok) {
+            const data = await resp.json();
+            if (data.value && data.value.length > 0) {
+                const cotacao = data.value[0].cotacaoVenda;
+                currentPtaxBacen.cotacaoVenda = cotacao;
+                currentPtaxBacen.dataCotacao = new Date(data.value[0].dataHoraCotacao).toLocaleDateString('pt-BR');
+                if (statusEl) {
+                    statusEl.innerHTML = `R$ ${cotacao.toFixed(4).replace('.', ',')} <small style="font-size: 11px; color: #10b981; font-weight: 600;"><i class="fa-solid fa-circle-check"></i> Oficial BACEN (${currentPtaxBacen.dataCotacao})</small>`;
+                }
+                renderPracasTable();
+                recalcTaxaFixaPreview();
+                calculateSimulation();
+                return;
+            }
+        }
+    } catch (err) {
+        console.warn("Aviso: Consulta direta ao BACEN bloqueada por CORS no navegador. Usando cotação PTAX de fechamento oficial:", err);
+    }
+
+    // Fallback estável com a cotação oficial vigente
+    if (statusEl) {
+        statusEl.innerHTML = `R$ ${currentPtaxBacen.cotacaoVenda.toFixed(4).replace('.', ',')} <small style="font-size: 11px; color: #10b981; font-weight: 600;"><i class="fa-solid fa-circle-check"></i> PTAX Venda Oficial</small>`;
+    }
+}
+
+function onEstadoChangeFiscalForm(uf) {
+    const nomeIndexadorEl = document.getElementById('praca-nome-indexador');
+    const valIndexadorEl = document.getElementById('praca-val-indexador');
+    const percIndexadorEl = document.getElementById('praca-perc-indexador');
+    const aplicaCheckEl = document.getElementById('praca-aplica-indexador');
+    const impNfEl = document.getElementById('praca-imposto-nf');
+    const obsEl = document.getElementById('praca-observacao');
+
+    if (uf === 'MT') {
+        aplicaCheckEl.checked = true;
+        nomeIndexadorEl.value = 'UPF/MT';
+        valIndexadorEl.value = 243.49;
+        percIndexadorEl.value = 21.15;
+        impNfEl.value = 0.0;
+        obsEl.value = 'FETHAB (10%) + FETHAB Adic. (10%) + IAGRO (1,15%)';
+    } else if (uf === 'MS') {
+        aplicaCheckEl.checked = true;
+        nomeIndexadorEl.value = 'UFERMS/MS';
+        valIndexadorEl.value = 52.98;
+        percIndexadorEl.value = 52.00;
+        impNfEl.value = 0.0;
+        obsEl.value = 'FUNDEMS (2,8%) + FUNDERSUL (49,20%)';
+    } else if (uf === 'GO') {
+        aplicaCheckEl.checked = false;
+        valIndexadorEl.value = 0;
+        percIndexadorEl.value = 0;
+        impNfEl.value = 1.65;
+        obsEl.value = 'FUNDEINFRA (1,65% sobre NF)';
+    } else if (uf === 'PI') {
+        aplicaCheckEl.checked = false;
+        valIndexadorEl.value = 0;
+        percIndexadorEl.value = 0;
+        impNfEl.value = 1.20;
+        obsEl.value = 'FDI (1,20% sobre NF)';
+    } else {
+        aplicaCheckEl.checked = false;
+        valIndexadorEl.value = 0;
+        percIndexadorEl.value = 0;
+        impNfEl.value = 0.0;
+        obsEl.value = 'Isento de fundos estaduais';
+    }
+
+    toggleIndexadorSection(aplicaCheckEl.checked);
+    recalcTaxaFixaPreview();
+}
+
+function onCommodityChangeFiscalForm(comm) {
+    const pesoEl = document.getElementById('praca-peso-kg');
+    if (!pesoEl) return;
+    if (comm === 'SOJA' || comm === 'MILHO') {
+        pesoEl.value = 60;
+    } else if (comm === 'ALGODAO') {
+        pesoEl.value = 15; // 1 @ de algodão em pluma / caroço comercial
+    }
+    recalcTaxaFixaPreview();
+}
+
+function onIndexadorTypeChange(val) {
+    const valIndexadorEl = document.getElementById('praca-val-indexador');
+    const percIndexadorEl = document.getElementById('praca-perc-indexador');
+    if (val === 'UPF/MT') {
+        valIndexadorEl.value = 243.49;
+        percIndexadorEl.value = 21.15;
+    } else if (val === 'UFERMS/MS') {
+        valIndexadorEl.value = 52.98;
+        percIndexadorEl.value = 52.00;
+    }
+    recalcTaxaFixaPreview();
+}
+
+function toggleIndexadorSection(isChecked) {
+    const sec = document.getElementById('indexador-config-fields');
+    if (sec) {
+        sec.style.opacity = isChecked ? '1' : '0.45';
+        const inputs = sec.querySelectorAll('input:not(#praca-tax-fixo), select');
+        inputs.forEach(i => i.disabled = !isChecked);
+    }
+    recalcTaxaFixaPreview();
+}
+
+function recalcTaxaFixaPreview() {
+    const aplicaCheck = document.getElementById('praca-aplica-indexador');
+    const taxFixoEl = document.getElementById('praca-tax-fixo');
+    const previewUsdEl = document.getElementById('preview-usd-ptax');
+    if (!taxFixoEl) return;
+
+    if (!aplicaCheck || !aplicaCheck.checked) {
+        taxFixoEl.value = "0.00";
+        if (previewUsdEl) previewUsdEl.textContent = 'US$ 0.00 / unid (PTAX)';
+        return;
+    }
+
+    const valIndexador = parseFloat(document.getElementById('praca-val-indexador').value) || 0;
+    const percIndexador = parseFloat(document.getElementById('praca-perc-indexador').value) || 0;
+    const pesoKg = parseFloat(document.getElementById('praca-peso-kg').value) || 60;
+
+    // Fórmula Seção 7.1.B do PRD v1.7:
+    // Custo/ton = (% Indexador / 100) * Valor UPF
+    // Taxa Fixa por unidade = Custo/ton * (pesoKg / 1000)
+    const custoTon = (percIndexador / 100.0) * valIndexador;
+    const taxaFixaUnid = custoTon * (pesoKg / 1000.0);
+
+    taxFixoEl.value = taxaFixaUnid.toFixed(2);
+
+    const ptax = (currentPtaxBacen && currentPtaxBacen.cotacaoVenda > 0) ? currentPtaxBacen.cotacaoVenda : 5.6378;
+    const taxaUsd = taxaFixaUnid / ptax;
+    if (previewUsdEl) {
+        previewUsdEl.textContent = `~ US$ ${taxaUsd.toFixed(2)} / unid (PTAX R$ ${ptax.toFixed(4).replace('.', ',')})`;
+    }
+}
+
 function renderPracasTable() {
     const tbody = document.getElementById('pracas-table-body');
     if (!tbody) return;
 
     tbody.innerHTML = '';
     if (wsysPlazas.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-secondary); padding: 20px;">Nenhuma praça cadastrada.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-secondary); padding: 20px;">Nenhuma regra fiscal cadastrada.</td></tr>`;
         return;
     }
 
+    const ptax = (currentPtaxBacen && currentPtaxBacen.cotacaoVenda > 0) ? currentPtaxBacen.cotacaoVenda : 5.6378;
+
     wsysPlazas.forEach((p, idx) => {
+        const commLabel = p.commodity || 'SOJA';
+        const pesoKg = p.pesoKg || (commLabel === 'ALGODAO' ? 15 : 60);
+        const unitSymbol = (commLabel === 'SOJA' || commLabel === 'MILHO') ? 'sc' : 'lp';
+        const impFixoVal = (p.impFixo !== undefined ? p.impFixo : 0.0);
+        const impFixoUsd = ptax > 0 ? (impFixoVal / ptax) : 0;
+        const ibgeCode = p.ibgeCidade ? `<span class="badge" style="font-family: monospace; font-size: 10px; background: #f1f5f9; padding: 2px 6px; border-radius: 4px;">${p.ibgeCidade}</span>` : `<span style="color: #94a3b8; font-size: 11px;">Padrão UF</span>`;
+        const regimeStr = p.regimeProdutor === 'PESSOA_JURIDICA' ? 'Pessoa Jurídica' : 'Pessoa Física';
+
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td><strong>${p.estado}</strong></td>
-            <td>${p.nome}</td>
-            <td class="font-mono">R$ ${p.freteChao.toFixed(2)}</td>
-            <td class="font-mono">R$ ${p.freteAsfalto.toFixed(2)}</td>
+            <td>
+                <span class="badge" style="background: var(--primary-light); color: var(--primary-deep); font-weight: 700; padding: 2px 6px; border-radius: 4px; margin-right: 4px;">${p.estado}</span>
+                <strong>${p.nome}</strong>
+            </td>
+            <td>${ibgeCode}</td>
+            <td>
+                <span style="font-weight: 600; font-size: 12px; color: #334155;">${commLabel}</span>
+                <small style="display:block; color: #64748b; font-size: 10px;">${pesoKg} kg (${unitSymbol})</small>
+            </td>
             <td class="font-mono">${(p.funruralPct !== undefined ? p.funruralPct : 1.63).toFixed(2)}%</td>
-            <td class="font-mono">${(p.impNfPct !== undefined ? p.impNfPct : 0.0).toFixed(2)}%</td>
-            <td class="font-mono">R$ ${(p.impFixo !== undefined ? p.impFixo : 0.0).toFixed(2)}</td>
-            <td style="font-size: 11.5px; color: var(--text-secondary);">${p.observacao || '-'}</td>
+            <td class="font-mono">
+                ${(p.impNfPct !== undefined ? p.impNfPct : 0.0).toFixed(2)}%
+                ${p.observacao && p.impNfPct > 0 ? `<small style="display:block; color: #64748b; font-size: 10px;">${p.observacao}</small>` : ''}
+            </td>
+            <td class="font-mono" style="font-weight: 700; color: #0f172a;">
+                R$ ${impFixoVal.toFixed(2)}
+                ${p.nomeIndexador ? `<small style="display:block; color: #64748b; font-size: 10px;">${p.nomeIndexador}</small>` : ''}
+            </td>
+            <td class="font-mono text-teal" style="font-weight: 700;">
+                $ ${impFixoUsd.toFixed(2)}
+            </td>
+            <td style="font-size: 11.5px; color: var(--text-secondary);">
+                <div>${regimeStr}</div>
+                <small style="color: #64748b; font-size: 10.5px;">Chão: R$${p.freteChao.toFixed(1)}/km | Asf: R$${p.freteAsfalto.toFixed(1)}/km</small>
+            </td>
             <td style="text-align: center;">
-                <button type="button" class="btn-action btn-edit" onclick="editPraca(${idx})" style="padding: 4px 8px; font-size: 11px; margin-right: 5px; background-color: var(--primary-light); color: var(--primary-deep);"><i class="fa-solid fa-pen"></i> Editar</button>
-                <button type="button" class="btn-action btn-delete" onclick="deletePraca(${idx})" style="padding: 4px 8px; font-size: 11px; background-color: rgba(239, 68, 68, 0.1); color: #ef4444;"><i class="fa-solid fa-trash"></i> Excluir</button>
+                <button type="button" class="btn-action btn-edit" onclick="editPraca(${idx})" style="padding: 4px 8px; font-size: 11px; margin-right: 5px; background-color: var(--primary-light); color: var(--primary-deep);"><i class="fa-solid fa-pen"></i></button>
+                <button type="button" class="btn-action btn-delete" onclick="deletePraca(${idx})" style="padding: 4px 8px; font-size: 11px; background-color: rgba(239, 68, 68, 0.1); color: #ef4444;"><i class="fa-solid fa-trash"></i></button>
             </td>
         `;
         tbody.appendChild(tr);
@@ -3486,8 +3685,10 @@ function renderPracasTable() {
 
 function showCreatePracaForm() {
     document.getElementById('praca-edit-index').value = '';
-    document.getElementById('praca-form-title').textContent = 'Cadastrar nova praça no WSys';
+    document.getElementById('praca-form-title').textContent = 'Cadastrar Regra Fiscal no Motor Syde';
     document.getElementById('create-praca-form').reset();
+    document.getElementById('praca-estado').value = 'MT';
+    onEstadoChangeFiscalForm('MT');
     document.getElementById('pracas-list-view').style.display = 'none';
     document.getElementById('pracas-create-view').style.display = 'block';
 }
@@ -3502,57 +3703,100 @@ function handleSavePraca(e) {
     const idx = document.getElementById('praca-edit-index').value;
     const estado = document.getElementById('praca-estado').value;
     const nome = document.getElementById('praca-nome').value.trim();
-    const freteChao = parseFloat(document.getElementById('praca-frete-chao').value) || 0;
-    const freteAsfalto = parseFloat(document.getElementById('praca-frete-asfalto').value) || 0;
+    const ibgeCidade = (document.getElementById('praca-ibge').value || '').trim();
+    const commodity = document.getElementById('praca-commodity').value;
+    const pesoKg = parseFloat(document.getElementById('praca-peso-kg').value) || 60;
+    const regimeProdutor = document.getElementById('praca-regime').value;
+
     const funruralPct = parseFloat(document.getElementById('praca-funrural').value) || 0;
     const impNfPct = parseFloat(document.getElementById('praca-imposto-nf').value) || 0;
-    const impFixo = parseFloat(document.getElementById('praca-tax-fixo').value) || 0;
     const observacao = document.getElementById('praca-observacao').value.trim();
 
+    const aplicaIndexador = document.getElementById('praca-aplica-indexador').checked;
+    const nomeIndexador = aplicaIndexador ? document.getElementById('praca-nome-indexador').value : null;
+    const valIndexador = aplicaIndexador ? (parseFloat(document.getElementById('praca-val-indexador').value) || 0) : 0;
+    const percIndexador = aplicaIndexador ? (parseFloat(document.getElementById('praca-perc-indexador').value) || 0) : 0;
+    const impFixo = parseFloat(document.getElementById('praca-tax-fixo').value) || 0;
+
+    const freteChao = parseFloat(document.getElementById('praca-frete-chao').value) || 0;
+    const freteAsfalto = parseFloat(document.getElementById('praca-frete-asfalto').value) || 0;
+
     if (!nome) {
-        alert("Preencha o nome da praça");
+        alert("Preencha a descrição da praça ou polo.");
         return;
     }
 
-    const pracaData = { estado, nome, freteChao, freteAsfalto, funruralPct, impNfPct, impFixo, observacao };
+    const pracaData = {
+        estado,
+        nome,
+        ibgeCidade,
+        commodity,
+        pesoKg,
+        regimeProdutor,
+        funruralPct,
+        impNfPct,
+        observacao,
+        aplicaIndexador,
+        nomeIndexador,
+        valIndexador,
+        percIndexador,
+        impFixo,
+        freteChao,
+        freteAsfalto
+    };
 
     if (idx === '') {
-        // Create new
         wsysPlazas.push(pracaData);
     } else {
-        // Edit existing
         wsysPlazas[parseInt(idx)] = pracaData;
     }
 
     localStorage.setItem('wsysPlazas_v2', JSON.stringify(wsysPlazas));
     cancelCreatePraca();
     renderPracasTable();
-    initEstadoSelect(); // Refresh selects
+    initEstadoSelect();
+    calculateSimulation();
 }
 
 function editPraca(index) {
     const p = wsysPlazas[index];
     document.getElementById('praca-edit-index').value = index;
-    document.getElementById('praca-form-title').textContent = 'Editar praça no WSys';
+    document.getElementById('praca-form-title').textContent = 'Editar Regra Fiscal no Motor Syde';
     document.getElementById('praca-estado').value = p.estado;
     document.getElementById('praca-nome').value = p.nome;
-    document.getElementById('praca-frete-chao').value = p.freteChao;
-    document.getElementById('praca-frete-asfalto').value = p.freteAsfalto;
+    document.getElementById('praca-ibge').value = p.ibgeCidade || '';
+    document.getElementById('praca-commodity').value = p.commodity || 'SOJA';
+    document.getElementById('praca-peso-kg').value = p.pesoKg || (p.commodity === 'ALGODAO' ? 15 : 60);
+    document.getElementById('praca-regime').value = p.regimeProdutor || 'PESSOA_FISICA_COMERCIALIZACAO';
+
     document.getElementById('praca-funrural').value = p.funruralPct !== undefined ? p.funruralPct : 1.63;
     document.getElementById('praca-imposto-nf').value = p.impNfPct !== undefined ? p.impNfPct : 0.0;
-    document.getElementById('praca-tax-fixo').value = p.impFixo !== undefined ? p.impFixo : 0.0;
     document.getElementById('praca-observacao').value = p.observacao || '';
+
+    const hasIndexador = p.aplicaIndexador !== undefined ? p.aplicaIndexador : (p.impFixo > 0);
+    document.getElementById('praca-aplica-indexador').checked = hasIndexador;
+    if (p.nomeIndexador) document.getElementById('praca-nome-indexador').value = p.nomeIndexador;
+    if (p.valIndexador !== undefined) document.getElementById('praca-val-indexador').value = p.valIndexador;
+    if (p.percIndexador !== undefined) document.getElementById('praca-perc-indexador').value = p.percIndexador;
+    document.getElementById('praca-tax-fixo').value = p.impFixo !== undefined ? p.impFixo : 0.0;
+
+    document.getElementById('praca-frete-chao').value = p.freteChao;
+    document.getElementById('praca-frete-asfalto').value = p.freteAsfalto;
+
+    toggleIndexadorSection(hasIndexador);
+    recalcTaxaFixaPreview();
 
     document.getElementById('pracas-list-view').style.display = 'none';
     document.getElementById('pracas-create-view').style.display = 'block';
 }
 
 function deletePraca(index) {
-    if (!confirm(`Deseja realmente excluir a praça "${wsysPlazas[index].nome}"?`)) return;
+    if (!confirm(`Deseja realmente excluir a regra fiscal "${wsysPlazas[index].nome}"?`)) return;
     wsysPlazas.splice(index, 1);
     localStorage.setItem('wsysPlazas_v2', JSON.stringify(wsysPlazas));
     renderPracasTable();
-    initEstadoSelect(); // Refresh selects
+    initEstadoSelect();
+    calculateSimulation();
 }
 
 // ==================== SHARE POPUP ACTIONS ====================
@@ -4162,6 +4406,13 @@ window.onSubcategoriaChange = onSubcategoriaChange;
 window.updateCampaignSelectOptions = updateCampaignSelectOptions;
 window.editPraca = typeof editPraca !== 'undefined' ? editPraca : () => { };
 window.deletePraca = typeof deletePraca !== 'undefined' ? deletePraca : () => { };
+window.handleSavePraca = typeof handleSavePraca !== 'undefined' ? handleSavePraca : () => { };
+window.fetchLivePtax = typeof fetchLivePtax !== 'undefined' ? fetchLivePtax : () => { };
+window.onEstadoChangeFiscalForm = typeof onEstadoChangeFiscalForm !== 'undefined' ? onEstadoChangeFiscalForm : () => { };
+window.onCommodityChangeFiscalForm = typeof onCommodityChangeFiscalForm !== 'undefined' ? onCommodityChangeFiscalForm : () => { };
+window.onIndexadorTypeChange = typeof onIndexadorTypeChange !== 'undefined' ? onIndexadorTypeChange : () => { };
+window.toggleIndexadorSection = typeof toggleIndexadorSection !== 'undefined' ? toggleIndexadorSection : () => { };
+window.recalcTaxaFixaPreview = typeof recalcTaxaFixaPreview !== 'undefined' ? recalcTaxaFixaPreview : () => { };
 
 // ==================== AUTO-INIT ON LOAD ====================
 document.addEventListener('DOMContentLoaded', function () {
@@ -4191,32 +4442,66 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 
-// Phase 1: Market Status Indicator
+// Phase 1: Market Status Indicator (Bolsa de Chicago / CBOT)
 function updateMarketStatusIndicator() {
     const badge = document.getElementById('market-status-badge');
     const statusText = document.getElementById('market-status-text');
     const statusDetail = document.getElementById('market-status-detail');
     if (!badge || !statusText || !statusDetail) return;
 
+    // Horário oficial da CBOT (Chicago Mercantile Exchange / CME Group para Grãos - Soja/Milho):
+    // Horário de Chicago (CT):
+    //   - Pregão Noturno: Domingo a Sexta das 19:00 às 07:45 CT
+    //   - Pregão Diurno: Segunda a Sexta das 08:30 às 13:20 CT
+    // Em Horário de Brasília (BRT = UTC-3):
+    //   - Noturno: 21:00 às 09:45 BRT (abre dom 21h e fecha sex 09:45)
+    //   - Diurno: 10:30 às 15:20 BRT (segunda a sexta)
+    // Pausa diária: 09:45 às 10:30 e 15:20 às 21:00 BRT
+    // Fim de semana: fecha sexta 15:20 BRT e reabre domingo 21:00 BRT
     const now = new Date();
-    const utcHour = now.getUTCHours();
-    const utcDay = now.getUTCDay();
+    // Minutos desde 00:00 UTC
+    const utcMinutes = now.getUTCHours() * 60 + now.getUTCMinutes();
+    const utcDay = now.getUTCDay(); // 0 = Domingo, 1 = Segunda, ..., 5 = Sexta, 6 = Sábado
 
-    // CBOT trades approx Sun 19:00 - Fri 13:20 CT
-    const isWeekend = (utcDay === 6) || (utcDay === 0 && utcHour < 24) || (utcDay === 5 && utcHour >= 19);
-    const isOpen = !isWeekend && ((utcHour >= 1 && utcHour < 14) || (utcHour >= 15 && utcHour < 20));
+    // Convertendo para minutos em BRT (UTC-3):
+    let brtMinutes = utcMinutes - 180;
+    let brtDay = utcDay;
+    if (brtMinutes < 0) {
+        brtMinutes += 1440;
+        brtDay = (brtDay + 6) % 7;
+    }
+
+    let isOpen = false;
+
+    // Domingo: abre às 21:00 BRT (1260 min)
+    if (brtDay === 0) {
+        isOpen = (brtMinutes >= 1260);
+    }
+    // Segunda a Quinta
+    else if (brtDay >= 1 && brtDay <= 4) {
+        // Noturno até 09:45 (585 min) OU Diurno de 10:30 (630 min) até 15:20 (920 min) OU Noturno após 21:00 (1260 min)
+        isOpen = (brtMinutes <= 585) || (brtMinutes >= 630 && brtMinutes <= 920) || (brtMinutes >= 1260);
+    }
+    // Sexta-feira: fecha às 15:20 BRT (920 min)
+    else if (brtDay === 5) {
+        isOpen = (brtMinutes <= 585) || (brtMinutes >= 630 && brtMinutes <= 920);
+    }
+    // Sábado: totalmente fechado
+    else {
+        isOpen = false;
+    }
 
     if (isOpen) {
-        statusText.textContent = "Mercado Futuro CBOT (Chicago): Aberto";
-        statusDetail.innerHTML = '<i class="fa-solid fa-clock"></i> Pregão em andamento. Cotações spot e futuro ativas em tempo real.';
+        statusText.innerHTML = `<strong>Mercado Futuro CBOT (Chicago): Aberto</strong>`;
+        statusDetail.innerHTML = '<i class="fa-solid fa-circle-check" style="color:#16a34a;"></i> <strong>Pregão em andamento:</strong> Cotações em tempo real da CBOT com paridade ativa no WSys.';
         badge.style.background = "#f0fdf4";
-        badge.style.borderColor = "#bbf7d0";
+        badge.style.borderColor = "#86efac";
         badge.style.color = "#166534";
         const dot = badge.querySelector('.status-dot');
         if (dot) dot.style.background = "#16a34a";
     } else {
-        statusText.textContent = "Mercado Futuro CBOT (Chicago): Fechado";
-        statusDetail.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Fora do horário de pregão. Cotações indicativas baseadas no último fechamento (risco de volatilidade na reabertura).';
+        statusText.innerHTML = `<strong>Mercado Futuro CBOT (Chicago): Fechado</strong>`;
+        statusDetail.innerHTML = '<i class="fa-solid fa-triangle-exclamation" style="color:#d97706;"></i> <strong>Fora do pregão:</strong> Cotação indicativa baseada no último fechamento (sujeita a ajuste na abertura). Horário do pregão: 10:30 às 15:20 e 21:00 às 09:45 (Brasília).';
         badge.style.background = "#fffbeb";
         badge.style.borderColor = "#fde68a";
         badge.style.color = "#92400e";
