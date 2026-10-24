@@ -44,7 +44,8 @@
                 <div class="sidebar-section-header">CRÉDITO</div>
                 <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-file-invoice-dollar"></i> Solicitações de crédito</div></a>
                 <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-handshake-angle"></i> Parceiros de crédito</div></a>
-                <a class="nav-link active" id="nav-link-simulador-v2" onclick="showPage('simulador-v2')"><div class="nav-link-main" style="color:#008080; font-weight:700;"><i class="fa-solid fa-calculator" style="color:#008080;"></i> Operação FIDC</div></a>
+                <a class="nav-link active" id="nav-link-simulador-v1" onclick="showPage('simulador-v1')"><div class="nav-link-main" style="color:#008080; font-weight:700;"><i class="fa-solid fa-calculator" style="color:#008080;"></i> Simulador (Fase 1 - Manual)</div></a>
+                <a class="nav-link" id="nav-link-simulador-v2" onclick="showPage('simulador-v2')"><div class="nav-link-main"><i class="fa-solid fa-network-wired"></i> Simulador (Fase 2 - WSys)</div></a>
 
                 <div class="sidebar-section-header">Usuários</div>
                 <a class="nav-link"><div class="nav-link-main"><i class="fa-solid fa-users"></i> Usuários</div></a>
@@ -202,15 +203,426 @@
                 </div>
 
 
-                <!-- ==================== PAGE: SIMULADOR ==================== -->
-
-                <!-- ==================== PAGE: SIMULADOR ==================== -->
-                <div class="simulator-v2-container" id="page-simulador-v2"
+                <!-- ==================== PAGE: SIMULADOR FASE 1 (MANUAL - FIN-18889) ==================== -->
+                <div class="simulator-v2-container" id="page-simulador-v1"
                     style="display:flex; flex-direction:column; gap:20px;">
+                    
+                    <!-- Top Phase Switcher Bar -->
+                    <div class="phase-selector-bar">
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                            <span class="phase-tag"><i class="fa-solid fa-code-branch"></i> Estratégia de Entrega</span>
+                            <span style="font-size:13px; font-weight:600; color:#334155;">Versão ativa: <strong>Fase 1 (MVP Manual - FIN-18889)</strong></span>
+                        </div>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <button type="button" class="phase-tab-btn active" onclick="showPage('simulador-v1')">
+                                <i class="fa-solid fa-pen-to-square"></i> Fase 1: Entrada Manual
+                            </button>
+                            <button type="button" class="phase-tab-btn" onclick="showPage('simulador-v2')">
+                                <i class="fa-solid fa-network-wired"></i> Fase 2: WSys Integrado
+                            </button>
+                        </div>
+                    </div>
+
                     <!-- Page Title -->
                     <div style="margin-bottom:2px;">
-                        <h2 style="font-family:var(--font-heading); color:#0f172a; font-size:22px; font-weight:700; margin:0 0 4px 0;">Simulador de taxas</h2>
-                        <p style="color:var(--text-secondary); font-size:13px; margin:0;">Conheça as melhores taxas disponíveis para você</p>
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                            <h2 style="font-family:var(--font-heading); color:#0f172a; font-size:22px; font-weight:700; margin:0 0 4px 0;">Simulador de taxas – Fase 1</h2>
+                            <span style="background:#e0f2fe; color:#0369a1; font-size:11px; font-weight:700; padding:3px 10px; border-radius:12px; text-transform:uppercase;">MVP Manual (FIN-18889)</span>
+                        </div>
+                        <p style="color:var(--text-secondary); font-size:13px; margin:0;">
+                            Cálculo de equivalência barter com cotação da commodity, alíquotas fiscais e cotação do dólar inseridas manualmente.
+                        </p>
+                    </div>
+
+                    <!-- Form Card (Figma Jess Style) -->
+                    <div class="card animate-fade-in" style="background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:24px; box-shadow:0 1px 3px rgba(0,0,0,0.03);">
+                        <form novalidate onsubmit="event.preventDefault(); window.handleFormSimulateV1(event);"
+                            style="display:flex; flex-direction:column; gap:22px;">
+                            
+                            <!-- Section 1: Campanha da Operação -->
+                            <div>
+                                <span style="font-size:12px; font-weight:700; text-transform:uppercase; color:#008080; letter-spacing:0.5px; display:block; margin-bottom:12px;">Campanha da Operação</span>
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap:16px;">
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v1-sim-campanha-select" style="font-size:12px; color:#475569; font-weight:500;">Campanha</label>
+                                        <div class="select-wrapper">
+                                            <select id="v1-sim-campanha-select" onchange="onCampanhaSelectChangeV1(this.value);" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;">
+                                                <option value="0" selected>Sul Repique (05/12/2026 - 05/05/2027)</option>
+                                                <option value="1">Cerrado Safra 2026/27 (01/10/2026 - 30/05/2027)</option>
+                                                <option value="2">Planilha 2026 (216 dias) (01/10/2025 - 05/05/2026)</option>
+                                                <option value="custom">Campanha Customizada (Manual)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v1-sim-subcategoria" style="font-size:12px; color:#475569; font-weight:500;">Subcategoria</label>
+                                        <div class="select-wrapper">
+                                            <select id="v1-sim-subcategoria" onchange="onSubcategoriaChangeV1(this.value)" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;">
+                                                <option value="pr_ms_silver_crop" selected>PR/MS | Silver +, Silver | Crop</option>
+                                                <option value="rs_sc_silver_crop_maio">RS/SC | Silver +, Silver | Crop | Venc. Maio</option>
+                                                <option value="rs_sc_black_crop_maio">RS/SC | Black | Crop | Venc. Maio</option>
+                                                <option value="rs_sc_bio_maio">RS/SC | Bio | Venc. Maio</option>
+                                                <option value="rs_sc_silver_crop_junho">RS/SC | Silver +, Silver | Crop | Venc. Junho</option>
+                                                <option value="rs_sc_bio_junho">RS/SC | Bio | Venc. Junho</option>
+                                                <option value="pr_ms_bio">PR/MS | Bio</option>
+                                                <option value="pr_ms_black_crop">PR/MS | Black | Crop</option>
+                                                <option value="pr_ms_black_plus_crop">PR/MS | Black + | Crop</option>
+                                                <option value="rs_sc_black_crop_junho">RS/SC | Black | Crop | Venc. Junho</option>
+                                                <option value="rs_sc_black_plus_crop_maio">RS/SC | Black + | Crop | Venc. Maio</option>
+                                                <option value="rs_sc_black_plus_crop_junho">RS/SC | Black + | Crop | Venc. Junho</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v1-sim-mes-logistico" style="font-size:12px; color:#475569; font-weight:500;">
+                                            Vencimento / Mês de Entrega
+                                        </label>
+                                        <div class="select-wrapper">
+                                            <select id="v1-sim-mes-logistico" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;">
+                                                <option value="05/2027" selected>Maio / 2027 (Padrão Vencimento)</option>
+                                                <option value="04/2027">Abril / 2027</option>
+                                                <option value="06/2027">Junho / 2027</option>
+                                                <option value="07/2027">Julho / 2027</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 2: Informações financeiras -->
+                            <div>
+                                <span style="font-size:12px; font-weight:700; text-transform:uppercase; color:#008080; letter-spacing:0.5px; display:block; margin-bottom:12px;">Informações Financeiras</span>
+                                <div style="display:flex; flex-direction:column; gap:14px;">
+                                    <div class="currency-selector-group" style="width:100%; max-width:100%; display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+                                        <button type="button" class="currency-btn active" id="v1-btn-currency-brl"
+                                            onclick="setCurrency('BRL')" style="border:1.5px solid #008080; background:#ffffff; color:#008080; border-radius:6px; font-weight:600; font-size:14px; padding:12px; cursor:pointer;">Real (R$)</button>
+                                        <button type="button" class="currency-btn" id="v1-btn-currency-usd"
+                                            onclick="setCurrency('USD')" style="border:1px solid #cbd5e1; background:#ffffff; color:#64748b; border-radius:6px; font-weight:600; font-size:14px; padding:12px; cursor:pointer;">Dólar (USD)</button>
+                                    </div>
+                                    
+                                    <div style="display:grid; grid-template-columns: 2fr 1.2fr; gap:14px; align-items:start;" id="v1-fin-grid">
+                                        <div class="input-group" style="margin-bottom:0;">
+                                            <label for="v1-sim-credito" style="font-size:12px; color:#475569; font-weight:500;">Valor da Operação ( TP + Impostos )</label>
+                                            <div class="input-wrapper">
+                                                <input type="text" id="v1-sim-credito" value="R$ 1.000.000,00" placeholder="R$ 1.000.000,00"
+                                                    style="font-size:15px; font-weight:600; padding:12px 14px; border:1px solid #cbd5e1; border-radius:6px;"
+                                                    oninput="document.getElementById('sim-credito').value=this.value; document.getElementById('sim-credito').dispatchEvent(new Event('input'));">
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Cotação do Dólar (Input Manual para cálculo dos impostos quando em USD) -->
+                                        <div class="input-group" id="v1-container-cotacao-dolar" style="margin-bottom:0; background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:10px 14px;">
+                                            <label for="v1-sim-cotacao-dolar" style="font-size:12px; color:#0f766e; font-weight:600; display:flex; align-items:center; gap:6px;">
+                                                <i class="fa-solid fa-dollar-sign"></i> Cotação do Dólar (R$/USD) *
+                                            </label>
+                                            <div class="input-wrapper" style="margin-top:4px;">
+                                                <input type="number" step="0.0001" id="v1-sim-cotacao-dolar" value="5.6378" placeholder="5.6378"
+                                                    style="border:1.5px solid #008080; border-radius:6px; font-size:14px; font-weight:700; color:#0f172a; padding:8px 10px;">
+                                            </div>
+                                            <small style="font-size:10.5px; color:#64748b; display:block; margin-top:4px; line-height:1.3;">
+                                                Usada para converter impostos fixos em R$ (ex: FETHAB) para dólares na simulação.
+                                            </small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Section 3: Dados para Simulação Barter & Cotação do Commodity (Manual) -->
+                            <div>
+                                <span style="font-size:12px; font-weight:700; text-transform:uppercase; color:#008080; letter-spacing:0.5px; display:block; margin-bottom:12px;">Dados para Simulação Barter & Cotação Manual</span>
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:end;">
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v1-sim-commodity" style="font-size:12px; color:#475569; font-weight:500;">Commodity / Cultura</label>
+                                        <div class="select-wrapper">
+                                            <select id="v1-sim-commodity" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
+                                                onchange="onCulturaChangeV1(this.value);">
+                                                <option value="Soja" selected>Soja (sc)</option>
+                                                <option value="Milho">Milho (sc)</option>
+                                                <option value="Algodão">Algodão (lp)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <!-- Campo Manual de Cotação da Commodity -->
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v1-sim-preco-bruto" style="font-size:12px; color:#0f766e; font-weight:600;">
+                                            Cotação do Commodity (Preço Bruto FOB) *
+                                        </label>
+                                        <div class="input-wrapper">
+                                            <input type="number" step="0.01" id="v1-sim-preco-bruto" value="103.00" placeholder="103.00"
+                                                style="border:1.5px solid #008080; border-radius:6px; font-size:14px; font-weight:700; color:#0f172a; padding:9px 12px;">
+                                            <span class="input-suffix" id="v1-sim-preco-bruto-suffix">R$/sc</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v1-sim-estado" style="font-size:12px; color:#475569; font-weight:500;">Estado</label>
+                                        <div class="select-wrapper">
+                                            <select id="v1-sim-estado" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
+                                                onchange="onEstadoChangeV1(this.value);">
+                                                <option value="MT" selected>Mato Grosso (MT)</option>
+                                                <option value="GO">Goiás (GO)</option>
+                                                <option value="MS">Mato Grosso do Sul (MS)</option>
+                                                <option value="PR">Paraná (PR)</option>
+                                                <option value="BA">Bahia (BA)</option>
+                                                <option value="MA">Maranhão (MA)</option>
+                                                <option value="TO">Tocantins (TO)</option>
+                                                <option value="PI">Piauí (PI)</option>
+                                                <option value="RO">Rondônia (RO)</option>
+                                                <option value="MG">Minas Gerais (MG)</option>
+                                                <option value="SP">São Paulo (SP)</option>
+                                                <option value="RS">Rio Grande do Sul (RS)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v1-sim-regiao" style="font-size:12px; color:#475569; font-weight:500;">Praça / Região</label>
+                                        <div class="select-wrapper">
+                                            <select id="v1-sim-regiao" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;">
+                                                <option value="Campo Novo do Parecis" selected>Campo Novo do Parecis</option>
+                                                <option value="Sorriso">Sorriso</option>
+                                                <option value="Querência">Querência</option>
+                                                <option value="Rondonópolis">Rondonópolis</option>
+                                                <option value="Primavera do Leste">Primavera do Leste</option>
+                                                <option value="Nova Mutum">Nova Mutum</option>
+                                                <option value="Sinop">Sinop</option>
+                                                <option value="Lucas do Rio Verde">Lucas do Rio Verde</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v1-sim-dist-chao" style="font-size:12px; color:#475569; font-weight:500;">Dist. Chão (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
+                                        <div class="input-wrapper">
+                                            <input type="number" id="v1-sim-dist-chao" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;">
+                                            <span class="input-suffix">KM</span>
+                                        </div>
+                                    </div>
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v1-sim-dist-asfalto" style="font-size:12px; color:#475569; font-weight:500;">Dist. Asfalto (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
+                                        <div class="input-wrapper">
+                                            <input type="number" id="v1-sim-dist-asfalto" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;">
+                                            <span class="input-suffix">KM</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Section 4: Motor Fiscal - Parâmetros Tributários Manuais (FIN-18889) -->
+                                <div class="manual-field-card" style="margin-top:16px;">
+                                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; border-bottom:1px solid #ccfbf1; padding-bottom:8px;">
+                                        <div style="display:flex; align-items:center; gap:8px;">
+                                            <i class="fa-solid fa-scale-balanced" style="color:#008080; font-size:16px;"></i>
+                                            <span style="font-size:12.5px; font-weight:700; color:#0f766e; text-transform:uppercase; letter-spacing:0.5px;">
+                                                Taxa dos Impostos e Deduções Fiscais (Input Manual)
+                                            </span>
+                                        </div>
+                                        <div class="toggle-switch" style="margin:0;">
+                                            <input type="checkbox" id="v1-sim-descontos" checked onchange="toggleFiscalDeductionsV1(this.checked);">
+                                            <label for="v1-sim-descontos" class="toggle-slider"></label>
+                                            <span class="toggle-label" style="font-size:12px; font-weight:600; color:#0f766e;">Aplicar Deduções Fiscais</span>
+                                        </div>
+                                    </div>
+
+                                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:14px;" id="v1-fiscal-inputs-row">
+                                        <div class="input-group" style="margin-bottom:0;">
+                                            <label for="v1-sim-funrural-pct" style="font-size:11.5px; color:#334155; font-weight:600;">
+                                                Funrural (%)
+                                            </label>
+                                            <div class="input-wrapper">
+                                                <input type="number" step="0.01" id="v1-sim-funrural-pct" value="1.63" placeholder="1.63"
+                                                    style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px; font-weight:600; padding:8px 12px;">
+                                                <span class="input-suffix">%</span>
+                                            </div>
+                                            <small style="font-size:10.5px; color:#64748b; margin-top:2px; display:block;">Padrão nacional PF (1,63%)</small>
+                                        </div>
+
+                                        <div class="input-group" style="margin-bottom:0;">
+                                            <label for="v1-sim-imposto-estadual-pct" style="font-size:11.5px; color:#334155; font-weight:600;">
+                                                Outros Impostos Estaduais (%)
+                                            </label>
+                                            <div class="input-wrapper">
+                                                <input type="number" step="0.01" id="v1-sim-imposto-estadual-pct" value="0.00" placeholder="0.00"
+                                                    style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px; font-weight:600; padding:8px 12px;">
+                                                <span class="input-suffix">% s/ NF</span>
+                                            </div>
+                                            <small style="font-size:10.5px; color:#64748b; margin-top:2px; display:block;">Ex: FUNDEINFRA (1,65% GO) ou FDI (1,20% PI)</small>
+                                        </div>
+
+                                        <div class="input-group" style="margin-bottom:0;">
+                                            <label for="v1-sim-taxa-fixa" style="font-size:11.5px; color:#334155; font-weight:600;">
+                                                Taxa Fixa Estadual (R$/sc)
+                                            </label>
+                                            <div class="input-wrapper">
+                                                <input type="number" step="0.01" id="v1-sim-taxa-fixa" value="3.09" placeholder="3.09"
+                                                    style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px; font-weight:600; padding:8px 12px;">
+                                                <span class="input-suffix">R$/sc</span>
+                                            </div>
+                                            <small style="font-size:10.5px; color:#64748b; margin-top:2px; display:block;">Ex: FETHAB/IAGRO (R$ 3,09 MT) ou FUNDERSUL (R$ 1,65 MS)</small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Observações da Operação -->
+                                <div style="margin-top:14px;">
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v1-sim-obs" style="font-size:12px; color:#475569; font-weight:500;">
+                                            Observações da Operação <span style="font-size:11px; color:#64748b;">(Ex: Vendedor de grão diferente de insumos, fazenda, CNPJ/CPF)</span>
+                                        </label>
+                                        <div class="input-wrapper">
+                                            <input type="text" id="v1-sim-obs" placeholder="Ex: Grão entregue por CNPJ 12.345.678/0001-90 | Fazenda Boa Esperança"
+                                                style="border:1px solid #cbd5e1; border-radius:6px; font-size:13px; padding:10px 12px; width:100%;">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Footer Action Buttons -->
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:8px;">
+                                <div>
+                                    <button type="button" class="btn-outline" id="v1-btn-voltar" onclick="resetFormToDefaultsV1()"
+                                        style="padding:9px 24px; min-height:40px; border-radius:6px; border:1px solid #008080; color:#008080; background:#ffffff; font-weight:600; font-size:13.5px; cursor:pointer; display:inline-flex; align-items:center; gap:8px;">
+                                        Voltar
+                                    </button>
+                                </div>
+                                <div style="display:flex; gap:10px; flex-wrap:wrap;">
+                                    <button type="button" class="btn-submit" id="v1-btn-sim-calcular"
+                                        onclick="window.handleFormSimulateV1(event)"
+                                        style="width:auto; padding:10px 32px; min-height:40px; background-color:#008080; border-radius:6px; font-weight:700; font-size:14px; box-shadow:0 2px 6px rgba(0,128,128,0.2); cursor:pointer;">
+                                        Simular
+                                    </button>
+                                    <button type="button" class="btn-submit btn-pdf" id="v1-btn-sim-pdf"
+                                        onclick="downloadSimulationPDF()"
+                                        style="width:auto; padding:10px 20px; background-color:#4b5563; background-image:none; box-shadow:none; min-height:40px; border-radius:6px; font-weight:600; font-size:13.5px;">
+                                        <i class="fa-solid fa-file-pdf"></i> PDF
+                                    </button>
+                                    <button type="button" class="btn-submit btn-share" id="v1-btn-sim-share"
+                                        onclick="openSharePopup()"
+                                        style="width:auto; padding:10px 20px; min-height:40px; border-radius:6px; font-weight:600; font-size:13.5px;">
+                                        <i class="fa-solid fa-share-nodes"></i> Compartilhar
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Results Section for Fase 1 (No Chicago CBOT badge & No TradingView widget) -->
+                    <div id="v1-sim-results-wrapper" style="display:none; flex-direction:column; gap:20px;">
+                        
+                        <!-- Resumo da Operação Card -->
+                        <div id="v1-summary-card" class="jess-summary-card animate-fade-in">
+                            <div class="jess-summary-title">Resumo da operação (Fase 1 - Manual)</div>
+                            <div class="jess-summary-grid">
+                                <div class="jess-summary-col">
+                                    <span class="jess-summary-label">VALOR</span>
+                                    <strong id="v1-summary-value" class="jess-summary-val">R$ 1.000.000,00</strong>
+                                </div>
+                                <div class="jess-summary-col border-left">
+                                    <span class="jess-summary-label">
+                                        <i class="fa-regular fa-calendar" style="color:#008080;"></i> DATA DA SIMULAÇÃO
+                                    </span>
+                                    <strong id="v1-summary-date" class="jess-summary-val" style="font-size:22px;">-</strong>
+                                </div>
+                                <div class="jess-summary-col border-left">
+                                    <span class="jess-summary-label">
+                                        <i class="fa-regular fa-clock" style="color:#008080;"></i> VALIDADE DA SIMULAÇÃO
+                                    </span>
+                                    <strong id="v1-summary-validity" class="jess-summary-val" style="font-size:22px;">-</strong>
+                                </div>
+                            </div>
+                            <div id="v1-summary-obs-container" style="display:none; margin-top:14px; padding-top:10px; border-top:1px solid rgba(0, 128, 128, 0.2); font-size:12.5px; color:#0f766e;">
+                                <strong>Observações da Operação:</strong> <span id="v1-summary-obs-display"></span>
+                            </div>
+                        </div>
+
+                        <!-- Modality Cards List (4 Columns Grid matching Figma Jess) -->
+                        <div class="modality-cards-grid" id="v1-modality-cards-list">
+                        </div>
+
+                        <!-- Tabela de Validação do Racional dos Cálculos (Fase 1) -->
+                        <div id="v1-validation-section" class="card animate-fade-in" style="display:none; margin-top:20px; border:2px dashed #0d9488; background:#f0fdfa; padding:20px; border-radius:12px;">
+                            <div style="background:#0f766e; color:#ffffff; padding:12px 16px; border-radius:8px; font-weight:700; font-size:13px; text-transform:uppercase; letter-spacing:0.5px; margin-bottom:16px; display:flex; align-items:center; gap:10px;">
+                                <i class="fa-solid fa-calculator" style="font-size:18px;"></i>
+                                <span>Racional Matemático da Simulação (Fase 1 - Entradas Manuais)</span>
+                            </div>
+
+                            <h3 style="font-family:var(--font-heading); color:#0f766e; font-size:16px; margin:0 0 14px 0; display:flex; align-items:center; gap:8px;">
+                                <i class="fa-solid fa-table-list text-teal"></i> Matriz de Parâmetros Digitados e Racional Fiscal Aplicado
+                            </h3>
+
+                            <!-- Key Campaign & Internal Parameters Grid -->
+                            <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; margin-bottom:20px;">
+                                <div style="background:#ffffff; padding:12px; border-radius:8px; border:1px solid #99f6e4;">
+                                    <div style="font-size:11px; color:#0f766e; font-weight:600; text-transform:uppercase;">Campanha Selecionada</div>
+                                    <div id="v1-val-camp-nome" style="font-size:13px; font-weight:700; color:#1e293b; margin-top:2px;">-</div>
+                                </div>
+                                <div style="background:#ffffff; padding:12px; border-radius:8px; border:1px solid #99f6e4;">
+                                    <div style="font-size:11px; color:#0f766e; font-weight:600; text-transform:uppercase;">Datas (Carência / Vencimento / Prazo)</div>
+                                    <div id="v1-val-camp-datas" style="font-size:13px; font-weight:700; color:#1e293b; margin-top:2px;">-</div>
+                                </div>
+                                <div style="background:#ffffff; padding:12px; border-radius:8px; border:1px solid #99f6e4;">
+                                    <div style="font-size:11px; color:#0f766e; font-weight:600; text-transform:uppercase;">Moeda da Operação</div>
+                                    <div id="v1-val-moeda-cambio" style="font-size:13px; font-weight:700; color:#1e293b; margin-top:2px;">-</div>
+                                </div>
+                                <div style="background:#ffffff; padding:12px; border-radius:8px; border:1px solid #99f6e4;">
+                                    <div style="font-size:11px; color:#0f766e; font-weight:600; text-transform:uppercase;">Cotação Commodity (Manual)</div>
+                                    <div id="v1-val-preco-wsys" style="font-size:13px; font-weight:700; color:#1e293b; margin-top:2px;">-</div>
+                                </div>
+                                <div style="background:#ffffff; padding:12px; border-radius:8px; border:1px solid #99f6e4;">
+                                    <div style="font-size:11px; color:#0f766e; font-weight:600; text-transform:uppercase;">Impostos e Deduções (Manual)</div>
+                                    <div id="v1-val-praca-imposto" style="font-size:13px; font-weight:700; color:#1e293b; margin-top:2px;">-</div>
+                                </div>
+                                <div style="background:#ffffff; padding:12px; border-radius:8px; border:1px solid #99f6e4;">
+                                    <div style="font-size:11px; color:#0f766e; font-weight:600; text-transform:uppercase;">Cotação Dólar PTAX (Conversão Fiscal)</div>
+                                    <div id="v1-val-dolar-conversao" style="font-size:13px; font-weight:700; color:#1e293b; margin-top:2px;">R$ 5,6378</div>
+                                </div>
+                            </div>
+
+                            <!-- Step-by-Step Table -->
+                            <div style="overflow-x:auto; background:#ffffff; border-radius:8px; border:1px solid #99f6e4;">
+                                <table class="data-table" style="width:100%; border-collapse:collapse; font-size:12px;">
+                                    <thead>
+                                        <tr style="background:#ccfbf1; color:#115e59; text-align:left;">
+                                            <th style="padding:10px 12px; border-bottom:2px solid #99f6e4;">Indicador / Etapa do Racional</th>
+                                            <th style="padding:10px 12px; border-bottom:2px solid #99f6e4;">Fórmula Aplicada</th>
+                                            <th style="padding:10px 12px; border-bottom:2px solid #99f6e4; background:#dcfce7; color:#14532d;">Nutrade (Estrutura Barter Hub)</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="v1-val-table-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- ==================== PAGE: SIMULADOR FASE 2 (WSYS INTEGRADO) ==================== -->
+                <div class="simulator-v2-container" id="page-simulador-v2"
+                    style="display:none; flex-direction:column; gap:20px;">
+                    
+                    <!-- Top Phase Switcher Bar -->
+                    <div class="phase-selector-bar">
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                            <span class="phase-tag"><i class="fa-solid fa-code-branch"></i> Estratégia de Entrega</span>
+                            <span style="font-size:13px; font-weight:600; color:#334155;">Versão ativa: <strong>Fase 2 (Conectado ao WSys CTRM)</strong></span>
+                        </div>
+                        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                            <button type="button" class="phase-tab-btn" onclick="showPage('simulador-v1')">
+                                <i class="fa-solid fa-pen-to-square"></i> Fase 1: Entrada Manual
+                            </button>
+                            <button type="button" class="phase-tab-btn active" onclick="showPage('simulador-v2')">
+                                <i class="fa-solid fa-network-wired"></i> Fase 2: WSys Integrado
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Page Title -->
+                    <div style="margin-bottom:2px;">
+                        <div style="display:flex; align-items:center; gap:10px; flex-wrap:wrap;">
+                            <h2 style="font-family:var(--font-heading); color:#0f172a; font-size:22px; font-weight:700; margin:0 0 4px 0;">Simulador de taxas – Fase 2</h2>
+                            <span style="background:#fef3c7; color:#92400e; font-size:11px; font-weight:700; padding:3px 10px; border-radius:12px; text-transform:uppercase;">Conectado ao WSys (CTRM 2.10.1)</span>
+                        </div>
+                        <p style="color:var(--text-secondary); font-size:13px; margin:0;">Cotações automáticas do WSys, integração de rotas e monitoramento do mercado de Chicago (CBOT).</p>
                     </div>
 
                     <!-- Top Card: Full width operations parameters form (Figma Jess Style) -->

@@ -123,6 +123,147 @@ function resetFormToDefaults() {
 }
 window.resetFormToDefaults = resetFormToDefaults;
 
+// ==================== FASE 1 (ENTREGA 1 - ENTRADA MANUAL) HANDLERS ====================
+function initFase1State() {
+    onEstadoChangeV1('MT');
+    const v1Comm = document.getElementById('v1-sim-commodity');
+    if (v1Comm) onCulturaChangeV1(v1Comm.value);
+}
+window.initFase1State = initFase1State;
+
+function handleFormSimulateV1(e) {
+    if (e) e.preventDefault();
+    window.hasSimulated = true;
+    hasSimulated = true;
+    calculateSimulation();
+
+    const target = document.getElementById('v1-sim-results-wrapper');
+    if (target && window.innerWidth < 1024) {
+        target.scrollIntoView({ behavior: 'smooth' });
+    }
+}
+window.handleFormSimulateV1 = handleFormSimulateV1;
+
+function onCulturaChangeV1(cultura) {
+    const isSoy = cultura === 'Soja';
+    const isCorn = cultura === 'Milho';
+    const unitSymbol = (isSoy || isCorn) ? 'sc' : 'lp';
+    const currencySign = selectedCurrency === 'BRL' ? 'R$' : 'USD';
+
+    const suffixEl = document.getElementById('v1-sim-preco-bruto-suffix');
+    if (suffixEl) suffixEl.textContent = `${currencySign}/${unitSymbol}`;
+
+    const priceInput = document.getElementById('v1-sim-preco-bruto');
+    if (priceInput) {
+        if (selectedCurrency === 'BRL') {
+            priceInput.value = isCorn ? "58.00" : (isSoy ? "103.00" : "4.38");
+        } else {
+            priceInput.value = isCorn ? "11.20" : (isSoy ? "20.00" : "0.85");
+        }
+    }
+    if (window.hasSimulated) calculateSimulation();
+}
+window.onCulturaChangeV1 = onCulturaChangeV1;
+
+function onEstadoChangeV1(estado) {
+    const regiaoSelect = document.getElementById('v1-sim-regiao');
+    if (regiaoSelect) {
+        const plazas = wsysPlazas.filter(p => p.estado === estado);
+        regiaoSelect.innerHTML = '';
+        if (plazas.length > 0) {
+            plazas.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.nome;
+                opt.textContent = p.nome;
+                regiaoSelect.appendChild(opt);
+            });
+        } else {
+            const opt = document.createElement('option');
+            opt.value = `Capital (${estado})`;
+            opt.textContent = `Capital (${estado})`;
+            regiaoSelect.appendChild(opt);
+        }
+    }
+
+    // Auto-suggest state fiscal references (100% editable by user)
+    const funruralInput = document.getElementById('v1-sim-funrural-pct');
+    const impEstInput = document.getElementById('v1-sim-imposto-estadual-pct');
+    const taxaFixaInput = document.getElementById('v1-sim-taxa-fixa');
+
+    if (funruralInput) funruralInput.value = "1.63";
+    if (impEstInput) {
+        if (estado === 'GO') impEstInput.value = "1.65"; // FUNDEINFRA
+        else if (estado === 'PI') impEstInput.value = "1.20"; // FDI
+        else impEstInput.value = "0.00";
+    }
+    if (taxaFixaInput) {
+        if (estado === 'MT') taxaFixaInput.value = "3.09"; // FETHAB + IAGRO
+        else if (estado === 'MS') taxaFixaInput.value = "1.65"; // FUNDERSUL
+        else taxaFixaInput.value = "0.00";
+    }
+
+    if (window.hasSimulated) calculateSimulation();
+}
+window.onEstadoChangeV1 = onEstadoChangeV1;
+
+function toggleFiscalDeductionsV1(checked) {
+    const inputsRow = document.getElementById('v1-fiscal-inputs-row');
+    if (inputsRow) {
+        inputsRow.style.opacity = checked ? '1' : '0.4';
+        inputsRow.style.pointerEvents = checked ? 'auto' : 'none';
+    }
+    if (window.hasSimulated) calculateSimulation();
+}
+window.toggleFiscalDeductionsV1 = toggleFiscalDeductionsV1;
+
+function onCampanhaSelectChangeV1(val) {
+    if (window.hasSimulated) calculateSimulation();
+}
+window.onCampanhaSelectChangeV1 = onCampanhaSelectChangeV1;
+
+function onSubcategoriaChangeV1(val) {
+    selectedSubcategoria = val;
+    if (window.hasSimulated) calculateSimulation();
+}
+window.onSubcategoriaChangeV1 = onSubcategoriaChangeV1;
+
+function resetFormToDefaultsV1() {
+    const v1Credit = document.getElementById('v1-sim-credito');
+    if (v1Credit) v1Credit.value = selectedCurrency === 'BRL' ? 'R$ 1.000.000,00' : '$ 1,000,000.00';
+    
+    const v1Price = document.getElementById('v1-sim-preco-bruto');
+    if (v1Price) v1Price.value = selectedCurrency === 'BRL' ? '103.00' : '20.00';
+
+    const v1Dolar = document.getElementById('v1-sim-cotacao-dolar');
+    if (v1Dolar) v1Dolar.value = '5.6378';
+
+    const v1Funrural = document.getElementById('v1-sim-funrural-pct');
+    if (v1Funrural) v1Funrural.value = '1.63';
+
+    const v1ImpEst = document.getElementById('v1-sim-imposto-estadual-pct');
+    if (v1ImpEst) v1ImpEst.value = '0.00';
+
+    const v1TaxaFixa = document.getElementById('v1-sim-taxa-fixa');
+    if (v1TaxaFixa) v1TaxaFixa.value = '3.09';
+
+    const v1Chao = document.getElementById('v1-sim-dist-chao');
+    if (v1Chao) v1Chao.value = '0';
+
+    const v1Asf = document.getElementById('v1-sim-dist-asfalto');
+    if (v1Asf) v1Asf.value = '0';
+
+    const v1Obs = document.getElementById('v1-sim-obs');
+    if (v1Obs) v1Obs.value = '';
+
+    const results = document.getElementById('v1-sim-results-wrapper');
+    if (results) results.style.display = 'none';
+
+    window.hasSimulated = false;
+    hasSimulated = false;
+}
+window.resetFormToDefaultsV1 = resetFormToDefaultsV1;
+
+
 // Lista de Feriados Nacionais (baseada na aba Feriados da planilha Simulador_outras_Modalidades.xlsx)
 const FERIADOS_NACIONAIS = [
     "2025-01-01", "2025-03-03", "2025-03-04", "2025-04-18", "2025-04-21", "2025-05-01", "2025-06-19", "2025-09-07", "2025-10-12", "2025-11-02", "2025-11-15", "2025-12-25",
@@ -229,45 +370,46 @@ window.addEventListener('DOMContentLoaded', () => {
     setupMasks();
     initTradingViewWidget('Soja');
     initDefaultQuotes();
-    showPage('simulador-v2'); // Simulador page is the default
+    showPage('simulador-v1'); // Fase 1 (MVP Entrada Manual - FIN-18889) is the default
     startNewChat(); // Initialize default chat welcome state
     initWsysPlazas(); // Initialize WSys database
     initEstadoSelect(); // Initialize Estado and Praça selects
     updateCampaignSelectOptions(); // Populate campaigns select in simulator form
     initTooltipsStore(); // Initialize tooltips database
+    initFase1State(); // Initialize Fase 1 initial praças and values
 });
 
 // Configure mask events
 function setupMasks() {
-    const creditInput = document.getElementById('sim-credito');
-    if (creditInput) {
-        creditInput.addEventListener('input', (e) => {
-            let digits = e.target.value.replace(/[^0-9]/g, '');
-            if (digits === '') {
-                e.target.value = '';
-                return;
-            }
-            let rawNum = parseFloat(digits) / 100;
-            e.target.value = formatCurrencyValue(rawNum, selectedCurrency);
-        });
-    }
+    ['sim-credito', 'v1-sim-credito', 'v2-sim-credito'].forEach(id => {
+        const creditInput = document.getElementById(id);
+        if (creditInput) {
+            creditInput.addEventListener('input', (e) => {
+                let digits = e.target.value.replace(/[^0-9]/g, '');
+                if (digits === '') {
+                    e.target.value = '';
+                    return;
+                }
+                let rawNum = parseFloat(digits) / 100;
+                e.target.value = formatCurrencyValue(rawNum, selectedCurrency);
+            });
+        }
+    });
 }
 
 // Single-page navigation controller
 function showPage(pageId) {
     const assistPage = document.getElementById('page-assistente');
-    const simPage = document.getElementById('page-simulador');
+    const simV1Page = document.getElementById('page-simulador-v1');
     const simV2Page = document.getElementById('page-simulador-v2');
-    const simCreativePage = document.getElementById('page-simulador-criativo');
     const rulesPage = document.getElementById('page-regras');
     const campaignsPage = document.getElementById('page-campanhas');
     const pracasPage = document.getElementById('page-pracas');
     const tooltipsPage = document.getElementById('page-tooltips');
 
     const assistLink = document.getElementById('nav-link-assistente');
-    const simLink = document.getElementById('nav-link-simulador');
+    const simV1Link = document.getElementById('nav-link-simulador-v1');
     const simV2Link = document.getElementById('nav-link-simulador-v2');
-    const simCreativeLink = document.getElementById('nav-link-simulador-criativo');
     const rulesLink = document.getElementById('nav-link-regras');
     const campaignsLink = document.getElementById('nav-link-campanhas');
     const pracasLink = document.getElementById('nav-link-pracas');
@@ -275,6 +417,7 @@ function showPage(pageId) {
 
     // Hide all pages
     if (assistPage) assistPage.style.display = 'none';
+    if (simV1Page) simV1Page.style.display = 'none';
     if (simV2Page) simV2Page.style.display = 'none';
     if (rulesPage) rulesPage.style.display = 'none';
     if (campaignsPage) campaignsPage.style.display = 'none';
@@ -283,7 +426,8 @@ function showPage(pageId) {
 
     // Remove active class from links
     if (assistLink) assistLink.classList.remove('active');
-    if (simV2Link) simV2Link.classList.add('active');
+    if (simV1Link) simV1Link.classList.remove('active');
+    if (simV2Link) simV2Link.classList.remove('active');
     if (rulesLink) rulesLink.classList.remove('active');
     if (campaignsLink) campaignsLink.classList.remove('active');
     if (pracasLink) pracasLink.classList.remove('active');
@@ -292,7 +436,11 @@ function showPage(pageId) {
     if (pageId === 'assistente') {
         if (assistPage) assistPage.style.display = 'grid';
         if (assistLink) assistLink.classList.add('active');
-    } else if (pageId === 'simulador-v2' || pageId === 'simulador') {
+    } else if (pageId === 'simulador-v1' || pageId === 'simulador') {
+        if (simV1Page) simV1Page.style.display = 'flex';
+        if (simV1Link) simV1Link.classList.add('active');
+        if (window.hasSimulated) calculateSimulation();
+    } else if (pageId === 'simulador-v2') {
         if (simV2Page) simV2Page.style.display = 'flex';
         if (simV2Link) simV2Link.classList.add('active');
         if (window.hasSimulated) calculateSimulation();
@@ -320,12 +468,16 @@ function setCurrency(currency) {
 
     const btnBrl = document.getElementById('btn-currency-brl');
     const btnUsd = document.getElementById('btn-currency-usd');
+    const v1BtnBrl = document.getElementById('v1-btn-currency-brl');
+    const v1BtnUsd = document.getElementById('v1-btn-currency-usd');
     const v2BtnBrl = document.getElementById('v2-btn-currency-brl');
     const v2BtnUsd = document.getElementById('v2-btn-currency-usd');
 
     const creditInput = document.getElementById('sim-credito');
+    const v1CreditInput = document.getElementById('v1-sim-credito');
     const v2CreditInput = document.getElementById('v2-sim-credito');
     const priceInput = document.getElementById('sim-preco-bruto');
+    const v1PriceInput = document.getElementById('v1-sim-preco-bruto');
     const freteChaoInput = document.getElementById('sim-frete-chao');
     const freteAsfaltoInput = document.getElementById('sim-frete-asfalto');
 
@@ -335,43 +487,60 @@ function setCurrency(currency) {
     if (currency === 'BRL') {
         if (btnBrl) btnBrl.classList.add('active');
         if (btnUsd) btnUsd.classList.remove('active');
-        if (v2BtnBrl) v2BtnBrl.classList.add('active');
-        if (v2BtnUsd) v2BtnUsd.classList.remove('active');
+        if (v1BtnBrl) { v1BtnBrl.classList.add('active'); v1BtnBrl.style.borderColor = '#008080'; v1BtnBrl.style.color = '#008080'; }
+        if (v1BtnUsd) { v1BtnUsd.classList.remove('active'); v1BtnUsd.style.borderColor = '#cbd5e1'; v1BtnUsd.style.color = '#64748b'; }
+        if (v2BtnBrl) { v2BtnBrl.classList.add('active'); v2BtnBrl.style.borderColor = '#008080'; v2BtnBrl.style.color = '#008080'; }
+        if (v2BtnUsd) { v2BtnUsd.classList.remove('active'); v2BtnUsd.style.borderColor = '#cbd5e1'; v2BtnUsd.style.color = '#64748b'; }
     } else {
         if (btnUsd) btnUsd.classList.add('active');
         if (btnBrl) btnBrl.classList.remove('active');
-        if (v2BtnUsd) v2BtnUsd.classList.add('active');
-        if (v2BtnBrl) v2BtnBrl.classList.remove('active');
+        if (v1BtnUsd) { v1BtnUsd.classList.add('active'); v1BtnUsd.style.borderColor = '#008080'; v1BtnUsd.style.color = '#008080'; }
+        if (v1BtnBrl) { v1BtnBrl.classList.remove('active'); v1BtnBrl.style.borderColor = '#cbd5e1'; v1BtnBrl.style.color = '#64748b'; }
+        if (v2BtnUsd) { v2BtnUsd.classList.add('active'); v2BtnUsd.style.borderColor = '#008080'; v2BtnUsd.style.color = '#008080'; }
+        if (v2BtnBrl) { v2BtnBrl.classList.remove('active'); v2BtnBrl.style.borderColor = '#cbd5e1'; v2BtnBrl.style.color = '#64748b'; }
     }
 
-    const commEl = document.getElementById('v2-sim-commodity') || document.getElementById('sim-commodity');
+    // Highlight / emphasize USD Exchange Rate box when in USD
+    const dolarBox = document.getElementById('v1-container-cotacao-dolar');
+    if (dolarBox) {
+        if (currency === 'USD') {
+            dolarBox.style.background = '#fef3c7';
+            dolarBox.style.borderColor = '#f59e0b';
+        } else {
+            dolarBox.style.background = '#f8fafc';
+            dolarBox.style.borderColor = '#e2e8f0';
+        }
+    }
+
+    const commEl = document.getElementById('v1-sim-commodity') || document.getElementById('v2-sim-commodity') || document.getElementById('sim-commodity');
     const commVal = commEl ? commEl.value : 'Soja';
     const isSoy = commVal === 'Soja';
     const isCorn = commVal === 'Milho';
     const unitSymbol = (isSoy || isCorn) ? 'sc' : 'lp';
 
-    // Native WSys commodity future prices for active currency
+    // Commodity quotes
     if (currency === 'BRL') {
         if (priceInput) priceInput.value = isCorn ? "58.00" : (isSoy ? "103.00" : "4.38");
+        if (v1PriceInput) v1PriceInput.value = isCorn ? "58.00" : (isSoy ? "103.00" : "4.38");
         if (freteChaoInput) freteChaoInput.value = "15.00";
         if (freteAsfaltoInput) freteAsfaltoInput.value = "8.00";
     } else {
         if (priceInput) priceInput.value = isCorn ? "11.20" : (isSoy ? "20.00" : "0.85");
+        if (v1PriceInput) v1PriceInput.value = isCorn ? "11.20" : (isSoy ? "20.00" : "0.85");
         if (freteChaoInput) freteChaoInput.value = "3.00";
         if (freteAsfaltoInput) freteAsfaltoInput.value = "1.60";
     }
 
-    // Safely update labels and suffixes if elements exist
-    const suffixEl = document.getElementById('sim-preco-bruto-suffix');
-    if (suffixEl) suffixEl.textContent = currency === 'BRL' ? 'R$/' + unitSymbol : 'USD/' + unitSymbol;
-    const chaoSuffixEl = document.getElementById('sim-frete-chao-suffix');
-    if (chaoSuffixEl) chaoSuffixEl.textContent = currency === 'BRL' ? 'R$/KM' : 'USD/KM';
-    const asfaltoSuffixEl = document.getElementById('sim-frete-asfalto-suffix');
-    if (asfaltoSuffixEl) asfaltoSuffixEl.textContent = currency === 'BRL' ? 'R$/KM' : 'USD/KM';
+    // Update suffixes
+    ['sim-preco-bruto-suffix', 'v1-sim-preco-bruto-suffix'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.textContent = currency === 'BRL' ? 'R$/' + unitSymbol : 'USD/' + unitSymbol;
+    });
 
     const currentCreditRaw = creditInput ? getRawCurrencyValue(creditInput.value) : 1000000;
     const formattedCredit = formatCurrencyValue(currentCreditRaw, currency);
     if (creditInput) creditInput.value = formattedCredit;
+    if (v1CreditInput) v1CreditInput.value = formattedCredit;
     if (v2CreditInput) v2CreditInput.value = formattedCredit;
 
     // Recalculate immediately when converting currencies
@@ -549,11 +718,11 @@ function runSimulationMath(inputs) {
     let pctTax = 0;
 
     if (descontoAtivo) {
-        const impFixo = plaza && plaza.impFixo !== undefined ? plaza.impFixo : 3.09;
-        const funruralPct = plaza && plaza.funruralPct !== undefined ? plaza.funruralPct : 1.63;
-        const impNfPct = plaza && plaza.impNfPct !== undefined ? plaza.impNfPct : 0.0;
+        const impFixo = inputs.impFixo !== undefined ? inputs.impFixo : (plaza && plaza.impFixo !== undefined ? plaza.impFixo : 3.09);
+        const funruralPct = inputs.funruralPct !== undefined ? inputs.funruralPct : (plaza && plaza.funruralPct !== undefined ? plaza.funruralPct : 1.63);
+        const impNfPct = inputs.impNfPct !== undefined ? inputs.impNfPct : (plaza && plaza.impNfPct !== undefined ? plaza.impNfPct : 0.0);
         const totalPctTax = funruralPct + impNfPct;
-        const ptaxVenda = (currentPtaxBacen && currentPtaxBacen.cotacaoVenda > 0) ? currentPtaxBacen.cotacaoVenda : 5.6378;
+        const ptaxVenda = (inputs.cotacaoDolar && inputs.cotacaoDolar > 0) ? inputs.cotacaoDolar : ((currentPtaxBacen && currentPtaxBacen.cotacaoVenda > 0) ? currentPtaxBacen.cotacaoVenda : 5.6378);
         const fixFactor = currency === 'BRL' ? 1.0 : (1.0 / ptaxVenda);
 
         fixedTax = impFixo * fixFactor;
@@ -689,49 +858,133 @@ window.handleFormSimulate = handleFormSimulate;
 function calculateSimulation() {
     const placeholder = document.getElementById('sim-placeholder-card');
     const resultsWrapper = document.getElementById('sim-results-wrapper');
+    const v1ResultsWrapper = document.getElementById('v1-sim-results-wrapper');
     const v2ResultsWrapper = document.getElementById('v2-sim-results-wrapper');
 
     // Determine which layout is visible
+    const v1Page = document.getElementById('page-simulador-v1');
     const v2Page = document.getElementById('page-simulador-v2');
+    const isV1Active = v1Page && v1Page.style.display !== 'none';
     const isV2Active = v2Page && v2Page.style.display !== 'none';
 
     if (!window.hasSimulated && !hasSimulated) {
         if (placeholder) placeholder.style.display = 'block';
         if (resultsWrapper) resultsWrapper.style.display = 'none';
+        if (v1ResultsWrapper) v1ResultsWrapper.style.display = 'none';
         if (v2ResultsWrapper) v2ResultsWrapper.style.display = 'none';
         return;
     }
 
     if (placeholder) placeholder.style.display = 'none';
     // Show results in the active layout's container
-    if (isV2Active) {
+    if (isV1Active) {
+        if (v1ResultsWrapper) v1ResultsWrapper.style.display = 'flex';
+        if (v2ResultsWrapper) v2ResultsWrapper.style.display = 'none';
+        if (resultsWrapper) resultsWrapper.style.display = 'none';
+    } else if (isV2Active) {
         if (v2ResultsWrapper) v2ResultsWrapper.style.display = 'flex';
-        // Keep layout 1 results hidden while on layout 2
+        if (v1ResultsWrapper) v1ResultsWrapper.style.display = 'none';
         if (resultsWrapper) resultsWrapper.style.display = 'none';
         const chartCard = document.getElementById('v2-chart-card-cfd');
         if (chartCard) chartCard.style.display = 'block';
     } else {
         if (resultsWrapper) resultsWrapper.style.display = 'block';
+        if (v1ResultsWrapper) v1ResultsWrapper.style.display = 'none';
         if (v2ResultsWrapper) v2ResultsWrapper.style.display = 'none';
     }
 
-    const commoditySelect = document.getElementById('v2-sim-commodity') || document.getElementById('sim-commodity');
-    if (!commoditySelect) return;
-    const commodity = commoditySelect.value || 'Soja';
+    let commodity = 'Soja';
+    let regiao = 'Campo Novo do Parecis';
+    let creditRaw = 1000000;
+    let commBrutoRaw = 103.00;
+    let descontoAtivo = true;
+    let campObj = null;
+    let prazo = 216;
+    let jurosAnual = 14.40;
+    let valPctProposta = 4.50;
+    let distChao = 0;
+    let distAsfalto = 0;
+    let freteChaoRaw = (selectedCurrency === 'BRL' ? 15.0 : 3.0);
+    let freteAsfaltoRaw = (selectedCurrency === 'BRL' ? 8.0 : 1.6);
+    let cambio = 1.0;
+    let obsText = '';
+    let funruralPct = 1.63;
+    let impNfPct = 0.0;
+    let impFixo = 3.09;
+    let cotacaoDolar = 5.6378;
 
-    const regiaoEl = document.getElementById('sim-regiao');
-    const regiao = regiaoEl ? regiaoEl.value : '';
+    if (isV1Active) {
+        // === FASE 1 (MVP MANUAL - FIN-18889) ===
+        const v1Comm = document.getElementById('v1-sim-commodity');
+        commodity = v1Comm ? v1Comm.value : 'Soja';
 
-    const creditRaw = getRawCurrencyValue(document.getElementById('sim-credito').value);
-    const commBrutoRaw = parseFloat(document.getElementById('sim-preco-bruto').value) || 0;
-    const descontoAtivo = document.getElementById('sim-descontos').checked;
-    
-    // Resolve Campaign and Term (Prazo)
-    const campSelect = document.getElementById('sim-campanha-select') || document.getElementById('v2-sim-campanha-select');
-    const campId = campSelect ? campSelect.value : 'custom';
-    let campObj = (campId !== 'custom') ? campaigns.find(c => c.id == campId) : (campaigns.find(c => c.status === 'Ativa') || campaigns[0]);
+        const v1CreditInput = document.getElementById('v1-sim-credito') || document.getElementById('sim-credito');
+        creditRaw = v1CreditInput ? getRawCurrencyValue(v1CreditInput.value) : 1000000;
 
-    let prazo = parseFloat(document.getElementById('sim-prazo').value) || 0;
+        const v1PriceInput = document.getElementById('v1-sim-preco-bruto');
+        commBrutoRaw = v1PriceInput ? (parseFloat(v1PriceInput.value) || 0) : (selectedCurrency === 'BRL' ? 103.00 : 20.00);
+
+        const v1DolarInput = document.getElementById('v1-sim-cotacao-dolar');
+        cotacaoDolar = v1DolarInput ? (parseFloat(v1DolarInput.value) || 5.6378) : 5.6378;
+
+        const v1DescToggle = document.getElementById('v1-sim-descontos');
+        descontoAtivo = v1DescToggle ? v1DescToggle.checked : true;
+
+        const v1Funrural = document.getElementById('v1-sim-funrural-pct');
+        funruralPct = v1Funrural ? (parseFloat(v1Funrural.value) || 0) : 1.63;
+
+        const v1ImpEst = document.getElementById('v1-sim-imposto-estadual-pct');
+        impNfPct = v1ImpEst ? (parseFloat(v1ImpEst.value) || 0) : 0.0;
+
+        const v1TaxaFixa = document.getElementById('v1-sim-taxa-fixa');
+        impFixo = v1TaxaFixa ? (parseFloat(v1TaxaFixa.value) || 0) : 3.09;
+
+        const v1Regiao = document.getElementById('v1-sim-regiao');
+        regiao = v1Regiao ? v1Regiao.value : 'Campo Novo do Parecis';
+
+        const v1Chao = document.getElementById('v1-sim-dist-chao');
+        distChao = v1Chao ? (parseFloat(v1Chao.value) || 0) : 0;
+
+        const v1Asf = document.getElementById('v1-sim-dist-asfalto');
+        distAsfalto = v1Asf ? (parseFloat(v1Asf.value) || 0) : 0;
+
+        const v1Obs = document.getElementById('v1-sim-obs');
+        obsText = v1Obs ? v1Obs.value.trim() : '';
+
+        const campSelect = document.getElementById('v1-sim-campanha-select');
+        const campId = campSelect ? campSelect.value : '0';
+        campObj = (campId !== 'custom') ? campaigns.find(c => c.id == campId) : (campaigns.find(c => c.status === 'Ativa') || campaigns[0]);
+    } else {
+        // === FASE 2 (WSYS INTEGRADO) ===
+        const commoditySelect = document.getElementById('v2-sim-commodity') || document.getElementById('sim-commodity');
+        commodity = commoditySelect ? commoditySelect.value : 'Soja';
+
+        const regiaoEl = document.getElementById('v2-sim-regiao') || document.getElementById('sim-regiao');
+        regiao = regiaoEl ? regiaoEl.value : 'Campo Novo do Parecis';
+
+        creditRaw = getRawCurrencyValue(document.getElementById('sim-credito').value);
+        commBrutoRaw = parseFloat(document.getElementById('sim-preco-bruto').value) || 0;
+        descontoAtivo = document.getElementById('sim-descontos').checked;
+
+        const plaza = wsysPlazas.find(p => p.nome === regiao || `${p.nome} (${p.estado})` === regiao) || wsysPlazas[0];
+        funruralPct = plaza ? plaza.funruralPct : 1.63;
+        impNfPct = plaza ? plaza.impNfPct : 0.0;
+        impFixo = plaza ? plaza.impFixo : 3.09;
+        cotacaoDolar = (currentPtaxBacen && currentPtaxBacen.cotacaoVenda > 0) ? currentPtaxBacen.cotacaoVenda : 5.6378;
+
+        const campSelect = document.getElementById('v2-sim-campanha-select') || document.getElementById('sim-campanha-select');
+        const campId = campSelect ? campSelect.value : 'custom';
+        campObj = (campId !== 'custom') ? campaigns.find(c => c.id == campId) : (campaigns.find(c => c.status === 'Ativa') || campaigns[0]);
+
+        const distChaoRaw = document.getElementById('v2-sim-dist-chao') ? document.getElementById('v2-sim-dist-chao').value : '0';
+        const distAsfaltoRaw = document.getElementById('v2-sim-dist-asfalto') ? document.getElementById('v2-sim-dist-asfalto').value : '0';
+        distChao = distChaoRaw !== '' ? (parseFloat(distChaoRaw) || 0) : 0;
+        distAsfalto = distAsfaltoRaw !== '' ? (parseFloat(distAsfaltoRaw) || 0) : 0;
+
+        const v2Obs = document.getElementById('v2-sim-obs');
+        obsText = v2Obs ? v2Obs.value.trim() : '';
+    }
+
     if (campObj && campObj.desembolso && campObj.vencimento) {
         const d1 = new Date(campObj.desembolso + 'T12:00:00');
         const d2 = new Date(campObj.vencimento + 'T12:00:00');
@@ -747,31 +1000,17 @@ function calculateSimulation() {
     }
     if (prazo <= 0) prazo = 216;
 
-    const jurosAnual = parseFloat(document.getElementById('sim-juros-anual').value) || 14.40;
-    const valPctProposta = parseFloat(document.getElementById('sim-campanha-val').value) || 4.50;
-
-    // Distances: default to 0 so user is not forced to fill
-    const distChaoRaw = document.getElementById('sim-dist-chao') ? document.getElementById('sim-dist-chao').value : '0';
-    const distAsfaltoRaw = document.getElementById('sim-dist-asfalto') ? document.getElementById('sim-dist-asfalto').value : '0';
-    const distChao = distChaoRaw !== '' ? (parseFloat(distChaoRaw) || 0) : 0;
-    const distAsfalto = distAsfaltoRaw !== '' ? (parseFloat(distAsfaltoRaw) || 0) : 0;
-
-    const freteChaoRaw = parseFloat(document.getElementById('sim-frete-chao').value) || (selectedCurrency === 'BRL' ? 15.0 : 3.0);
-    const freteAsfaltoRaw = parseFloat(document.getElementById('sim-frete-asfalto').value) || (selectedCurrency === 'BRL' ? 8.0 : 1.6);
-    const cambio = 1.0;
-
-    // Determine if Barter can be calculated - Barter can ALWAYS be calculated (even with 0 km freight)
+    // Determine if Barter can be calculated
     const canBarter = true;
-
-    // Store canBarter for PDF
     window.lastCanBarter = canBarter;
     window.lastSimCommodity = commodity || 'Soja';
 
-    // Call standalone math calculator (only fully runs barter when canBarter)
+    // Call standalone math calculator
     const res = runSimulationMath({
         commodity: commodity || 'Soja',
-        regiao: regiao || (wsysPlazas[0] ? wsysPlazas[0].nome : 'Campo Novo do Parecis'),
+        regiao: regiao || 'Campo Novo do Parecis',
         creditRaw, commBrutoRaw, descontoAtivo,
+        funruralPct, impNfPct, impFixo, cotacaoDolar,
         prazo, jurosAnual, valPctProposta,
         distChao, distAsfalto,
         freteChaoRaw, freteAsfaltoRaw, cambio, currency: selectedCurrency,
@@ -789,40 +1028,39 @@ function calculateSimulation() {
         return selectedCurrency === 'BRL' ? formatBRLExtended(val) : formatUSDExtended(val);
     };
 
-    const factor = 1.0;
-
     // 1. Update Resumo da Operação Banner across all layouts
     const today = new Date();
     const validityDate = new Date();
     validityDate.setDate(today.getDate() + 30);
-    ['summary-value', 'v2-summary-value'].forEach(id => {
+    ['summary-value', 'v2-summary-value', 'v1-summary-value'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = formatSelectedCurrency(creditRaw);
     });
-    ['summary-date', 'v2-summary-date'].forEach(id => {
+    ['summary-date', 'v2-summary-date', 'v1-summary-date'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = today.toLocaleDateString('pt-BR');
     });
-    ['summary-validity', 'v2-summary-validity'].forEach(id => {
+    ['summary-validity', 'v2-summary-validity', 'v1-summary-validity'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.textContent = validityDate.toLocaleDateString('pt-BR');
     });
 
-    // Phase 1: Update Observações da Operação (RTV Notes)
-    const obsInput = document.getElementById('v2-sim-obs');
-    const obsContainer = document.getElementById('v2-summary-obs-container');
-    const obsDisplay = document.getElementById('v2-summary-obs-display');
-    if (obsInput && obsContainer && obsDisplay) {
-        if (obsInput.value && obsInput.value.trim() !== '') {
-            obsDisplay.textContent = obsInput.value.trim();
-            obsContainer.style.display = 'block';
-        } else {
-            obsContainer.style.display = 'none';
+    // Update Observações da Operação (RTV Notes)
+    ['summary-obs', 'v2-summary-obs', 'v1-summary-obs'].forEach(prefix => {
+        const obsContainer = document.getElementById(`${prefix}-container`);
+        const obsDisplay = document.getElementById(`${prefix}-display`);
+        if (obsContainer && obsDisplay) {
+            if (obsText !== '') {
+                obsDisplay.textContent = obsText;
+                obsContainer.style.display = 'block';
+            } else {
+                obsContainer.style.display = 'none';
+            }
         }
-    }
+    });
 
-    // Phase 1: Update Chicago Market status indicator
-    if (typeof updateMarketStatusIndicator === 'function') {
+    // Chicago Market status indicator ONLY in Fase 2
+    if (isV2Active && typeof updateMarketStatusIndicator === 'function') {
         updateMarketStatusIndicator();
     }
 
@@ -1100,8 +1338,9 @@ function calculateSimulation() {
 
     // Render sorted modality cards in all active layout containers
     const containers = [
-        document.getElementById('modality-cards-list'),
+        document.getElementById('v1-modality-cards-list'),
         document.getElementById('v2-modality-cards-list'),
+        document.getElementById('modality-cards-list'),
         document.getElementById('creative-modality-cards-list')
     ].filter(Boolean);
 
@@ -1285,23 +1524,27 @@ function calculateSimulation() {
     renderValidationTable(res, campObj, {
         commodity, regiao, creditRaw, commBrutoRaw, descontoAtivo,
         prazo, jurosAnual, valPctProposta, distChao, distAsfalto,
-        freteChaoRaw, freteAsfaltoRaw, cambio, currency: selectedCurrency
+        freteChaoRaw, freteAsfaltoRaw, cambio, currency: selectedCurrency,
+        funruralPct, impNfPct, impFixo, cotacaoDolar
     });
 }
 
 // Render internal validation table for calculations validation (uso interno)
 function renderValidationTable(res, campObj, inputs) {
     const valSection = document.getElementById('validation-section');
+    const v1ValSection = document.getElementById('v1-validation-section');
     const v2ValSection = document.getElementById('v2-validation-section');
-    if (!valSection && !v2ValSection) return;
+    if (!valSection && !v1ValSection && !v2ValSection) return;
 
     if (!res) {
         if (valSection) valSection.style.display = 'none';
+        if (v1ValSection) v1ValSection.style.display = 'none';
         if (v2ValSection) v2ValSection.style.display = 'none';
         return;
     }
 
     if (valSection) valSection.style.display = 'block';
+    if (v1ValSection) v1ValSection.style.display = 'block';
     if (v2ValSection) v2ValSection.style.display = 'block';
 
     const isSoy = inputs.commodity === 'Soja';
@@ -1315,7 +1558,7 @@ function renderValidationTable(res, campObj, inputs) {
     const vencimentoStr = campObj && campObj.vencimento ? formatDateBR(campObj.vencimento) : '05/05/2026';
     const moedaStr = selectedCurrency === 'BRL' ? 'Real (R$)' : 'Dólar (USD)';
     
-    // WSys price in native selected currency
+    // Commodity price in native selected currency
     const commVal = res.commBrutoUSD;
     const wsysPriceStr = `${fmtExt(commVal)} / ${unitSymbol}`;
 
@@ -1324,7 +1567,7 @@ function renderValidationTable(res, campObj, inputs) {
     const freteInfo = `Chão: ${isNaN(inputs.distChao) ? 0 : inputs.distChao} km | Asfalto: ${isNaN(inputs.distAsfalto) ? 0 : inputs.distAsfalto} km | Total: ${fmtCurr(res.freteTotalUSDProposta)}`;
 
     // Populate header info cards
-    ['val', 'v2-val'].forEach(prefix => {
+    ['val', 'v2-val', 'v1-val'].forEach(prefix => {
         const elName = document.getElementById(`${prefix}-camp-nome`);
         if (elName) elName.textContent = campName;
 
@@ -1343,6 +1586,11 @@ function renderValidationTable(res, campObj, inputs) {
         const elFrete = document.getElementById(`${prefix}-frete-info`);
         if (elFrete) elFrete.textContent = freteInfo;
     });
+
+    const elDolarConv = document.getElementById('v1-val-dolar-conversao');
+    if (elDolarConv) {
+        elDolarConv.textContent = (selectedCurrency === 'USD') ? `PTAX: R$ ${(inputs.cotacaoDolar || 5.6378).toFixed(4)}` : 'Não aplicável (Moeda BRL)';
+    }
 
     const rows = [
         {
@@ -1471,7 +1719,7 @@ function renderValidationTable(res, campObj, inputs) {
     `).join('');
 
     const htmlContent = generateRowsHtml();
-    ['val-table-body', 'v2-val-table-body'].forEach(tbodyId => {
+    ['val-table-body', 'v2-val-table-body', 'v1-val-table-body'].forEach(tbodyId => {
         const tbody = document.getElementById(tbodyId);
         if (tbody) tbody.innerHTML = htmlContent;
     });
@@ -2545,8 +2793,9 @@ function downloadSimulationPDF(dataInput = null) {
     }
 
     ensureHtml2Canvas(() => {
-        const summaryCard = document.querySelector('#sim-results-wrapper .card:first-child, .results-card:first-child, #v2-summary-card');
-        const cardsContainer = document.getElementById('modality-cards-list') || document.getElementById('v2-modality-cards-list') || document.getElementById('creative-modality-cards-list');
+        const isV1 = document.getElementById('page-simulador-v1') && document.getElementById('page-simulador-v1').style.display !== 'none';
+        const summaryCard = isV1 ? document.getElementById('v1-summary-card') : (document.querySelector('#sim-results-wrapper .card:first-child, .results-card:first-child, #v2-summary-card'));
+        const cardsContainer = isV1 ? document.getElementById('v1-modality-cards-list') : (document.getElementById('v2-modality-cards-list') || document.getElementById('modality-cards-list') || document.getElementById('creative-modality-cards-list'));
 
         // Off-screen container for crisp capture
         const wrapper = document.createElement('div');

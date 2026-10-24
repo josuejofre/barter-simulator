@@ -2688,4 +2688,67 @@ select {
     font-size: 13px;
 }
 
+/* Phase Selector Bar - Estratégia de Entrega (Fase 1 vs Fase 2) */
+.phase-selector-bar {
+    background: #ffffff;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 12px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.phase-tag {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #008080;
+    letter-spacing: 0.5px;
+    background: rgba(0, 128, 128, 0.1);
+    padding: 4px 10px;
+    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.phase-tab-btn {
+    padding: 8px 18px;
+    border-radius: 6px;
+    border: 1px solid #cbd5e1;
+    background: #ffffff;
+    color: #475569;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.phase-tab-btn:hover {
+    border-color: #008080;
+    color: #008080;
+    background: #f0fdfa;
+}
+
+.phase-tab-btn.active {
+    background: #008080;
+    color: #ffffff;
+    border-color: #008080;
+    box-shadow: 0 2px 6px rgba(0, 128, 128, 0.25);
+}
+
+.manual-field-card {
+    background: #f0fdfa;
+    border: 1px solid #99f6e4;
+    border-radius: 8px;
+    padding: 14px 16px;
+}
+
 
