@@ -19,76 +19,76 @@ let currentPtaxBacen = {
 
 // WSys Praças Data Store (Matriz Tributária e Logística - Planilha Impostos 1)
 let wsysPlazas = [
-    // MT - Funrural 1.63%, FETHAB/IAGRO (UPF MT 243.49 -> R$ 51.50/ton = R$ 3.09/saca)
-    { estado: 'MT', nome: 'Campo Novo do Parecis', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
-    { estado: 'MT', nome: 'Sorriso', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
-    { estado: 'MT', nome: 'Querência', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
-    { estado: 'MT', nome: 'Rondonópolis', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
-    { estado: 'MT', nome: 'Primavera do Leste', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
-    { estado: 'MT', nome: 'Nova Mutum', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
-    { estado: 'MT', nome: 'Sinop', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
-    { estado: 'MT', nome: 'Lucas do Rio Verde', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
-    { estado: 'MT', nome: 'Diamantino', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
-    { estado: 'MT', nome: 'Sapezal', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    // MT - Funrural 1.63%, FETHAB/IAGRO (UPF MT 243.49 -> R$ 51.50/ton = R$ 3.09/sc soja ou R$ 0.77/@ algodao)
+    { estado: 'MT', nome: 'Campo Novo do Parecis', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 51.50, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Sorriso', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 51.50, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Querência', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 51.50, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Rondonópolis', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 51.50, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Primavera do Leste', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 51.50, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Nova Mutum', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 51.50, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Sinop', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 51.50, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Lucas do Rio Verde', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 51.50, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Diamantino', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 51.50, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
+    { estado: 'MT', nome: 'Sapezal', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 51.50, impFixo: 3.09, observacao: 'FETHAB + IAGRO (10% + 10% + 1.15% UPF/MT)' },
 
-    // MS - Funrural 1.63%, FUNDEMS/FUNDERSUL (UFERMS 52.98 -> R$ 27.55/ton = R$ 1.65/saca)
-    { estado: 'MS', nome: 'Dourados', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
-    { estado: 'MS', nome: 'Maracaju', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
-    { estado: 'MS', nome: 'São Gabriel do Oeste', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
-    { estado: 'MS', nome: 'Chapadão do Sul', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
-    { estado: 'MS', nome: 'Sidrolândia', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
-    { estado: 'MS', nome: 'Ponta Porã', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
+    // MS - Funrural 1.63%, FUNDEMS/FUNDERSUL (UFERMS 52.98 -> R$ 27.55/ton = R$ 1.65/sc soja ou R$ 0.41/@ algodao)
+    { estado: 'MS', nome: 'Dourados', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 27.55, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
+    { estado: 'MS', nome: 'Maracaju', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 27.55, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
+    { estado: 'MS', nome: 'São Gabriel do Oeste', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 27.55, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
+    { estado: 'MS', nome: 'Chapadão do Sul', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 27.55, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
+    { estado: 'MS', nome: 'Sidrolândia', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 27.55, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
+    { estado: 'MS', nome: 'Ponta Porã', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 27.55, impFixo: 1.65, observacao: 'FUNDEMS + FUNDERSUL (2.8% + 49.20% UFERMS)' },
 
     // GO - Funrural 1.63% + FUNDEINFRA 1.65% (sobre NF)
-    { estado: 'GO', nome: 'Rio Verde', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
-    { estado: 'GO', nome: 'Jataí', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
-    { estado: 'GO', nome: 'Cristalina', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
-    { estado: 'GO', nome: 'Montividiu', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
-    { estado: 'GO', nome: 'Mineiros', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
+    { estado: 'GO', nome: 'Rio Verde', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, upfTon: 0.00, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
+    { estado: 'GO', nome: 'Jataí', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, upfTon: 0.00, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
+    { estado: 'GO', nome: 'Cristalina', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, upfTon: 0.00, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
+    { estado: 'GO', nome: 'Montividiu', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, upfTon: 0.00, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
+    { estado: 'GO', nome: 'Mineiros', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.65, upfTon: 0.00, impFixo: 0.00, observacao: 'FUNDEINFRA (1,65% s/ NF) + Funrural' },
 
     // PI - Funrural 1.63% + FDI 1.20% (sobre NF)
-    { estado: 'PI', nome: 'Bom Jesus', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.20, impFixo: 0.00, observacao: 'FDI (1,20% s/ NF) + Funrural' },
-    { estado: 'PI', nome: 'Uruçuí', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.20, impFixo: 0.00, observacao: 'FDI (1,20% s/ NF) + Funrural' },
+    { estado: 'PI', nome: 'Bom Jesus', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.20, upfTon: 0.00, impFixo: 0.00, observacao: 'FDI (1,20% s/ NF) + Funrural' },
+    { estado: 'PI', nome: 'Uruçuí', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 1.20, upfTon: 0.00, impFixo: 0.00, observacao: 'FDI (1,20% s/ NF) + Funrural' },
 
     // PR - Funrural 1.63%
-    { estado: 'PR', nome: 'Cascavel', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
-    { estado: 'PR', nome: 'Londrina', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
-    { estado: 'PR', nome: 'Maringá', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
-    { estado: 'PR', nome: 'Ponta Grossa', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
-    { estado: 'PR', nome: 'Toledo', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
-    { estado: 'PR', nome: 'Guarapuava', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
+    { estado: 'PR', nome: 'Cascavel', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
+    { estado: 'PR', nome: 'Londrina', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
+    { estado: 'PR', nome: 'Maringá', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
+    { estado: 'PR', nome: 'Ponta Grossa', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
+    { estado: 'PR', nome: 'Toledo', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
+    { estado: 'PR', nome: 'Guarapuava', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural (Isento de fundos estaduais)' },
 
     // BA - Funrural 1.63%
-    { estado: 'BA', nome: 'Luís Eduardo Magalhães', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
-    { estado: 'BA', nome: 'Barreiras', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
-    { estado: 'BA', nome: 'São Desidério', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'BA', nome: 'Luís Eduardo Magalhães', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'BA', nome: 'Barreiras', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'BA', nome: 'São Desidério', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
 
     // MA - Funrural 1.63%
-    { estado: 'MA', nome: 'Balsas', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
-    { estado: 'MA', nome: 'Tasso Fragoso', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'MA', nome: 'Balsas', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'MA', nome: 'Tasso Fragoso', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
 
     // TO - Funrural 1.63%
-    { estado: 'TO', nome: 'Pedro Afonso', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
-    { estado: 'TO', nome: 'Porto Nacional', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
-    { estado: 'TO', nome: 'Gurupi', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'TO', nome: 'Pedro Afonso', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'TO', nome: 'Porto Nacional', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'TO', nome: 'Gurupi', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
 
     // RO - Funrural 1.63%
-    { estado: 'RO', nome: 'Vilhena', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
-    { estado: 'RO', nome: 'Cerejeiras', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'RO', nome: 'Vilhena', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'RO', nome: 'Cerejeiras', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
 
     // MG - Funrural 1.63%
-    { estado: 'MG', nome: 'Unaí', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
-    { estado: 'MG', nome: 'Paracatu', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
-    { estado: 'MG', nome: 'Patos de Minas', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'MG', nome: 'Unaí', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'MG', nome: 'Paracatu', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'MG', nome: 'Patos de Minas', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
 
     // SP - Funrural 1.63%
-    { estado: 'SP', nome: 'Assis', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
-    { estado: 'SP', nome: 'Itapeva', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'SP', nome: 'Assis', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'SP', nome: 'Itapeva', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
 
     // RS - Funrural 1.63%
-    { estado: 'RS', nome: 'Passo Fundo', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
-    { estado: 'RS', nome: 'Cruz Alta', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' },
-    { estado: 'RS', nome: 'Santa Maria', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, impFixo: 0.00, observacao: 'Funrural' }
+    { estado: 'RS', nome: 'Passo Fundo', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'RS', nome: 'Cruz Alta', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' },
+    { estado: 'RS', nome: 'Santa Maria', freteChao: 15.00, freteAsfalto: 8.00, funruralPct: 1.63, impNfPct: 0.0, upfTon: 0.00, impFixo: 0.00, observacao: 'Funrural' }
 ];
 
 let selectedSubcategoria = 'venda_direta_crop';
@@ -778,7 +778,21 @@ function runSimulationMath(inputs) {
     let pctTax = 0;
 
     if (descontoAtivo) {
-        const impFixo = inputs.impFixo !== undefined ? inputs.impFixo : (plaza && plaza.impFixo !== undefined ? plaza.impFixo : 3.09);
+        // Quantidade de sacas por tonelada conforme a cultura:
+        // Soja, Milho, Café: 60 kg/saca -> 1.000 / 60 = 16,6667 sacas por tonelada
+        // Algodão: 15 kg/saca (arroba) -> 1.000 / 15 = 66,6667 sacas por tonelada
+        const scPerTon = (commodity === 'Algodão') ? (1000.0 / 15.0) : (1000.0 / 60.0);
+
+        let impFixo = 0;
+        if (inputs.impFixo !== undefined && inputs.impFixo !== null && inputs.impFixo > 0) {
+            impFixo = inputs.impFixo;
+        } else if (inputs.impUpfTon !== undefined && inputs.impUpfTon !== null && inputs.impUpfTon > 0) {
+            impFixo = inputs.impUpfTon / scPerTon;
+        } else if (plaza) {
+            const upfTon = plaza.upfTon !== undefined ? plaza.upfTon : (plaza.estado === 'MT' ? 51.50 : (plaza.estado === 'MS' ? 27.55 : 0.0));
+            impFixo = upfTon > 0 ? (upfTon / scPerTon) : (plaza.impFixo || 0.0);
+        }
+
         const funruralPct = inputs.funruralPct !== undefined ? inputs.funruralPct : (plaza && plaza.funruralPct !== undefined ? plaza.funruralPct : 1.63);
         const impNfPct = inputs.impNfPct !== undefined ? inputs.impNfPct : (plaza && plaza.impNfPct !== undefined ? plaza.impNfPct : 0.0);
         const totalPctTax = funruralPct + impNfPct;
@@ -1037,7 +1051,9 @@ function calculateSimulation() {
         const plaza = wsysPlazas.find(p => p.nome === regiao || `${p.nome} (${p.estado})` === regiao) || wsysPlazas[0];
         funruralPct = plaza ? plaza.funruralPct : 1.63;
         impNfPct = plaza ? plaza.impNfPct : 0.0;
-        impFixo = plaza ? plaza.impFixo : 3.09;
+        const upfTon = plaza ? (plaza.upfTon !== undefined ? plaza.upfTon : (plaza.estado === 'MT' ? 51.50 : (plaza.estado === 'MS' ? 27.55 : 0.0))) : 0.0;
+        const scPerTon = (commodity === 'Algodão') ? (1000.0 / 15.0) : (1000.0 / 60.0);
+        impFixo = upfTon > 0 ? (upfTon / scPerTon) : (plaza ? plaza.impFixo : 0.0);
         cotacaoDolar = (currentPtaxBacen && currentPtaxBacen.cotacaoVenda > 0) ? currentPtaxBacen.cotacaoVenda : 5.6378;
 
         const campSelect = document.getElementById('v2-sim-campanha-select') || document.getElementById('sim-campanha-select');

@@ -56,29 +56,51 @@ Para avaliar a efetividade e a homologação do produto pós-rollout, o projeto 
 
 | Dimensão | KPI / Métrica | Meta Quantitativa | Prazo de Aferição | Método de Medição |
 |---|---|:---:|:---:|---|
-| **Adoção Comercial** | % de simulações de Barter geradas via Syde vs. planilhas | $\ge 80\%$ | 60 dias após lançamento | Telemetria de eventos (`simulacao_barter_calculada`) vs. estimativa comercial da safra. |
-| **Eficiência Comercial** | Tempo médio de geração e compartilhamento da proposta | $< 120\text{ segundos}$ | Contínuo | Medição do funil desde a seleção de insumos até clique em "Exportar PDF" ou "Compartilhar". |
+| **Adoção Comercial** | % de simulações de Barter geradas via Syde vs. planilhas | Maior ou igual a 80% | 60 dias após lançamento | Telemetria de eventos (`simulacao_barter_calculada`) vs. estimativa comercial da safra. |
+| **Eficiência Comercial** | Tempo médio de geração e compartilhamento da proposta | Menor que 120 segundos | Contínuo | Medição do funil desde a seleção de insumos até clique em "Exportar PDF" ou "Compartilhar". |
 | **Confiabilidade Matemática** | Divergência de cálculo entre Simulador e CPR emitida | **0% de divergência** | Contínuo | Amostragem de conciliação entre as boletas formalizadas na Nutrade e os IDs de simulação gerados. |
-| **Conversão Comercial** | Taxa de simulações convertidas em intenções/pedidos | $\ge 25\%$ | 90 dias após lançamento | Cruzamento entre propostas exportadas e contratos formalizados no ERP/WSys. |
-| **Resiliência Técnica** | Disponibilidade e Uptime do módulo Barter | $\ge 98{,}0\%$ | Mensal | Monitoramento Datadog/APM de erros no BFF e chamadas com sucesso ao WSys. |
+| **Conversão Comercial** | Taxa de simulações convertidas em intenções/pedidos | Maior ou igual a 25% | 90 dias após lançamento | Cruzamento entre propostas exportadas e contratos formalizados no ERP/WSys. |
+| **Resiliência Técnica** | Disponibilidade e Uptime do módulo Barter | Maior ou igual a 98,0% | Mensal | Monitoramento Datadog/APM de erros no BFF e chamadas com sucesso ao WSys. |
 
 ---
 
-## 🚩 5. Feature Flags & Estratégia de Rollout
+## 🚩 5. Estratégia de Entregas (Fase 1 vs Fase 2) & Feature Flags
 
-Dada a dependência de um serviço terceiro de missão crítica (WSys CTRM 2.10.1) e a necessidade de validação preliminar em campo, o lançamento será controlado por **Feature Flags**:
+Para garantir velocidade de go-to-market e independência de cronograma de APIs legadas externas, o produto é estruturado em **duas fases de entrega**:
+
+### 5.1. Fase 1: MVP Operacional Manual (Card Jira: FIN-18889)
+* **Objetivo:** Disponibilizar imediatamente o simulador Barter para a força de vendas (RTVs) sem dependência da integração técnica com o WSys ou da criação prévia do banco cadastral de praças.
+* **Cotação da Commodity:** Entrada manual direta pelo usuário (inicia em branco no formulário para preenchimento obrigatório da negociação).
+* **Cotação do Dólar:** Campo visível e obrigatório exclusivamente quando a simulação for em USD (Dólar), localizado na seção de dados da operação.
+* **Vencimento da Operação (Mês de Entrega):** Sincronizado automaticamente com a data da Campanha comercial selecionada (removido campo de seleção manual de mês).
+* **Parâmetros Fiscais Flexíveis:**
+  * **Funrural:** Seletor de alíquota com opções pré-configuradas para Comercialização (1,63%), Folha de Pagamento (0,20%) e Personalizado (livre digitação).
+  * **Outros Impostos Base NF (%):** Campo percentual livre para retenções sobre nota fiscal (ex: FUNDEINFRA 1,65% em GO, FDI 1,20% no PI).
+  * **Impostos Base UPF (R$/ton) e Dedução Fixa (R$/sc):** Sincronização bidirecional em tempo real ajustada dinamicamente pelo peso da saca da commodity:
+    - Soja, Milho e Café (60 kg): 1 tonelada = 16,6667 sacas (1.000 / 60).
+    - Algodão (15 kg): 1 tonelada = 66,6667 sacas/arrobas (1.000 / 15).
+
+### 5.2. Fase 2: Automação Integral com WSys CTRM 2.10.1 & Motor Fiscal
+* **Objetivo:** Conectar o simulador aos serviços corporativos em tempo real para automação ponta a ponta.
+* **Cotações de Mercado & Frete Polo:** Consumo automatizado via API WSys (`/api/integracao/odin/precos`).
+* **Motor Fiscal Regional Nativo do Syde:** Seleção por Estado (UF) e Praça Polo, aplicando automaticamente as alíquotas cadastradas:
+  * MT: FETHAB/IAGRO (UPF MT -> R$ 51,50/ton = R$ 3,09/sc soja ou R$ 0,77/sc algodão).
+  * MS: FUNDEMS/FUNDERSUL (UFERMS -> R$ 27,55/ton = R$ 1,65/sc soja ou R$ 0,41/sc algodão).
+  * GO: FUNDEINFRA (1,65% sobre NF) + Funrural.
+  * PI: FDI (1,20% sobre NF) + Funrural.
+  * Demais UFs: Funrural padrão ou isenções vigentes.
+* **Conversão Cambial para USD:** Conversão automática dos tributos fixados em R$ utilizando a Cotação PTAX Venda oficial do Banco Central.
+* **Indicador de Horário CBOT:** Alerta informativo de mercado futuro aberto ou fechado em Chicago.
+
+### 5.3. Feature Flags
+Dada a criticidade da operação, o rollout é controlado por Feature Flags:
 
 | Feature Flag | Camada | Tipo | Comportamento / Objetivo |
 |---|:---:|:---:|---|
-| `ff_barter_nutrade_ui` | Frontend / BFF | Booleana / Segmentada | Controla a visibilidade da aba Barter e do card comparativo no simulador. Permite liberação gradual por perfil de usuário, regional (ex: Cerrado primeiro, Sul depois) ou grupo piloto de RTVs. |
-| `ff_barter_wsys_integration` | BFF (API Syde) | Booleana | Determina a origem dos dados de mercado: `true` consome a API real do WSys; `false` chaveia para mock/tabela de contingência local em caso de manutenção programada do WSys. |
-| `ff_barter_kill_switch` | Global (BFF) | Booleana | **Kill Switch Emergencial:** Desativa imediatamente a modalidade Barter em caso de divergência matemática crítica ou indisponibilidade total do WSys, mantendo as modalidades Syde, Fiso e Syngenta 100% operacionais. |
-| `ff_barter_cbot_alert` | Frontend | Booleana | Habilita os banners visuais informativos de "Mercado Aberto / Fechado" da CBOT e a anotação preventiva nos PDFs de que a cotação é indicativa fora do horário de pregão. |
-
-### Estratégia de Rollout Fatiado:
-1. **Fase 1 (Piloto Interno / Mesa):** `ff_barter_nutrade_ui` ativa apenas para usuários internos de Produto, Engenharia e Mesa Nutrade.
-2. **Fase 2 (Canary Regional):** Liberação para 1 Regional Comercial piloto (ex: Mato Grosso / Cerrado) para validação do comportamento com RTVs reais.
-3. **Fase 3 (General Availability - GA):** Liberação nacional total.
+| `ff_barter_nutrade_ui` | Frontend / BFF | Booleana / Segmentada | Controla a visibilidade da aba Barter e do card comparativo no simulador. Permite liberação gradual por perfil ou regional. |
+| `ff_barter_wsys_integration` | BFF (API Syde) | Booleana | Determina a origem dos dados: `true` consome API real do WSys (Fase 2); `false` opera em modo contingência / manual (Fase 1). |
+| `ff_barter_kill_switch` | Global (BFF) | Booleana | **Kill Switch Emergencial:** Desativa a modalidade Barter em caso de divergência crítica, preservando Syde, Fiso e Syngenta. |
+| `ff_barter_cbot_alert` | Frontend | Booleana | Habilita os banners visuais informativos de status da CBOT. |
 
 ---
 
@@ -117,46 +139,111 @@ graph TD
     G -->|Crédito x % Cashback| H[Devolução Financeira em Dinheiro R$ / USD]
 ```
 
-### 7.1. Preço Líquido da Saca (Porteira) e Matriz Tributária Híbrida
-$$\text{Preço Líquido} = \text{Preço Bruto FOB (WSys)} - \text{Deduções Fiscais (Syde)}$$
+### 7.1. Preço Líquido da Commodity (Porteira) e Matriz Tributária Híbrida
 
-Onde a **Dedução Fiscal** é calculada pela fórmula híbrida:
-$$\text{Dedução Fiscal} = \left(\text{Preço Bruto} \times (\text{Funrural \%} + \text{Alíquotas Estaduais \%})\right) + \text{Taxa Fixa Estadual por Saca}$$
+O Preço Líquido recebido pelo produtor na porteira deduz os impostos aplicáveis e eventuais despesas de deslocamento:
 
-* **Alíquotas Percentuais:**
-  * Funrural: $1{,}63\%$ sobre a comercialização bruta (Produtor Rural PF).
-  * Goiás (GO): FUNDEINFRA de $1{,}65\%$ sobre o valor bruto.
-  * Piauí (PI): FDI de $1{,}20\%$ sobre o valor bruto.
-* **Taxas Fixas Indexadas (UPF / UFERMS):**
-  * Mato Grosso (MT): FETHAB ($10\%$ UPF) + FETHAB Adic. ($10\%$ UPF) + IAGRO ($1{,}15\%$ UPF) $= 51{,}4981\text{ UPF/ton} \times \text{R\$\ } 243{,}49 \approx \text{R\$\ } 3{,}09/\text{sc}$.
-  * Mato Grosso do Sul (MS): FUNDEMS ($2{,}8\%$ UFERMS) + FUNDERSUL ($49{,}2\%$ UFERMS) $= 27{,}5496\text{ UFERMS/ton} \times \text{R\$\ } 52{,}98 \approx \text{R\$\ } 1{,}65/\text{sc}$.
+```text
+Preço Líquido = Preço Bruto FOB - Dedução Total de Impostos - Frete Unitário
+```
 
-> [!IMPORTANT]
-> **Conversão Cambial para Simulações em USD (Cotação PTAX):**
-> Como os indexadores estaduais (UPF/UFERMS) são fixados em Reais, simulações em Dólar (USD) convertem a taxa fixa pela **Cotação PTAX oficial do Banco Central (Venda)** do dia (ou D-1 de fechamento):
-> $$\text{Taxa Fixa (USD/sc)} = \frac{\text{Taxa Fixa Estadual (R\$/sc)}}{\text{Cotação PTAX (BACEN)}}$$
-> 
-> ⚠️ **Decisão de Arquitetura & Pendência de Negócio:**
-> Não faz sentido cadastrar uma taxa cambial estática no cadastro de campanha, visto que o câmbio oscila diariamente e geraria defasagem ou manutenção excessiva. Adota-se como padrão técnico a cotação PTAX do Banco Central, **registrando-se a obrigatoriedade de validar formalmente essa decisão com o time de Barter/Mesa Nutrade** antes do congelamento do backend.
+A **Dedução Total de Impostos** combina alíquotas percentuais sobre o faturamento com taxas estaduais fixadas por unidade:
+
+```text
+Dedução Total de Impostos por Saca = Dedução Percentual + Dedução Fixa por Saca
+```
+
+#### A. Dedução Percentual (sobre o valor da NF):
+```text
+Dedução Percentual = Preço Bruto * ((Funrural % + Outros Impostos Base NF %) / 100)
+```
+* **Funrural:**
+  * Comercialização (Padrão Produtor PF): 1,63% sobre a receita bruta.
+  * Folha de Pagamento (Opção Produtor): 0,20% sobre a receita bruta.
+* **Outros Impostos Estaduais Base NF (%):**
+  * Goiás (GO): FUNDEINFRA de 1,65% sobre o valor da NF.
+  * Piauí (PI): FDI de 1,20% sobre o valor da NF.
+  * Demais UFs: 0,00% ou alíquota conforme legislação estadual.
+
+#### B. Dedução Fixa Estadual por Saca (Base UPF / UFERMS em R$/ton):
+Os fundos estaduais de infraestrutura em Mato Grosso e Mato Grosso do Sul são legislados em Unidades Fiscais por tonelada (R$/ton). O simulador converte esse valor em taxa por saca conforme o peso oficial da cultura:
+
+```text
+Dedução Fixa (R$/sc) = Imposto Base UPF (R$/ton) / Sacas por Tonelada
+```
+
+**Fator de Conversão por Cultura (Sacas por Tonelada):**
+* **Soja, Milho e Café (60 kg por saca):**
+  * 1 tonelada = 1.000 kg / 60 kg = 16,6667 sacas por tonelada.
+  * **Mato Grosso (MT - FETHAB / IAGRO):**
+    R$ 51,50 / ton / 16,6667 sacas = **R$ 3,09 por saca**.
+  * **Mato Grosso do Sul (MS - FUNDEMS / FUNDERSUL):**
+    R$ 27,55 / ton / 16,6667 sacas = **R$ 1,65 por saca**.
+* **Algodão (15 kg por saca/arroba):**
+  * 1 tonelada = 1.000 kg / 15 kg = 66,6667 sacas (arrobas) por tonelada.
+  * **Mato Grosso (MT):**
+    R$ 51,50 / ton / 66,6667 sacas = **R$ 0,77 por saca/arroba**.
+  * **Mato Grosso do Sul (MS):**
+    R$ 27,55 / ton / 66,6667 sacas = **R$ 0,41 por saca/arroba**.
+
+#### C. Conversão Cambial para Simulações em Dólar (USD):
+Como as taxas estaduais (FETHAB e FUNDERSUL) são legisladas em moeda nacional (Reais), em simulações cotadas em Dólar (USD) a taxa fixa em Reais é convertida dividindo pela cotação do Dólar:
+
+```text
+Dedução Fixa (USD/sc) = Dedução Fixa (R$/sc) / Cotação do Dólar (PTAX Venda BACEN)
+```
+* **Na Fase 1:** O RTV informa manualmente a cotação do dólar no formulário.
+* **Na Fase 2:** O sistema obtém a Cotação PTAX Venda do Banco Central automaticamente via API/BFF.
+
+---
 
 ### 7.2. Preço Pedido TP (Valor Presente)
-$$\text{Juros do Período} = \left(\frac{\text{Dias de Prazo}}{360}\right) \times \left(\frac{\text{Taxa Anual Barter \%}}{100}\right)$$
-$$\text{Preço Pedido TP} = \frac{\text{Valor do Crédito}}{1 + \text{Juros do Período}}$$
+Traz o valor do pedido a prazo a valor presente com base na taxa de juros anual da campanha e no prazo em dias corridos:
+
+```text
+Juros do Período = (Dias de Prazo / 360) * (Taxa Anual Barter % / 100)
+
+Preço Pedido TP = Valor do Crédito / (1 + Juros do Período)
+```
+
+---
 
 ### 7.3. Incentivo de Prazo Barter (Desconto Comercial)
-O incentivo de prazo concede um desconto comercial proporcional ao prazo da operação (cadastrado na campanha como taxa mensal, ex.: $0{,}5\%\text{ a.m.}$):
-$$\text{Taxa Incentivo Prazo (\%)} = \left(\frac{\text{Dias de Prazo}}{30}\right) \times \text{Taxa Mensal da Campanha (\% a.m.)}$$
-$$\text{Incentivo Barter (\$)} = \text{Preço Pedido TP} \times \left(\frac{\text{Taxa Incentivo Prazo (\%)}}{100}\right)$$
+Desconto comercial sobre o preço do insumo proporcional aos dias corridos da operação:
+
+```text
+Taxa de Incentivo de Prazo (%) = (Dias de Prazo / 30) * Taxa Mensal da Campanha (% a.m.)
+
+Incentivo Barter ($) = Preço Pedido TP * (Taxa de Incentivo de Prazo (%) / 100)
+```
+
+---
 
 ### 7.4. Volume Contratual de Sacas da CPR (Física)
-$$\text{Volume de Sacas da CPR} = \text{Teto}\left(\frac{\text{Valor do Crédito} - \text{Incentivo Barter}}{\text{Preço Líquido da Saca}}\right)$$
+Quantidade de sacas de grãos a serem entregues pelo produtor para quitação do crédito de insumos. O Incentivo de Prazo abate diretamente o saldo financiado antes da divisão pelo Preço Líquido:
+
+```text
+Volume de Sacas da CPR = Teto((Valor do Crédito - Incentivo Barter) / Preço Líquido da Saca)
+```
+
+---
 
 ### 7.5. Devolução Financeira em Dinheiro de Cashback da Campanha
-$$\text{Cashback Financeiro} = \text{Valor do Crédito} \times \left(\frac{\%\text{ Cashback da Campanha}}{100}\right)$$
+Benefício financeiro creditado na conta do produtor ou compensado em títulos ao final da operação (NÃO reduz o volume físico de sacas da CPR):
+
+```text
+Cashback Financeiro ($) = Valor do Crédito * (Cashback da Campanha % / 100)
+```
+
+---
 
 ### 7.6. Frete Total da Operação
-$$\text{Frete Total} = \text{Frete Rota Polo (WSys)} + (\text{KM Chão} \times \text{Tarifa Chão}) + (\text{KM Asfalto} \times \text{Tarifa Asfalto})$$
-*(Se a retirada for no armazém e KM flexível for zero, considera-se apenas a rota polo ou R$ 0,00 se negociado CIF).*
+Composição do frete da rota polo e do deslocamento flexível da fazenda:
+
+```text
+Frete Total = Frete Rota Polo + (KM Chão * Tarifa Chão) + (KM Asfalto * Tarifa Asfalto)
+```
+*(Se a retirada for no armazém ou polo e os KMs da fazenda forem iguais a zero, considera-se apenas a rota polo ou R$ 0,00 se negociado CIF).*
 
 ---
 
@@ -227,7 +314,7 @@ interface TributacaoRegionalBarter {
 ## ✅ 12. Critérios de Aceite para Engenharia (CAs)
 
 - **CA-01 (Incentivo de Prazo):** O Incentivo Barter de Prazo deve abater o saldo da operação antes da divisão pelo Preço Líquido, reduzindo o volume de sacas da CPR: `Volume = (Crédito - Incentivo) ÷ Preço Líquido`.
-- **CA-02 (Devolução de Cashback):** O Cashback ($4{,}5\%$) deve ser tratado exclusivamente como devolução financeira em dinheiro (R$ ou USD), sem reduzir sacas da CPR.
+- **CA-02 (Devolução de Cashback):** O Cashback (ex: 4,5%) deve ser tratado exclusivamente como devolução financeira em dinheiro (R$ ou USD), sem reduzir sacas da CPR.
 - **CA-03 (Frete Flexível KM Zero):** O sistema deve calcular simulações com KM chão = 0 e KM asfalto = 0 sem emitir exceções ou bloquear a tela.
 - **CA-04 (Origem da Cotação):** Preço Bruto e frete polo devem ser obtidos do endpoint oficial `/api/integracao/odin/precos`.
 - **CA-05 (Identificação de Fonte):** Campos parametrizados por campanha devem conter o indicador visual `* Fonte: Cadastro de campanha`.
