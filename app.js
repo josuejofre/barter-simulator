@@ -125,14 +125,74 @@ window.resetFormToDefaults = resetFormToDefaults;
 
 // ==================== FASE 1 (ENTREGA 1 - ENTRADA MANUAL) HANDLERS ====================
 function initFase1State() {
-    onEstadoChangeV1('MT');
+    const v1Price = document.getElementById('v1-sim-preco-bruto');
+    if (v1Price) v1Price.value = ''; // Inicia em branco conforme solicitado
+
     const v1Comm = document.getElementById('v1-sim-commodity');
     if (v1Comm) onCulturaChangeV1(v1Comm.value);
+
+    const v1Funrural = document.getElementById('v1-sim-funrural-pct');
+    if (v1Funrural) v1Funrural.value = '1.63';
+
+    const v1ImpEst = document.getElementById('v1-sim-imposto-estadual-pct');
+    if (v1ImpEst) v1ImpEst.value = '0.00';
+
+    const v1ImpUpf = document.getElementById('v1-sim-imposto-upf-ton');
+    if (v1ImpUpf) v1ImpUpf.value = '0.00';
+
+    const v1TaxaFixa = document.getElementById('v1-sim-taxa-fixa');
+    if (v1TaxaFixa) v1TaxaFixa.value = '0.00';
+
+    // Show/hide cotação do dólar conforme selectedCurrency
+    const dolarBox = document.getElementById('v1-container-cotacao-dolar');
+    if (dolarBox) {
+        dolarBox.style.display = (selectedCurrency === 'USD') ? 'block' : 'none';
+    }
+
+    const campSelect = document.getElementById('v1-sim-campanha-select');
+    const campId = campSelect ? campSelect.value : '0';
+    const camp = (campId !== 'custom') ? campaigns.find(c => c.id == campId) : campaigns[0];
+    if (camp) updateCampaignMonthBadges(camp);
 }
 window.initFase1State = initFase1State;
 
+function updateCampaignMonthBadges(camp) {
+    if (!camp || !camp.vencimento) return;
+    const parts = camp.vencimento.split('-');
+    if (parts.length === 3) {
+        const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
+        const mIdx = parseInt(parts[1], 10) - 1;
+        const monthName = months[mIdx] || parts[1];
+        const displayStr = `${monthName} / ${parts[0]}`;
+        const b1 = document.getElementById('v1-campaign-month-badge');
+        if (b1) b1.textContent = displayStr;
+        const b2 = document.getElementById('v2-campaign-month-badge');
+        if (b2) b2.textContent = displayStr;
+    }
+}
+window.updateCampaignMonthBadges = updateCampaignMonthBadges;
+
 function handleFormSimulateV1(e) {
     if (e) e.preventDefault();
+
+    const priceInput = document.getElementById('v1-sim-preco-bruto');
+    const priceVal = priceInput ? parseFloat(priceInput.value) : 0;
+    if (!priceVal || priceVal <= 0) {
+        alert('Por favor, informe a Cotação do Commodity (Preço Bruto FOB) para realizar a simulação.');
+        if (priceInput) priceInput.focus();
+        return;
+    }
+
+    if (selectedCurrency === 'USD') {
+        const dolarInput = document.getElementById('v1-sim-cotacao-dolar');
+        const dolarVal = dolarInput ? parseFloat(dolarInput.value) : 0;
+        if (!dolarVal || dolarVal <= 0) {
+            alert('Por favor, informe a Cotação do Dólar para cálculo dos impostos em operações em dólar.');
+            if (dolarInput) dolarInput.focus();
+            return;
+        }
+    }
+
     window.hasSimulated = true;
     hasSimulated = true;
     calculateSimulation();
@@ -153,58 +213,56 @@ function onCulturaChangeV1(cultura) {
     const suffixEl = document.getElementById('v1-sim-preco-bruto-suffix');
     if (suffixEl) suffixEl.textContent = `${currencySign}/${unitSymbol}`;
 
-    const priceInput = document.getElementById('v1-sim-preco-bruto');
-    if (priceInput) {
-        if (selectedCurrency === 'BRL') {
-            priceInput.value = isCorn ? "58.00" : (isSoy ? "103.00" : "4.38");
-        } else {
-            priceInput.value = isCorn ? "11.20" : (isSoy ? "20.00" : "0.85");
-        }
+    // Recalcular equivalência de R$/ton para R$/sc com base na nova cultura se houver valor
+    const upfTonEl = document.getElementById('v1-sim-imposto-upf-ton');
+    if (upfTonEl && parseFloat(upfTonEl.value) > 0) {
+        onTaxaUpfTonChangeV1(upfTonEl.value);
     }
+
     if (window.hasSimulated) calculateSimulation();
 }
 window.onCulturaChangeV1 = onCulturaChangeV1;
 
-function onEstadoChangeV1(estado) {
-    const regiaoSelect = document.getElementById('v1-sim-regiao');
-    if (regiaoSelect) {
-        const plazas = wsysPlazas.filter(p => p.estado === estado);
-        regiaoSelect.innerHTML = '';
-        if (plazas.length > 0) {
-            plazas.forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.nome;
-                opt.textContent = p.nome;
-                regiaoSelect.appendChild(opt);
-            });
-        } else {
-            const opt = document.createElement('option');
-            opt.value = `Capital (${estado})`;
-            opt.textContent = `Capital (${estado})`;
-            regiaoSelect.appendChild(opt);
-        }
-    }
-
-    // Auto-suggest state fiscal references (100% editable by user)
+function onFunruralTipoChangeV1(tipo) {
     const funruralInput = document.getElementById('v1-sim-funrural-pct');
-    const impEstInput = document.getElementById('v1-sim-imposto-estadual-pct');
-    const taxaFixaInput = document.getElementById('v1-sim-taxa-fixa');
-
-    if (funruralInput) funruralInput.value = "1.63";
-    if (impEstInput) {
-        if (estado === 'GO') impEstInput.value = "1.65"; // FUNDEINFRA
-        else if (estado === 'PI') impEstInput.value = "1.20"; // FDI
-        else impEstInput.value = "0.00";
+    if (!funruralInput) return;
+    if (tipo === 'comercializacao') {
+        funruralInput.value = '1.63';
+    } else if (tipo === 'folha') {
+        funruralInput.value = '0.20';
+    } else if (tipo === 'personalizado') {
+        funruralInput.focus();
     }
-    if (taxaFixaInput) {
-        if (estado === 'MT') taxaFixaInput.value = "3.09"; // FETHAB + IAGRO
-        else if (estado === 'MS') taxaFixaInput.value = "1.65"; // FUNDERSUL
-        else taxaFixaInput.value = "0.00";
-    }
-
     if (window.hasSimulated) calculateSimulation();
 }
-window.onEstadoChangeV1 = onEstadoChangeV1;
+window.onFunruralTipoChangeV1 = onFunruralTipoChangeV1;
+
+function onTaxaUpfTonChangeV1(val) {
+    const comm = document.getElementById('v1-sim-commodity')?.value || 'Soja';
+    // Soja/Milho = 60 kg/saca -> 1 ton = 16.6667 sacas. Algodão = 15 kg/saca -> 1 ton = 66.6667 sacas.
+    const scPerTon = (comm === 'Algodão') ? (1000 / 15) : (1000 / 60);
+    const tonVal = parseFloat(val) || 0;
+    const scVal = (tonVal / scPerTon);
+    const taxaFixaInput = document.getElementById('v1-sim-taxa-fixa');
+    if (taxaFixaInput) {
+        taxaFixaInput.value = scVal > 0 ? scVal.toFixed(2) : '0.00';
+    }
+    if (window.hasSimulated) calculateSimulation();
+}
+window.onTaxaUpfTonChangeV1 = onTaxaUpfTonChangeV1;
+
+function onTaxaFixaChangeV1(val) {
+    const comm = document.getElementById('v1-sim-commodity')?.value || 'Soja';
+    const scPerTon = (comm === 'Algodão') ? (1000 / 15) : (1000 / 60);
+    const scVal = parseFloat(val) || 0;
+    const tonVal = (scVal * scPerTon);
+    const upfTonInput = document.getElementById('v1-sim-imposto-upf-ton');
+    if (upfTonInput) {
+        upfTonInput.value = tonVal > 0 ? tonVal.toFixed(2) : '0.00';
+    }
+    if (window.hasSimulated) calculateSimulation();
+}
+window.onTaxaFixaChangeV1 = onTaxaFixaChangeV1;
 
 function toggleFiscalDeductionsV1(checked) {
     const inputsRow = document.getElementById('v1-fiscal-inputs-row');
@@ -217,6 +275,8 @@ function toggleFiscalDeductionsV1(checked) {
 window.toggleFiscalDeductionsV1 = toggleFiscalDeductionsV1;
 
 function onCampanhaSelectChangeV1(val) {
+    const camp = (val !== 'custom') ? campaigns.find(c => c.id == val) : campaigns[0];
+    if (camp) updateCampaignMonthBadges(camp);
     if (window.hasSimulated) calculateSimulation();
 }
 window.onCampanhaSelectChangeV1 = onCampanhaSelectChangeV1;
@@ -232,10 +292,13 @@ function resetFormToDefaultsV1() {
     if (v1Credit) v1Credit.value = selectedCurrency === 'BRL' ? 'R$ 1.000.000,00' : '$ 1,000,000.00';
     
     const v1Price = document.getElementById('v1-sim-preco-bruto');
-    if (v1Price) v1Price.value = selectedCurrency === 'BRL' ? '103.00' : '20.00';
+    if (v1Price) v1Price.value = ''; // Inicia em branco
 
     const v1Dolar = document.getElementById('v1-sim-cotacao-dolar');
     if (v1Dolar) v1Dolar.value = '5.6378';
+
+    const v1Tipo = document.getElementById('v1-sim-funrural-tipo');
+    if (v1Tipo) v1Tipo.value = 'comercializacao';
 
     const v1Funrural = document.getElementById('v1-sim-funrural-pct');
     if (v1Funrural) v1Funrural.value = '1.63';
@@ -243,8 +306,11 @@ function resetFormToDefaultsV1() {
     const v1ImpEst = document.getElementById('v1-sim-imposto-estadual-pct');
     if (v1ImpEst) v1ImpEst.value = '0.00';
 
+    const v1ImpUpf = document.getElementById('v1-sim-imposto-upf-ton');
+    if (v1ImpUpf) v1ImpUpf.value = '0.00';
+
     const v1TaxaFixa = document.getElementById('v1-sim-taxa-fixa');
-    if (v1TaxaFixa) v1TaxaFixa.value = '3.09';
+    if (v1TaxaFixa) v1TaxaFixa.value = '0.00';
 
     const v1Chao = document.getElementById('v1-sim-dist-chao');
     if (v1Chao) v1Chao.value = '0';
@@ -500,16 +566,10 @@ function setCurrency(currency) {
         if (v2BtnBrl) { v2BtnBrl.classList.remove('active'); v2BtnBrl.style.borderColor = '#cbd5e1'; v2BtnBrl.style.color = '#64748b'; }
     }
 
-    // Highlight / emphasize USD Exchange Rate box when in USD
+    // Show / Hide USD Exchange Rate box na Fase 1 (só deve aparecer se simulação for em dólar)
     const dolarBox = document.getElementById('v1-container-cotacao-dolar');
     if (dolarBox) {
-        if (currency === 'USD') {
-            dolarBox.style.background = '#fef3c7';
-            dolarBox.style.borderColor = '#f59e0b';
-        } else {
-            dolarBox.style.background = '#f8fafc';
-            dolarBox.style.borderColor = '#e2e8f0';
-        }
+        dolarBox.style.display = (currency === 'USD') ? 'block' : 'none';
     }
 
     const commEl = document.getElementById('v1-sim-commodity') || document.getElementById('v2-sim-commodity') || document.getElementById('sim-commodity');
@@ -521,12 +581,12 @@ function setCurrency(currency) {
     // Commodity quotes
     if (currency === 'BRL') {
         if (priceInput) priceInput.value = isCorn ? "58.00" : (isSoy ? "103.00" : "4.38");
-        if (v1PriceInput) v1PriceInput.value = isCorn ? "58.00" : (isSoy ? "103.00" : "4.38");
+        // Fase 1: NÃO preencher automaticamente v1PriceInput se estiver vazio (permanece em branco)
         if (freteChaoInput) freteChaoInput.value = "15.00";
         if (freteAsfaltoInput) freteAsfaltoInput.value = "8.00";
     } else {
         if (priceInput) priceInput.value = isCorn ? "11.20" : (isSoy ? "20.00" : "0.85");
-        if (v1PriceInput) v1PriceInput.value = isCorn ? "11.20" : (isSoy ? "20.00" : "0.85");
+        // Fase 1: NÃO preencher automaticamente v1PriceInput se estiver vazio (permanece em branco)
         if (freteChaoInput) freteChaoInput.value = "3.00";
         if (freteAsfaltoInput) freteAsfaltoInput.value = "1.60";
     }
@@ -922,7 +982,7 @@ function calculateSimulation() {
         creditRaw = v1CreditInput ? getRawCurrencyValue(v1CreditInput.value) : 1000000;
 
         const v1PriceInput = document.getElementById('v1-sim-preco-bruto');
-        commBrutoRaw = v1PriceInput ? (parseFloat(v1PriceInput.value) || 0) : (selectedCurrency === 'BRL' ? 103.00 : 20.00);
+        commBrutoRaw = v1PriceInput ? (parseFloat(v1PriceInput.value) || 0) : 0;
 
         const v1DolarInput = document.getElementById('v1-sim-cotacao-dolar');
         cotacaoDolar = v1DolarInput ? (parseFloat(v1DolarInput.value) || 5.6378) : 5.6378;
@@ -937,10 +997,10 @@ function calculateSimulation() {
         impNfPct = v1ImpEst ? (parseFloat(v1ImpEst.value) || 0) : 0.0;
 
         const v1TaxaFixa = document.getElementById('v1-sim-taxa-fixa');
-        impFixo = v1TaxaFixa ? (parseFloat(v1TaxaFixa.value) || 0) : 3.09;
+        impFixo = v1TaxaFixa ? (parseFloat(v1TaxaFixa.value) || 0) : 0.0;
 
         const v1Regiao = document.getElementById('v1-sim-regiao');
-        regiao = v1Regiao ? v1Regiao.value : 'Campo Novo do Parecis';
+        regiao = v1Regiao ? (v1Regiao.value.trim() || 'Praça Informada') : 'Praça Informada';
 
         const v1Chao = document.getElementById('v1-sim-dist-chao');
         distChao = v1Chao ? (parseFloat(v1Chao.value) || 0) : 0;
@@ -954,6 +1014,14 @@ function calculateSimulation() {
         const campSelect = document.getElementById('v1-sim-campanha-select');
         const campId = campSelect ? campSelect.value : '0';
         campObj = (campId !== 'custom') ? campaigns.find(c => c.id == campId) : (campaigns.find(c => c.status === 'Ativa') || campaigns[0]);
+        if (campObj) updateCampaignMonthBadges(campObj);
+
+        // Se a cotação do commodity estiver vazia ou zero na Fase 1, não exibe resultados
+        if (commBrutoRaw <= 0) {
+            const results = document.getElementById('v1-sim-results-wrapper');
+            if (results) results.style.display = 'none';
+            return;
+        }
     } else {
         // === FASE 2 (WSYS INTEGRADO) ===
         const commoditySelect = document.getElementById('v2-sim-commodity') || document.getElementById('sim-commodity');
@@ -975,6 +1043,7 @@ function calculateSimulation() {
         const campSelect = document.getElementById('v2-sim-campanha-select') || document.getElementById('sim-campanha-select');
         const campId = campSelect ? campSelect.value : 'custom';
         campObj = (campId !== 'custom') ? campaigns.find(c => c.id == campId) : (campaigns.find(c => c.status === 'Ativa') || campaigns[0]);
+        if (campObj) updateCampaignMonthBadges(campObj);
 
         const distChaoRaw = document.getElementById('v2-sim-dist-chao') ? document.getElementById('v2-sim-dist-chao').value : '0';
         const distAsfaltoRaw = document.getElementById('v2-sim-dist-asfalto') ? document.getElementById('v2-sim-dist-asfalto').value : '0';
@@ -3520,21 +3589,8 @@ function onCampanhaSelectChange(val) {
         updateWsysMonthIndicator(null);
     }
 
-    // Phase 1: Sync Mês Logístico (Entrega) with Campaign Vencimento
-    const mesLogisticoSelect = document.getElementById('v2-sim-mes-logistico');
-    if (mesLogisticoSelect && camp && camp.vencimento) {
-        const parts = camp.vencimento.split('-');
-        if (parts.length === 3) {
-            const months = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho', 'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'];
-            const mIdx = parseInt(parts[1], 10) - 1;
-            const monthName = months[mIdx] || parts[1];
-            const valStr = `${parts[1]}/${parts[0]}`;
-            if (mesLogisticoSelect.options.length > 0) {
-                mesLogisticoSelect.options[0].textContent = `${monthName} / ${parts[0]} (Padrão Vencimento)`;
-                mesLogisticoSelect.options[0].value = valStr;
-            }
-        }
-    }
+    // Sync Mês da Campanha com badges informativos de entrega
+    updateCampaignMonthBadges(camp);
 
 
     // Find Barter tax parameters (Nutrade or generic Barter)
