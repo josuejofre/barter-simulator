@@ -347,18 +347,23 @@
                                                 style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px; padding:9px 12px;">
                                         </div>
                                     </div>
+                                </div>
 
+                                <!-- Linha Logística: Dist. Chão e Dist. Asfalto na mesma linha -->
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:end; margin-top:14px;">
                                     <div class="input-group" style="margin-bottom:0;">
                                         <label for="v1-sim-dist-chao" style="font-size:12px; color:#475569; font-weight:500;">Dist. Chão (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
                                         <div class="input-wrapper">
-                                            <input type="number" id="v1-sim-dist-chao" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;">
+                                            <input type="number" id="v1-sim-dist-chao" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
+                                                oninput="if(window.hasSimulated) calculateSimulation();">
                                             <span class="input-suffix">KM</span>
                                         </div>
                                     </div>
                                     <div class="input-group" style="margin-bottom:0;">
                                         <label for="v1-sim-dist-asfalto" style="font-size:12px; color:#475569; font-weight:500;">Dist. Asfalto (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
                                         <div class="input-wrapper">
-                                            <input type="number" id="v1-sim-dist-asfalto" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;">
+                                            <input type="number" id="v1-sim-dist-asfalto" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
+                                                oninput="if(window.hasSimulated) calculateSimulation();">
                                             <span class="input-suffix">KM</span>
                                         </div>
                                     </div>
@@ -751,11 +756,15 @@
                                             </select>
                                         </div>
                                     </div>
+                                </div>
+
+                                <!-- Linha Logística: Dist. Chão e Dist. Asfalto na mesma linha -->
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:end; margin-top:14px;">
                                     <div class="input-group" style="margin-bottom:0;">
                                         <label for="v2-sim-dist-chao" style="font-size:12px; color:#475569; font-weight:500;">Dist. Chão (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
                                         <div class="input-wrapper">
                                             <input type="number" id="v2-sim-dist-chao" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
-                                                oninput="document.getElementById('sim-dist-chao').value=this.value;">
+                                                oninput="document.getElementById('sim-dist-chao').value=this.value; if(window.hasSimulated) calculateSimulation();">
                                             <span class="input-suffix">KM</span>
                                         </div>
                                     </div>
@@ -763,7 +772,7 @@
                                         <label for="v2-sim-dist-asfalto" style="font-size:12px; color:#475569; font-weight:500;">Dist. Asfalto (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
                                         <div class="input-wrapper">
                                             <input type="number" id="v2-sim-dist-asfalto" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
-                                                oninput="document.getElementById('sim-dist-asfalto').value=this.value;">
+                                                oninput="document.getElementById('sim-dist-asfalto').value=this.value; if(window.hasSimulated) calculateSimulation();">
                                             <span class="input-suffix">KM</span>
                                         </div>
                                     </div>
