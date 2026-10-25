@@ -11,6 +11,15 @@
 
 ---
 
+> [!NOTE]
+> **Documentação Estruturada em 3 Partes:**  
+> A especificação técnica e funcional do Barter Hub agora está modularizada em 3 documentos específicos:
+> * 🧭 **PRD Pai (Visão Geral & Arquitetura Macro):** [PRD_SYDE-31_Visao_Geral_Solucao.md](file:///c:/Users/jj/OneDrive/Projetos/Barter%20Simulator/PRD_SYDE-31_Visao_Geral_Solucao.md)
+> * 📘 **PRD Filho 1 (Fase 1: MVP Manual - FIN-18889):** [PRD_SYDE-31_Fase1_MVP_Manual.md](file:///c:/Users/jj/OneDrive/Projetos/Barter%20Simulator/PRD_SYDE-31_Fase1_MVP_Manual.md)
+> * 📗 **PRD Filho 2 (Fase 2: WSys Integrado & Motor Fiscal - SYDE-31):** [PRD_SYDE-31_Fase2_WSys_Integrado.md](file:///c:/Users/jj/OneDrive/Projetos/Barter%20Simulator/PRD_SYDE-31_Fase2_WSys_Integrado.md)
+
+---
+
 ## 📋 1. Changelog do Documento
 
 | Versão | Data | Autor / Origem | Principais Alterações |
