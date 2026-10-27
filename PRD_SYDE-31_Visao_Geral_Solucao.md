@@ -2,11 +2,17 @@
 ## Simulador de Taxas Barter (Nutrade) – Estratégia de Entregas & Governança
 
 * **Identificador Geral:** PRD_SYDE-31
-* **Versão:** v2.0 (Arquitetura Tripartida & Refinamento Fiscal)
-* **Data:** Outubro de 2026
-* **Status:** Pronto para Desenvolvimento (Ready for Dev)
+* **Versão:** v2.1 (Alinhamento de Escopo Mínimo, Taxas e Governança – Reunião 27/10/2026)
+* **Data:** 27 de outubro de 2026
+* **Status:** Pronto para Desenvolvimento / Homologação (Ready for Dev)
 * **Autor:** Josue Jofre (Produto & Engenharia)
-* **Aprovadores:** Pablo (Diretoria de Produto), Alessandra Monteiro / Mariana Haddad (Mesa Nutrade), Aleksander Santos (Engenharia Syde)
+* **Aprovadores / Participantes do Alinhamento 27/10/2026:**
+  * **Leonardo Vale** (Liderança de Barter Syngenta / Nutrade)
+  * **Pablo** (Diretoria de Produto)
+  * **Jessica Moraes** (Design de Produto)
+  * **Aleksander Santos** (Engenharia Syde)
+  * **Bruno Vedovatte** (Operações Barter)
+  * **Alessandra Monteiro / Mariana Haddad** (Mesa de Grãos Nutrade)
 
 ---
 
@@ -29,11 +35,16 @@ Para garantir clareza técnica e direcionamento cirúrgico para os times de dese
 │                                       │ │                                   │
 │ • Card Jira: FIN-18889                │ │ • Card Jira: SYDE-31              │
 │ • MVP Operacional Manual              │ │ • Automação WSys CTRM 2.10.1      │
-│ • Cotação da Commodity Manual        │ │ • Consulta em tempo real (/precos)│
-│ • Cotação Dólar Manual (apenas USD)   │ │ • Motor Fiscal Automático Syde    │
-│ • Tributos Manuais (Funrural + UPF)   │ │ • PTAX BACEN Oficial Automática   │
-│ • Sincronização Tonelada x Saca       │ │ • Monitoramento de Pregão CBOT    │
-│ • Desacoplado de APIs externas        │ │ • Mapeamento de Cidades e Rotas   │
+│ • Entrada Manual de Cotação da        │ │ • Consulta em tempo real          │
+│   Commodity (inicia em branco)        │ │   (/api/integracao/odin/precos)   │
+│ • Cotação do Dólar Futuro             │ │ • Motor Fiscal Automático Syde    │
+│   (visível somente em USD)            │ │ • PTAX BACEN Oficial Automática   │
+│ • Estado (UF) em primeiro lugar       │ │ • Monitoramento de Pregão CBOT    │
+│ • Funrural Unificado (1,63% ou 0,20%) │ │ • Mapeamento de Cidades e Rotas   │
+│ • Tributos Estaduais Automatizados    │ │ • Foco: Soja, Milho e Algodão     │
+│   (FETHAB, FUNDEMS, FUNDEINFRA, FDI)  │ │   (Café automatizado via CRM)     │
+│ • Aviso Oficial da Mesa de Barter     │ │ • Aviso Oficial da Mesa de Barter │
+│ • Desacoplado de APIs externas        │ │ • Conectado à esteira corporativa │
 └───────────────────────────────────────┘ └───────────────────────────────────┘
 ```
 
@@ -46,9 +57,9 @@ Para garantir clareza técnica e direcionamento cirúrgico para os times de dese
 
 ## 🎯 2. Business Outcomes & Objetivos de Negócio
 
-1. **Aceleração da Originação de Grãos (Barter Nutrade):** Transformar o Syde no canal digital oficial para contratação de Barter, eliminando o atrito das negociações de balcão.
-2. **Redução Drástica do Ciclo de Venda (Lead Time):** Reduzir o tempo que o Consultor Comercial / RTV leva para formular e compartilhar uma proposta com o produtor de **25 a 30 minutos (em planilhas paralelas)** para **menos de 2 minutos** de forma 100% digital.
-3. **Eliminação do Risco Operacional e Divergências de CPR:** Erradicar divergências entre a cotação acordada na fazenda e a formalização da CPR física no backoffice/mesa de grãos, garantindo que o volume de grãos prometido reflita exatamente o contrato emitido.
+1. **Aceleração da Originação de Grãos (Barter Nutrade):** Transformar o Syde no canal digital oficial para contratação de Barter na campanha da safra 2027/28, eliminando o atrito das negociações de balcão e de planilhas locais.
+2. **Redução Drástica do Ciclo de Venda (Lead Time):** Reduzir o tempo que o Consultor Comercial / RTV leva para formular e compartilhar uma proposta com o produtor de **25 a 30 minutos (em planilhas paralelas)** para **menos de 2 minutos** de forma 100% digital e segura.
+3. **Eliminação do Risco Operacional e Divergências de CPR:** Erradicar divergências entre a cotação acordada na fazenda e a formalização da CPR física no backoffice/mesa de grãos, assegurando que o volume de grãos prometido reflita com exatidão o contrato formal.
 
 ### Critérios de Sucesso (KPIs SMART):
 * **Adoção Comercial:** Maior ou igual a 80% das propostas de Barter geradas via Syde em até 60 dias pós-lançamento.
@@ -59,21 +70,25 @@ Para garantir clareza técnica e direcionamento cirúrgico para os times de dese
 
 ---
 
-## ⚖️ 3. Matriz Comparativa de Escopo: Fase 1 vs Fase 2
+## ⚖️ 3. Matriz Comparativa de Escopo: Fase 1 vs Fase 2 (Alinhada em 27/10/2026)
 
 | Dimensão / Funcionalidade | Fase 1: MVP Manual (FIN-18889) | Fase 2: WSys Integrado (SYDE-31) |
 |---|---|---|
+| **Público & Cronograma** | Lançamento na primeira/segunda quinzena de Novembro/2026 (Safra 27/28). | Integração homologada em Dezembro/2026 para uso pleno em Janeiro/2027. |
 | **Dependência Externa** | **Nenhuma.** Opera 100% autônoma no Syde. | Conectada ao WSys CTRM 2.10.1 da Syngenta e BACEN. |
-| **Cotação da Commodity** | Entrada manual pelo RTV (inicia vazia). | Consumo em tempo real da API WSys (`/precos`). |
-| **Cotação do Dólar** | Campo visível somente em simulações USD. | Consumo automático da Cotação PTAX Venda do Banco Central. |
-| **Vencimento da Operação** | Automático com base no vencimento da Campanha. | Automático com base na Campanha (injetado na query do WSys). |
-| **Regras Fiscais (Funrural)** | Opção entre Comercialização (1,63%), Folha (0,20%) ou Personalizado. | Aplicado automaticamente pelo perfil fiscal cadastrado na praça. |
-| **Outros Impostos Base NF %** | Campo percentual livre (ex: FUNDEINFRA 1,65% em GO; FDI 1,20% no PI). | Identificado e aplicado automaticamente pela UF da praça. |
-| **Imposto Base UPF (R$/ton)** | Campo manual em R$/tonelada. | Cadastro centralizado no Motor Fiscal do Syde por Estado/Praça. |
-| **Dedução Fixa por Saca (R$/sc)**| Sincronização bidirecional em tempo real ajustada pelo peso da cultura. | Calculado automaticamente com base na UPF da praça dividida pelo peso da cultura. |
-| **Conversão Tonelada x Saca** | 16,6667 sc/t (Soja/Milho/Café) e 66,6667 sc/t (Algodão). | 16,6667 sc/t (Soja/Milho/Café) e 66,6667 sc/t (Algodão). |
-| **Distâncias Chão e Asfalto** | Na linha de baixo, alinhadas lado a lado. | Na linha de baixo, alinhadas lado a lado. |
-| **Status Pregão de Chicago (CBOT)**| Não exibido (evita confusão em modo manual). | Exibição de badge visual de mercado aberto/fechado e aviso indicativo. |
+| **Aviso ao RTV / Comercial** | Banner informativo oficial direcionando à Mesa de Barter para cotações vigentes. | Banner oficial direcionando à Mesa de Barter e indicador CBOT. |
+| **Posicionamento de Campos** | **Estado (UF)** em 1º lugar, seguido de **Commodity**, Cotação e Dólar Futuro. | **Estado (UF)** em 1º lugar, seguido de **Commodity**, Praça WSys e Dólar Futuro. |
+| **Commodities Suportadas** | **Soja, Milho e Algodão** (Café excluído por ser cotado direto no CRM Salesforce). | **Soja, Milho e Algodão** (Café excluído pelo mesmo racional). |
+| **Cotação da Commodity** | Entrada manual pelo RTV (inicia vazia para preenchimento obrigatório). | Consumo em tempo real da API WSys (`/api/integracao/odin/precos`). |
+| **Cotação do Dólar Futuro** | Campo `Cotação do Dólar Futuro (R$/USD)` visível apenas em simulações USD. | Consumo automático da Cotação PTAX Venda do Banco Central / WSys. |
+| **Vencimento da Operação** | Automático com base no vencimento da Campanha (campo de mês manual removido). | Automático com base na Campanha (injetado na query do WSys). |
+| **Regras Fiscais (Funrural)** | **Seletor Unificado:** Comercialização (1,63%) ou Folha de Pagamento (0,20%). | **Seletor Unificado:** Comercialização (1,63%) ou Folha de Pagamento (0,20%). |
+| **Outros Impostos Base NF %** | Auto-carregado pela UF: FUNDEINFRA 1,65% (GO), FDI 1,20% (PI), 0,00% (demais). | Identificado e aplicado automaticamente pela UF da praça. |
+| **Imposto Base UPF (R$/ton)** | Auto-carregado por UF + Cultura: FETHAB R$ 51,50/t (MT), FUNDEMS R$ 27,55/t (MS). | Cadastro centralizado no Motor Fiscal do Syde por Estado/Praça. |
+| **Dedução Fixa por Saca (R$/sc)**| Calculado automaticamente (R$/ton / sacas por ton). Ex: MT Soja = R$ 3,09/sc. | Calculado automaticamente com base na UPF da praça dividida pelo peso da cultura. |
+| **Conversão Tonelada x Saca** | 16,6667 sc/t (Soja e Milho - 60 kg) e 66,6667 sc/t (Algodão - 15 kg). | 16,6667 sc/t (Soja e Milho - 60 kg) e 66,6667 sc/t (Algodão - 15 kg). |
+| **Fretes & Distâncias** | Dist. Asfalto e Dist. Chão alinhadas lado a lado na mesma linha. | Dist. Asfalto e Dist. Chão alinhadas lado a lado na mesma linha. |
+| **Tarifas de Frete por KM** | Padronizadas nacionalmente por KM de chão e asfalto conforme confirmado em reunião. | Parametrizadas na esteira comercial da praça polo. |
 | **Saída da Proposta** | Comparativo em tela, PDF formal e link compartilhável. | Comparativo em tela, PDF formal, link compartilhável e envio ao ERP. |
 
 ---
@@ -81,7 +96,7 @@ Para garantir clareza técnica e direcionamento cirúrgico para os times de dese
 ## 📸 4. Comparativo Visual das Telas Homologadas
 
 ### Tela da Fase 1 (MVP Operacional Manual)
-Destaca a entrada manual de cotação e alíquotas fiscais, cotação do dólar exibida condicionalmente quando a moeda for USD e distâncias de chão e asfalto na mesma linha:
+Destaca o banner da Mesa de Barter, Estado (UF) como primeiro seletor, entrada manual da cotação, Funrural unificado (1,63% ou 0,20%), tributos estaduais automáticos e distâncias de asfalto e chão na mesma linha:
 
 ![Protótipo Fase 1](prints_prd/01b_fase1_dolar_cotacao.png)
 
@@ -107,18 +122,24 @@ Todas as fórmulas operam sem notação matemática complexa, assegurando total 
 
 3. Dedução Percentual:
    Dedução Percentual = Preço Bruto * ((Funrural % + Outros Impostos Base NF %) / 100)
+   Onde:
+   - Funrural: 1,63% (Comercialização) ou 0,20% (Folha de Pagamento)
+   - Outros Impostos Base NF (%): 1,65% em GO (FUNDEINFRA), 1,20% no PI (FDI), 0,00% nos demais
 
 4. Dedução Fixa por Saca (Conversão UPF R$/ton para R$/sc):
    Dedução Fixa (R$/sc) = Imposto Base UPF (R$/ton) / Sacas por Tonelada
-   - Soja, Milho e Café (60 kg): 1.000 / 60 = 16,6667 sacas por tonelada
-     * MT (R$ 51,50 / 16,6667) = R$ 3,09 por saca
-     * MS (R$ 27,55 / 16,6667) = R$ 1,65 por saca
+   - Soja e Milho (60 kg): 1.000 / 60 = 16,6667 sacas por tonelada
+     * MT Soja (R$ 51,50 / 16,6667) = R$ 3,09 por saca
+     * MT Milho (R$ 14,00 / 16,6667) = R$ 0,84 por saca (ou R$ 0,37 conforme alíquota específica)
+     * MS Soja (R$ 27,55 / 16,6667) = R$ 1,65 por saca
+     * MS Milho (R$ 14,00 / 16,6667) = R$ 0,84 por saca
    - Algodão (15 kg): 1.000 / 15 = 66,6667 sacas/arrobas por tonelada
      * MT (R$ 51,50 / 66,6667) = R$ 0,77 por saca/arroba
      * MS (R$ 27,55 / 66,6667) = R$ 0,41 por saca/arroba
+   - Demais Estados: R$ 0,00 por saca
 
 5. Conversão Cambial em Dólar (USD):
-   Dedução Fixa em USD = Dedução Fixa em R$ / Cotação do Dólar (PTAX BACEN)
+   Dedução Fixa em USD = Dedução Fixa em R$ / Cotação do Dólar Futuro
 
 6. Saldo Base e Volume de Sacas da CPR Física:
    Preço Pedido TP = Valor da Operação / (1 + Juros do Período)
@@ -145,11 +166,11 @@ O avanço e a convivência entre as fases são governados por Feature Flags:
 
 ---
 
-## ⚠️ 7. Matriz de Riscos & Plano de Mitigação
+## ⚠️ 7. Matriz de Riscos & Plano de Mitigação (Reunião 27/10/2026)
 
 | Risco Identificado | Impacto | Mitigação Estruturada |
 |---|:---:|---|
 | **Atraso na liberação de credenciais ou lotes da API WSys** | Alto | **Mitigado pela Fase 1 (FIN-18889):** Força de vendas já está operando com simulador manual sem depender do WSys. |
-| **Divergência de alíquotas estaduais por município** | Médio | **Mitigado pelo Motor Fiscal:** Cadastro hierárquico (regra por UF com possibilidade de exceção por código IBGE da cidade). |
-| **Volatilidade do Dólar desfasar impostos estaduais em USD** | Médio | **Mitigado pela PTAX Oficial:** Uso da cotação oficial diária do Banco Central como padrão técnico de conversão. |
-| **Erro 500 no WSys por ausência de datas de embarque** | Alto | **Mitigado no BFF:** Injeção mandatória de `startDate` e `endDate` deduzidos do mês de vencimento da campanha. |
+| **Divergência de alíquotas estaduais por município** | Médio | **Mitigado pela parametrização por Estado e Commodity:** As regras de FETHAB, FUNDEMS, FUNDEINFRA e FDI já estão pré-configuradas e vinculadas à UF selecionada. |
+| **Volatilidade do Dólar desfasar impostos estaduais em USD** | Médio | **Mitigado pela Cotação do Dólar Futuro:** Uso explícito do Dólar Futuro informado ou da PTAX oficial diária para conversão das taxas fixas. |
+| **RTV preencher cotação spot em vez de futuro** | Médio | **Mitigado pelos rótulos claros e banner da Mesa:** Inclusão mandatória do aviso oficial para consulta à Mesa de Barter. |

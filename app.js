@@ -125,28 +125,28 @@ window.resetFormToDefaults = resetFormToDefaults;
 
 // ==================== FASE 1 (ENTREGA 1 - ENTRADA MANUAL) HANDLERS ====================
 function initFase1State() {
-    const v1Price = document.getElementById('v1-sim-preco-bruto');
-    if (v1Price) v1Price.value = ''; // Inicia em branco conforme solicitado
+    const v1Estado = document.getElementById('v1-sim-estado');
+    if (v1Estado) v1Estado.value = 'MT';
 
     const v1Comm = document.getElementById('v1-sim-commodity');
-    if (v1Comm) onCulturaChangeV1(v1Comm.value);
+    if (v1Comm) v1Comm.value = 'Soja';
 
-    const v1Funrural = document.getElementById('v1-sim-funrural-pct');
+    const v1Price = document.getElementById('v1-sim-preco-bruto');
+    if (v1Price) v1Price.value = ''; // Inicia em branco conforme solicitado na reuniao 27/10
+
+    const v1Funrural = document.getElementById('v1-sim-funrural');
     if (v1Funrural) v1Funrural.value = '1.63';
 
-    const v1ImpEst = document.getElementById('v1-sim-imposto-estadual-pct');
-    if (v1ImpEst) v1ImpEst.value = '0.00';
+    updateFiscalTaxesV1();
 
-    const v1ImpUpf = document.getElementById('v1-sim-imposto-upf-ton');
-    if (v1ImpUpf) v1ImpUpf.value = '0.00';
-
-    const v1TaxaFixa = document.getElementById('v1-sim-taxa-fixa');
-    if (v1TaxaFixa) v1TaxaFixa.value = '0.00';
-
-    // Show/hide cotação do dólar conforme selectedCurrency
+    // Show/hide cotacao do dolar futuro conforme selectedCurrency
     const dolarBox = document.getElementById('v1-container-cotacao-dolar');
     if (dolarBox) {
         dolarBox.style.display = (selectedCurrency === 'USD') ? 'block' : 'none';
+    }
+    const v2DolarBox = document.getElementById('v2-container-cotacao-dolar');
+    if (v2DolarBox) {
+        v2DolarBox.style.display = (selectedCurrency === 'USD') ? 'block' : 'none';
     }
 
     const campSelect = document.getElementById('v1-sim-campanha-select');
@@ -178,7 +178,7 @@ function handleFormSimulateV1(e) {
     const priceInput = document.getElementById('v1-sim-preco-bruto');
     const priceVal = priceInput ? parseFloat(priceInput.value) : 0;
     if (!priceVal || priceVal <= 0) {
-        alert('Por favor, informe a Cotação do Commodity (Preço Bruto FOB) para realizar a simulação.');
+        alert('Por favor, informe a Cotação da Commodity (Preço Bruto FOB) para realizar a simulação.');
         if (priceInput) priceInput.focus();
         return;
     }
@@ -187,7 +187,7 @@ function handleFormSimulateV1(e) {
         const dolarInput = document.getElementById('v1-sim-cotacao-dolar');
         const dolarVal = dolarInput ? parseFloat(dolarInput.value) : 0;
         if (!dolarVal || dolarVal <= 0) {
-            alert('Por favor, informe a Cotação do Dólar para cálculo dos impostos em operações em dólar.');
+            alert('Por favor, informe a Cotação do Dólar Futuro para cálculo dos impostos em operações em dólar.');
             if (dolarInput) dolarInput.focus();
             return;
         }
@@ -204,6 +204,30 @@ function handleFormSimulateV1(e) {
 }
 window.handleFormSimulateV1 = handleFormSimulateV1;
 
+function onEstadoChangeV1(estado) {
+    const capitalMap = {
+        'MT': 'Campo Novo do Parecis',
+        'MS': 'Dourados',
+        'GO': 'Rio Verde',
+        'PI': 'Bom Jesus',
+        'BA': 'Luís Eduardo Magalhães',
+        'MA': 'Balsas',
+        'TO': 'Porto Nacional',
+        'RO': 'Vilhena',
+        'PR': 'Cascavel',
+        'MG': 'Unaí',
+        'SP': 'Itapeva',
+        'RS': 'Passo Fundo'
+    };
+    const regEl = document.getElementById('v1-sim-regiao');
+    if (regEl && capitalMap[estado]) {
+        regEl.value = capitalMap[estado];
+    }
+    updateFiscalTaxesV1();
+    if (window.hasSimulated) calculateSimulation();
+}
+window.onEstadoChangeV1 = onEstadoChangeV1;
+
 function onCulturaChangeV1(cultura) {
     const isSoy = cultura === 'Soja';
     const isCorn = cultura === 'Milho';
@@ -213,56 +237,92 @@ function onCulturaChangeV1(cultura) {
     const suffixEl = document.getElementById('v1-sim-preco-bruto-suffix');
     if (suffixEl) suffixEl.textContent = `${currencySign}/${unitSymbol}`;
 
-    // Recalcular equivalência de R$/ton para R$/sc com base na nova cultura se houver valor
-    const upfTonEl = document.getElementById('v1-sim-imposto-upf-ton');
-    if (upfTonEl && parseFloat(upfTonEl.value) > 0) {
-        onTaxaUpfTonChangeV1(upfTonEl.value);
-    }
-
+    updateFiscalTaxesV1();
     if (window.hasSimulated) calculateSimulation();
 }
 window.onCulturaChangeV1 = onCulturaChangeV1;
 
-function onFunruralTipoChangeV1(tipo) {
-    const funruralInput = document.getElementById('v1-sim-funrural-pct');
-    if (!funruralInput) return;
-    if (tipo === 'comercializacao') {
-        funruralInput.value = '1.63';
-    } else if (tipo === 'folha') {
-        funruralInput.value = '0.20';
-    } else if (tipo === 'personalizado') {
-        funruralInput.focus();
-    }
-    if (window.hasSimulated) calculateSimulation();
-}
-window.onFunruralTipoChangeV1 = onFunruralTipoChangeV1;
-
-function onTaxaUpfTonChangeV1(val) {
+function updateFiscalTaxesV1() {
+    const estado = document.getElementById('v1-sim-estado')?.value || 'MT';
     const comm = document.getElementById('v1-sim-commodity')?.value || 'Soja';
-    // Soja/Milho = 60 kg/saca -> 1 ton = 16.6667 sacas. Algodão = 15 kg/saca -> 1 ton = 66.6667 sacas.
-    const scPerTon = (comm === 'Algodão') ? (1000 / 15) : (1000 / 60);
-    const tonVal = parseFloat(val) || 0;
-    const scVal = (tonVal / scPerTon);
-    const taxaFixaInput = document.getElementById('v1-sim-taxa-fixa');
-    if (taxaFixaInput) {
-        taxaFixaInput.value = scVal > 0 ? scVal.toFixed(2) : '0.00';
-    }
-    if (window.hasSimulated) calculateSimulation();
-}
-window.onTaxaUpfTonChangeV1 = onTaxaUpfTonChangeV1;
 
-function onTaxaFixaChangeV1(val) {
-    const comm = document.getElementById('v1-sim-commodity')?.value || 'Soja';
-    const scPerTon = (comm === 'Algodão') ? (1000 / 15) : (1000 / 60);
-    const scVal = parseFloat(val) || 0;
-    const tonVal = (scVal * scPerTon);
-    const upfTonInput = document.getElementById('v1-sim-imposto-upf-ton');
-    if (upfTonInput) {
-        upfTonInput.value = tonVal > 0 ? tonVal.toFixed(2) : '0.00';
+    // 1. Outros Impostos Base NF (%)
+    let impNfPct = 0.0;
+    let impNfNote = 'Isento / Alíquota 0,00% s/ NF';
+    if (estado === 'GO') {
+        impNfPct = 1.65;
+        impNfNote = 'FUNDEINFRA: 1,65% s/ NF (Goiás)';
+    } else if (estado === 'PI') {
+        impNfPct = 1.20;
+        impNfNote = 'FDI: 1,20% s/ NF (Piauí)';
     }
+
+    // 2. Imposto Base UPF (R$/tonelada) conforme cultura
+    let upfTon = 0.0;
+    let upfNote = 'Sem taxa fixa estadual';
+    if (estado === 'MT') {
+        if (comm === 'Milho') {
+            upfTon = 14.00;
+            upfNote = 'FETHAB Milho: R$ 14,00/ton';
+        } else {
+            upfTon = 51.50;
+            upfNote = 'FETHAB (20%) + IAGRO (1,15%): R$ 51,50/ton';
+        }
+    } else if (estado === 'MS') {
+        if (comm === 'Milho') {
+            upfTon = 14.00;
+            upfNote = 'FUNDEMS Milho: R$ 14,00/ton';
+        } else {
+            upfTon = 27.55;
+            upfNote = 'FUNDEMS (2,8%) + FUNDERSUL (49,2%): R$ 27,55/ton';
+        }
+    }
+
+    // 3. Dedução Fixa por Saca (R$/saca)
+    const scPerTon = (comm === 'Algodão') ? (1000.0 / 15.0) : (1000.0 / 60.0);
+    let taxaFixa = upfTon > 0 ? (upfTon / scPerTon) : 0.0;
+    if (estado === 'MT' && comm === 'Milho') taxaFixa = 0.37;
+
+    // UI Updates
+    const impEstEl = document.getElementById('v1-sim-imposto-estadual-pct');
+    if (impEstEl) impEstEl.value = `${impNfPct.toFixed(2)}%`;
+    const impEstNoteEl = document.getElementById('v1-sim-imposto-estadual-note');
+    if (impEstNoteEl) impEstNoteEl.textContent = impNfNote;
+
+    const upfTonEl = document.getElementById('v1-sim-imposto-upf-ton');
+    if (upfTonEl) upfTonEl.value = upfTon > 0 ? `R$ ${upfTon.toFixed(2)}/t` : 'R$ 0,00/t';
+    const upfNoteEl = document.getElementById('v1-sim-imposto-upf-note');
+    if (upfNoteEl) upfNoteEl.textContent = upfNote;
+
+    const taxaFixaEl = document.getElementById('v1-sim-taxa-fixa');
+    const unitSymbol = comm === 'Algodão' ? '@' : 'sc';
+    if (taxaFixaEl) taxaFixaEl.value = taxaFixa > 0 ? `R$ ${taxaFixa.toFixed(2)}/${unitSymbol}` : `R$ 0,00/${unitSymbol}`;
+    const taxaFixaNoteEl = document.getElementById('v1-sim-taxa-fixa-note');
+    if (taxaFixaNoteEl) {
+        taxaFixaNoteEl.textContent = taxaFixa > 0
+            ? `Taxa rateada na CPR: R$ ${taxaFixa.toFixed(2)}/${unitSymbol} (${estado})`
+            : 'Sem dedução fixa estadual';
+    }
+
+    window.currentV1Fiscal = {
+        estado,
+        comm,
+        impNfPct,
+        upfTon,
+        taxaFixa
+    };
+}
+window.updateFiscalTaxesV1 = updateFiscalTaxesV1;
+
+function onFunruralChangeV1(val) {
     if (window.hasSimulated) calculateSimulation();
 }
-window.onTaxaFixaChangeV1 = onTaxaFixaChangeV1;
+window.onFunruralChangeV1 = onFunruralChangeV1;
+
+function onFunruralChangeV2(val) {
+    if (window.hasSimulated) calculateSimulation();
+}
+window.onFunruralChangeV2 = onFunruralChangeV2;
 
 function toggleFiscalDeductionsV1(checked) {
     const inputsRow = document.getElementById('v1-fiscal-inputs-row');
@@ -992,6 +1052,8 @@ function calculateSimulation() {
         const v1Comm = document.getElementById('v1-sim-commodity');
         commodity = v1Comm ? v1Comm.value : 'Soja';
 
+        const v1Estado = document.getElementById('v1-sim-estado')?.value || 'MT';
+
         const v1CreditInput = document.getElementById('v1-sim-credito') || document.getElementById('sim-credito');
         creditRaw = v1CreditInput ? getRawCurrencyValue(v1CreditInput.value) : 1000000;
 
@@ -1004,14 +1066,18 @@ function calculateSimulation() {
         const v1DescToggle = document.getElementById('v1-sim-descontos');
         descontoAtivo = v1DescToggle ? v1DescToggle.checked : true;
 
-        const v1Funrural = document.getElementById('v1-sim-funrural-pct');
-        funruralPct = v1Funrural ? (parseFloat(v1Funrural.value) || 0) : 1.63;
+        const v1Funrural = document.getElementById('v1-sim-funrural');
+        funruralPct = v1Funrural ? (parseFloat(v1Funrural.value) || 1.63) : 1.63;
 
-        const v1ImpEst = document.getElementById('v1-sim-imposto-estadual-pct');
-        impNfPct = v1ImpEst ? (parseFloat(v1ImpEst.value) || 0) : 0.0;
-
-        const v1TaxaFixa = document.getElementById('v1-sim-taxa-fixa');
-        impFixo = v1TaxaFixa ? (parseFloat(v1TaxaFixa.value) || 0) : 0.0;
+        if (window.currentV1Fiscal) {
+            impNfPct = window.currentV1Fiscal.impNfPct || 0.0;
+            impFixo = window.currentV1Fiscal.taxaFixa || 0.0;
+        } else {
+            impNfPct = (v1Estado === 'GO') ? 1.65 : ((v1Estado === 'PI') ? 1.20 : 0.0);
+            const scPerTon = (commodity === 'Algodão') ? (1000 / 15) : (1000 / 60);
+            const upfTon = (v1Estado === 'MT') ? 51.50 : ((v1Estado === 'MS') ? 27.55 : 0.0);
+            impFixo = upfTon > 0 ? (upfTon / scPerTon) : 0.0;
+        }
 
         const v1Regiao = document.getElementById('v1-sim-regiao');
         regiao = v1Regiao ? (v1Regiao.value.trim() || 'Praça Informada') : 'Praça Informada';
@@ -1049,7 +1115,8 @@ function calculateSimulation() {
         descontoAtivo = document.getElementById('sim-descontos').checked;
 
         const plaza = wsysPlazas.find(p => p.nome === regiao || `${p.nome} (${p.estado})` === regiao) || wsysPlazas[0];
-        funruralPct = plaza ? plaza.funruralPct : 1.63;
+        const v2Funrural = document.getElementById('v2-sim-funrural');
+        funruralPct = v2Funrural ? (parseFloat(v2Funrural.value) || 1.63) : (plaza ? plaza.funruralPct : 1.63);
         impNfPct = plaza ? plaza.impNfPct : 0.0;
         const upfTon = plaza ? (plaza.upfTon !== undefined ? plaza.upfTon : (plaza.estado === 'MT' ? 51.50 : (plaza.estado === 'MS' ? 27.55 : 0.0))) : 0.0;
         const scPerTon = (commodity === 'Algodão') ? (1000.0 / 15.0) : (1000.0 / 60.0);
@@ -1069,7 +1136,6 @@ function calculateSimulation() {
         const v2Obs = document.getElementById('v2-sim-obs');
         obsText = v2Obs ? v2Obs.value.trim() : '';
     }
-
     if (campObj && campObj.desembolso && campObj.vencimento) {
         const d1 = new Date(campObj.desembolso + 'T12:00:00');
         const d2 = new Date(campObj.vencimento + 'T12:00:00');

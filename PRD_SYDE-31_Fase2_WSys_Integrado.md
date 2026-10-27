@@ -3,7 +3,8 @@
 
 * **Identificador:** PRD_SYDE-31_FASE2
 * **Card Jira:** SYDE-31 (Épico de Integração)
-* **Versão:** v1.0
+* **Versão:** v1.1 (Refinamento de Escopo Mínimo e Taxas – Reunião 27/10/2026)
+* **Data:** 27 de outubro de 2026
 * **Status:** Especificação Pronta para Engenharia / Backoffice
 * **Documento Pai:** [PRD_SYDE-31_Visao_Geral_Solucao.md](file:///c:/Users/jj/OneDrive/Projetos/Barter%20Simulator/PRD_SYDE-31_Visao_Geral_Solucao.md)
 * **Documento Complementar:** [PRD_SYDE-31_Fase1_MVP_Manual.md](file:///c:/Users/jj/OneDrive/Projetos/Barter%20Simulator/PRD_SYDE-31_Fase1_MVP_Manual.md)
@@ -12,53 +13,56 @@
 
 ## 🎯 1. Objetivo & Visão da Fase 2
 
-A **Fase 2 (SYDE-31)** representa o estado da arte e a automação digital completa do fluxo de Barter na plataforma Syde.
+A **Fase 2 (SYDE-31)** representa o estado da arte e a automação digital completa do fluxo de Barter na plataforma Syde, conectada diretamente ao sistema corporativo de originação da Syngenta.
 
-### Objetivos Principais:
-1. **Conexão Direta com a Mesa Nutrade:** Consumo em tempo real dos preços oficiais de balcão futuro gerados pelo sistema corporativo **WSys CTRM 2.10.1** da Syngenta.
-2. **Automação Tributária Transparente (Motor Fiscal):** O RTV não precisa calcular nem memorizar alíquotas estaduais ou decretos de UPF/FETHAB/FUNDERSUL; ao selecionar o Estado e a Praça, o sistema aplica instantaneamente a regra tributária correspondente.
-3. **Conversão Cambial Automatizada via PTAX BACEN:** Para simulações em Dólar (USD), o BFF consome a cotação oficial diária PTAX do Banco Central para converter as taxas estaduais fixadas em Reais.
-4. **Governança de Mercado (Monitoramento CBOT):** Alerta proativo e disclaimer contratual quando a simulação ocorrer fora do pregão de Chicago.
+### Objetivos Principais e Acordos da Reunião (27/10/2026):
+1. **Conexão Direta com a Mesa Nutrade (WSys CTRM 2.10.1):** Consumo em tempo real dos preços oficiais de balcão futuro gerados pelo WSys.
+2. **Cronograma de Implementação:** Conforme alinhado com Leonardo Vale, o refinamento técnico dos endpoints do WSys com o time de engenharia ocorrerá em novembro/2026, com entrega em meados/fim de dezembro de 2026 para operação plena em janeiro de 2027.
+3. **Escopo de Commodities:** Foco em **Soja**, **Milho** e **Algodão**. A cultura de Café permanece fora do simulador pois o time comercial de café da Syngenta opera diretamente com cotações automáticas no Salesforce.
+4. **Motor Fiscal Automático no Syde:** O RTV seleciona o **Estado (UF)** e a **Praça Polo**; o sistema aplica instantaneamente as alíquotas estaduais cadastradas (FETHAB em MT, FUNDEMS em MS, FUNDEINFRA em GO, FDI no PI e Funrural de 1,63% ou 0,20%).
+5. **Conversão Cambial Automatizada via PTAX BACEN:** Para simulações em Dólar (USD), o backend consome a cotação oficial diária PTAX do Banco Central / Dólar Futuro oficial para converter as taxas estaduais fixadas em Reais.
+6. **Governança de Mercado (Monitoramento CBOT & Aviso Barter):** Alerta proativo e disclaimer contratual quando a simulação ocorrer fora do pregão de Chicago, acompanhado do banner oficial da Mesa de Barter.
 
 ---
 
 ## 📸 2. Telas do Protótipo Homologado (Fase 2)
 
 ### 2.1. Formulário Integrado ao WSys (Estado, Praça e Distâncias)
-Na Fase 2, o usuário seleciona a Campanha, a Cultura e a Praça Polo. A cotação é carregada automaticamente do WSys e as distâncias de terra (chão) e asfalto estão na mesma linha:
+Na Fase 2, o usuário seleciona a Campanha, o Estado (UF) em 1º lugar, a Cultura e a Praça Polo do catálogo WSys. A cotação é carregada automaticamente e as distâncias de asfalto e terra (chão) estão na mesma linha:
 
 ![Formulário Fase 2 - WSys Integrado](prints_prd/03_fase2_formulario_wsys.png)
 
 ---
 
 ### 2.2. Resultados Simulados com Alerta CBOT e Gráfico de Mercado
-O resultado exibe o banner informativo de status da Bolsa de Chicago (pregão aberto/fechado), cards de comparação com outras modalidades de crédito e gráfico de tendências:
+O resultado exibe o banner informativo de status da Bolsa de Chicago (pregão aberto/fechado), cards de comparação com outras modalidades de crédito e gráfico de tendências de mercado:
 
 ![Resultados Fase 2 - WSys e CBOT](prints_prd/04_fase2_resultado_wsys.png)
 
 ---
 
 ### 2.3. Motor Fiscal do Syde (Tabela de Regras Tributárias por Praça/UF)
-Módulo centralizado onde a equipe de operações e fiscal cadastra e atualiza as regras estaduais (Funrural, FETHAB, FUNDERSUL, FUNDEINFRA) e monitora a Cotação PTAX:
+Módulo centralizado onde a equipe de operações e fiscal cadastra e atualiza as regras estaduais (Funrural, FETHAB, FUNDEMS, FUNDEINFRA) e monitora a Cotação PTAX:
 
 ![Motor Fiscal Syde](prints_prd/05_motor_fiscal_pracas.png)
 
 ---
 
-## 📝 3. Mapeamento Detalhado dos Campos da Fase 2
+## 📝 3. Mapeamento Detalhado dos Campos da Fase 2 (Reunião 27/10/2026)
 
 | Campo em Tela | ID do Elemento | Origem dos Dados | Regra de Negócio & Automação |
 |---|---|:---:|---|
-| **Cotação da Commodity (FOB)** | `sim-preco-bruto` | API WSys (`VL_PrecoBase` ou `VL_PrecoBRL`) | Consumido automaticamente do endpoint `/api/integracao/odin/precos`. O RTV recebe o preço oficial homologado da mesa para a safra. |
-| **Frete Base de Rota Polo** | Interno / WSys | API WSys (`VL_CustoFrete`) | Frete rodoviário contratado da cidade polo até o porto de exportação ou terminal ferroviário. |
-| **Estado (UF)** | `v2-sim-estado` | Cadastro de Praças | Filtra dinamicamente as cidades polo disponíveis no dropdown de praças. |
-| **Praça Logística (WSys)** | `v2-sim-regiao` | Catálogo Odin (`/cidades`) | Cidade homologada pela mesa. Ao selecionar a praça, o sistema aplica automaticamente a matriz fiscal e as tarifas de frete da região. |
-| **Distância Chão (KM)** | `v2-sim-dist-chao` | Entrada RTV (inicia em 0) | KM adicional de terra da fazenda até a praça. **Posicionado na linha de baixo junto com Dist. Asfalto.** |
-| **Distância Asfalto (KM)** | `v2-sim-dist-asfalto` | Entrada RTV (inicia em 0) | KM adicional de rodovia da fazenda até a praça. **Posicionado na mesma linha que Dist. Chão.** |
-| **Alíquota Funrural (%)** | Matriz Fiscal Syde | Configuração / Praça | Padrão nacional 1,63% (Pessoa Física). |
+| **Aviso da Mesa de Barter** | Banner visual | Informativo | Direcionamento oficial para consultar a Mesa de Barter caso necessite balizamento. |
+| **Estado (UF) \*** | `v2-sim-estado` | Cadastro de Praças | **1º campo dos Dados Barter.** Filtra dinamicamente as cidades polo disponíveis no dropdown de praças WSys. |
+| **Commodity / Cultura \*** | `v2-sim-commodity` | Catálogo WSys | Opções: `Soja (sc)`, `Milho (sc)` e `Algodão (lp)`. (Café excluído). |
+| **Praça Logística (WSys) \*** | `v2-sim-regiao` | Catálogo Odin (`/cidades`) | Cidade homologada pela mesa. Ao selecionar a praça, o sistema aplica automaticamente a matriz fiscal e as tarifas de frete da região. |
+| **Cotação da Commodity (FOB)** | `sim-preco-bruto` | API WSys (`VL_PrecoBase`) | Consumido automaticamente do endpoint `/api/integracao/odin/precos`. O RTV recebe o preço oficial homologado da mesa para a safra. |
+| **Cotação do Dólar Futuro (PTAX)** | `v2-sim-cotacao-dolar` | BFF / BACEN / WSys | Cotação oficial PTAX Venda. Utilizada para converter tributos fixados em R$ (FETHAB/FUNDEMS) para simulações em USD. |
+| **Distância Asfalto (KM)** | `v2-sim-dist-asfalto` | Entrada RTV (inicia em 0) | KM de rodovia da fazenda até a praça. Posicionado lado a lado com Dist. Chão. |
+| **Distância Chão (KM)** | `v2-sim-dist-chao` | Entrada RTV (inicia em 0) | KM de terra da fazenda até o asfalto. Posicionado lado a lado com Dist. Asfalto. |
+| **Funrural (Alíquota Unificada)** | `v2-sim-funrural` | Dropdown unificado | Opções: `Comercialização (1,63%)` (Padrão PF) ou `Folha de Pagamento (0,20%)`. |
 | **Outros Impostos Base NF (%)** | Matriz Fiscal Syde | Configuração / Praça | Identificado automaticamente pela UF: 1,65% em Goiás (FUNDEINFRA); 1,20% no Piauí (FDI); 0% nos demais. |
 | **Taxa Fixa Estadual (R$/ton)** | Matriz Fiscal Syde | Configuração / Praça | Puxado automaticamente por UF: MT = R$ 51,50/ton (FETHAB+IAGRO); MS = R$ 27,55/ton (FUNDEMS+FUNDERSUL). Convertido para saca conforme a cultura. |
-| **Cotação do Dólar (PTAX)** | BFF / BACEN | API Banco Central | Cotação oficial de fechamento da PTAX Venda. Utilizada para converter tributos fixados em R$ para simulações em USD. |
 | **Status Pregão CBOT** | Componente visual | Relógio de Mercado | Exibe badge verde quando o pregão está em andamento (10:30–15:20 e 21:00–09:45) e badge amarelo indicando preço indicativo fora de horário. |
 
 ---
@@ -79,19 +83,22 @@ O Motor Fiscal armazena o valor em **R$/tonelada** e converte automaticamente pa
 Dedução Fixa por Saca (R$/sc) = Valor UPF por Tonelada / Sacas por Tonelada
 
 Onde:
-- Soja, Milho e Café: 1.000 kg / 60 kg = 16,6667 sacas por tonelada.
-  * Mato Grosso: R$ 51,50 / 16,6667 = R$ 3,09 por saca.
-  * Mato Grosso do Sul: R$ 27,55 / 16,6667 = R$ 1,65 por saca.
-- Algodão: 1.000 kg / 15 kg = 66,6667 sacas/arrobas por tonelada.
+- Soja e Milho (60 kg): 1.000 kg / 60 kg = 16,6667 sacas por tonelada.
+  * Mato Grosso Soja: R$ 51,50 / 16,6667 = R$ 3,09 por saca.
+  * Mato Grosso Milho: R$ 14,00 / 16,6667 = R$ 0,84 por saca.
+  * Mato Grosso do Sul Soja: R$ 27,55 / 16,6667 = R$ 1,65 por saca.
+  * Mato Grosso do Sul Milho: R$ 14,00 / 16,6667 = R$ 0,84 por saca.
+- Algodão (15 kg): 1.000 kg / 15 kg = 66,6667 sacas/arrobas por tonelada.
   * Mato Grosso: R$ 51,50 / 66,6667 = R$ 0,77 por saca/arroba.
   * Mato Grosso do Sul: R$ 27,55 / 66,6667 = R$ 0,41 por saca/arroba.
+- Demais UFs: R$ 0,00 por saca.
 ```
 
 ### 3. Conversão Cambial em USD via PTAX Oficial:
-Nas simulações em Dólar, o backend aplica automaticamente a cotação PTAX Venda:
+Nas simulações em Dólar, o backend aplica automaticamente a cotação oficial do Dólar Futuro / PTAX Venda:
 
 ```text
-Dedução Fixa em USD = Dedução Fixa em R$ / Cotação PTAX BACEN
+Dedução Fixa em USD = Dedução Fixa em R$ / Cotação do Dólar Futuro
 ```
 
 ### 4. Dedução Percentual sobre a NF:
@@ -100,8 +107,6 @@ Dedução Percentual = Preço Bruto FOB * ((Funrural % + Impostos Estaduais NF %
 ```
 
 ### 5. Volume Contratual de Sacas da CPR:
-O Incentivo Barter abate diretamente o saldo financiado, gerando o número final de sacas que constará na CPR:
-
 ```text
 Juros do Período = (Dias de Prazo / 360) * (Taxa Anual Barter % / 100)
 Preço Pedido TP = Valor da Operação / (1 + Juros do Período)
@@ -119,62 +124,7 @@ Cashback da Campanha ($) = Valor da Operação * (Percentual de Cashback % / 100
 
 ---
 
-## 🔌 5. Especificação Técnica da Integração WSys CTRM 2.10.1
-
-### 5.1. Autenticação na API WSys
-* **Endpoint:** `POST https://wsys.syngentadigitalapps.com:444/api/integracao/loginintegracao`
-* **Retorno:** Bearer Token JWT válido por **8 horas**.
-* **Estratégia de Cache:** O BFF Syde renova o token preventivamente com 7h30 de uso para evitar rejeições em requisições de RTVs.
-
-### 5.2. Catálogo de Cidades Homologadas
-* **Endpoint:** `GET /api/integracao/odin/cidades`
-* **Tratamento Obrigatório:** Aplicar função `.trim()` nos nomes de cidades recebidos para remover espaços em branco gerados pelo banco legatário do WSys.
-
-### 5.3. Formação de Preço em Tempo Real
-* **Endpoint:** `GET /api/integracao/odin/precos`
-* **Parâmetros Mandatórios da Requisição:**
-  * `currencyISO`: `'BRL'` ou `'USD'`
-  * `productID`: Código da commodity (ex: `'0000001'` para Soja)
-  * `pricingName`: Nome descritivo do lote (ex: `'SOJA 2025/2026 - PORTOS - PARANAGUA - MAR/26'`)
-  * `city`: Nome da cidade (ex: `'PARANAGUA'`)
-  * `UF`: Sigla da UF de 2 letras (ex: `'PR'`)
-  * `logisticsTypeName`: `'FOB'`
-  * `startDate`: Data de início do período de entrega (`aaaa-mm-dd`) — **Obrigatório sob pena de Erro 500 no WSys**
-  * `endDate`: Data de fim do período de entrega (`aaaa-mm-dd`) — **Obrigatório sob pena de Erro 500 no WSys**
-  * `DT_Vencto`: Data de liquidação/pagamento do contrato (`aaaa-mm-dd`)
-* **Campos Consumidos da Resposta:**
-  * `VL_PrecoBase`: Cotação em moeda base (USD).
-  * `VL_PrecoBRL`: Cotação em Reais (BRL).
-  * `VL_CustoFrete`: Custo total do frete da rota contratada.
-  * `ST_PrecoValido`: Confirmação de integridade de preço.
-
----
-
-## 🏛️ 6. Modelo de Dados do Motor Fiscal Syde
-
-```typescript
-interface TributacaoRegionalBarter {
-  id: string; // UUID da regra
-  uf: string; // Ex: 'MT', 'MS', 'GO', 'PR', 'BA'
-  nomePracaDescricao: string; // Ex: 'Mato Grosso - Polo Sorriso'
-  codigoIbgeCidade?: string; // Código IBGE de 7 dígitos para exceções
-  funruralPerc: number; // Padrão: 1.63%
-  impostoEstadualNfPerc: number; // Ex: 1.65% (GO) ou 1.20% (PI)
-  nomeTributoEstadual?: string; // Ex: 'FUNDEINFRA', 'FDI'
-  aplicaIndexadorUpf: boolean; // true para MT e MS
-  upfPorTonelada: number; // Ex: 51.50 em MT; 27.55 em MS
-  ativo: boolean;
-  atualizadoEm: string;
-}
-```
-
----
-
-## ✅ 7. Critérios de Aceite para Engenharia (Fase 2)
-
-* **CA-F2-01 (Consumo WSys):** O simulador deve preencher `sim-preco-bruto` e frete base diretamente a partir da resposta da API WSys `/precos`.
-* **CA-F2-02 (Injeção Obrigatória de Datas):** O BFF deve enviar mandatoriamente `startDate` e `endDate` deduzidos da campanha para evitar Erro 500 do WSys.
-* **CA-F2-03 (Tratamento de Lote Inexistente):** Caso o WSys retorne `PrecosMonitorar: []`, exibir alerta contextual orientando o RTV a selecionar praça vizinha ou contatar a mesa, sem travar as outras modalidades.
-* **CA-F2-04 (Alinhamento Chão e Asfalto):** Os campos `v2-sim-dist-chao` e `v2-sim-dist-asfalto` devem estar posicionados na linha de baixo, alinhados lado a lado.
-* **CA-F2-05 (Automação Fiscal por UF/Cultura):** Ao mudar de cultura (ex: Soja para Algodão) ou de Praça (ex: Sorriso para Dourados), a taxa fixa por saca deve ser recalculada instantaneamente sem ação manual do usuário.
-* **CA-F2-06 (PTAX Automática em USD):** Em simulações USD, as taxas fixas estaduais devem ser convertidas pela cotação PTAX Venda do Banco Central integrada no BFF.
+## 📅 5. Próximos Passos de Integração com o WSys
+1. **Refinamento Técnico com Engenharia WSys (Novembro/2026):** Reuniões de detalhamento com a equipe técnica da Syngenta para validar o mapeamento de praças e contratos `/api/integracao/odin/...`.
+2. **Ambiente de Homologação (Dezembro/2026):** Liberação em staging com consumo da API WSys e dados de simulação da safra 27/28.
+3. **Go-Live em Produção (Janeiro/2027):** Ativação da Feature Flag `ff_barter_wsys_integration` para migração gradual da força de vendas da Fase 1 para a Fase 2.

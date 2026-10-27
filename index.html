@@ -298,12 +298,44 @@
                                 </div>
                             </div>
 
-                            <!-- Section 3: Dados para Simulação Barter & Cotação do Commodity (Manual) -->
+                            <!-- Section 3: Dados para Simulação Barter & Cotação Manual -->
                             <div>
+                                <!-- Aviso Oficial da Mesa de Barter acordado na reunião 27/10/2026 -->
+                                <div class="barter-notice-banner" style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px;">
+                                    <i class="fa-solid fa-circle-info" style="color:#059669; font-size:16px; flex-shrink:0;"></i>
+                                    <div style="font-size:12px; color:#065f46; line-height:1.4;">
+                                        <strong>Aviso ao RTV / Comercial:</strong> Para obter as cotações oficiais vigentes de commodities, cotação do dólar futuro e fretes referenciais para a sua praça, consulte a <strong>Mesa de Barter</strong>.
+                                    </div>
+                                </div>
+
                                 <span style="font-size:12px; font-weight:700; text-transform:uppercase; color:#008080; letter-spacing:0.5px; display:block; margin-bottom:12px;">Dados para Simulação Barter & Cotação Manual</span>
                                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:end;">
+                                    <!-- Estado (UF) posicionado em primeiro lugar conforme alinhamento com Leonardo Vale -->
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v1-sim-commodity" style="font-size:12px; color:#475569; font-weight:500;">Commodity / Cultura</label>
+                                        <label for="v1-sim-estado" style="font-size:12px; color:#475569; font-weight:600;">Estado (UF) *</label>
+                                        <div class="select-wrapper">
+                                            <select id="v1-sim-estado" style="border:1.5px solid #008080; border-radius:6px; font-size:13.5px; font-weight:600; color:#0f172a;"
+                                                onchange="onEstadoChangeV1(this.value);">
+                                                <option value="MT" selected>Mato Grosso (MT)</option>
+                                                <option value="MS">Mato Grosso do Sul (MS)</option>
+                                                <option value="GO">Goiás (GO)</option>
+                                                <option value="PI">Piauí (PI)</option>
+                                                <option value="BA">Bahia (BA)</option>
+                                                <option value="MA">Maranhão (MA)</option>
+                                                <option value="TO">Tocantins (TO)</option>
+                                                <option value="RO">Rondônia (RO)</option>
+                                                <option value="PR">Paraná (PR)</option>
+                                                <option value="MG">Minas Gerais (MG)</option>
+                                                <option value="SP">São Paulo (SP)</option>
+                                                <option value="RS">Rio Grande do Sul (RS)</option>
+                                            </select>
+                                        </div>
+                                        <small style="font-size:10px; color:#64748b; margin-top:2px; display:block;">Determina os tributos estaduais (FETHAB, etc.)</small>
+                                    </div>
+
+                                    <!-- Commodity / Cultura: Soja, Milho, Algodão (Café excluído conforme direcionamento) -->
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v1-sim-commodity" style="font-size:12px; color:#475569; font-weight:600;">Commodity / Cultura *</label>
                                         <div class="select-wrapper">
                                             <select id="v1-sim-commodity" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
                                                 onchange="onCulturaChangeV1(this.value);">
@@ -312,53 +344,48 @@
                                                 <option value="Algodão">Algodão (lp)</option>
                                             </select>
                                         </div>
+                                        <small style="font-size:10px; color:#64748b; margin-top:2px; display:block;">60kg (soja/milho) ou 15kg (algodão)</small>
                                     </div>
 
                                     <!-- Campo Manual de Cotação da Commodity (Inicia em branco conforme solicitado) -->
                                     <div class="input-group" style="margin-bottom:0;">
                                         <label for="v1-sim-preco-bruto" style="font-size:12px; color:#0f766e; font-weight:600;">
-                                            Cotação do Commodity (Preço Bruto FOB) *
+                                            Cotação da Commodity (Preço Bruto FOB) *
                                         </label>
                                         <div class="input-wrapper">
                                             <input type="number" step="0.01" id="v1-sim-preco-bruto" value="" placeholder="Digite a cotação..."
                                                 style="border:1.5px solid #008080; border-radius:6px; font-size:14px; font-weight:700; color:#0f172a; padding:9px 12px;">
                                             <span class="input-suffix" id="v1-sim-preco-bruto-suffix">R$/sc</span>
                                         </div>
+                                        <small style="font-size:10px; color:#64748b; margin-top:2px; display:block;">Preço bruto acordado de balcão na praça</small>
                                     </div>
 
-                                    <!-- Cotação do Dólar (Só aparece quando simulação for em dólar) -->
+                                    <!-- Cotação do Dólar Futuro (Só aparece quando simulação for em dólar) -->
                                     <div class="input-group" id="v1-container-cotacao-dolar" style="margin-bottom:0; display:none; background:#fef3c7; border:1px solid #f59e0b; border-radius:8px; padding:8px 12px;">
                                         <label for="v1-sim-cotacao-dolar" style="font-size:12px; color:#92400e; font-weight:700; display:flex; align-items:center; gap:6px;">
-                                            <i class="fa-solid fa-dollar-sign"></i> Cotação do Dólar (R$/USD) *
+                                            <i class="fa-solid fa-dollar-sign"></i> Cotação do Dólar Futuro (R$/USD) *
                                         </label>
                                         <div class="input-wrapper" style="margin-top:4px;">
                                             <input type="number" step="0.0001" id="v1-sim-cotacao-dolar" value="5.6378" placeholder="5.6378"
                                                 style="border:1.5px solid #d97706; border-radius:6px; font-size:13.5px; font-weight:700; color:#0f172a; padding:7px 10px;">
                                         </div>
                                         <small style="font-size:10px; color:#78350f; display:block; margin-top:2px; line-height:1.2;">
-                                            Necessária para conversão dos impostos fixos em R$ (ex: FETHAB) em USD na CPR.
+                                            Necessária para conversão das taxas fixas estaduais (R$/sc) em USD na CPR.
                                         </small>
                                     </div>
 
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v1-sim-regiao" style="font-size:12px; color:#475569; font-weight:500;">Praça / Região <span style="font-size:11px; color:#64748b;">(opcional)</span></label>
+                                        <label for="v1-sim-regiao" style="font-size:12px; color:#475569; font-weight:500;">Praça / Município <span style="font-size:11px; color:#64748b;">(opcional)</span></label>
                                         <div class="input-wrapper">
                                             <input type="text" id="v1-sim-regiao" value="Campo Novo do Parecis" placeholder="Ex: Campo Novo do Parecis"
                                                 style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px; padding:9px 12px;">
                                         </div>
+                                        <small style="font-size:10px; color:#64748b; margin-top:2px; display:block;">Ponto de entrega ou armazém regional</small>
                                     </div>
                                 </div>
 
-                                <!-- Linha Logística: Dist. Chão e Dist. Asfalto na mesma linha -->
+                                <!-- Linha Logística: Dist. Asfalto e Dist. Chão na mesma linha -->
                                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:end; margin-top:14px;">
-                                    <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v1-sim-dist-chao" style="font-size:12px; color:#475569; font-weight:500;">Dist. Chão (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
-                                        <div class="input-wrapper">
-                                            <input type="number" id="v1-sim-dist-chao" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
-                                                oninput="if(window.hasSimulated) calculateSimulation();">
-                                            <span class="input-suffix">KM</span>
-                                        </div>
-                                    </div>
                                     <div class="input-group" style="margin-bottom:0;">
                                         <label for="v1-sim-dist-asfalto" style="font-size:12px; color:#475569; font-weight:500;">Dist. Asfalto (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
                                         <div class="input-wrapper">
@@ -367,15 +394,23 @@
                                             <span class="input-suffix">KM</span>
                                         </div>
                                     </div>
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v1-sim-dist-chao" style="font-size:12px; color:#475569; font-weight:500;">Dist. Chão (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
+                                        <div class="input-wrapper">
+                                            <input type="number" id="v1-sim-dist-chao" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
+                                                oninput="if(window.hasSimulated) calculateSimulation();">
+                                            <span class="input-suffix">KM</span>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <!-- Section 4: Motor Fiscal - Parâmetros Tributários Manuais (FIN-18889 - Matriz da Alessandra) -->
+                                <!-- Section 4: Motor Fiscal - Parâmetros Tributários (FIN-18889 - Matriz da Alessandra e Alinhamento 27/10) -->
                                 <div class="manual-field-card" style="margin-top:16px;">
                                     <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:12px; border-bottom:1px solid #ccfbf1; padding-bottom:8px;">
                                         <div style="display:flex; align-items:center; gap:8px;">
                                             <i class="fa-solid fa-scale-balanced" style="color:#008080; font-size:16px;"></i>
                                             <span style="font-size:12.5px; font-weight:700; color:#0f766e; text-transform:uppercase; letter-spacing:0.5px;">
-                                                Taxa dos Impostos e Deduções Fiscais (Input Manual)
+                                                Taxa dos Impostos e Deduções Fiscais (Regras por Estado & Cultura)
                                             </span>
                                         </div>
                                         <div class="toggle-switch" style="margin:0;">
@@ -385,81 +420,61 @@
                                         </div>
                                     </div>
 
-                                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:14px;" id="v1-fiscal-inputs-row">
-                                        <!-- Funrural Modalidade -->
+                                    <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:14px;" id="v1-fiscal-inputs-row">
+                                        <!-- Funrural Unificado (Comercialização 1,63% ou Folha 0,20% acordado com Leonardo & Pablo) -->
                                         <div class="input-group" style="margin-bottom:0;">
-                                            <label for="v1-sim-funrural-tipo" style="font-size:11.5px; color:#334155; font-weight:600;">
-                                                Modalidade Funrural
+                                            <label for="v1-sim-funrural" style="font-size:11.5px; color:#334155; font-weight:600;">
+                                                Funrural (Alíquota)
                                             </label>
                                             <div class="select-wrapper">
-                                                <select id="v1-sim-funrural-tipo" onchange="onFunruralTipoChangeV1(this.value);" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13px;">
-                                                    <option value="comercializacao" selected>Comercialização (1,63%)</option>
-                                                    <option value="folha">Folha de Pagamento (0,20%)</option>
-                                                    <option value="personalizado">Personalizado</option>
+                                                <select id="v1-sim-funrural" onchange="onFunruralChangeV1(this.value);" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13px; font-weight:600;">
+                                                    <option value="1.63" selected>Comercialização (1,63%) - Padrão PF</option>
+                                                    <option value="0.20">Folha de Pagamento (0,20%) - Opção Folha</option>
                                                 </select>
                                             </div>
                                             <small style="font-size:10px; color:#64748b; margin-top:2px; display:block;">Opção do Produtor (Lei 13.606/18)</small>
                                         </div>
 
-                                        <!-- Funrural % -->
-                                        <div class="input-group" style="margin-bottom:0;">
-                                            <label for="v1-sim-funrural-pct" style="font-size:11.5px; color:#334155; font-weight:600;">
-                                                Alíquota Funrural (%)
-                                            </label>
-                                            <div class="input-wrapper">
-                                                <input type="number" step="0.01" id="v1-sim-funrural-pct" value="1.63" placeholder="1.63"
-                                                    style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px; font-weight:600; padding:8px 12px;"
-                                                    oninput="if(window.hasSimulated) calculateSimulation();">
-                                                <span class="input-suffix">%</span>
-                                            </div>
-                                            <small style="font-size:10px; color:#64748b; margin-top:2px; display:block;">1,63% comercialização ou 0,20% folha</small>
-                                        </div>
-
-                                        <!-- Outros Impostos Base NF % -->
+                                        <!-- Outros Impostos Base NF % (Auto-carregado do Estado) -->
                                         <div class="input-group" style="margin-bottom:0;">
                                             <label for="v1-sim-imposto-estadual-pct" style="font-size:11.5px; color:#334155; font-weight:600;">
                                                 Outros Impostos Base NF (%)
                                             </label>
                                             <div class="input-wrapper">
-                                                <input type="number" step="0.01" id="v1-sim-imposto-estadual-pct" value="0.00" placeholder="0.00"
-                                                    style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px; font-weight:600; padding:8px 12px;"
-                                                    oninput="if(window.hasSimulated) calculateSimulation();">
-                                                <span class="input-suffix">% s/ NF</span>
+                                                <input type="text" id="v1-sim-imposto-estadual-pct" value="0.00%" readonly
+                                                    style="border:1px solid #cbd5e1; border-radius:6px; font-size:13px; font-weight:700; padding:8px 12px; background:#f8fafc; color:#0f766e;">
                                             </div>
-                                            <small style="font-size:10px; color:#64748b; margin-top:2px; display:block;">Ex: FUNDEINFRA (1,65% GO) ou FDI (1,20% PI)</small>
+                                            <small id="v1-sim-imposto-estadual-note" style="font-size:10px; color:#64748b; margin-top:2px; display:block;">Conforme UF (ex: FUNDEINFRA 1,65% GO | FDI 1,20% PI)</small>
                                         </div>
 
-                                        <!-- Outros Impostos Base UPF por TON -->
+                                        <!-- Outros Impostos Base UPF por TON (Auto-carregado do Estado e Cultura) -->
                                         <div class="input-group" style="margin-bottom:0;">
                                             <label for="v1-sim-imposto-upf-ton" style="font-size:11.5px; color:#334155; font-weight:600;">
                                                 Impostos Base UPF (R$/ton)
                                             </label>
                                             <div class="input-wrapper">
-                                                <input type="number" step="0.01" id="v1-sim-imposto-upf-ton" value="0.00" placeholder="0.00"
-                                                    style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px; font-weight:600; padding:8px 12px;"
-                                                    oninput="onTaxaUpfTonChangeV1(this.value)">
-                                                <span class="input-suffix">R$/ton</span>
+                                                <input type="text" id="v1-sim-imposto-upf-ton" value="R$ 51,50/t" readonly
+                                                    style="border:1px solid #cbd5e1; border-radius:6px; font-size:13px; font-weight:700; padding:8px 12px; background:#f8fafc; color:#0f766e;">
                                             </div>
-                                            <small style="font-size:10px; color:#64748b; margin-top:2px; display:block;">Ex: MT = R$ 51,50/t | MS = R$ 27,55/t</small>
+                                            <small id="v1-sim-imposto-upf-note" style="font-size:10px; color:#64748b; margin-top:2px; display:block;">Ex: MT = R$ 51,50/t (FETHAB/IAGRO) | MS = R$ 27,55/t (FUNDEMS)</small>
                                         </div>
 
-                                        <!-- Equivalente Taxa Fixa por Saca -->
+                                        <!-- Equivalente Dedução Fixa por Saca (Calculado automaticamente: R$/ton / (1000/kg)) -->
                                         <div class="input-group" style="margin-bottom:0;">
                                             <label for="v1-sim-taxa-fixa" style="font-size:11.5px; color:#334155; font-weight:600;">
                                                 Dedução Fixa por Saca (R$/sc)
                                             </label>
                                             <div class="input-wrapper">
-                                                <input type="number" step="0.01" id="v1-sim-taxa-fixa" value="0.00" placeholder="0.00"
-                                                    style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px; font-weight:600; padding:8px 12px;"
-                                                    oninput="onTaxaFixaChangeV1(this.value)">
-                                                <span class="input-suffix">R$/sc</span>
+                                                <input type="text" id="v1-sim-taxa-fixa" value="R$ 3,09/sc" readonly
+                                                    style="border:1px solid #cbd5e1; border-radius:6px; font-size:13px; font-weight:700; padding:8px 12px; background:#f8fafc; color:#0f766e;">
                                             </div>
-                                            <small style="font-size:10px; color:#64748b; margin-top:2px; display:block;">Rateio por saca na CPR (ex: R$ 3,09 MT)</small>
+                                            <small id="v1-sim-taxa-fixa-note" style="font-size:10px; color:#64748b; margin-top:2px; display:block;">Rateio por saca na CPR (ex: R$ 3,09 MT soja)</small>
                                         </div>
                                     </div>
                                 </div>
-
-                                <!-- Observações da Operação -->
+                            </div>
+                            
+                            <!-- Observações da Operação -->
                                 <div style="margin-top:14px;">
                                     <div class="input-group" style="margin-bottom:0;">
                                         <label for="v1-sim-obs" style="font-size:12px; color:#475569; font-weight:500;">
@@ -713,27 +728,25 @@
                                 </div>
                             </div>
 
-                            <!-- Section 3: Dados para Simulação Barter -->
+                            <!-- Section 3: Dados para Simulação Barter (WSys Integrado) -->
                             <div>
-                                <span style="font-size:12px; font-weight:700; text-transform:uppercase; color:#008080; letter-spacing:0.5px; display:block; margin-bottom:12px;">Dados para Simulação Barter</span>
-                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:end;">
-                                    <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-commodity" style="font-size:12px; color:#475569; font-weight:500;">Commodity / Cultura</label>
-                                        <div class="select-wrapper">
-                                            <select id="v2-sim-commodity" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
-                                                onchange="document.getElementById('sim-commodity').value=this.value; onCulturaChange(this.value);">
-                                                <option value="Soja" selected>Soja (sc)</option>
-                                                <option value="Milho">Milho (sc)</option>
-                                                <option value="Algodão">Algodão (lp)</option>
-                                            </select>
-                                        </div>
+                                <!-- Aviso Oficial da Mesa de Barter acordado na reunião 27/10/2026 -->
+                                <div class="barter-notice-banner" style="background:#f0fdf4; border:1px solid #86efac; border-radius:8px; padding:10px 14px; margin-bottom:14px; display:flex; align-items:center; gap:10px;">
+                                    <i class="fa-solid fa-circle-info" style="color:#059669; font-size:16px; flex-shrink:0;"></i>
+                                    <div style="font-size:12px; color:#065f46; line-height:1.4;">
+                                        <strong>Aviso ao RTV / Comercial:</strong> Para obter as cotações oficiais vigentes de commodities, cotação do dólar futuro e fretes referenciais para a sua praça, consulte a <strong>Mesa de Barter</strong>.
                                     </div>
+                                </div>
+
+                                <span style="font-size:12px; font-weight:700; text-transform:uppercase; color:#008080; letter-spacing:0.5px; display:block; margin-bottom:12px;">Dados para Simulação Barter & Praças WSys</span>
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:end;">
+                                    <!-- Estado (UF) em primeiro lugar -->
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-estado" style="font-size:12px; color:#475569; font-weight:500;">Estado</label>
+                                        <label for="v2-sim-estado" style="font-size:12px; color:#475569; font-weight:600;">Estado (UF) *</label>
                                         <div class="select-wrapper">
-                                            <select id="v2-sim-estado" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
+                                            <select id="v2-sim-estado" style="border:1.5px solid #008080; border-radius:6px; font-size:13.5px; font-weight:600; color:#0f172a;"
                                                 onchange="document.getElementById('sim-estado').value=this.value; onEstadoChange(this.value);">
-                                                <option value="MT">Mato Grosso (MT)</option>
+                                                <option value="MT" selected>Mato Grosso (MT)</option>
                                                 <option value="GO">Goiás (GO)</option>
                                                 <option value="MS">Mato Grosso do Sul (MS)</option>
                                                 <option value="PR">Paraná (PR)</option>
@@ -747,27 +760,51 @@
                                                 <option value="RS">Rio Grande do Sul (RS)</option>
                                             </select>
                                         </div>
+                                        <small style="font-size:10px; color:#64748b; margin-top:2px; display:block;">Filtra praças WSys e tributos estaduais</small>
                                     </div>
+
+                                    <!-- Commodity / Cultura -->
                                     <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-regiao" style="font-size:12px; color:#475569; font-weight:500;">Praça (WSys)</label>
+                                        <label for="v2-sim-commodity" style="font-size:12px; color:#475569; font-weight:600;">Commodity / Cultura *</label>
+                                        <div class="select-wrapper">
+                                            <select id="v2-sim-commodity" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
+                                                onchange="document.getElementById('sim-commodity').value=this.value; onCulturaChange(this.value);">
+                                                <option value="Soja" selected>Soja (sc)</option>
+                                                <option value="Milho">Milho (sc)</option>
+                                                <option value="Algodão">Algodão (lp)</option>
+                                            </select>
+                                        </div>
+                                        <small style="font-size:10px; color:#64748b; margin-top:2px; display:block;">60kg (soja/milho) ou 15kg (algodão)</small>
+                                    </div>
+
+                                    <!-- Praça WSys -->
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v2-sim-regiao" style="font-size:12px; color:#475569; font-weight:600;">Praça (WSys CTRM) *</label>
                                         <div class="select-wrapper">
                                             <select id="v2-sim-regiao" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
                                                 onchange="document.getElementById('sim-regiao').value=this.value; onPracaChange(this.value);">
                                             </select>
                                         </div>
+                                        <small style="font-size:10px; color:#64748b; margin-top:2px; display:block;">Hub logístico oficial parametrizado no WSys</small>
+                                    </div>
+
+                                    <!-- Cotação do Dólar Futuro em USD na Fase 2 -->
+                                    <div class="input-group" id="v2-container-cotacao-dolar" style="margin-bottom:0; display:none; background:#fef3c7; border:1px solid #f59e0b; border-radius:8px; padding:8px 12px;">
+                                        <label for="v2-sim-cotacao-dolar" style="font-size:12px; color:#92400e; font-weight:700; display:flex; align-items:center; gap:6px;">
+                                            <i class="fa-solid fa-dollar-sign"></i> Cotação do Dólar Futuro (R$/USD)
+                                        </label>
+                                        <div class="input-wrapper" style="margin-top:4px;">
+                                            <input type="number" step="0.0001" id="v2-sim-cotacao-dolar" value="5.6378" readonly
+                                                style="border:1.5px solid #d97706; border-radius:6px; font-size:13.5px; font-weight:700; color:#0f172a; padding:7px 10px; background:#fffbeb;">
+                                        </div>
+                                        <small style="font-size:10px; color:#78350f; display:block; margin-top:2px; line-height:1.2;">
+                                            Integrado Bacen PTAX / WSys para conversão das taxas fixas.
+                                        </small>
                                     </div>
                                 </div>
 
-                                <!-- Linha Logística: Dist. Chão e Dist. Asfalto na mesma linha -->
+                                <!-- Linha Logística: Dist. Asfalto e Dist. Chão na mesma linha -->
                                 <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap:14px; align-items:end; margin-top:14px;">
-                                    <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-dist-chao" style="font-size:12px; color:#475569; font-weight:500;">Dist. Chão (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
-                                        <div class="input-wrapper">
-                                            <input type="number" id="v2-sim-dist-chao" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
-                                                oninput="document.getElementById('sim-dist-chao').value=this.value; if(window.hasSimulated) calculateSimulation();">
-                                            <span class="input-suffix">KM</span>
-                                        </div>
-                                    </div>
                                     <div class="input-group" style="margin-bottom:0;">
                                         <label for="v2-sim-dist-asfalto" style="font-size:12px; color:#475569; font-weight:500;">Dist. Asfalto (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
                                         <div class="input-wrapper">
@@ -776,10 +813,41 @@
                                             <span class="input-suffix">KM</span>
                                         </div>
                                     </div>
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v2-sim-dist-chao" style="font-size:12px; color:#475569; font-weight:500;">Dist. Chão (KM) <span style="font-size:11px;color:var(--text-secondary);">(opcional)</span></label>
+                                        <div class="input-wrapper">
+                                            <input type="number" id="v2-sim-dist-chao" value="0" min="0" placeholder="0" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13.5px;"
+                                                oninput="document.getElementById('sim-dist-chao').value=this.value; if(window.hasSimulated) calculateSimulation();">
+                                            <span class="input-suffix">KM</span>
+                                        </div>
+                                    </div>
                                 </div>
 
-                                <!-- Phase 1: Observações da Operação (RTV Notes) & Deduções Fiscais -->
-                                <div style="display:grid; grid-template-columns: 2fr 1fr; gap:16px; margin-top:14px; align-items:center;">
+                                <!-- Deduções Fiscais e Observações da Operação (Fase 2) -->
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:16px; margin-top:14px; align-items:center;">
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v2-sim-funrural" style="font-size:12px; color:#475569; font-weight:600;">Funrural (Alíquota)</label>
+                                        <div class="select-wrapper">
+                                            <select id="v2-sim-funrural" onchange="onFunruralChangeV2(this.value);" style="border:1px solid #cbd5e1; border-radius:6px; font-size:13px; font-weight:600;">
+                                                <option value="1.63" selected>Comercialização (1,63%) - Padrão PF</option>
+                                                <option value="0.20">Folha de Pagamento (0,20%) - Opção Folha</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                    <div class="input-group" style="margin-bottom:0;">
+                                        <label for="v2-sim-descontos" style="font-size:12px; color:#475569; font-weight:500;">Deduções Fiscais</label>
+                                        <div class="toggle-switch" style="margin-top:4px;">
+                                            <input type="checkbox" id="v2-sim-descontos" checked
+                                                onchange="document.getElementById('sim-descontos').checked=this.checked; if(window.hasSimulated) calculateSimulation();">
+                                            <label for="v2-sim-descontos" class="toggle-slider"></label>
+                                            <span class="toggle-label" style="font-size:12.5px; font-weight:600; color:#334155;">Aplicar Deduções Fiscais</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Observações da Operação -->
+                                <div style="margin-top:14px;">
                                     <div class="input-group" style="margin-bottom:0;">
                                         <label for="v2-sim-obs" style="font-size:12px; color:#475569; font-weight:500;">
                                             Observações da Operação <span style="font-size:11px; color:#64748b;">(Ex: Vendedor de grão diferente de insumos, fazenda, CNPJ/CPF)</span>
@@ -789,18 +857,9 @@
                                                 style="border:1px solid #cbd5e1; border-radius:6px; font-size:13px; padding:10px 12px; width:100%;">
                                         </div>
                                     </div>
-                                    <div class="input-group" style="margin-bottom:0;">
-                                        <label for="v2-sim-descontos" style="font-size:12px; color:#475569; font-weight:500;">Deduções Fiscais</label>
-                                        <div class="toggle-switch" style="margin-top:4px;">
-                                            <input type="checkbox" id="v2-sim-descontos" checked
-                                                onchange="document.getElementById('sim-descontos').checked=this.checked;">
-                                            <label for="v2-sim-descontos" class="toggle-slider"></label>
-                                            <span class="toggle-label" style="font-size:12.5px; font-weight:600; color:#334155;">Funrural + Taxas</span>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
-
+                            
                             <!-- Footer Action Buttons (Figma Jess Style) -->
                             <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px; margin-top:8px;">
                                 <div>
